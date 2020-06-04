@@ -1,0 +1,6 @@
+Makefile.DEPEND
+Makefile.RULES
+*.mod
+*.o
+report*
+*.diff
