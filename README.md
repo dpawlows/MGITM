@@ -8,9 +8,9 @@ Installation
 ------------
 `Config.pl -install -mars [-compiler=compiler]`
 
-    The configuration script is capable of detecting the appropriate
-    compiler on some systems. However, you may opt to specify the
-    appropriate compiler (e.g. -compiler=gfortran)
+The configuration script is capable of detecting the appropriate
+compiler on some systems. However, you may opt to specify the
+appropriate compiler (e.g. -compiler=gfortran)
 
 Compilation
 -----------
