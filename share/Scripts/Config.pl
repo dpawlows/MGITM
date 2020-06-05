@@ -195,8 +195,7 @@ if($Uninstall){
 	&shell_command("rm -f Makefile.def Makefile.conf dataCRASH ".
 		       "src*/$MakefileDepend src*/$MakefileRules");
 	&shell_command("rm -f data") if -l "data";
-	if
-	&shell_command("rm -f srcData/MarsMagField4dim.dat") if -e "srcData/MarsMagField4dim.dat"; 
+	&shell_command("rm -f srcData/MarsMagField4dim.dat") if -e "srcData/MarsMagField4dim.dat";
 
 	exit 0;
     }
