@@ -47,7 +47,7 @@ module ModInputs
   logical :: UseNewellWave     = .false.
   logical :: DoNewellRemoveSpikes = .true.
   logical :: DoNewellAverage      = .true.
-  
+
   character (len=iCharLen_) :: TypeLimiter = "minmod"
 
   integer, dimension(7) :: iStartTime
@@ -172,6 +172,7 @@ module ModInputs
   logical :: UseVerAdvection     = .true.
   logical :: UseNeutralFriction  = .true.
 
+  logical :: UseCrustalField        = .false.
   logical :: UseIonPressureGradient = .true.
   logical :: UseIonGravity          = .true.
   logical :: UseNeutralDrag         = .true.
@@ -225,7 +226,7 @@ module ModInputs
   integer, parameter :: cSubCycleChemType_    = 3
   integer, parameter :: nChemTypes_       = 3
 
-  character (len=100), dimension(nChemTypes_) :: sChemType 
+  character (len=100), dimension(nChemTypes_) :: sChemType
 
   character (len=100)                         :: sInputIonChemType
   character (len=100)                         :: sInputNeutralChemType
@@ -272,7 +273,7 @@ Logical :: UseDustDistribution = .False.
   real, parameter :: PLONG = 4.0E-1 ! Pa  (also 4.0  ubar): 60 km (aphelion)
 
 !!!!!!!!!!!!!!!!!!!!!!
- 
+
 !  Mars Secondary Ionization Logicals
 ! logical :: UseSecondaryIonization = .false.
 ! character (len=iCharLen_) :: SecondaryIonFile
@@ -289,7 +290,7 @@ Logical :: UseDustDistribution = .False.
 	  real, dimension(7) :: Ls_a
 	  real, dimension(7) :: Ls_tau
 	  real, dimension(7) :: Ls_phi
-	  
+
 	  DATA Ls_a / 0.007, 0.006, 0.004, 0.004, 0.002, 0.002, 0.002 /
 	  DATA Ls_tau / 2.2353, 2.7543, 1.1177, 15.7866, 2.1354, &
 	             2.4694, 32.8493 /
@@ -365,4 +366,3 @@ contains
   end subroutine set_defaults
 
 end module ModInputs
-
