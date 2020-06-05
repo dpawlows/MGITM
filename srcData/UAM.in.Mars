@@ -81,7 +81,7 @@ F		if you want to run with msis and iri only (i.e. not GITM)
 1.0
 
 #CRUSTAL
-T   UseCrustalFields
+F         UseCrustalFields
 
 #AMIEFILES
 none      northern hemisphere amie file
@@ -114,8 +114,8 @@ F               initialize ionosphere using IRI
 125		f10.7
 125		f10.7 averaged over 81 days
 
-EUV_DATA
-T
+#EUV_DATA
+F
 T
 UA/DataIn/fismdaily.dat
 
