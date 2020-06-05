@@ -1,4 +1,3 @@
-
 #DEBUG
 0		debug level
 0		cpu to watch
@@ -8,134 +7,152 @@ F		usebarriers - forces the code to stop and wait more often
 #RESTART
 F
 
+# -----------------------------------------------------------------------
 #GRID
-8		lons
-4		lats
--90.0		minimum latitude to model
-90.0		maximum latitude to model
-0.0		longitude to model (ignored in everything but 1D)
+1        lons
+1	        lats
+40		minimum latitude to model
+40		maximum latitude to model
+180.0		longitude to model (ignored in everything but 1D)
 
+#ALTITUDE
+0.0		minimum altitude to use
+300.0		maximum altitude to use (ignored unless the following is F)
+F		use stretched grid
+
+# -------------------------------------------------------------------------
 #DIFFUSION
 T
 100.0		Eddy Diffusion Coefficient (Should be about 37.5 for 1-D runs)
-0.010		Total Eddy Diffusion applied at alts below this pressures level
-0.005		No Eddy Diffusion at altitudes above this pressure level
+0.020		Total Eddy Diffusion applied at alts below this pressures level
+0.003		No Eddy Diffusion at altitudes above this pressure level
 
 #THERMALDIFFUSION
 2.22e-4		Thermal conductivity (code use kappa = number * T**0.75)
-
-#CPUTIMEMAX
-86000.0		Maximum amount of cputime to use before stopping the code
+# -------------------------------------------------------------------------
 
 #TIMESTART
-2002		year
-12		month
-21		day
-12		hour
+2010		year
+01		month
+01		day
+00		hour
 00		minute
 00		second
 
 #TIMEEND
-2002		year
-12		month
-22		day
-12		hour
+2010		year
+02		month
+01		day
+00		hour
 00		minute
 00		second
 
+#CPUTIMEMAX
+604800		Maximum amount of cputime to use before stopping the code
+
+#SAVEPLOTS
+7200.0		dt for writing restart files
+2		how many output files do you want
+3DALL		output style
+3600		dt for output
+3DTHM           output style
+3600           dt for output
+
 #CFL
-0.3		percentage of maximum allowable time-step to take
+0.7		percentage of maximum allowable time-step to take
 
 #LIMITER
-mc		The MC limiter does not work well for Mars
+mc		only limiter available
 2.0
-
-#STATISTICALMODELSONLY
-F		if you want to run with msis and iri only (i.e. not GITM)
-1800.0		time step to take if you run with msis and iri
 
 #LOGFILE
 1.0		dt for output to a log file
 
-#SAVEPLOTS
-3600.0		dt for writing restart files
-1		how many output files do you want
-3DALL		output style
-3600.0		dt for output
+# ----------------------------------------------------------------------
+#STATISTICALMODELSONLY
+F		if you want to run with msis and iri only (i.e. not GITM)
+1800.0		time step to take if you run with msis and iri
 
 #ELECTRODYNAMICS
 60.0		how often to update potential
 60.0		how often to update aurora and euv
 
-#ALTITUDE
-000.0		minimum altitude to use
-300.0		maximum altitude to use (ignored unless the following is F)
-F		use stretched grid
+#KP
+1.0
 
-#TOPOGRAPHY
-F			If you want to include topography
-80.0			Altitude at which the vertical grid becomes consistent
-
-#DAMPING
-T			Turn on vertical velocity damping term in vertical_solver
-	
-#INITIAL
-T		initialize thermosphere using MSIS
-F		initialize ionosphere using IRI
-100.0		if msis is false, then this is the temperature at the base
-250.0		if msis is false, then this is the temperature at the top
-140.0		if msis is false, then this altitude of the temperature change
-20.0		if msis is false, then this width of the temperature change
-1.17e18		CO2
-4.03e15		CO
-2.31e15		O
-3.26e16		N2
-
-#APEX
-F		Use apex magnetic coordinate system
+#CRUSTAL
+T   UseCrustalFields
 
 #AMIEFILES
-none		northern hemisphere amie file
-none		southern hemisphere amie file
+none      northern hemisphere amie file
+none      southern hemisphere amie file
+
+# ----------------------------------------------------------------------
+#DAMPING
+T      Turn on vertical velocity damping term in vertical_solver
+
+#DUST
+0.5
+0.003
+
+#INITIAL
+T               initialize thermosphere using MSIS
+F               initialize ionosphere using IRI
+100.0           if msis is false, then this is the temperature at the base
+250.0           if msis is false, then this is the temperature at the top
+140.0           if msis is false, then this altitude of the temperature change
+20.0            if msis is false, then this width of the temperature change
+1.17e18         CO2
+4.03e15         CO
+2.31e15         O
+3.26e16         N2
+2.00e20         O2
+2.40e21         Ar
+3.20e17         He
 
 #F107
-150.0		f10.7
-150.0		f10.7 averaged over 81 days
+125		f10.7
+125		f10.7 averaged over 81 days
 
-#HPI
-1.0		hemispheric power
-
-#KP
-1.0		kp
-
-#SOLARWIND
-0.0		IMF Bx
-0.0		IMF By
--20.0		IMF Bz
-400.0		Solar wind Vx
+EUV_DATA
+T
+T
+UA/DataIn/fismdaily.dat
 
 #THERMO
 T		 UseSolarHeating
 F		 UseJouleHeating
 F		 UseAuroralHeating
 F		 UseNOCooling
-F		 UseOCooling
+T		 UseOCooling
 T		 UseConduction
-T		 UseTurbulentConduction
+F		 UseTurbulentConduction
 F		 UseUpdatedTurbulentConduction
-1.0		 EddyScalingFactor
-
-#VERTICALSOURCES
-F                UseEddyInSolver
-F                UseNeutralFrictionInSolver
-200.0
+1.0	 EddyScalingFactor
 
 #WAVEDRAG
-F               UseStressHeating
+F           UseStressHeating
+
+#VERTICALSOURCES
+T           UseEddyInSolver
+T           UseFrictionInSolver
+25.0
 
 #EDDYVELOCITY
-F               UseBoquehoAndBlelly
-T               UseEddyCorrection
+F           UseBoquehoAndBlelly
+F           UseEddyCorrection
+
+#TIDES
+F
+F
+F
+F
+
+#GSWMCOMP
+F
+F
+F
+F
 
 #FORCING
 T		UsePressureGradient
@@ -146,11 +163,11 @@ T		UseCoriolis
 T		UseGravity
 
 #IONFORCING
-T               UseExB
-T               UseIonPressure
-T               UseGravity
-T               UseNeutralDrag
-F		UseDynamo
+T   UseExB                 (logical)
+T   UseIonPressureGradient (logical)
+T   UseIonGravity          (logical)
+T   UseNeutralDrag         (logical)
+F   UseDynamo              (logical)
 
 #CHEMISTRY
 T		UseIonChemistry
