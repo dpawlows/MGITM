@@ -52,3 +52,8 @@ and compilation.
 Installing and compiling results in files that are created that
 are system dependent and should not be tracked in the git repository.
 Such files are listed in the `.gitignore` file in the installation directory.
+
+GitHub
+------
+
+For more information on using GitHub with this project, see: https://docs.google.com/document/d/1ZxupN-aDTWsYAqoM0ey6Q5T7bdTqQNhEk__6_Mm1txM/edit?usp=sharing
