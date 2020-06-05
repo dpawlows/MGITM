@@ -1,6 +1,6 @@
 #!/usr/bin/perl -i
-#  Copyright (C) 2002 Regents of the University of Michigan, 
-#  portions used with permission 
+#  Copyright (C) 2002 Regents of the University of Michigan,
+#  portions used with permission
 #  For more information, see http://csem.engin.umich.edu/tools/swmf
 use strict;
 
@@ -38,7 +38,7 @@ our $DIR = `/bin/pwd` or die "$ERROR_ could not obtain DIR\n"; chop $DIR;
 our $Machine = `hostname`; chop($Machine); $Machine =~ s/\..*//;
 
 # remove numbers from the machine name
-$Machine =~ s/\d+$//; 
+$Machine =~ s/\d+$//;
 
 # These are either obtained from the calling script or set here
 our $Component;             # The SWMF component the code is representing
@@ -60,7 +60,7 @@ our $CompilerC = "gcc_mpicc";
 $CompilerC = $1 if $Compiler =~ s/,(.+)//;
 
 # These are always obtained from the calling script
-our $MakefileDefOrig;       # Original Makefile.def 
+our $MakefileDefOrig;       # Original Makefile.def
 our @Arguments;             # Arguments obtained from the caller script
 
 # The arguments not handled by this script are provided to the caller
@@ -97,12 +97,12 @@ my $H5pcc = "h5pcc";
 my $HypreDefinition = "# HYPRE library definitions
 HYPRELIB     = -L\${UTILDIR}/HYPRE/lib -lHYPRE
 HYPRESEARCH  = -I\${UTILDIR}/HYPRE/include
-";             	    
+";
 
 # This string should be added into Makefile.conf when Fishpak is enabled
-my $FishpakDefinition = "# Fishpak library definitions                               
+my $FishpakDefinition = "# Fishpak library definitions
 FISHPAKSEARCH  = -I\${UTILDIR}/FISHPAK/lib
-FISHPAKLIB     = -L\${UTILDIR}/FISHPAK/lib -lFISHPAK           
+FISHPAKLIB     = -L\${UTILDIR}/FISHPAK/lib -lFISHPAK
 ";
 
 
@@ -148,7 +148,7 @@ foreach (@Arguments){
 			       $IsComponent=0 if $value =~ /^=s/i;
 			       $Install=1;                      next};
     if(/^-uninstall$/i)       {$Uninstall=1;                    next};
-    if(/^-compiler=(.*)$/i)   {$Compiler=$1; 
+    if(/^-compiler=(.*)$/i)   {$Compiler=$1;
 			       $CompilerC=$1 if $Compiler =~ s/,(.+)//;
 			       $IsCompilerSet=1;  next};
     if(/^-compiler$/i)        {$ShowCompiler=1;                 next};
@@ -164,7 +164,7 @@ foreach (@Arguments){
     if(/^-nofishpak$/i)       {$NewFishpak="no";                next};
     if(/^-spice=(.*)$/i)      {$NewSpice=$1;                    next};
     if(/^-nospice$/i)         {$NewSpice="no";                  next};
-    if(/^-O[0-5]$/i)          {$NewOptimize=$_;                 next};  
+    if(/^-O[0-5]$/i)          {$NewOptimize=$_;                 next};
     if(/^-g(rid)?$/)          {$ShowGridSize=1;                 next};
     if(/^-g(rid)?=([\d,]+)$/) {$NewGridSize=$+;                 next};
 
@@ -195,6 +195,9 @@ if($Uninstall){
 	&shell_command("rm -f Makefile.def Makefile.conf dataCRASH ".
 		       "src*/$MakefileDepend src*/$MakefileRules");
 	&shell_command("rm -f data") if -l "data";
+	if($Planet eq 'Earth'){
+		&shell_command("cd srcData; rm MarsMagField4dim.dat; cd ..")
+	}
 	exit 0;
     }
 }
@@ -264,17 +267,17 @@ if($NewPrecision and $NewPrecision ne $Precision){
 &set_mpi_ if $NewMpi and $NewMpi ne $Mpi;
 
 # Link with HDF5 library is required
-&set_hdf5_ 
+&set_hdf5_
     if ($Install and not $IsComponent) or ($NewHdf5 and $NewHdf5 ne $Hdf5);
 
 # Link with HYPRE library is required
 &set_hypre_ if $NewHypre and $NewHypre ne $Hypre;
 
-# Link with FISHPAK library is required 
+# Link with FISHPAK library is required
 &set_fishpak_ if $NewFishpak and $NewFishpak ne $Fishpak;
 
 # Link with SPICE library is required
-&set_spice_ 
+&set_spice_
     if ($Install and not $IsComponent) or ($NewSpice and $NewSpice ne $Spice);
 
 # Get new settings
@@ -335,11 +338,11 @@ sub get_settings_{
 	      close MAKEFILE;
 	      redo TRY;
 	  }
-	  $Compiler = $1 if 
+	  $Compiler = $1 if
 	      /^\#\s*Fortran language.*Makefile\.$OS\.(\S+)/i;
 	  $CompilerC= $1 if /^\#\s*C language.*:\s*Makefile\.(\S+)/;
 
-	  $Fcompiler = $+ if 
+	  $Fcompiler = $+ if
 	      /^\s*COMPILE\.f90\s*=\s*(\$\{CUSTOMPATH_F\})?(\S+)/;
 	  $Ccompiler   = $1 if /^\s*COMPILE\.c\s*=\s*(\S+)/;
 	  $MpiCompiler = $1 if /^\s*LINK\.f90\s*=\s*(.*)/;
@@ -390,7 +393,7 @@ sub show_settings_{
 	}
     }
     print "The installation is for the $OS operating system.
-Makefile.conf was created from $MakefileConfOrig.$OS.$Compiler 
+Makefile.conf was created from $MakefileConfOrig.$OS.$Compiler
                            and $MakefileConfOrig.$CompilerC
 The selected F90 compiler is $Fcompiler.
 The selected C   compiler is $Ccompiler.
@@ -410,7 +413,7 @@ Linked with SPICE: $Spice
 sub install_code_{
 
     my $Text = $Installed ? "Reinstalling $Code" : "Installing $Code";
-    $Text .= " as $Component component" if $IsComponent;  
+    $Text .= " as $Component component" if $IsComponent;
     print "$Text\n";
 
     if($IsComponent){
@@ -443,7 +446,7 @@ sub install_code_{
 	    sleep 10;
 	    $Makefile = "$MakefileConfOrig.conf";
 	    open(IN, $Makefile) or die "$ERROR_ $Makefile is missing\n";
-	    open(OUT, ">$MakefileConf") 
+	    open(OUT, ">$MakefileConf")
 		or die "$ERROR_ could not open $MakefileConf\n";
 	    while(<IN>){
 		s/_COMPILER_/$Compiler/;
@@ -486,9 +489,9 @@ sub install_code_{
     &link_swmf_data;
 
     # Install the code
-    &shell_command("cd share; make install") 
+    &shell_command("cd share; make install")
 	if -f "share/Makefile" and not $IsComponent;
-    &shell_command("cd util; make install") 
+    &shell_command("cd util; make install")
 	if -d "util" and not $IsComponent;
     &shell_command("make install");
 
@@ -617,7 +620,7 @@ sub set_hdf5_{
 
 	# For the NAG compiler find the HDF5 include directory from h5pfc -show
 	my $H5include;
-	$H5include = $1 if ($Compiler eq "f95" or $Compiler eq "nagfor") 
+	$H5include = $1 if ($Compiler eq "f95" or $Compiler eq "nagfor")
 	    and `$H5pfc -show` =~ /( \-I\S+)/;
 
 	@ARGV = ($MakefileConf);
@@ -719,7 +722,7 @@ sub set_hypre_{
 
 sub set_fishpak_{
 
-    # Check if library is present 
+    # Check if library is present
     if($NewFishpak eq "yes" and not -d "util/FISHPAK"){
         print "Warning: util/FISHPAK is missing. Use cd util; cvs co FISHPAK\n";
         return;
@@ -739,7 +742,7 @@ sub set_fishpak_{
         }
     }
 
-    # $Fishpak will be $NewFishpak after changes                                     
+    # $Fishpak will be $NewFishpak after changes
     $Fishpak = $NewFishpak;
 
     print "Enabling FISHPAK library in $MakefileConf\n" if $Fishpak eq "yes";
@@ -747,7 +750,7 @@ sub set_fishpak_{
     if(not $DryRun){
         @ARGV = ($MakefileConf);
         while(<>){
-            # Add/remove Fishpak related definitions after MPILIB                                          
+            # Add/remove Fishpak related definitions after MPILIB
             $_ .= $FishpakDefinition if $Fishpak eq "yes" and /-lNOMPI/;
             $_ = "" if $Fishpak eq "no" and /FISHPAK/i;
             print;
@@ -756,7 +759,7 @@ sub set_fishpak_{
 
 }
 
-############################################################################## 
+##############################################################################
 
 sub set_spice_{
 
@@ -783,9 +786,9 @@ sub set_spice_{
 	    $_ = "" if $RemoveSpice and /SPICE/i;
 
 	    # Add SPICE related definitions after MPILIB
-	    $_ .= "# SPICE library\nSPICELIB = $Spice\n" 
+	    $_ .= "# SPICE library\nSPICELIB = $Spice\n"
 		if $EnableSpice and /-lNOMPI/;
-	    
+
 	    # Change SPICE related definition
 	    s/(SPICELIB\s*=\s*)\S*/$1$Spice/ if $ChangeSpice;
 
@@ -840,7 +843,7 @@ sub create_makefile_rules{
     return unless @InFile;
 
     # Hash for general configuration settings
-    my %Settings = (OS         => $OS, 
+    my %Settings = (OS         => $OS,
 		    Compiler   => $Compiler,
 		    Mpi        => $Mpi,
 		    Debug      => $Debug,
@@ -869,7 +872,7 @@ sub create_makefile_rules{
 	# Evaluate conditional rules in Makefile.RULES.all
 	my $Condition;
 	while(<INFILE>){
-	    next if /^\#/ or /^\s/; 
+	    next if /^\#/ or /^\s/;
 	    $Condition = $_;
 
 	    # Replace $xxx variables with their actually set values
@@ -919,7 +922,7 @@ sub link_swmf_data{
 
     return if -d "data";
     my $SwmfData = "";
-    foreach ("$DIR/SWMF_data", "$DIR/../../SWMF_data", 
+    foreach ("$DIR/SWMF_data", "$DIR/../../SWMF_data",
 	     "$ENV{HOME}/SWMF_data", "/csem1/SWMF_data"){
 	next unless -d $_;
 	$SwmfData = $_;
@@ -944,7 +947,7 @@ sub shell_command{
 
     return if $DryRun;
 
-    $ErrorCode = system($command) / 256; 
+    $ErrorCode = system($command) / 256;
 
     die "$ERROR Could not execute command=$command: code = $ErrorCode\n"
 	if $ErrorCode and $IsStrict;
@@ -955,7 +958,7 @@ sub shell_command{
 #!QUOTE: \subsection{Installation and Configuration with Config.pl}
 #!ROUTINE: Config.pl - (un)installation and configuration of SWMF/components
 #!DESCRIPTION:
-# The Config.pl provides a single uniform interface towards 
+# The Config.pl provides a single uniform interface towards
 # installation, configuration and uninstallation for the SWMF and its
 # components.
 #
@@ -964,19 +967,19 @@ sub shell_command{
 #EOP
 sub print_help_{
 
-    print 
+    print
 #BOC
 "Config.pl can be used for installing and setting various options for SWMF
 or its components. The core of the script is in share/Scripts/Config.pl,
-and this is used by the Config.pl scripts in the main SWMF and component 
-directories. This help message starts with the options/features/examples 
+and this is used by the Config.pl scripts in the main SWMF and component
+directories. This help message starts with the options/features/examples
 of the core script, and continues with the additional features (if any)
 of the SWMF/component script (starting with the text 'Additional ...').
 
-This script edits the appropriate Makefile-s, copies files and executes 
+This script edits the appropriate Makefile-s, copies files and executes
 shell commands. The script can also show the current settings.
 
-Usage: Config.pl [-help] [-verbose] [-dryrun] [-show] [-compiler] 
+Usage: Config.pl [-help] [-verbose] [-dryrun] [-show] [-compiler]
                  [-install[=s|=c] [-compiler=FC[,CC] [-nompi]]
                  [-uninstall]
                  [-single|-double] [-debug|-nodebug] [-mpi|-nompi]
@@ -1035,11 +1038,11 @@ Compilation:
 
 Examples of use:
 
-Show current settings: 
+Show current settings:
 
     Config.pl
 
-Show current settings with more detail: 
+Show current settings with more detail:
 
     Config.pl -show
 
