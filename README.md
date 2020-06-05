@@ -8,9 +8,9 @@ Installation
 ------------
 `Config.pl -install -mars [-compiler=compiler]`
 
-The configuration script is capable of detecting the appropriate
-compiler on some systems. However, you may opt to specify the
-appropriate compiler (e.g. -compiler=gfortran)
+    The configuration script is capable of detecting the appropriate
+    compiler on some systems. However, you may opt to specify the
+    appropriate compiler (e.g. -compiler=gfortran)
 
 Compilation
 -----------
@@ -38,3 +38,17 @@ file is set up for 3D mode. To change it to 1D, the variables `nLons` and `nLats
 2. run/UAM.in: This is the input file and is changed regularly. It
 also defaults to 3D mode. To change it to 1D, the inputs for
 `lons` and `lats` under `#GRID` should be set to 1 and the minimum and maximum latitude values should be the same.
+
+Uninstalling
+------------
+Config.pl -uninstall
+
+This command deletes all object files created upon compilation and
+removes links that were created during the initial installation
+and compilation.
+
+.gitignore
+---------
+Installing and compiling results in files that are created that
+are system dependent and should not be tracked in the git repository.
+Such files are listed in the `.gitignore` file in the installation directory.
