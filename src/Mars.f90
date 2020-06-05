@@ -28,7 +28,7 @@ subroutine fill_photo(photoion, photoabs, photodis)
 ! -- supporting parameters and inputs (1)
 ! -- supporting array declarations (real, integer) (1)
 ! Modified by K. J. Roeten :F2019 and W2020
-! Updated by S. W. Bougher :SS2020 V17c code 
+! Updated by S. W. Bougher :SS2020 V17c code
 ! -- calc_gw replaced by E. Yigit & A. Medvedev scheme for Mars
 
   use ModPlanet
@@ -884,7 +884,7 @@ end subroutine init_isochem
 
 
    ! ----------------------------------------------------------------------
-   
+
    subroutine calc_gw(iBlock)
 
      use ModInputs
@@ -950,7 +950,7 @@ end subroutine init_isochem
      integer :: ilon,ilat,ialt
 ! Local Variables (for EGWD2 1-D code loops)
       INTEGER :: i, j, k, n, nd, m, il
- 
+
   !  -----------------------------------------------------------------
   ! Input 3-D fields (8) recast from MarsGITM (4-D+ fields)
   ! Setup section:  from MGITM inputs  (all mks units!)
@@ -960,18 +960,18 @@ end subroutine init_isochem
        TN, UN, VN, PN, CPN, HTN, KMN, GRAVN
 
   real,dimension(1:nLons,1:nLats,1:nAlts) ::    &
-       mnd, vmro, vmrco, vmrn2, vmrco2, mmean 
+       mnd, vmro, vmrco, vmrn2, vmrco2, mmean
 
   !  -----------------------------------------------------------------
   ! Output 3-D fields (4) later recast from EGWD2 code into MarsGITM
   ! (4-D+ fields), (all mks units!)
   !  -----------------------------------------------------------------
 
-! Output args: for passing to duv.F 
-      real,dimension(1:nLons,1:nLats,1:nAlts) :: udrag, vdrag  
+! Output args: for passing to duv.F
+      real,dimension(1:nLons,1:nLats,1:nAlts) :: udrag, vdrag
      !  zonal and meridional momentum drag (m/s/s)
 
-! Output args: for passing to dt.F 
+! Output args: for passing to dt.F
       real,dimension(1:nLons,1:nLats,1:nAlts) :: gwheat_ir, gwheat_dif
      !  irreversible heating (K/s), differential heating/cooling (K/s)
 
@@ -1091,7 +1091,7 @@ end subroutine init_isochem
        TempUnit(1:nLons,1:nLats,1:nAlts)
 
 
-  !  Mars GITM zonal/meridional velocities in m/sec (on its grid) ---  
+  !  Mars GITM zonal/meridional velocities in m/sec (on its grid) ---
 
   UN(1:nLons,1:nLats,1:nAlts) = &
            Velocity(1:nLons,1:nLats,1:nAlts,iEast_,iBlock)+1.0E-4
@@ -1110,7 +1110,7 @@ end subroutine init_isochem
   HTN(1:nLons,1:nLats,1:nAlts) = &
         Altitude_GB(1:nLons,1:nLats,1:nAlts,iBlock)
 
- 
+
   !     Mars GITM cp in J/kg/K (on its grid) -------------------
   !     (same units as LMD-MGCM cooling code, and will vary with altitude)
   !     (cpco2 = 8.4e+06 erg/gm/K = 0.84 J/gm/K = 8.4e-04 J/kg/K)
@@ -1190,7 +1190,7 @@ end subroutine init_isochem
 !-----------------------------------------------------
 !
 
-!  Initialize variables 
+!  Initialize variables
 
      do k=1,ht_dim
 	 flux_tot(k)   = 0.
@@ -1331,9 +1331,9 @@ end subroutine init_isochem
 
          var_tot(SLEV) = var_tot(SLEV) + upSq(SLEV,i)
 
-	sigmaSq(SLEV,i)=0. 
+	sigmaSq(SLEV,i)=0.
 	sigmaSq(SLEV+1,i)=0.
-	
+
 
       ENDDO SPECTRUM2
 
@@ -1363,7 +1363,7 @@ end subroutine init_isochem
              fac2      = 2.*brunt(n)/(kx*c_int(n,i)*c_int(n,i))
              beta(n,i) = fac1*(m_vis(n)+v_eddy(n))  &
                         + fac2*(vin(n)+alpha(n))
-		
+
              NON_LINEARITY : DO j = 1, nh
                 c_int(n,j) = phasespeed(j) - u_source_m(n)
                 IF (ABS(c_int(n,i)) .GE. ABS(c_int(n,j))) THEN
@@ -9844,3 +9844,160 @@ subroutine ERRORS (ierr,varerr)
       end subroutine rhist_03
 
 ! **************************************************************
+
+subroutine ReadMagField
+
+  use ModGITM
+  use ModInputs
+
+  implicit None
+
+!  real, intent(out) :: altzero2(nLons,nLats,nBlocks)
+
+  integer, parameter :: MagLons = 360 , MagLats=180, MagAlts=89, Maxdim=4
+
+  real, dimension(MagAlts,MagLons,MagLats, Maxdim) :: MagField
+  !real, dimension(1:54,1:54,1:124) :: Magdata64
+  !real, dimension(1:89, 1:360,1:180,1) :: MagFieldMagnitude
+  integer :: ilon, ilat, ialt, iblock, Mlat1, MLat2,i,j,k,jlon,jlat,jalt,Magdim
+  integer :: iilon,iialt,iilat, ii, jj, kk, tt, Magdimfix, iilon2
+  real :: Blat, Blon,Balt, latfind,lonfind,Altfind,c00,c10,c01,c11,c0,c1,c
+  real, dimension(MagLons) :: MagFieldLon
+  real, dimension(MagLats) :: MagFieldLat
+  real, dimension(MagAlts) :: MagFieldAlt
+
+
+  !!!! Longitude: [1:360], Latitude: [-89,90]
+  !!!! Unsure if these should be centered. Need to compare
+  !!!! datafile with actual to determine.
+
+  do i=1,MagAlts
+     MagFieldAlt(i)=80+(2.5*(i-1))
+  enddo
+  do j=1,MagLons
+     MagFieldLon(j)=j
+  enddo
+  do k=1,MagLats
+     MagFieldLat(k)=(k)-90
+  enddo
+
+  write(*,*) "==> Now Reading Mars Magnetic Field"
+  open(unit=42, file='DataIn/MarsMagField4dim.dat', action='read',access='sequential', status="old")
+  !if (iDebugLevel > 4) write(*,*) "=====> Reading Magnetic Field"
+  !PRINT *, iInputUnit_
+read(42,*) MagField
+close(42)
+
+  do iBlock = 1, nBlocks
+     do Magdim =1, Maxdim
+        do ialt = 1, nAlts
+           do iLon = 1, nLons
+              do iLat = 1, nLats
+
+                 LonFind = Longitude(iLon,iBlock)*180/pi
+                 LatFind = latitude(iLat,iBlock)*180/pi
+                 AltFind = Altitude_GB(ilon,ilat,ialt,iBlock)/1000
+ !                Print*, Altfind,ialt
+                ! Print*, LonFind
+                if (LonFind < MagFieldLon(1)) then
+                  !In between 0 deg and first lon
+                  iiLon = MagLons
+                  iiLon2 = 1
+
+                  BLon = (LonFind-0)/&
+                       (MagFieldLon(iiLon2)-0)
+                else
+                   do jLon = 1, MagLons-1
+
+
+                      if (MagFieldLon(jLon) <= LonFind .and. &
+                           MagFieldLon(jLon+1) > LonFind) then
+                         iiLon = jLon
+                         iiLon2 = iiLon + 1
+                         BLon = (LonFind-MagFieldLon(jLon))/&
+                              (MagFieldLon(iiLon2)-MagFieldLon(iiLon))
+                       !  Print*, MagFieldLon(jLon), LonFind, MagFieldLon(jlon+1),&
+
+
+
+                      endif
+
+                    enddo
+                  end if
+                  if (LatFind < MagFieldLat(1)) then
+                    !In between -90 and first lat, using 1st lat
+                    iiLat = 1
+                    BLat = 0
+
+                  else
+                   do jLat = 1, MagLats-1
+
+                      if (MagFieldlat(jlat) <= LatFind .and. &
+                           MagFieldLat(jlat+1) > LatFind) then
+                         iiLat = jLat
+                         BLat = (LatFind-MagFieldLat(jLat))/&
+                              (MagFieldLat(jlat+1)-MagFieldLat(jlat))
+                      ! Print*, Blat
+                      endif
+                   enddo
+                 end if
+                 do jAlt=1, MagAlts-1
+
+                    if (MagFieldAlt(jAlt)<= AltFind .and. &
+                         MagFieldAlt(jAlt+1) > AltFind) then
+                       iiAlt=jAlt
+                       BAlt =  (AltFind-MagFieldAlt(jAlt))/&
+                            (MagFieldAlt(jAlt+1)-MagFieldLat(jAlt))
+                      ! Print*, BAlt
+
+                   endif
+                enddo
+            !  if (Magdim==1) then
+           !       Magdimfix=2
+          !        EXIT
+         !     else if (Magdim==2) then
+        !          Magdimfix=1
+       !           EXIT
+      !        else if (Magdim==3) then
+    !             Magdimfix=3
+     !             EXIT
+   !           else if (Magdim==4) then
+  !               Magdimfix=4
+ !                EXIT
+!              endif
+               if (iialt <= 0 .or. iialt > MagAlts) then
+                 B0(iLon,iLat,iAlt,Magdim,iBlock)=0
+               else
+
+                c00=MagField(iialt,iilon,iilat,Magdim)*(1-Blon) + &
+                      MagField(iialt,iilon2,iilat,Magdim)*Blon
+                 c10=MagField(iialt,iilon,iilat+1,Magdim)*(1-Blon)+ &
+                      MagField(iialt,iilon2,iilat+1,Magdim)*Blon
+                 c01=MagField(iialt+1,iilon,iilat,Magdim)*(1-Blon)+ &
+                      MagField(iialt+1,iilon2,iilat, Magdim)*Blon
+                c11=MagField(iialt+1,iilon,iilat+1,Magdim)*(1-Blon)+ &
+                      Magfield(iialt+1,iilon2,iilat+1,Magdim)*Blon
+                 c0= c00*(1-Blat)+c10*Blat
+                 c1= c01*(1-Blat)+c11*Blat
+                 c= c0*(1-Balt)+c1*Balt
+                 B0(iLon,iLat,iAlt,Magdim,iBlock)=c*1.8
+                ! if(iproc==0)then
+                  ! write(*,*)c
+                  ! write(*,*)Magdim
+                  ! write(*,*)iBlock
+                   !write(*,*)Magdimfix
+                   !write(*,*) B0(iLon,iLat,iAlt,1,1)
+                   !write(*,*) B0(iLon,iLat,iAlt,2,1)
+                   !write(*,*) B0(iLon,iLat,iAlt,3,1)
+                   !write(*,*) B0(iLon,iLat,iAlt,4,1)
+                ! endif
+
+              endif
+
+           enddo
+        enddo
+     enddo
+   enddo
+  enddo
+
+end subroutine ReadMagField
