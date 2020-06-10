@@ -1580,6 +1580,7 @@ end subroutine init_isochem
     real :: COOLCORRECTION(LL_LAYERS) !zero's out longwave cooling where
     !radcool is working
     integer ngwi(L_NSPECTI)
+    real :: alt1d(nalts)
 
     ! Internal fields recast from MarsGITM
 
@@ -1597,15 +1598,16 @@ end subroutine init_isochem
     P(1:nAlts) = &
          Pressure(iLon,iLat,1:nAlts,iBlock)*0.01
 
+
     !C              RADIATIVE CALCULATIONS.
 
     !C  Fill the new radiation code variables.
     !C  PLEV and TLEV are the pressure and temperatures on a vertical grid
     !C  that the new radiation code uses.
-
+    alt1D = altitude_GB(iLon,iLat,1:nAlts,iBlock)
     CALL FILLPT(P,T,L_LEVELS,L_LAYERS,&
          SurfaceTemp(iLon,iLat,iBlock),altmin,&
-         altitude_GB(iLon,iLat,1:nAlts,iBlock),&
+         alt1d,&
          PLEV,TLEV,PMID,TMID,pressure(iLon,iLat,0,iBlock),&
          altitude_GB(iLon,iLat,0,iBlock))
     !
