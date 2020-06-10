@@ -9884,11 +9884,13 @@ subroutine ReadMagField
   enddo
 
   write(*,*) "==> Now Reading Mars Magnetic Field"
-  open(unit=42, file='DataIn/MarsMagField4dim.dat', action='read',access='sequential', status="old")
+  open(unit=42, form="unformatted", file='DataIn/CrustalField.dat', action='read')
+
   !if (iDebugLevel > 4) write(*,*) "=====> Reading Magnetic Field"
   !PRINT *, iInputUnit_
-read(42,*) MagField
-close(42)
+
+  read(42) MagField
+  close(42)
 
   do iBlock = 1, nBlocks
      do Magdim =1, Maxdim
