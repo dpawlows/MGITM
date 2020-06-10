@@ -6,6 +6,7 @@ subroutine advance_vertical(iLon,iLat,iBlock)
   use ModSources, only: EUVHeating, KappaEddyDiffusion
   use ModInputs, only: UseIonAdvection, iDebugLevel
   use ModUserGITM
+  use ModTime, only: iStep !!Temporary for writing; remove
   use ModVertical, ONLY: &
        LogRho, &
        cMax1      => cMax,&
@@ -60,6 +61,7 @@ subroutine advance_vertical(iLon,iLat,iBlock)
   !!!! CHANGE !!!!
 
   Temp    = Temperature(iLon,iLat,:,iBlock)*TempUnit(iLon,iLat,:)
+
   do iSpecies = 1, nSpecies
      LogNS1(:,iSpecies)  = log(NDensityS(iLon,iLat,:,iSpecies,iBlock))
      VertVel(:,iSpecies) = VerticalVelocity(iLon,iLat,:,iSpecies,iBlock)
