@@ -51,7 +51,7 @@ subroutine calc_GITM_sources(iBlock)
 
   ChemicalHeatingRate = 0.0
   ChemicalHeatingSpecies = 0.0
-  call calc_eddy_diffusion_coefficient(iBlock)  
+  call calc_eddy_diffusion_coefficient(iBlock)
   call calc_rates(iBlock)
   call calc_collisions(iBlock)
 
@@ -102,7 +102,7 @@ subroutine calc_GITM_sources(iBlock)
 
      tmp = Collisions(1:nLons,1:nLats,1:nAlts,iVIN_) * &
           RhoI(1:nLons,1:nLats,1:nAlts)/ &
-          Rho(1:nLons,1:nLats,1:nAlts,iBlock) 
+          Rho(1:nLons,1:nLats,1:nAlts,iBlock)
 
      ! After reading the Thayer paper, this term needs to be taken
      ! out, since it is approximately 1/2, which is the contribution
@@ -142,17 +142,17 @@ subroutine calc_GITM_sources(iBlock)
 
      tmp2 = Rho(1:nLons, 1:nLats,0:nAlts+1, iBlock) * &
           cp(1:nLons, 1:nLats,0:nAlts+1, iBlock)
-     
+
      Prandtl = 0.0
-  
+
      call calc_conduction(iBlock, &
           Temperature(1:nLons, 1:nLats,-1:nAlts+2, iBlock) * &
           TempUnit(1:nLons, 1:nLats,-1:nAlts+2), &
           KappaTemp(1:nLons, 1:nLats,0:nAlts+1, iBlock), &
           tmp2, &
           MoleConduction)
-     
-      Conduction = MoleConduction/TempUnit(1:nLons, 1:nLats,1:nAlts) 
+
+      Conduction = MoleConduction/TempUnit(1:nLons, 1:nLats,1:nAlts)
 
       if (UseTurbulentCond) then
 
@@ -177,12 +177,12 @@ subroutine calc_GITM_sources(iBlock)
 
             do iAlt = -1,0
                GammaScale(1:nLons,1:nLats,iAlt) = &
-                    GammaScale(1:nLons,1:nLats,1) 
+                    GammaScale(1:nLons,1:nLats,1)
             enddo
 
             do iAlt = nAlts,nAlts+2
                GammaScale(1:nLons,1:nLats,iAlt) = &
-                    GammaScale(1:nLons,1:nLats,nAlts) 
+                    GammaScale(1:nLons,1:nLats,nAlts)
             enddo
 
             Theta(1:nLons,1:nLats,-1:nAlts+2) = &
@@ -191,8 +191,8 @@ subroutine calc_GITM_sources(iBlock)
                  (P0(1:nLons,1:nLats,-1:nAlts+2)/ &
                  Pressure(1:nLons,1:nLats,-1:nAlts+2,iBlock))**&
                  GammaScale(1:nLons,1:nLats,-1:nAlts+2)
- 
-!! Prandtl is the Eddy Heat Conduction Coefficient After Hickey et al [2000] 
+
+!! Prandtl is the Eddy Heat Conduction Coefficient After Hickey et al [2000]
 
             Prandtl = &
                  KappaEddyDiffusion(1:nLons,1:nLats,0:nAlts+1,iBlock) * &
@@ -215,10 +215,10 @@ subroutine calc_GITM_sources(iBlock)
                  (1.0/EddyScaling)* &
                  (Temperature(1:nLons,1:nLats,1:nAlts,iBlock) / &
                  Theta(1:nLons,1:nLats,1:nAlts))*EddyCond
-            
-         else  !! Use The Old Version 
 
-            Prandtl = & 
+         else  !! Use The Old Version
+
+            Prandtl = &
                  KappaEddyDiffusion(1:nLons, 1:nLats,0:nAlts+1, iBlock) * &
                  Rho(1:nLons, 1:nLats,0:nAlts+1, iBlock) * &
                  Cp(1:nLons, 1:nLats,0:nAlts+1, iBlock)
@@ -231,7 +231,7 @@ subroutine calc_GITM_sources(iBlock)
                  EddyCond)
 
              Conduction = Conduction + &
-                   EddyCond/TempUnit(1:nLons, 1:nLats,1:nAlts) 
+                   EddyCond/TempUnit(1:nLons, 1:nLats,1:nAlts)
 
             tmp3 = &
                  Prandtl      / &
@@ -244,10 +244,10 @@ subroutine calc_GITM_sources(iBlock)
                  tmp3, &
                  tmp2, &
                  EddyCondAdia)
-   
+
              Conduction = Conduction - &
                    EddyCondAdia/TempUnit(1:nLons, 1:nLats,1:nAlts)
-   
+
          endif  !! UseUpdatedTurbulentCond Check
       endif  ! THE USETurbulentCond Check
 
@@ -273,7 +273,7 @@ subroutine calc_GITM_sources(iBlock)
      enddo
 
      ! F_iondrag = rho_i/rho * Vis * (Ui-Un)
-     ! where Vis = Vin *(Ns/N)  
+     ! where Vis = Vin *(Ns/N)
 
      do iSpecies = 1, nSpecies
         tmp = Collisions(1:nLons,1:nLats,1:nAlts,iVIN_)*&
@@ -315,10 +315,10 @@ subroutine calc_GITM_sources(iBlock)
                   -1.0*Gravity_GB(iLon,iLat,iAlt,iBlock)*&
                    (1.0 -  (MeanMajorMass(iLon,iLat,iAlt)/Mass(iSpecies)) )
 
-               enddo 
-             enddo 
-           enddo 
-         enddo 
+               enddo
+             enddo
+           enddo
+         enddo
 
      else
 
@@ -331,10 +331,10 @@ subroutine calc_GITM_sources(iBlock)
                   NDensityS(iLon,iLat,iAlt,iSpecies,iBlock)/&
                    NDensity(iLon,iLat,iAlt,iBlock)
 
-               enddo 
-             enddo 
-           enddo 
-         enddo 
+               enddo
+             enddo
+           enddo
+         enddo
 
          LogConS(1:nLons,1:nLats,-1:nAlts+2,1:nSpecies) = &
              alog(ConS(1:nLons,1:nLats,-1:nAlts+2,1:nSpecies) )
@@ -342,13 +342,13 @@ subroutine calc_GITM_sources(iBlock)
          do iSpecies = 1, nSpecies
            do iAlt = 1, nAlts
                  GradLogConS(1:nLons,1:nLats,iAlt,  iSpecies) = &
-               (-1.0*LogConS(1:nLons,1:nLats,iAlt+2,iSpecies) + & 
+               (-1.0*LogConS(1:nLons,1:nLats,iAlt+2,iSpecies) + &
                  8.0*LogConS(1:nLons,1:nLats,iAlt+1,iSpecies) - &
                  8.0*LogConS(1:nLons,1:nLats,iAlt-1,iSpecies) + &
                  1.0*LogConS(1:nLons,1:nLats,iAlt-2,iSpecies) )/&
                   (12.0*dAlt_GB(1:nLons,1:nLats,iAlt,iBlock))
-           enddo 
-         enddo 
+           enddo
+         enddo
 
      endif
 
@@ -383,7 +383,7 @@ subroutine calc_GITM_sources(iBlock)
            do iAlt = 1, nAlts
               NeutralFriction(iLon, iLat, iAlt, 1:nSpecies) = &
                    nVel(iAlt,1:nSpecies) - VerticalVelocity(iLon,iLat,iAlt,1:nSpecies,iBlock)
-!              
+!
 !              EddyCoefRatio(iLon, iLat, iAlt, 1:nSpecies,iBlock) = &
 !                    NF_EddyRatio(iAlt,1:nSpecies)
 !
@@ -439,15 +439,17 @@ subroutine calc_GITM_sources(iBlock)
 
   if (iDebugLevel > 4) write(*,*) "=====> calc_ion_v", iproc
 
-  call get_potential(iBlock)
-  call calc_efield(iBlock)
-  call aurora(iBlock)
-  if (UseAuroralHeating) then
-     AuroralHeating = AuroralHeatingRate(:,:,:,iBlock) / &
-          TempUnit(1:nLons,1:nLats,1:nAlts) / cp(:,:,1:nAlts,iBlock) / &
-          rho(1:nLons,1:nLats,1:nAlts, iBlock)
-  else
-     AuroralHeating = 0.0
+  if (isEarth) then
+    call get_potential(iBlock)
+    call calc_efield(iBlock)
+    call aurora(iBlock)
+    if (UseAuroralHeating) then
+       AuroralHeating = AuroralHeatingRate(:,:,:,iBlock) / &
+            TempUnit(1:nLons,1:nLats,1:nAlts) / cp(:,:,1:nAlts,iBlock) / &
+            rho(1:nLons,1:nLats,1:nAlts, iBlock)
+    else
+       AuroralHeating = 0.0
+    endif
   endif
 
   call calc_ion_v(iBlock)
