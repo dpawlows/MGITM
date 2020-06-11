@@ -226,8 +226,6 @@ sub set_planet{
           $nLat = 9;
           $nAlt = 120;
           $MaxBlock = 4;
-          print "Extracting Mars Magfield:\n";
-          &shell_command("cd srcData ; tar -xjvf MarsMagField4dim.tar.bz2");
 
     } elsif($Planet eq 'Titan'){
           $nLon = 2;
