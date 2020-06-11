@@ -91,6 +91,9 @@ none      southern hemisphere amie file
 #DAMPING
 T      Turn on vertical velocity damping term in vertical_solver
 
+#GRAVITYWAVE
+F       UseGravityWave
+
 #DUST
 0.5
 0.003
