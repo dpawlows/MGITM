@@ -28,7 +28,7 @@ subroutine fill_photo(photoion, photoabs, photodis)
 ! -- supporting parameters and inputs (1)
 ! -- supporting array declarations (real, integer) (1)
 ! Modified by K. J. Roeten :F2019 and W2020
-! Updated by S. W. Bougher :SS2020 V17c code 
+! Updated by S. W. Bougher :SS2020 V17c code
 ! -- calc_gw replaced by E. Yigit & A. Medvedev scheme for Mars
 
   use ModPlanet
@@ -884,7 +884,7 @@ end subroutine init_isochem
 
 
    ! ----------------------------------------------------------------------
-   
+
    subroutine calc_gw(iBlock)
 
      use ModInputs
@@ -950,7 +950,7 @@ end subroutine init_isochem
      integer :: ilon,ilat,ialt
 ! Local Variables (for EGWD2 1-D code loops)
       INTEGER :: i, j, k, n, nd, m, il
- 
+
   !  -----------------------------------------------------------------
   ! Input 3-D fields (8) recast from MarsGITM (4-D+ fields)
   ! Setup section:  from MGITM inputs  (all mks units!)
@@ -960,18 +960,18 @@ end subroutine init_isochem
        TN, UN, VN, PN, CPN, HTN, KMN, GRAVN
 
   real,dimension(1:nLons,1:nLats,1:nAlts) ::    &
-       mnd, vmro, vmrco, vmrn2, vmrco2, mmean 
+       mnd, vmro, vmrco, vmrn2, vmrco2, mmean
 
   !  -----------------------------------------------------------------
   ! Output 3-D fields (4) later recast from EGWD2 code into MarsGITM
   ! (4-D+ fields), (all mks units!)
   !  -----------------------------------------------------------------
 
-! Output args: for passing to duv.F 
-      real,dimension(1:nLons,1:nLats,1:nAlts) :: udrag, vdrag  
+! Output args: for passing to duv.F
+      real,dimension(1:nLons,1:nLats,1:nAlts) :: udrag, vdrag
      !  zonal and meridional momentum drag (m/s/s)
 
-! Output args: for passing to dt.F 
+! Output args: for passing to dt.F
       real,dimension(1:nLons,1:nLats,1:nAlts) :: gwheat_ir, gwheat_dif
      !  irreversible heating (K/s), differential heating/cooling (K/s)
 
@@ -1091,7 +1091,7 @@ end subroutine init_isochem
        TempUnit(1:nLons,1:nLats,1:nAlts)
 
 
-  !  Mars GITM zonal/meridional velocities in m/sec (on its grid) ---  
+  !  Mars GITM zonal/meridional velocities in m/sec (on its grid) ---
 
   UN(1:nLons,1:nLats,1:nAlts) = &
            Velocity(1:nLons,1:nLats,1:nAlts,iEast_,iBlock)+1.0E-4
@@ -1110,7 +1110,7 @@ end subroutine init_isochem
   HTN(1:nLons,1:nLats,1:nAlts) = &
         Altitude_GB(1:nLons,1:nLats,1:nAlts,iBlock)
 
- 
+
   !     Mars GITM cp in J/kg/K (on its grid) -------------------
   !     (same units as LMD-MGCM cooling code, and will vary with altitude)
   !     (cpco2 = 8.4e+06 erg/gm/K = 0.84 J/gm/K = 8.4e-04 J/kg/K)
@@ -1190,7 +1190,7 @@ end subroutine init_isochem
 !-----------------------------------------------------
 !
 
-!  Initialize variables 
+!  Initialize variables
 
      do k=1,ht_dim
 	 flux_tot(k)   = 0.
@@ -1331,9 +1331,9 @@ end subroutine init_isochem
 
          var_tot(SLEV) = var_tot(SLEV) + upSq(SLEV,i)
 
-	sigmaSq(SLEV,i)=0. 
+	sigmaSq(SLEV,i)=0.
 	sigmaSq(SLEV+1,i)=0.
-	
+
 
       ENDDO SPECTRUM2
 
@@ -1363,7 +1363,7 @@ end subroutine init_isochem
              fac2      = 2.*brunt(n)/(kx*c_int(n,i)*c_int(n,i))
              beta(n,i) = fac1*(m_vis(n)+v_eddy(n))  &
                         + fac2*(vin(n)+alpha(n))
-		
+
              NON_LINEARITY : DO j = 1, nh
                 c_int(n,j) = phasespeed(j) - u_source_m(n)
                 IF (ABS(c_int(n,i)) .GE. ABS(c_int(n,j))) THEN
@@ -1455,6 +1455,8 @@ end subroutine init_isochem
     enddo ! LON-loop
 ! -----------------------------------------------------------------------
 ! Stuff 3-D internal arrays back into MGITM allocated arrays for usage
+  GWDrag(1:nLons,1:nLats,1:nAlts,iUp_,iBlock) = &
+      0.0
   GWDrag(1:nLons,1:nLats,1:nAlts,iEast_,iBlock) = &
         udrag(1:nLons,1:nLats,1:nAlts)             ![m/s^2]
   GWDrag(1:nLons,1:nLats,1:nAlts,iNorth_,iBlock) = &
