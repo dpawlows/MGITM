@@ -19,84 +19,97 @@ subroutine init_b0
   call report("init_b0",1)
   call start_timing("init_b0")
 
-  AltMinIono=(2*RadialDistance_GB(1,1,-1,1) - &
-       RadialDistance_GB(1,1,1,1) - RBody)/1000.0
+  if (IsMars .and. UseCrustalField) then
 
-  do iBlock=1,nBlocks
-     if (nBlocks > 1 .and. iDebugLevel > 1) write(*,*) "==> Block : ", iBlock
-     do iAlt=-1,nAlts+2
-        if (iDebugLevel > 4) write(*,*) "=====> init_b0, alt : ", iAlt, Altitude_GB(1,1, iAlt, iBlock)/1000.0
-        do iLat=-1,nLats+2
-           do iLon=-1,nLons+2
+        Call ReadMagField
 
-              GeoLat = Latitude(iLat,iBlock)*180.0/pi
-              GeoLon = Longitude(iLon,iBlock)*180.0/pi
+        ! do i=1,nBlocks
+        !    UserData3D(:,:,:,12,i)=B0(:,:,:,1,i)
+        !    UserData3D(:,:,:,13,i)=B0(:,:,:,2,i)
+        !    UserData3D(:,:,:,14,i)=B0(:,:,:,3,i)
+        !    UserData3D(:,:,:,15,i)=B0(:,:,:,4,i)
+        ! enddo
 
-              GeoAlt = Altitude_GB(iLon, iLat, iAlt, iBlock)/1000.0
+      else
 
-              if (GeoLat > 90.0) then
-                 GeoLat = 180.0 - GeoLat
-                 GeoLon = mod(GeoLon + 180.0,360.0)
-              endif
+    AltMinIono=(2*RadialDistance_GB(1,1,-1,1) - &
+         RadialDistance_GB(1,1,1,1) - RBody)/1000.0
 
-              if (GeoLat < -90.0) then
-                 GeoLat = -180.0 - GeoLat
-                 GeoLon = mod(GeoLon + 180.0,360.0)
-              endif
+    do iBlock=1,nBlocks
+       if (nBlocks > 1 .and. iDebugLevel > 1) write(*,*) "==> Block : ", iBlock
+       do iAlt=-1,nAlts+2
+          if (iDebugLevel > 4) write(*,*) "=====> init_b0, alt : ", iAlt, Altitude_GB(1,1, iAlt, iBlock)/1000.0
+          do iLat=-1,nLats+2
+             do iLon=-1,nLons+2
 
-              alat = 0.0
-              alon = 0.0
-              xmag = 0.0
-              ymag = 0.0
-              zmag = 0.0
+                GeoLat = Latitude(iLat,iBlock)*180.0/pi
+                GeoLon = Longitude(iLon,iBlock)*180.0/pi
 
-              call get_magfield_all(GeoLat,GeoLon,GeoAlt,alat,alon, &
-                   xmag,ymag,zmag,d1,d2,d3,e1,e2,e3,cD)
-              mLatitude(iLon,iLat,iAlt,iBlock)  = alat
-              mLongitude(iLon,iLat,iAlt,iBlock) = alon
-              B0(iLon,iLat,iAlt,iEast_,iBlock)  = ymag
-              B0(iLon,iLat,iAlt,iNorth_,iBlock) = xmag
-              B0(iLon,iLat,iAlt,iUp_,iBlock)    = zmag
-              B0(iLon,iLat,iAlt,iMag_,iBlock)   = &
-                   sqrt(xmag*xmag + ymag*ymag + zmag*zmag)
+                GeoAlt = Altitude_GB(iLon, iLat, iAlt, iBlock)/1000.0
 
-              if(UseDynamo)then
-                 b0_d1(iLon,iLat,iAlt,:,iBlock) = d1
-                 b0_d2(iLon,iLat,iAlt,:,iBlock) = d2
-                 b0_d3(iLon,iLat,iAlt,:,iBlock) = d3
-                 b0_e1(iLon,iLat,iAlt,:,iBlock) = e1
-                 b0_e2(iLon,iLat,iAlt,:,iBlock) = e2
-                 b0_e3(iLon,iLat,iAlt,:,iBlock) = e3
-                 b0_cD(iLon,iLat,iAlt,iBlock)   = cD
-                 b0_Be3(iLon,iLat,iAlt,iBlock)  = &
-                      B0(iLon,iLat,iAlt,iMag_,iBlock)/cD
-              end if
+                if (GeoLat > 90.0) then
+                   GeoLat = 180.0 - GeoLat
+                   GeoLon = mod(GeoLon + 180.0,360.0)
+                endif
 
-              if (B0(iLon,iLat,iAlt,iMag_,iBlock) == 0.0) then
-                 B0(iLon,iLat,iAlt,iMag_,iBlock) = 1.0e-10
-                 DipAngle(iLon,iLat,iAlt, iBlock) = 0.0
-                 DecAngle(iLon,iLat,iAlt, iBlock) = 0.0
-              else
+                if (GeoLat < -90.0) then
+                   GeoLat = -180.0 - GeoLat
+                   GeoLon = mod(GeoLon + 180.0,360.0)
+                endif
 
-                 ! Calculate the magnetic dip angle, the magnetic 
-                 ! declination angle, and sines and cosines
-                 ! For now, only have positive sin of the dip angle 
-                 ! (and the magnetic dip angle)
-              
-                 DipAngle(iLon,iLat,iAlt, iBlock) = &
-                      atan (abs(zmag)/sqrt(xmag**2+ymag**2) )
-                 DecAngle(iLon,iLat,iAlt, iBlock) = atan2(ymag,xmag) * 180.0/pi
+                alat = 0.0
+                alon = 0.0
+                xmag = 0.0
+                ymag = 0.0
+                zmag = 0.0
 
-              endif
+                call get_magfield_all(GeoLat,GeoLon,GeoAlt,alat,alon, &
+                     xmag,ymag,zmag,d1,d2,d3,e1,e2,e3,cD)
+                mLatitude(iLon,iLat,iAlt,iBlock)  = alat
+                mLongitude(iLon,iLat,iAlt,iBlock) = alon
+                B0(iLon,iLat,iAlt,iEast_,iBlock)  = ymag
+                B0(iLon,iLat,iAlt,iNorth_,iBlock) = xmag
+                B0(iLon,iLat,iAlt,iUp_,iBlock)    = zmag
+                B0(iLon,iLat,iAlt,iMag_,iBlock)   = &
+                     sqrt(xmag*xmag + ymag*ymag + zmag*zmag)
 
-           enddo
-        enddo
-     enddo
-  enddo
+                if(UseDynamo)then
+                   b0_d1(iLon,iLat,iAlt,:,iBlock) = d1
+                   b0_d2(iLon,iLat,iAlt,:,iBlock) = d2
+                   b0_d3(iLon,iLat,iAlt,:,iBlock) = d3
+                   b0_e1(iLon,iLat,iAlt,:,iBlock) = e1
+                   b0_e2(iLon,iLat,iAlt,:,iBlock) = e2
+                   b0_e3(iLon,iLat,iAlt,:,iBlock) = e3
+                   b0_cD(iLon,iLat,iAlt,iBlock)   = cD
+                   b0_Be3(iLon,iLat,iAlt,iBlock)  = &
+                        B0(iLon,iLat,iAlt,iMag_,iBlock)/cD
+                end if
 
-  if (UseApex .and. IsEarth) &
-       call dypol( &
-       MagneticPoleColat, MagneticPoleLon, MagneticPoleStrength)
+                if (B0(iLon,iLat,iAlt,iMag_,iBlock) == 0.0) then
+                   B0(iLon,iLat,iAlt,iMag_,iBlock) = 1.0e-10
+                   DipAngle(iLon,iLat,iAlt, iBlock) = 0.0
+                   DecAngle(iLon,iLat,iAlt, iBlock) = 0.0
+                else
+
+                   ! Calculate the magnetic dip angle, the magnetic
+                   ! declination angle, and sines and cosines
+                   ! For now, only have positive sin of the dip angle
+                   ! (and the magnetic dip angle)
+
+                   DipAngle(iLon,iLat,iAlt, iBlock) = &
+                        atan (abs(zmag)/sqrt(xmag**2+ymag**2) )
+                   DecAngle(iLon,iLat,iAlt, iBlock) = atan2(ymag,xmag) * 180.0/pi
+
+                endif
+
+             enddo
+          enddo
+       enddo
+    enddo
+
+    if (UseApex .and. IsEarth) &
+         call dypol( &
+         MagneticPoleColat, MagneticPoleLon, MagneticPoleStrength)
 
 
   !    GyroFrequency_Electron(:,:,:,iBlock) = &
@@ -105,8 +118,9 @@ subroutine init_b0
 !!!!!!!!!!!!!  call MMT_Init
   !///
 
-  call end_timing("init_b0")
-  
+endif
+call end_timing("init_b0")
+
 end subroutine init_b0
 
 subroutine get_magfield(GeoLat,GeoLon,GeoAlt,xmag,ymag,zmag)
@@ -208,7 +222,7 @@ subroutine get_magfield_all(GeoLat,GeoLon,GeoAlt,alat,alon,xmag,ymag,zmag, &
           alatp,alonp,bmag,xmag,ymag,zmag,MagPot)
      call test_mag_point(rBelow, LShell, RBody)
      alatp = acos(sqrt(rBelow/LShell))*180.0/pi * sign(1.0,aLatp)
-     
+
      call APEX(DATE,GeoLat-1.0,GeoLon,GeoAlt,LShell, &
           alatm,alonm,bmag,xmag,ymag,zmag,MagPot)
      call test_mag_point(rBelow, LShell, RBody)
@@ -221,7 +235,7 @@ subroutine get_magfield_all(GeoLat,GeoLon,GeoAlt,alat,alon,xmag,ymag,zmag, &
      do while (londiff < -70.0)
         londiff = londiff + 90.0
      enddo
-     
+
      d1(iNorth_) = londiff/twodegrees
      d2(iNorth_) = (alatp - alatm)/twodegrees
 
@@ -230,7 +244,7 @@ subroutine get_magfield_all(GeoLat,GeoLon,GeoAlt,alat,alon,xmag,ymag,zmag, &
           alatp,alonp,bmag,xmag,ymag,zmag,MagPot)
      call test_mag_point(rBelow, LShell, RBody)
      alatp = acos(sqrt(rBelow/LShell))*180.0/pi * sign(1.0,aLatp)
-     
+
      call APEX(DATE,GeoLat,mod(GeoLon-1+360,360.0),GeoAlt,LShell, &
           alatm,alonm,bmag,xmag,ymag,zmag,MagPot)
      call test_mag_point(rBelow, LShell, RBody)
@@ -243,7 +257,7 @@ subroutine get_magfield_all(GeoLat,GeoLon,GeoAlt,alat,alon,xmag,ymag,zmag, &
      do while (londiff < -70.0)
         londiff = londiff + 90.0
      enddo
-     
+
      d1(iEast_) = (londiff)/(twodegrees * cos(GeoLat*pi/180.0))
      d2(iEast_) = (alatp - alatm)/(twodegrees * cos(GeoLat*pi/180.0))
 
@@ -252,7 +266,7 @@ subroutine get_magfield_all(GeoLat,GeoLon,GeoAlt,alat,alon,xmag,ymag,zmag, &
           alatp,alonp,bmag,xmag,ymag,zmag,MagPot)
      call test_mag_point(rBelow, LShell, RBody)
      alatp = acos(sqrt(rBelow/LShell))*180.0/pi * sign(1.0,aLatp)
-     
+
      call APEX(DATE,GeoLat,GeoLon,GeoAlt-1,LShell, &
           alatm,alonm,bmag,xmag,ymag,zmag,MagPot)
      call test_mag_point(rBelow, LShell, RBody)
@@ -272,7 +286,7 @@ subroutine get_magfield_all(GeoLat,GeoLon,GeoAlt,alat,alon,xmag,ymag,zmag, &
      do while (londiff < -70.0)
         londiff = londiff + 90.0
      enddo
-     
+
      d1(iUp_) = (RBody+GeoAlt*1000.0)*(londiff)/(2000.0)
      d2(iUp_) = (RBody+GeoAlt*1000.0)*(alatp - alatm)/(2000.0)
 
@@ -322,7 +336,7 @@ subroutine get_magfield_all(GeoLat,GeoLon,GeoAlt,alat,alon,xmag,ymag,zmag, &
         do while (londiff < -70.0)
            londiff = londiff + 90.0
         enddo
-     
+
         d1(iNorth_) = londiff/twodegrees
         d2(iNorth_) = (alatp - alatm)/twodegrees
 
@@ -338,7 +352,7 @@ subroutine get_magfield_all(GeoLat,GeoLon,GeoAlt,alat,alon,xmag,ymag,zmag, &
         do while (londiff < -70.0)
            londiff = londiff + 90.0
         enddo
-     
+
         d1(iEast_) = (londiff)/(twodegrees * cos(GeoLat*pi/180.0))
         d2(iEast_) = (alatp - alatm)/(twodegrees * cos(GeoLat*pi/180.0))
 
@@ -352,7 +366,7 @@ subroutine get_magfield_all(GeoLat,GeoLon,GeoAlt,alat,alon,xmag,ymag,zmag, &
         do while (londiff < -70.0)
            londiff = londiff + 90.0
         enddo
-     
+
         d1(iUp_) = (RBody+GeoAlt*1000.0)*(londiff)/(2000.0)
         d2(iUp_) = (RBody+GeoAlt*1000.0)*(alatp - alatm)/(2000.0)
 
@@ -404,7 +418,7 @@ subroutine get_magfield_all(GeoLat,GeoLon,GeoAlt,alat,alon,xmag,ymag,zmag, &
   e2(iEast_)  =    d3(iNorth_)*d1(iUp_   ) - d1(iNorth_)*d3(iUp_   )
   e2(iNorth_) = - (d3(iEast_ )*d1(iUp_   ) - d1(iEast_ )*d3(iUp_   ))
   e2(iUp_)    =    d3(iEast_ )*d1(iNorth_) - d1(iEast_ )*d3(iNorth_)
-  
+
   e3(iEast_)  =    d1(iNorth_)*d2(iUp_   ) - d2(iNorth_)*d1(iUp_   )
   e3(iNorth_) = - (d1(iEast_ )*d2(iUp_   ) - d2(iEast_ )*d1(iUp_   ))
   e3(iUp_)    =    d1(iEast_ )*d2(iNorth_) - d2(iEast_ )*d1(iNorth_)
@@ -434,7 +448,7 @@ subroutine dipole_to_geo(aLat, aLon, Alt, gLat, gLon)
   real :: LShell
 
   LShell = (1.0 / cos(aLat*pi/180.0))**2
-  
+
 
 end subroutine dipole_to_geo
 
@@ -484,7 +498,7 @@ subroutine mydipole(GeoLat, GeoLon, GeoAlt, LShell, aLat, aLon, BEast, BNorth, B
   aLat      = acos(1.0/sqrt(LShell))*180.0/pi * sign(1.0,zpp)
   aLon      = acos(xpp/xypp)
 
-  bx = DipoleStrength * r3 * 3 * xpp*zpp/xyzpp**2 
+  bx = DipoleStrength * r3 * 3 * xpp*zpp/xyzpp**2
   by = DipoleStrength * r3 * 3 * zpp*ypp/xyzpp**2
   bz = DipoleStrength * r3 /xyzpp**2 * (2*zpp**2 - xypp**2)
 
@@ -547,5 +561,3 @@ subroutine test_mag_point(rBelow, LShell, RBody)
   endif
 
 end subroutine test_mag_point
-
-
