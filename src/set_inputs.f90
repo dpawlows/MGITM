@@ -262,7 +262,7 @@ subroutine set_inputs
            call read_in_logical(UseDamping,iError)
 
         case ("#DUSTDATA")
-           call read_in_logical(UseDustDistribution,iError) 
+           call read_in_logical(UseDustDistribution,iError)
            call read_in_string(DustFileType,iError)
            call read_in_real(dTDust, iError)
            call read_in_string(cDustFile,iError)
@@ -506,7 +506,7 @@ subroutine set_inputs
               write(*,*) "Therefore The first pressure must be larger than the second!"
               iError = 1
            endif
-             
+
            if (iError /= 0) then
               write(*,*) 'Incorrect format for #DIFFUSION:'
               write(*,*) '#DIFFUSION'
@@ -623,6 +623,14 @@ subroutine set_inputs
 !              IsDone = .true.
 !           endif
 
+      case ("#CRUSTAL")
+        call read_in_logical(UseCrustalField,iError)
+        if (iError /= 0) then
+           write(*,*) 'Incorrect format for #CRUSTAL:'
+           write(*,*) '#CRUSTAL'
+           write(*,*) 'UseCrustalField   (logical)'
+        endif
+
         case ("#DIPOLE")
 
            call read_in_real(MagneticPoleRotation, iError)
@@ -665,7 +673,7 @@ subroutine set_inputs
            else
 
               call read_in_logical(UseApex, iError)
-              
+
               if (iError /= 0) then
                  write(*,*) 'Incorrect format for #APEX:'
                  write(*,*) '#APEX'
@@ -685,7 +693,7 @@ subroutine set_inputs
            call read_in_real(LatStart, iError)
            call read_in_real(LatEnd, iError)
            call read_in_real(LonStart, iError)
-           if (iError == 0) then 
+           if (iError == 0) then
               call read_in_real(LonEnd, iError)
               if (iError /= 0) then
                  write(*,*) "You can now model part of the globe in"
@@ -941,7 +949,7 @@ subroutine set_inputs
 ! --------------------------------------------------------------------------------
 
         case ("#GLOW")
-           call read_in_logical(UseGlow, iError) 
+           call read_in_logical(UseGlow, iError)
            call read_in_real(dTGlow, iError)
 
         case ("#MHD_INDICES")
@@ -956,7 +964,7 @@ subroutine set_inputs
            call IO_set_inputs(cTempLines)
            call read_MHDIMF_Indices(iError)
 
-           if (iError /= 0) then 
+           if (iError /= 0) then
               write(*,*) "read indices was NOT successful (imf file)"
               IsDone = .true.
            else
@@ -973,7 +981,7 @@ subroutine set_inputs
            call IO_set_inputs(cTempLines)
            call read_NGDC_Indices(iError)
 
-           if (iError /= 0) then 
+           if (iError /= 0) then
               write(*,*) "read indices was NOT successful (NOAA file)"
               IsDone = .true.
            else
@@ -992,7 +1000,7 @@ subroutine set_inputs
            call IO_set_inputs(cTempLines)
            call read_SWPC_Indices(iError)
 
-           if (iError /= 0) then 
+           if (iError /= 0) then
               write(*,*) "read indices was NOT successful (SWPC file)"
               IsDone = .true.
            else
@@ -1009,7 +1017,7 @@ subroutine set_inputs
            call IO_set_inputs(cTempLines)
            call read_NOAAHPI_Indices(iError)
 
-           if (iError /= 0) then 
+           if (iError /= 0) then
               write(*,*) "read indices was NOT successful (NOAA HPI file)"
               IsDone = .true.
            else
@@ -1046,7 +1054,7 @@ contains
   subroutine read_in_int(variable, iError)
     integer, intent(out) :: variable
     integer :: iError
-    if (iError == 0) then 
+    if (iError == 0) then
        iline = iline + 1
        read(cInputText(iline),*,iostat=iError) variable
     endif
@@ -1056,7 +1064,7 @@ contains
     real(Real8_), intent(out) :: variable
     integer :: iError
     integer :: iTimeReadIn(7)
-    if (iError == 0) then 
+    if (iError == 0) then
        iline = iline + 1
        read(cInputText(iline),*,iostat=iError) iTimeReadIn(1:6)
        iTimeReadIn(7) = 0
@@ -1076,7 +1084,7 @@ contains
   subroutine read_in_string(variable, iError)
     character (len=iCharLen_), intent(out) :: variable
     integer :: iError
-    if (iError == 0) then 
+    if (iError == 0) then
        iline = iline + 1
        variable = cInputText(iline)
        ! Remove anything after a space or TAB
@@ -1140,7 +1148,6 @@ subroutine fix_vernal_time
   iDay  = DTime / Rotation_Period
   uTime = (DTime / Rotation_Period - iDay) * Rotation_Period
   iJulianDay = jday( &
-       iTimeArray(1), iTimeArray(2), iTimeArray(3)) 
+       iTimeArray(1), iTimeArray(2), iTimeArray(3))
 
 end subroutine fix_vernal_time
-
