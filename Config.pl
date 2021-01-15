@@ -2,6 +2,7 @@
 #  Copyright (C) 2002 Regents of the University of Michigan, portions used with permission
 #  For more information, see http://csem.engin.umich.edu/tools/swmf
 use strict;
+use warnings;
 
 our $Component       = 'UA';
 our $Code            = 'GITM2';
@@ -10,6 +11,7 @@ our @Arguments       = @ARGV;
 
 my $config     = "share/Scripts/Config.pl";
 if(-f $config){
+    print "Config: $config";
     require $config;
 }else{
     require "../../$config";
