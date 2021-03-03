@@ -8,6 +8,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.dates as dates
 from matplotlib.gridspec import GridSpec
+import matplotlib.ticker as mticker
 from pylab import cm
 from gitm_routines import *
 import re
@@ -16,7 +17,7 @@ import sys
 rtod = 180.0/3.141592
 
 #-----------------------------------------------------------------------------
-# 
+#
 #-----------------------------------------------------------------------------
 
 def get_args(argv):
@@ -32,7 +33,7 @@ def get_args(argv):
     help = 0
     winds = 0
     diff = 0
-    
+
     for arg in argv:
 
         IsFound = 0
@@ -108,7 +109,7 @@ def get_args(argv):
     return args
 
 #-----------------------------------------------------------------------------
-# 
+#
 #-----------------------------------------------------------------------------
 
 #-----------------------------------------------------------------------------
@@ -124,7 +125,7 @@ header = read_gitm_header(args["filelist"])
 if (args["help"]):
 
     print('Usage : ')
-    print('gitm_plot_one_alt.py -var=N -tec -winds -cut=alt,lat,lon') 
+    print('gitm_plot_one_alt.py -var=N -tec -winds -cut=alt,lat,lon')
     print('                     -alt=alt -lat=lat -lon=lon -alog ')
     print('                     -help [*.bin or a file]')
     print('   -help : print this message')
@@ -144,7 +145,7 @@ if (args["help"]):
 
     exit()
 
-        
+
 filelist = args["filelist"]
 nFiles = len(filelist)
 
@@ -199,7 +200,7 @@ for file in filelist:
             else:
                 iAlt = 0
             Alt = Alts[iAlt]
-            
+
         if (cut == 'lat'):
             xPos = Lons
             yPos = Alts
@@ -213,7 +214,7 @@ for file in filelist:
                     while (Lats[iLat] < args["lat"]):
                         iLat=iLat+1
             Lat = Lats[iLat]
-            
+
         if (cut == 'lon'):
             xPos = Lats
             yPos = Alts
@@ -227,9 +228,9 @@ for file in filelist:
                     while (Lons[iLon] < args["lon"]):
                         iLon=iLon+1
             Lon = Lons[iLon]
-                        
+
     AllTimes.append(data["time"])
-    
+
     if (args["tec"]):
         iAlt = 2
         tec = np.zeros((nLons, nLats))
@@ -256,7 +257,7 @@ for file in filelist:
                 AllWindsX.append(data[iUx_][iLon,:,:])
                 AllWindsY.append(data[iUy_][iLon,:,:])
     j=j+1
-    
+
 
 AllData2D = np.array(AllData2D)
 if (args["winds"]):
@@ -275,7 +276,7 @@ if (Negative):
     maxi = np.max(abs(AllData2D))*1.05
     mini = -maxi
 
-print(AllData2D.shape)
+print("Data shape: {}".format(AllData2D.shape))
 if (cut == 'alt'):
     maskNorth = ((yPos>45) & (yPos<90.0))
     maskSouth = ((yPos<-45) & (yPos>-90.0))
@@ -293,7 +294,7 @@ if (cut == 'alt'):
             miniS = -maxiS
         else:
             miniS = np.min(AllData2D[:,:,maskSouth])*0.95
-    
+
 dr = (maxi-mini)/31
 levels = np.arange(mini, maxi, dr)
 
@@ -336,7 +337,6 @@ for time in AllTimes:
     outfile = file+'_'+sTime+'.png'
 
     ax = fig.add_subplot(gs1[1, :2])
-
     cax = ax.pcolor(xPos, yPos, d2d, vmin=mini, vmax=maxi, shading='auto', cmap=cmap)
 
     if (args["winds"]):
@@ -365,7 +365,7 @@ for time in AllTimes:
     cbar.set_label(Var,rotation=90)
 
     if (cut == 'alt'):
-        
+
         if (DoPlotNorth):
             # Top Left Graph Northern Hemisphere
             ax2 = fig.add_subplot(gs[0, 0],projection='polar')
@@ -373,6 +373,7 @@ for time in AllTimes:
             cax2 = ax2.pcolor(theta, r, AllData2D[i][:,maskNorth], vmin=miniN, vmax=maxiN, shading='auto', cmap=cmap)
             xlabels = ['', '12', '18', '00']
             ylabels = ['80', '70', '60', '50']
+
             ax2.set_xticklabels(xlabels)
             ax2.set_yticklabels(ylabels)
             cbar2 = fig.colorbar(cax2, ax=ax2, shrink = 0.5, pad=0.01)
@@ -380,7 +381,7 @@ for time in AllTimes:
             pi = 3.14159
             ax2.set_xticks(np.arange(0,2*pi,pi/2))
             ax2.set_yticks(np.arange(10,50,10))
-            
+
         if (DoPlotSouth):
             # Top Right Graph Southern Hemisphere
             r, theta = np.meshgrid(90.0+yPos[maskSouth], (xPos+shift-90.0)*3.14159/180.0)
@@ -402,5 +403,3 @@ for time in AllTimes:
     plt.close()
 
     i=i+1
-
-
