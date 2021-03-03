@@ -102,7 +102,7 @@ subroutine calc_ion_v(iBlock)
           Velocity(1:nLons,1:nLats,1:nAlts,iNorth_,iBlock) - &
           (PressureGradient(1:nLons,1:nLats,1:nAlts,iNorth_) / IRho) / &
           Collisions(1:nLons,1:nLats,1:nAlts,iVIN_)
-         
+
   else
 
   UDotB = sum(Velocity(1:nLons,1:nLats,1:nAlts,:,iBlock) * BLocal, dim=4)/ &
@@ -120,6 +120,8 @@ subroutine calc_ion_v(iBlock)
 
   VIParallel = UDotB + &
        ( gDotB - gpDotB / IRho) / Collisions(1:nLons,1:nLats,1:nAlts,iVIN_)
+
+
 
 !  write(*,*) VIParallel(1,1,49)
 
@@ -173,7 +175,6 @@ subroutine calc_ion_v(iBlock)
   enddo
 
 endif
-
   IVelocity(:,:,:,:,iBlock) = min( 300.0, IVelocity(:,:,:,:,iBlock))
   IVelocity(:,:,:,:,iBlock) = max(-300.0, IVelocity(:,:,:,:,iBlock))
 
