@@ -54,7 +54,7 @@ subroutine add_sources
      !! To turn off GWIHeat, GWDHeat, turn UseGravityWave=.false. in UAM.in
      !! All Temperature equation source terms in <T>/s units
 
-  
+
      Temperature(1:nLons, 1:nLats, 1:nAlts, iBlock) = &
           Temperature(1:nLons, 1:nLats, 1:nAlts, iBlock) + Dt * ( &
           LowAtmosRadRate(1:nLons, 1:nLats, 1:nAlts, iBlock) &
@@ -73,10 +73,10 @@ subroutine add_sources
      ! UserData3D(:,:,:,1,iBlock) = 0.0
      ! UserData3D(1:nLons, 1:nLats, 1:nAlts, 1, iBlock) = JouleHeating
      !-----------------------------------------------------------------
-     ! S. W. BOUGHER defined:  11-10-05 UserData3D 
-     ! S. W. BOUGHER defined:  11-10-26 UserData3D 
-     ! S. W. BOUGHER defined:  11-10-27 UserData3D 
-     ! S. W. BOUGHER defined:  12-01-31 UserData3D 
+     ! S. W. BOUGHER defined:  11-10-05 UserData3D
+     ! S. W. BOUGHER defined:  11-10-26 UserData3D
+     ! S. W. BOUGHER defined:  11-10-27 UserData3D
+     ! S. W. BOUGHER defined:  12-01-31 UserData3D
      !-----------------------------------------------------------------
      UserData3D(:,:,:,1,iBlock) = 0.0
      UserData3D(1:nLons, 1:nLats, 1:nAlts, 1, iBlock) =  86400. *  &
@@ -107,7 +107,7 @@ subroutine add_sources
      ! S. W. BOUGHER defined:  11-10-25 UserData1D
      ! S. W. BOUGHER defined:  11-10-26 UserData1D
      ! S. W. BOUGHER defined:  11-10-27 UserData1D
-     ! S. W. BOUGHER defined:  12-01-31 UserData1D 
+     ! S. W. BOUGHER defined:  12-01-31 UserData1D
      !-----------------------------------------------------------------
      UserData1D(1,1,:,1) = 0.0
      UserData1D(1, 1, 1:nAlts, 1) =  86400. *  &
@@ -200,7 +200,7 @@ iAlt = 10
           Velocity(1:nLons, 1:nLats, 1:nAlts, :, iBlock) + Dt * ( &
           IonDrag + GWDrag(1:nLons,1:nLats,1:nAlts,:,iBlock)) + Viscosity
 
-     
+
      !! To turn off IonDrag, turn UseIonDrag=.false. in UAM.in
      !! To turn off NeutralFriction, turn UseNeutralFriction=.false. in UAM.in
 
@@ -208,12 +208,12 @@ iAlt = 10
         VerticalVelocity(1:nLons, 1:nLats, 1:nAlts, iSpecies, iBlock) =&
              VerticalVelocity(1:nLons, 1:nLats, 1:nAlts, iSpecies, iBlock) + &
              Dt*(VerticalIonDrag(:,:,:,iSpecies)) + &
-             NeutralFriction(:,:,:,iSpecies) 
-   
-   
+             NeutralFriction(:,:,:,iSpecies)
+
+
      enddo
 
-    
+
      call planet_limited_fluxes(iBlock)
 
      call calc_electron_temperature(iBlock)
