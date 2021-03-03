@@ -1,17 +1,17 @@
 #  Copyright (C) 2002 Regents of the University of Michigan,
-#  portions used with permission 
+#  portions used with permission
 #  For more information, see http://csem.engin.umich.edu/tools/swmf
 
 SHELL=/bin/sh
 
 # Fortran language related part of Makefile.conf: Makefile.Linux.gfortran
 #
-#	Space Weather Modeling Framework (SWMF) 
+#	Space Weather Modeling Framework (SWMF)
 #	GNU gfortran (gfortran) Fortran 90/95 Compiler
 #
 
-COMPILE.f77     = ${CUSTOMPATH_F}gfortran
-COMPILE.f90     = ${CUSTOMPATH_F}gfortran
+COMPILE.f77     = ${CUSTOMPATH_F}gfortran-9
+COMPILE.f90     = ${CUSTOMPATH_F}gfortran-9
 LINK.f90	= ${CUSTOMPATH_MPI}mpif90
 AR = ar -rs
 
@@ -19,7 +19,7 @@ SINGLEPREC = -frecord-marker=4
 DOUBLEPREC = -frecord-marker=4 -fdefault-real-8 -fdefault-double-8
 PRECISION  = ${DOUBLEPREC}
 
-MPILIB = 
+MPILIB =
 #MPILIB = -L${LIBDIR} -lNOMPI
 
 # Define where modules are stored and add it to the search path
@@ -27,7 +27,7 @@ MPILIB =
 SEARCH = -J${INCLDIR} ${INCL_EXTRA}
 
 DEBUGFLAG = -C -g -fbacktrace -ffpe-trap=invalid,zero,overflow -fcheck=all
-DEBUG     = 
+DEBUG     =
 
 OPT0 = -O0
 OPT1 = -O1
@@ -78,7 +78,7 @@ BLAS  = lapack.o blas.o
 .ftn.o:
 	${COMPILE.f77} ${Cflag3} -ffixed-line-length-132 $<
 
-clean:	
+clean:
 	rm -f *~ core *.o *.mod fort.* a.out *.exe *.a *.so *.protex
 
 
