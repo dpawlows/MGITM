@@ -10005,3 +10005,80 @@ subroutine ReadMagField
   enddo
 
 end subroutine ReadMagField
+
+subroutine ReadLillisModel
+
+  use ModGITM
+  use ModInputs
+
+  implicit None
+
+  integer :: nsin,naltsin,nbmagsin,nbelvsin,nswin, iswplow, iswphigh
+  real :: EIM_IZ(nspecies_EIM,nSW_EIM,nAlts_EIM,nBmags_EIM,nBelvs_EIM)
+  real :: tempswp(nSW_EIM),invSWdiff,SWPlow, SWPHigh
+  real, dimension(nspecies_EIM,nAlts_EIM,nBmags_EIM,nBelvs_EIM) :: V1, V2
+
+  !!Only allocate if UseEmpiricalIonization is True
+  if(.not. allocated(EIM_IonizationFrequency)) then
+    allocate(EIM_IonizationFrequency(nspecies_EIM,nAlts_EIM,nBmags_EIM,nBelvs_EIM))
+    allocate(impactIonizationFrequency(nLons,nLats,nAlts,nSpecies_EIM,nBlocks))
+  endif
+  EIM_IonizationFrequency = 0.0
+
+  EIMSpecies(iImpactCO2_) = 'CO2_'
+  EIMSpecies(iImpactO_) = 'O_'
+  EIMSpecies(iImpactN2_) = 'N2_'
+  EIMSpecies(iImpactCO_) = 'CO_'
+  EIMSpecies(iImpactAr_) = 'Ar_'
+
+    write(*,*) "==> Now Reading Mars Empirical Ionization Model"
+  open(unit=42, file='DataIn/nemlillis.dat', action='read')
+
+    read(42,*) nsin, nswin,naltsin,nbmagsin,nbelvsin
+
+    if (nsin /= nSpecies_EIM .or. nSW_EIM /= nswin .or. nAlts_EIM /= naltsin &
+      .or. nbmagsin /= nBmags_EIM .or. nbelvsin /= nBelvs_EIM) then
+      call stop_GITM("Stopping in ReadLillisModel: Are the model dimensions different?")
+    end if
+
+    read(42,*) EIMsolarwindpressure
+    read(42,*) EIMAltitude
+    read(42,*) EIMBmag
+    read(42,*) EIMBElvs
+    read(42,*) EIM_IZ
+
+    EIMAltitude = EIMAltitude * 1000. !Convert to m
+
+  close(42)
+
+  !!!Solar wind pressure should be constant (for now) so interpolate the IZ to input pressure.
+  if (solarWindPressure < minval(EIMsolarwindpressure)) then
+    write(*,*) "Solar wind pressure is less than minimum value for &
+      electron ionization grid. Setting to min value."
+    solarWindPressure = minval(EIMsolarwindpressure)
+  endif
+  if (solarWindPressure > maxval(EIMsolarwindpressure)) then
+    write(*,*) "Solar wind pressure is greater than maximum value for &
+      electron ionization grid. Setting to max value."
+    solarWindPressure = maxval(EIMsolarwindpressure)
+  endif
+
+  tempswp = EIMSolarwindpressure
+  where(solarwindpressure - tempswp .lt. -0.00001) tempswp = -1.0e9
+  iswplow =  maxloc(tempswp,1)
+
+  if (iswplow == nSW_EIM) iswplow = iswplow - 1
+  iswphigh = iswplow + 1
+  SWPlow = EIMSolarwindpressure(iswplow)
+  SWPhigh = EIMSolarwindpressure(iswphigh)
+  invSWdiff = 1/(SWPhigh-SWPlow)
+
+  V1 = EIM_IZ(:,iswplow,:,:,:)
+  V2 = EIM_IZ(:,iswphigh,:,:,:)
+
+  EIM_IonizationFrequency = V1 + (solarwindpressure-SWPlow)*invSWdiff* &
+    (V2 - V1)
+
+
+
+end subroutine ReadLillisModel

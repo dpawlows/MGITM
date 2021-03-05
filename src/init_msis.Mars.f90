@@ -662,15 +662,15 @@ if (DustFileType .eq. "FullHorizontal") then
                DustMixingRatio(1:nDustTimes,1,1:nDustAlts)
 
        else if (LatFind .gt. DustLatitude(nDustLats)) then
-          
+
           CumulativeTauProfile(1:nDustTimes,ilat,1:nDustAlts,iblock) = &
-               CumulativeTau(1:nDustTimes,nDustLats,1:nDustAlts) 
-          
+               CumulativeTau(1:nDustTimes,nDustLats,1:nDustAlts)
+
           DustMixingRatioProfile(1:nDustTimes,ilat,1:nDustAlts,iblock) = &
                DustMixingRatio(1:nDustTimes,nDustLats,1:nDustAlts)
-       
+
         else
-           !Multiply by .999 to handle case when grids match up.  
+           !Multiply by .999 to handle case when grids match up.
            !Rounding error can result in negative numbers
 
           CumulativeTauProfile(1:nDustTimes,ilat,1:nDustAlts,iblock) = &
@@ -678,14 +678,14 @@ if (DustFileType .eq. "FullHorizontal") then
                (Lathigh-LatFind)*0.999*invLatDiff*&
                (CumulativeTau(1:nDustTimes,ilatlow(1)+1,1:nDustAlts)-&
                CumulativeTau(1:nDustTimes,ilatlow(1),1:nDustAlts))
-          
+
           DustMixingRatioProfile(1:nDustTimes,ilat,1:nDustAlts,iblock) = &
                DustMixingRatio(1:nDustTimes,ilatlow(1)+1,1:nDustAlts) - &
                (Lathigh-LatFind)*0.999*invLatDiff*&
                (DustMixingRatio(1:nDustTimes,ilatlow(1)+1,1:nDustAlts)-&
                DustMixingRatio(1:nDustTimes,ilatlow(1),1:nDustAlts))
        endif
-       
+
     enddo
  endif
 

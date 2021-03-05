@@ -21,6 +21,8 @@ subroutine calc_rates(iBlock)
   use ModConstants
   use ModPlanet
   use ModInputs
+  use ModTime, only: tsimulation
+
   use ModEUV, only : SunOrbitEccentricity
   use ModSources, only : KappaEddyDiffusion
 
@@ -38,6 +40,9 @@ subroutine calc_rates(iBlock)
 
   real :: ScaleHeight(nLons, nLats)
 
+  real, dimension(1:nLons, 1:nLats, 1:nAlts, 4) ::  BLocal
+  logical :: IsFirstTime=.true.
+
   real :: e2
 
 ! ------------------------------------------------------------------------------
@@ -51,7 +56,7 @@ subroutine calc_rates(iBlock)
 
 ! ------------------------------------------------------------------------------
 
-  logical :: trouble 
+  logical :: trouble
 
   call report("calc_rates",2)
   call start_timing("calc_rates")
@@ -133,7 +138,7 @@ trouble = .false.
 !      enddo
 
 ! -------------------------------------------------------------------------------
-   
+
 
   if(trouble) then
     write(*,*) 'trouble found!!'
@@ -162,7 +167,7 @@ trouble = .false.
 
   Ne  = IDensityS(:,:,:,ie_,iBlock)
 
-  ! We add 1 because this is in the denominator a lot, and the corners 
+  ! We add 1 because this is in the denominator a lot, and the corners
   ! don't have anything. Total number density.
 
   mnd = (NDensity(:,:,:,iBlock)+1.0)
@@ -188,12 +193,12 @@ trouble = .false.
   invNe = 1/Ne
   do iIon = 1, nIons-1
      MeanIonMass = MeanIonMass + &
-          MassI(iIon) * IDensityS(:,:,:,iIon,iBlock) 
+          MassI(iIon) * IDensityS(:,:,:,iIon,iBlock)
   enddo
   MeanIonMass = MeanIonMass * invNe
 
 ! -------------------------------------------------------------------------------
-  TempUnit = MeanMajorMass / Boltzmanns_Constant       
+  TempUnit = MeanMajorMass / Boltzmanns_Constant
 ! -------------------------------------------------------------------------------
 
 !write(*,*) '==> calc_rates:  Before Mixing Ratio Calculation.'
@@ -203,26 +208,29 @@ trouble = .false.
 
  ! do iAlt = 0, nAlts+1
 
-!   Mixing Ratios 
+!   Mixing Ratios
 !    po(:,:,0:nAlts+1)   = NDensityS(:,:,0:nAlts+1,iO_,iBlock)*invmnd(:,:,0:nAlts+1)
 !    pco(:,:,0:nAlts+1)  = NDensityS(:,:,0:nAlts+1,iCO_,iBlock)*invmnd(:,:,0:nAlts+1)
 !    pn2(:,:,0:nAlts+1)  = NDensityS(:,:,0:nAlts+1,iN2_,iBlock)*invmnd(:,:,0:nAlts+1)
 !    pco2(:,:,0:nAlts+1) = NDensityS(:,:,0:nAlts+1,iCO2_,iBlock)*invmnd(:,:,0:nAlts+1)
- 
-! !   Temperature Based Arrays 
+
+! !   Temperature Based Arrays
 !    ttot(:,:,0:nAlts+1) = Temperature(:,:,0:nAlts+1,iBlock) * &
-!                          TempUnit(:,:,0:nAlts+1)   
+!                          TempUnit(:,:,0:nAlts+1)
 !    tt(:,:,0:nAlts+1) = ttot(:,:,0:nAlts+1)**0.69
 
    po   = NDensityS(:,:,:,iO_,iBlock)*invmnd
    pco  = NDensityS(:,:,:,iCO_,iBlock)*invmnd
    pn2  = NDensityS(:,:,:,iN2_,iBlock)*invmnd
    pco2 = NDensityS(:,:,:,iCO2_,iBlock)*invmnd
- 
-!   Temperature Based Arrays 
+
+!   Temperature Based Arrays
    ttot = Temperature(:,:,:,iBlock) * &
-                         TempUnit   
+                         TempUnit
    tt = ttot**0.69
+
+   BLocal = B0(1:nLons,1:nLats,1:nAlts,1:4,iBlock)
+
 
 !  enddo
 
@@ -256,7 +264,7 @@ trouble = .false.
           if (ttot(iLon,iLat,iAlt) < 500.)    &
                crn = 1.64-(ttot(iLon,iLat,iAlt)-500.)*2.5e-4
           co2km(iLon,iLat,iAlt)=cmrf(is)+(cmrf(is+1)-cmrf(is))*  &
-               (ttot(iLon,iLat,iAlt)- (is*100.+73.3))*0.01 
+               (ttot(iLon,iLat,iAlt)- (is*100.+73.3))*0.01
 
           co2km(iLon,iLat,iAlt)=co2km(iLon,iLat,iAlt)*1.e-06
           cpco2=3.5*RGAS*AMU/Mass(iCO2_)
@@ -268,7 +276,7 @@ trouble = .false.
           if (is <= 1) is=1
           if (is >= 7) is=7
           if (ttot(iLon,iLat,iAlt) > 400.) prco=0.72
-          if (ttot(iLon,iLat,iAlt) > 300. .and. ttot(iLon,iLat,iAlt) < 400.)  & 
+          if (ttot(iLon,iLat,iAlt) > 300. .and. ttot(iLon,iLat,iAlt) < 400.)  &
               prco = 0.73-(ttot(iLon,iLat,iAlt)-350.)*1.5e-04
           if (ttot(iLon,iLat,iAlt) < 300.)  &
                      prco=0.75-(ttot(iLon,iLat,iAlt)-250.)*2.6e-04
@@ -294,6 +302,9 @@ trouble = .false.
             pco2(iLon,iLat,iAlt)*co2kt(iLon,iLat,iAlt))* &
             1.0E-05
 
+
+
+
           enddo
         enddo
       enddo
@@ -316,7 +327,7 @@ trouble = .false.
 !            TempUnit(1:nLons,1:nLats,iAlt))**0.75
 !    endif
 
-        KappaTemp(:,:,iAlt,iBlock) =  ktmix(1:nLons,1:nLats,iAlt) 
+        KappaTemp(:,:,iAlt,iBlock) =  ktmix(1:nLons,1:nLats,iAlt)
 
 ! -------------------------------------------------------------------------------
 ! This adds the eddy turbulent conduction Term (scaled by Prandtl number)
@@ -330,8 +341,21 @@ trouble = .false.
                    KappaTemp(iLon,iLat,iAlt,iBlock) + &
                    KappaEddyDiffusion(iLon,iLat,iAlt,iBlock) * cp(iLon,iLat,iAlt,iBlock) * &
                    Rho(iLon,iLat,iAlt,iBlock)/10.
+
+             if (UseEmpiricalIonization .and. Altitude_GB(iLon,iLat,iAlt,iBlock) >= minval(EIMAltitude)) then
+               !Nightside impact ionization
+               if (floor((tSimulation-dt)/dtImpactIonization) /= &
+                    floor((tsimulation)/dtImpactIonization) .or. IsFirstTime) then
+                    IsFirstTime = .false.
+                    impactIonizationFrequency = 0.0
+
+                    call interpolateEIM(Altitude_GB(iLon,iLat,iAlt,iBlock),Blocal(iLon,iLat,iAlt,iUp_),&
+                      Blocal(iLon,iLat,iAlt,iMag_),impactionizationFrequency(ilon,ilat,ialt,:,iBlock))
+                endif
+             end if
         enddo
      enddo
+
 ! -------------------------------------------------------------------------------
 
 !   Earth GITM formulation for Molecular Viscosity (mks)
@@ -441,7 +465,7 @@ subroutine calc_collisions(iBlock)
 
 !!  Collisions(:,:,:,VEI) = (34.0 + 4.18*log((TE**3.0)/(Ne*1.0e-6))) &
 !!       * Ne * TE**(-3.0/2.0) * 1.0e-6
-!  
+!
 
   i_gyro = Element_Charge * B0(:,:,:,iMag_,iBlock) / MeanIonMass
 
@@ -458,3 +482,93 @@ subroutine calc_viscosity(iBlock)
 
 
 end subroutine calc_viscosity
+
+subroutine interpolateEIM(altitude,Bz,Bmag,c)
+
+  !Interpolate the Lillis Empirical Ionization Model to a point.
+
+  use ModGITM, only: EIMAltitude,EIMBMag,EIMBElvs,EIM_IonizationFrequency, &
+    nSpecies_EIM,nBmags_EIM,nBelvs_EIM,nAlts_EIM, iproc
+  use ModConstants, only: Pi
+
+
+  implicit none
+
+  real, intent(in) :: Bz,Bmag,altitude
+  real :: BelevationAngle,VHigh,Vlow,invValDiff, altd, elvd, magd
+  real, dimension(nSpecies_EIM) :: c000, c001, c011, c010, c100, c101, c110, c111
+  real, dimension(nSpecies_EIM) :: c00, c01, c10, c11, c0, c1
+  real :: tempBMag(nBmags_EIM),tempBElev(nBelvs_EIM), tempAlt(nAlts_EIM)
+  real,intent(out) :: c(nSpecies_EIM)
+  integer :: ialtlow,ialthigh,imaglow,imaghigh,ielvlow,ielvhigh
+
+
+  !Only need Bz and Bmag to calculate elevation angle
+  BelevationAngle = asin(abs(Bz)/Bmag)*180/pi
+
+
+  tempalt = EIMAltitude
+  tempBmag = EIMBMag
+  tempBElev = EIMBElvs
+
+  !!! Interpolate to altitude
+  where(altitude - tempalt .lt. -0.00001) tempalt = -1.0e9
+  ialtlow =  maxloc(tempalt,1)
+  if (ialtlow == nAlts_EIM) ialtlow = ialtlow - 1
+  ialthigh = ialtlow + 1
+
+  !!! Interpolate to BMagnitude
+  where(BMag - tempBMag .lt. -0.00001) tempBMag = -1.0e9
+  imaglow =  maxloc(tempBMag,1)
+  if (imaglow == nBmags_EIM) imaglow = imaglow - 1
+  imaghigh = imaglow + 1
+
+  !!! Interpolate to BMagnitude
+  where(BelevationAngle - tempBElev .lt. -0.00001) tempBElev = -1.0e9
+  ielvlow =  maxloc(tempBElev,1)
+  if (ielvlow == nBelvs_EIM) ielvlow = ielvlow - 1
+  ielvhigh = ielvlow + 1
+
+  vlow = EIMAltitude(ialtlow)
+  vhigh = EIMAltitude(ialthigh)
+  invvaldiff = 1/(vhigh-vlow)
+  altd = (altitude-vlow)*invvalDiff
+
+  vlow = EIMBmag(imaglow)
+  vhigh = EIMBMag(imaghigh)
+  invvaldiff = 1/(Vhigh-Vlow)
+  magd = (BMag-vlow)*invvalDiff
+
+  vlow = EIMBElvs(ielvlow)
+  vhigh = EIMBElvs(ielvhigh)
+  invvaldiff = 1/(Vhigh-Vlow)
+  elvd = (BelevationAngle-vlow)*invvalDiff
+
+  c000 = EIM_IonizationFrequency(:,ialtlow,imaglow,ielvlow)
+  c100 = EIM_IonizationFrequency(:,ialthigh,imaglow,ielvlow)
+  c010 = EIM_IonizationFrequency(:,ialtlow,imaghigh,ielvlow)
+  c110 = EIM_IonizationFrequency(:,ialthigh,imaghigh,ielvlow)
+  c001 = EIM_IonizationFrequency(:,ialtlow,imaglow,ielvhigh)
+  c101 = EIM_IonizationFrequency(:,ialthigh,imaglow,ielvhigh)
+  c011 = EIM_IonizationFrequency(:,ialtlow,imaghigh,ielvhigh)
+  c111 = EIM_IonizationFrequency(:,ialthigh,imaghigh,ielvhigh)
+
+  c00 = c000*(1-altd)+c100*altd
+  c01 = c001*(1-altd)+c101*altd
+  c10 = c010*(1-altd)+c110*altd
+  c11 = c011*(1-altd)+c111*altd
+
+  c0 = c00*(1-magd) + c10*magd
+  c1 = c01*(1-magd) + c11*magd
+
+  c = c0 * (1-elvd) + c1 * elvd
+
+
+  !!! Check the interpolation
+  ! if (iproc .eq. 0) then
+  !   ! write(*,*) EIMBmag
+  !    write(*,*)  c(1), c000(1), c001(1), c011(1), c010(1), c100(1), c101(1), c110(1), c111(1)
+  ! endif
+
+
+end subroutine interpolateEIM

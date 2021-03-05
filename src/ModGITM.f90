@@ -31,6 +31,7 @@ module ModGITM
 
   real, dimension(-1:nLons+2, nBlocksMax) :: Longitude
   real, dimension(-1:nLats+2, nBlocksMax) :: Latitude, TanLatitude, CosLatitude
+  real, allocatable :: impactIonizationFrequency(:,:,:,:,:)
 
   real, dimension(nLons, nBlocksMax) :: GradLonM_CB, GradLon0_CB, GradLonP_CB
   real, dimension(nLats, nBlocksMax) :: GradLatM_CB, GradLat0_CB, GradLatP_CB
@@ -49,7 +50,7 @@ module ModGITM
 
 real, allocatable :: SpeciesDensity(:,:,:,:,:)
 real, allocatable :: SpeciesDensityOld(:,:,:,:,:)
-  
+
   real, allocatable :: LogRhoS(:,:,:,:,:)
   real, allocatable :: LogNS(:,:,:,:,:)
   real, allocatable :: VerticalVelocity(:,:,:,:,:)
@@ -119,26 +120,26 @@ real, allocatable :: SpeciesDensityOld(:,:,:,:,:)
   real, allocatable :: Velocity(:,:,:,:,:)
   real, allocatable :: IVelocity(:,:,:,:,:)
 
-  logical            :: isFirstGlow = .True.  
-  logical            :: isInitialGlow 
+  logical            :: isFirstGlow = .True.
+  logical            :: isInitialGlow
 
   real, allocatable :: Emissions(:,:,:,:,:)
 
   real, allocatable :: vEmissionRate(:,:,:,:,:)
-  
+
   real, allocatable :: PhotoElectronDensity(:,:,:,:,:)
   real, allocatable :: PhotoElectronRate(:,:,:,:,:)
   real, allocatable :: PhotoEFluxU(:,:,:,:,:)
   real, allocatable :: PhotoEFluxD(:,:,:,:,:)
-  
+
   real, allocatable :: PhotoEFluxTotal(:,:,:,:,:)
-  
+
   real, dimension(nPhotoBins)                 :: PhotoEBins
   real, dimension(-1:nLons+2, -1:nLats+2, -1:nAlts+2) :: TempUnit
 
   real :: LocalTime(-1:nLons+2)
 
-  real :: SubsolarLatitude, SubsolarLongitude 
+  real :: SubsolarLatitude, SubsolarLongitude
   real :: MagneticPoleColat, MagneticPoleLon
   real :: HemisphericPowerNorth, HemisphericPowerSouth
 
@@ -287,6 +288,11 @@ contains
     deallocate(PhotoEFluxU)
     deallocate(PhotoEFluxD)
     deallocate(PhotoEFluxTotal)
+    if(allocated(EIM_IonizationFrequency)) then
+      deallocate(EIM_IonizationFrequency)
+      deallocate(impactIonizationFrequency)
+    endif
+
   end subroutine clean_mod_gitm
   !=========================================================================
 end module ModGITM
