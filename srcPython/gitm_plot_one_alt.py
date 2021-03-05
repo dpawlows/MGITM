@@ -150,7 +150,6 @@ filelist = args["filelist"]
 nFiles = len(filelist)
 
 cut = args["cut"]
-
 vars = [0,1,2]
 vars.append(args["var"])
 
@@ -174,7 +173,6 @@ Var = header["vars"][args["var"]]
 AllData2D = []
 AllAlts = []
 AllTimes = []
-
 j = 0
 for file in filelist:
 
@@ -265,6 +263,8 @@ if (args["winds"]):
     AllWindsY = np.array(AllWindsY)
 
 Negative = 0
+
+AllData2D = np.log10(AllData2D) if (args['IsLog']) else AllData2D
 
 maxi  = np.max(AllData2D)*1.05
 mini  = np.min(AllData2D)*0.95
