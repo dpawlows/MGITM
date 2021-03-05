@@ -1046,7 +1046,7 @@ subroutine output_3dthm(iBlock)
 ! to allow us to quickly calculate the W/m^3 from the
 ! K/s variables below
                         Rho(iLon,iLat,iAlt,iBlock),   &
-                         cp(iLon,iLat,iAlt,iBlock),   &
+                         cp(iiLon,iiLat,iiAlt,iBlock),   &
 ! ------------------------------------------------------------------------------
 ! All Units: K/s  
 ! EuvHeating*TempUnit -> K/s; 
