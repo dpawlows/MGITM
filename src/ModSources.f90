@@ -142,7 +142,7 @@ contains
     allocate(IonPrecipIonRateS(nLons,nLats,nAlts,nSpecies,nBlocks))
     allocate(IonPrecipHeatingRate(nLons,nLats,nAlts,nBlocks))
     allocate(KappaEddyDiffusion(nLons,nLats,-1:nAlts+2,nBlocks))
-    allocate(GWDrag(nLons, nLats, nAlts, 2, nBlocks))
+    allocate(GWDrag(nLons, nLats, nAlts, 3, nBlocks))
     allocate(GWIHeat(nLons, nLats, nAlts, nBlocks))
     allocate(GWDHeat(nLons, nLats, nAlts, nBlocks))
     allocate(GW_net_heating(nLons, nLats, nAlts, nBlocks))
