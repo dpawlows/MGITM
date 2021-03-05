@@ -9892,6 +9892,7 @@ subroutine ReadMagField
   read(42) MagField
   close(42)
 
+
   do iBlock = 1, nBlocks
      do Magdim =1, Maxdim
         do ialt = 1, nAlts
@@ -9901,8 +9902,8 @@ subroutine ReadMagField
                  LonFind = Longitude(iLon,iBlock)*180/pi
                  LatFind = latitude(iLat,iBlock)*180/pi
                  AltFind = Altitude_GB(ilon,ilat,ialt,iBlock)/1000
- !                Print*, Altfind,ialt
-                ! Print*, LonFind
+
+                 
                 if (LonFind < MagFieldLon(1)) then
                   !In between 0 deg and first lon
                   iiLon = MagLons
@@ -9928,6 +9929,7 @@ subroutine ReadMagField
 
                     enddo
                   end if
+
                   if (LatFind < MagFieldLat(1)) then
                     !In between -90 and first lat, using 1st lat
                     iiLat = 1
@@ -9952,24 +9954,13 @@ subroutine ReadMagField
                        iiAlt=jAlt
                        BAlt =  (AltFind-MagFieldAlt(jAlt))/&
                             (MagFieldAlt(jAlt+1)-MagFieldLat(jAlt))
-                      ! Print*, BAlt
+
 
                    endif
+
                 enddo
-            !  if (Magdim==1) then
-           !       Magdimfix=2
-          !        EXIT
-         !     else if (Magdim==2) then
-        !          Magdimfix=1
-       !           EXIT
-      !        else if (Magdim==3) then
-    !             Magdimfix=3
-     !             EXIT
-   !           else if (Magdim==4) then
-  !               Magdimfix=4
- !                EXIT
-!              endif
-               if (iialt <= 0 .or. iialt > MagAlts) then
+
+               if (altFind <= minval(MagFieldAlt) .or. altFind > maxval(MagFieldAlt)) then
                  B0(iLon,iLat,iAlt,Magdim,iBlock)=0
                else
 
