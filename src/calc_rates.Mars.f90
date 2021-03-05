@@ -39,7 +39,7 @@ subroutine calc_rates(iBlock)
        Ne, mnd, Te, tmp,invmnd,invNe
 
   real :: ScaleHeight(nLons, nLats)
-
+  real :: EIMIZ(nSpecies_EIM)
   real, dimension(1:nLons, 1:nLats, 1:nAlts, 4) ::  BLocal
   logical :: IsFirstTime=.true.
 
@@ -350,7 +350,8 @@ trouble = .false.
                     impactIonizationFrequency = 0.0
 
                     call interpolateEIM(Altitude_GB(iLon,iLat,iAlt,iBlock),Blocal(iLon,iLat,iAlt,iUp_),&
-                      Blocal(iLon,iLat,iAlt,iMag_),impactionizationFrequency(ilon,ilat,ialt,:,iBlock))
+                      Blocal(iLon,iLat,iAlt,iMag_),EIMIZ)
+                    impactionizationFrequency(ilon,ilat,ialt,:,iBlock) = EIMIZ
                 endif
              end if
         enddo
