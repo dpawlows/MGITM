@@ -920,11 +920,11 @@ subroutine output_3dall(iBlock)
                 eTemperature(iLon,iLat,iAlt,iBlock)  ,&
                 ITemperature(iLon,iLat,iAlt,iBlock)  ,&
                 (Ivelocity(iLon,iLat,iAlt,i,iBlock),i=1,3),&
-                EUVIonRateS(iLon,iLat,iAlt,1,iBlock),&
-                EUVIonRateS(iLon,iLat,iAlt,2,iBlock),&
-                EUVIonRateS(iLon,iLat,iAlt,3,iBlock),&
-                EUVIonRateS(iLon,iLat,iAlt,4,iBlock),&
-                EUVIonRateS(iLon,iLat,iAlt,5,iBlock),&
+                EUVIonRateS(iiLon,iiLat,iiAlt,1,iBlock),&
+                EUVIonRateS(iiLon,iiLat,iiAlt,2,iBlock),&
+                EUVIonRateS(iiLon,iiLat,iiAlt,3,iBlock),&
+                EUVIonRateS(iiLon,iiLat,iiAlt,4,iBlock),&
+                EUVIonRateS(iiLon,iiLat,iiAlt,5,iBlock),&
                 SZA(iiLon,iiLat,iBlock)*180/Pi, &
                 LocalTime(iiLon),        &
                 MarsOrbitalDistance(iiLon,iiLat,iiAlt),&
