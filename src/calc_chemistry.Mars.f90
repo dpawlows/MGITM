@@ -4,7 +4,7 @@ subroutine calc_chemistry(iBlock)
 
   use ModGITM
   use ModInputs, only: iDebugLevel, UseIonChemistry, UseNeutralChemistry,f107,f107a, &
-       useImplicitChemistry
+       useImplicitChemistry, UseEmpiricalIonization
   use ModConstants
   use ModSources
   use ModChemistry
@@ -46,7 +46,7 @@ subroutine calc_chemistry(iBlock)
 
   !   if (istep .lt. 10000) then
   !      useimplicitchemistry = .false.
-  !   else 
+  !   else
   !      useimplicitchemistry = .true.
   !   endif
 !  neutralsourcestotal = 0.0
@@ -103,7 +103,7 @@ subroutine calc_chemistry(iBlock)
               enddo
 
               NDensityS(iLon,iLat,iAlt,:,iBlock) =  NDensityS(iLon,iLat,iAlt,:,iBlock) + nSources
-              IDensityS(iLon,iLat,iAlt,:,iBlock)   =  IDensityS(iLon,iLat,iAlt,:,iBlock) + iSources 
+              IDensityS(iLon,iLat,iAlt,:,iBlock)   =  IDensityS(iLon,iLat,iAlt,:,iBlock) + iSources
 
               IDensityS(iLon,iLat,iAlt,nIons,iBlock) = 0.0
               do iIon = 1, nIons - 1
@@ -112,7 +112,7 @@ subroutine calc_chemistry(iBlock)
               enddo
 
               ! end if implicit --------------------------
-           else 
+           else
               !write(*,*) ialt,'Explicit'
 
               niters = 0
@@ -315,10 +315,12 @@ subroutine calc_chemistry(iBlock)
               !                  do iion = 1, nions - 1
               !                     write(*,*) ialt,"end chem: ",iIon,Ions(iion),IDensityS(1,1,ialt,iion,1),&
               !                          ions(iion)-IDensityS(1,1,ialt,iion,1)
-              ! 
+              !
               !                  enddo
               !                  stop
               !               endif
+
+
 
               IDensityS(iLon,iLat,iAlt,1:nIons,iBlock) = Ions
               NDensityS(iLon,iLat,iAlt,:,iBlock) = Neutrals
@@ -326,11 +328,12 @@ subroutine calc_chemistry(iBlock)
               Emissions(iLon, iLat, iAlt, :, iBlock) =  &
                    Emissions(iLon, iLat, iAlt, :, iBlock) + EmissionTotals
 
+
            endif
         enddo
      enddo
   enddo
-  !stop
+
   if (iDebugLevel > 2) &
        write(*,*) "===> calc_chemistry: Average Dt for this timestep : ", &
        (Dt*nLats*nLons*nAlts)/nIters
@@ -349,7 +352,7 @@ subroutine calc_chemistry(iBlock)
 end subroutine calc_chemistry
 
 subroutine calc_dtsub(IonSources,IonLosses,NeutralSources,NeutralLosses,dtSub)
-  
+
   use ModChemistry, only: Ions,Neutrals
   use ModPlanet, only : nIons,nSpeciesTotal
 
@@ -365,13 +368,13 @@ subroutine calc_dtsub(IonSources,IonLosses,NeutralSources,NeutralLosses,dtSub)
 
   tli = DtSub * IonLosses
   tsi = DtSub * IonSources + 0.25*Ions
-  
+
   do while (minval(tsi-tli) < 0.0 .and. DtSub > 1.0e-16)
      DtSub = DtSub/2.0
      tli = DtSub * IonLosses
      tsi = DtSub * IonSources + 0.25*Ions
   enddo
-  
+
 !  tli = DtSub * IonLosses
 !  tsi = DtSub * IonSources + Ions
 !
@@ -398,4 +401,3 @@ subroutine calc_dtsub(IonSources,IonLosses,NeutralSources,NeutralLosses,dtSub)
   enddo
 
 end subroutine calc_dtsub
-

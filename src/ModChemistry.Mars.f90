@@ -12,12 +12,12 @@ Module ModChemistry
   use ModPlanet
   use ModRates
   use ModEUV
-  use ModInputs, only: iDebugLevel, UseIonChemistry, UseNeutralChemistry,f107,f107a
+  use ModInputs, only: iDebugLevel, UseIonChemistry, UseNeutralChemistry,f107,f107a, UseEmpiricalIonization
   use ModConstants
   use ModSources, only: ChemicalHeatingS, IonPrecipIonRates,AuroralIonRates
-  
+
   implicit None
-    
+
     real :: Ions(nIons),Neutrals(nSpeciesTotal), eDensity
     real :: rtN2P_e, rtNOP_e, rtCO2P_e, rtO2P_e  ! DR rates
     real :: te, ti, tn
@@ -44,7 +44,7 @@ Module ModChemistry
 contains
 !-----------------------------------
 subroutine calc_reaction_rates(iLon,iLat,iAlt,iBlock)
-  
+
   integer, intent(in) :: iLon,iLat,iAlt,iBlock
 
             te = eTemperature(iLon,iLat,iAlt,iBlock)
@@ -55,8 +55,8 @@ subroutine calc_reaction_rates(iLon,iLat,iAlt,iBlock)
 
 !\ --------------------------------------------------------------------------
 !  TN, TE, TI dependent reaction rates precalculated (like vtgcm)
-!  Rates calculated once each iLON, iLAT, iALT bin of loop 
-!  (m3/sec, m6/sec units needed) 
+!  Rates calculated once each iLON, iLAT, iALT bin of loop
+!  (m3/sec, m6/sec units needed)
 !  -- Only use Te <= 1200 K rate for O2+ DR.  OK up to ~220 km
 !/ --------------------------------------------------------------------------
 ! DR Rates with Electron Temp, te:  cm^3/s -> m^3/s
@@ -96,20 +96,20 @@ subroutine calc_reaction_rates(iLon,iLat,iAlt,iBlock)
 !\
 ! Reactions and Rates taken from vtgcm  [May 2008] (T-independent)
 ! real :: rtCO2_OP, rtO_CO2P_tOP, rtO_CO2P_tO2P, rtN4S_O2P, rtN2D_CO2,  &
-!         rtN2D_CO, rtN2D_O, rtN2D_N2, rtN4S_CO2, rtNO_O2P, rtNO_N2D 
-           
-           rtCO2_OP = 1.1e-09*1.e-6 
+!         rtN2D_CO, rtN2D_O, rtN2D_N2, rtN4S_CO2, rtNO_O2P, rtNO_N2D
+
+           rtCO2_OP = 1.1e-09*1.e-6
            rtO_CO2P_tOP = 9.6e-11*1.e-6
-           rtO_CO2P_tO2P = 1.64e-10*1.e-6 
-           rtN4S_O2P = 1.0e-10*1.e-6 
-!          rtN2D_CO2 = 3.6e-13*1.e-6 
-           rtN2D_CO2 = 2.8e-13*1.e-6 
-           rtN2D_CO = 1.9e-12*1.e-6 
+           rtO_CO2P_tO2P = 1.64e-10*1.e-6
+           rtN4S_O2P = 1.0e-10*1.e-6
+!          rtN2D_CO2 = 3.6e-13*1.e-6
+           rtN2D_CO2 = 2.8e-13*1.e-6
+           rtN2D_CO = 1.9e-12*1.e-6
 !          rtN2D_O =  6.9e-13*1.e-6
            rtN2D_O =  2.0e-11*1.e-6
            rtN2D_N2 =  1.7e-14*1.e-6
            rtN4S_CO2 =  1.7e-16*1.e-6
-           rtNO_O2P = 4.5e-10*1.e-6 
+           rtNO_O2P = 4.5e-10*1.e-6
            rtNO_N2D =  6.7e-11*1.e-6
 
 !\
@@ -123,23 +123,23 @@ subroutine calc_reaction_rates(iLon,iLat,iAlt,iBlock)
             rtCOP_O = 1.4e-10*1.0e-6
             rtCOP_NO = 4.2e-10*1.0e-6
             rtCOP_O2 = 1.5e-10*(300/Ti)**1.1*1.0e-6
-            rtCOP_CO2 = 1.1e-9*1.e-6 
-            rtO2P_N2D = 1.8e-10*1.e-6 
-            rtO2P_N2D2 = 8.65e-11*1.e-6 
-            rtO2P_NO = 4.5e-10*1.e-6 
-            rtO2P_N2 = 1.0e-15*1.e-6 
-            rtN2P_N = 1.0e-11*1.e-6 
-            rtN2P_CO = 7.6e-11*1.e-6 
-            rtN2P_O2 = 5.1e-11*(300/Ti)**1.16*1.e-6 
-            rtN2P_O = 7.0e-12*(300/Ti)**.23*1.e-6 
-            rtN2P_NO = 3.6e-10*1.e-6 
-            rtNP_CO2 = 2.02e-10*1.e-6 
-            rtCO2_NP = 9.18e-10*1.e-6 
-            rtOP_O2 = 1.6e-11*(300/Ti)**.52*1.e-6 
-            rtOP_N2D = 1.3e-10*1.e-6 
-            rtN4S_O2 = 1.5e-14*Tn*exp(-3270/Tn)*1.e-6 
-            rtN2D_NO = 6.7e-11*1.e-6 
-            rtN2D_e = 3.86e-10*(Te/300)**.81*1.e-6 
+            rtCOP_CO2 = 1.1e-9*1.e-6
+            rtO2P_N2D = 1.8e-10*1.e-6
+            rtO2P_N2D2 = 8.65e-11*1.e-6
+            rtO2P_NO = 4.5e-10*1.e-6
+            rtO2P_N2 = 1.0e-15*1.e-6
+            rtN2P_N = 1.0e-11*1.e-6
+            rtN2P_CO = 7.6e-11*1.e-6
+            rtN2P_O2 = 5.1e-11*(300/Ti)**1.16*1.e-6
+            rtN2P_O = 7.0e-12*(300/Ti)**.23*1.e-6
+            rtN2P_NO = 3.6e-10*1.e-6
+            rtNP_CO2 = 2.02e-10*1.e-6
+            rtCO2_NP = 9.18e-10*1.e-6
+            rtOP_O2 = 1.6e-11*(300/Ti)**.52*1.e-6
+            rtOP_N2D = 1.3e-10*1.e-6
+            rtN4S_O2 = 1.5e-14*Tn*exp(-3270/Tn)*1.e-6
+            rtN2D_NO = 6.7e-11*1.e-6
+            rtN2D_e = 3.86e-10*(Te/300)**.81*1.e-6
             rtO2P_N4S = 1.0e-10*1.e-6
 
 end subroutine calc_reaction_rates
@@ -153,17 +153,17 @@ subroutine calc_chemical_sources(iLon,iLat,iAlt,iBlock,IonSources, &
   real, intent(out) :: IonSources(nIons),IonLosses(nIons)
   real, intent(out) :: NeutralSources(nSpeciesTotal), NeutralLosses(nSpeciesTotal)
   real, intent(out) :: ChemicalHeatingSub,Emission(nEmissions)
-  
+
   real :: Source, Reaction, rr
- 
+
   integer :: iNeutral, iion
 
-  
+
   real :: lon, lat, alt
   real, dimension(1:2) :: msis_temp
   real, dimension(1:8) :: msis_dens
   real :: LonDeg, LatDeg, AltKm, LST
-  real,dimension(7)    :: AP  
+  real,dimension(7)    :: AP
 
   real :: percent,o2total,o2ptotal
 
@@ -176,7 +176,7 @@ subroutine calc_chemical_sources(iLon,iLat,iAlt,iBlock,IonSources, &
   NeutralSources = 0.0
   IonLosses  = 0.0
   NeutralLosses = 0.0
-  
+
   ChemicalHeatingSub = 0.0
   Emission = 0.0
 
@@ -194,7 +194,7 @@ subroutine calc_chemical_sources(iLon,iLat,iAlt,iBlock,IonSources, &
               ! ----------------------------------------------------------
               !rr=EuvDissRateS(iLon,iLat,iAlt,iN2_,iBlock) + PEDissRateS(iLon,iLat,iAlt,iN2_,iBlock)
               !rr=EuvDissRateS(iLon,iLat,iAlt,iN2_,iBlock)
-              rr=EuvDissRateS(iLon,iLat,iAlt,iN2_,iBlock)*3.0 
+              rr=EuvDissRateS(iLon,iLat,iAlt,iN2_,iBlock)*3.0
 
               Reaction = rr * Neutrals(iN2_)
 
@@ -203,7 +203,7 @@ subroutine calc_chemical_sources(iLon,iLat,iAlt,iBlock,IonSources, &
               NeutralSources(iN2D_) = NeutralSources(iN2D_) + 2.*0.5*Reaction
 
               ! ----------------------------------------------------------
-              ! N2 + hv ==> N2+ 
+              ! N2 + hv ==> N2+
               ! ----------------------------------------------------------
 
               Reaction = EuvIonRateS(iLon,iLat,iAlt,iN2P_,iBlock)*Neutrals(iN2_)
@@ -215,7 +215,7 @@ subroutine calc_chemical_sources(iLon,iLat,iAlt,iBlock,IonSources, &
 ! CO2 Photochemistry:-----------------------------------------------------+
 !/
               ! ----------------------------------------------------------
-              ! CO2 + hv ==> CO2+ 
+              ! CO2 + hv ==> CO2+
               ! ----------------------------------------------------------
 
               Reaction = EuvIonRateS(iLon,iLat,iAlt,iCO2P_,iBlock)*Neutrals(iCO2_)
@@ -233,7 +233,7 @@ subroutine calc_chemical_sources(iLon,iLat,iAlt,iBlock,IonSources, &
 !write(*,*) reaction,EuvIonRateS(iLon,iLat,iAlt,iCO2P_,iBlock),Neutrals(iCO2_)
 !stop
               ! ----------------------------------------------------------
-              ! CO2 + hv ==> CO + O 
+              ! CO2 + hv ==> CO + O
               ! ----------------------------------------------------------
 
               Reaction = EuvDissRateS(iLon,iLat,iAlt,iCO2_,iBlock)*Neutrals(iCO2_)
@@ -242,6 +242,17 @@ subroutine calc_chemical_sources(iLon,iLat,iAlt,iBlock,IonSources, &
 !              NeutralLosses(iCO2_) = 0.0
               NeutralSources(iO_) = NeutralSources(iO_) + Reaction
               NeutralSources(iCO_) = NeutralSources(iCO_) + Reaction
+
+              ! ----------------------------------------------------------
+              ! CO2 impact ionization
+              ! ----------------------------------------------------------
+              if (UseEmpiricalIonization) then
+                  Reaction = impactIonizationFrequency(iLon,iLat,iAlt,iImpactCO2_,iBlock)*Neutrals(iCO2_)
+                  NeutralLosses(iCO2_) = NeutralLosses(iCO2_) + Reaction
+                  !              NeutralLosses(iCO2_) = 0.0
+                   IonSources(iCO2P_) = IonSources(iCO2P_) + Reaction
+              endif
+
 !\
 ! O2 Photochemistry:-----------------------------------------------------+
 !
@@ -250,14 +261,14 @@ subroutine calc_chemical_sources(iLon,iLat,iAlt,iBlock,IonSources, &
 !             ! ----------------------------------------------------------
 !
               Reaction = EuvIonRateS(iLon,iLat,iAlt,iO2P_,iBlock)*Neutrals(iO2_)
- 
+
               NeutralLosses(iO2_) = NeutralLosses(iO2_) + Reaction
               IonSources(iO2P_) = IonSources(iO2P_) + Reaction
               !/
               reactionrate(11) = reaction
 
               ! ----------------------------------------------------------
-              ! O2 + hv ==> O + O 
+              ! O2 + hv ==> O + O
               ! ----------------------------------------------------------
 
               Reaction = EuvDissRateS(iLon,iLat,iAlt,iO2_,iBlock)*Neutrals(iO2_)
@@ -268,7 +279,7 @@ subroutine calc_chemical_sources(iLon,iLat,iAlt,iBlock,IonSources, &
 ! O Photochemistry:-----------------------------------------------------+
 !/
               ! ----------------------------------------------------------
-              ! O + hv ==> O+ 
+              ! O + hv ==> O+
               !  Two Components:
               !  (1)  O   --> O+ direct (total ionization): High Altitude
               !       photoion(1:NWH,iOP_) slot filled in fill_photo
@@ -292,7 +303,7 @@ subroutine calc_chemical_sources(iLon,iLat,iAlt,iBlock,IonSources, &
               ! N2+ + e- ==> 2.*(0.25*N4S + 0.75*N2D)  Fix and Sung (2001) Branching
               ! -----------------------------------------------------------
 
-              Reaction = rtN2P_e * Ions(ie_) * Ions(iN2P_) 
+              Reaction = rtN2P_e * Ions(ie_) * Ions(iN2P_)
 
               IonLosses(iN2P_) = IonLosses(iN2P_) + Reaction
               NeutralSources(iN4S_) = NeutralSources(iN4S_) + 2.*0.25*Reaction
@@ -302,7 +313,7 @@ subroutine calc_chemical_sources(iLon,iLat,iAlt,iBlock,IonSources, &
               ! O2+ + e- ==> 2O
               ! -----------------------------------------------------------
 
-              Reaction = rtO2P_e * Ions(ie_) * Ions(iO2P_) 
+              Reaction = rtO2P_e * Ions(ie_) * Ions(iO2P_)
 
               IonLosses(iO2P_) = IonLosses(iO2P_) + Reaction
               NeutralSources(iO_) = NeutralSources(iO_) + 2.*Reaction
@@ -311,31 +322,31 @@ subroutine calc_chemical_sources(iLon,iLat,iAlt,iBlock,IonSources, &
               ! CO2+ + e- ==> O + CO
               ! -----------------------------------------------------------
 
-              Reaction =rtCO2P_e * Ions(ie_) * Ions(iCO2P_) 
+              Reaction =rtCO2P_e * Ions(ie_) * Ions(iCO2P_)
               reactionrate(2) = reaction
               IonLosses(iCO2P_) = IonLosses(iCO2P_) + Reaction
               NeutralSources(iO_) = NeutralSources(iO_) + Reaction
               NeutralSources(iCO_) = NeutralSources(iCO_) + Reaction
-              !if (ialt .eq. 50) write(*,*) "CO2+ + e- ==> O + CO",niters, ialt,reaction,rtCO2P_e , Ions(ie_) , Ions(iCO2P_) 
+              !if (ialt .eq. 50) write(*,*) "CO2+ + e- ==> O + CO",niters, ialt,reaction,rtCO2P_e , Ions(ie_) , Ions(iCO2P_)
                ! -----------------------------------------------------------
-              ! NO+ + e- ==> O + N2D 
+              ! NO+ + e- ==> O + N2D
               ! g = 0.75
               ! -----------------------------------------------------------
 
-              Reaction = rtNOP_e * Ions(ie_) * Ions(iNOP_) 
-              !if (ialt .eq. 47)               write(*,*) -1*reaction, "NO+ + e- ==> O + N2D ",rtNOP_e,Ions(ie_) ,Ions(iNOP_) 
+              Reaction = rtNOP_e * Ions(ie_) * Ions(iNOP_)
+              !if (ialt .eq. 47)               write(*,*) -1*reaction, "NO+ + e- ==> O + N2D ",rtNOP_e,Ions(ie_) ,Ions(iNOP_)
               IonLosses(iNOP_) = IonLosses(iNOP_) + Reaction
               NeutralSources(iN2D_) = NeutralSources(iN2D_) + Reaction
               NeutralSources(iO_) = NeutralSources(iO_) + Reaction
               reactionrate(14) = reaction
 
               ! -----------------------------------------------------------
-              ! NO+ + e- ==> O + N4S 
+              ! NO+ + e- ==> O + N4S
               ! (1-g) = 0.25
               ! -----------------------------------------------------------
 
-              Reaction = rtNOP_e2 * Ions(ie_) * Ions(iNOP_) 
-              !if (ialt .eq. 47)  write(*,*) -1*reaction, "NO+ + e- ==> O + N4S ",rtNOP_e2,Ions(ie_) ,Ions(iNOP_) 
+              Reaction = rtNOP_e2 * Ions(ie_) * Ions(iNOP_)
+              !if (ialt .eq. 47)  write(*,*) -1*reaction, "NO+ + e- ==> O + N4S ",rtNOP_e2,Ions(ie_) ,Ions(iNOP_)
               IonLosses(iNOP_) = IonLosses(iNOP_) + Reaction
               NeutralSources(iN4S_) = NeutralSources(iN4S_) + Reaction
               NeutralSources(iO_) = NeutralSources(iO_) + Reaction
@@ -345,12 +356,12 @@ subroutine calc_chemical_sources(iLon,iLat,iAlt,iBlock,IonSources, &
 !-----------Begin Bi-Molecular Ion-Neutral and Neutral-Neutral Chemistry-----------+
 !/
               ! -----------------------------------------------------------
-              ! CO2+ + O ==> O2+ + CO  Fast 
+              ! CO2+ + O ==> O2+ + CO  Fast
               ! -----------------------------------------------------------
-              Reaction = rtO_CO2P_tO2P * Neutrals(iO_) * Ions(iCO2P_) 
+              Reaction = rtO_CO2P_tO2P * Neutrals(iO_) * Ions(iCO2P_)
               reactionrate(3) = reaction
 !if (ialt .eq. 42) then
-!   write(*,*) reaction,rtO_CO2P_tO2P,Neutrals(iO_) ,Ions(iCO2P_) 
+!   write(*,*) reaction,rtO_CO2P_tO2P,Neutrals(iO_) ,Ions(iCO2P_)
 
 
 !endif
@@ -360,13 +371,13 @@ subroutine calc_chemical_sources(iLon,iLat,iAlt,iBlock,IonSources, &
               IonSources(iO2P_) = IonSources(iO2P_) + Reaction
 
               !if (ialt .eq. 50) write(*,*) "CO2+ + O ==> O2+ + CO",niters,&
-!                   ialt,reaction,rtO_CO2P_tO2P,  Neutrals(iO_) , Ions(iCO2P_) 
+!                   ialt,reaction,rtO_CO2P_tO2P,  Neutrals(iO_) , Ions(iCO2P_)
               ! -----------------------------------------------------------
-              ! CO2+ + O ==> O+ + CO2  Fast 
+              ! CO2+ + O ==> O+ + CO2  Fast
               ! -----------------------------------------------------------
-              Reaction =rtO_CO2P_tOP * Neutrals(iO_) * Ions(iCO2P_) 
+              Reaction =rtO_CO2P_tOP * Neutrals(iO_) * Ions(iCO2P_)
 !if (ialt .eq. 42) then
-!   write(*,*) reaction,rtO_CO2P_tOP,Neutrals(iO_) ,Ions(iCO2P_) 
+!   write(*,*) reaction,rtO_CO2P_tOP,Neutrals(iO_) ,Ions(iCO2P_)
 !stop
 !endif
               reactionrate(4) = reaction
@@ -377,12 +388,12 @@ subroutine calc_chemical_sources(iLon,iLat,iAlt,iBlock,IonSources, &
               IonSources(iOP_) = IonSources(iOP_) + Reaction
               reactionrate(7) = reaction
               !if (ialt .eq. 50) write(*,*) "CO2+ + O ==> O+ + CO2",niters, &
-              !ialt,reaction ,rtO_CO2P_tOP ,Neutrals(iO_) , Ions(iCO2P_) 
+              !ialt,reaction ,rtO_CO2P_tOP ,Neutrals(iO_) , Ions(iCO2P_)
 !              if (ialt .eq. 41)              write(*,*) "CO2+ + O ",reaction, neutrals(iO_)
               ! -----------------------------------------------------------
-              ! CO2 + O+ ==> O2+ + CO  Fast 
+              ! CO2 + O+ ==> O2+ + CO  Fast
               ! -----------------------------------------------------------
-              Reaction = rtCO2_OP * Neutrals(iCO2_) * Ions(iOP_) 
+              Reaction = rtCO2_OP * Neutrals(iCO2_) * Ions(iOP_)
 
 !                write(*,*)ialt, niters, rtCO2_OP ,neutrals(iCO2_),ions(iOP_)
               !if (ialt .eq. 45 .or. ialt  .eq. 46)
@@ -398,9 +409,9 @@ subroutine calc_chemical_sources(iLon,iLat,iAlt,iBlock,IonSources, &
 !                   Ions(iOP_)-reaction ,reaction
 !              if (ialt .eq. 41) write(*,*) "CO2 + O+: ",reaction, neutrals(ico2_)
               ! -----------------------------------------------------------
-              ! CO2 + N2+ ==> CO2+ + N2  
+              ! CO2 + N2+ ==> CO2+ + N2
               ! -----------------------------------------------------------
-              Reaction = rtCO2_N2P * Neutrals(iCO2_) * Ions(iN2P_) 
+              Reaction = rtCO2_N2P * Neutrals(iCO2_) * Ions(iN2P_)
               reactionrate(5) = reaction
               NeutralLosses(iCO2_) = NeutralLosses(iCO2_) + Reaction
 !              NeutralLosses(iCO2_) = 0.0
@@ -408,11 +419,11 @@ subroutine calc_chemical_sources(iLon,iLat,iAlt,iBlock,IonSources, &
               NeutralSources(iN2_) = NeutralSources(iN2_) + Reaction
               IonSources(iCO2P_) = IonSources(iCO2P_) + Reaction
 
-                           
+
               ! -----------------------------------------------------------
-              ! O + N2+ ==> NO+ + N4S  
+              ! O + N2+ ==> NO+ + N4S
               ! -----------------------------------------------------------
-              Reaction = rtO_N2P * Neutrals(iO_) * Ions(iN2P_) 
+              Reaction = rtO_N2P * Neutrals(iO_) * Ions(iN2P_)
               !if (ialt .eq. 47) write(*,*) reaction, "O + N2+ ==> NO+ + N4S"
               NeutralLosses(iO_) = NeutralLosses(iO_) + Reaction
               IonLosses(iN2P_) = IonLosses(iN2P_) + Reaction
@@ -420,9 +431,9 @@ subroutine calc_chemical_sources(iLon,iLat,iAlt,iBlock,IonSources, &
               IonSources(iNOP_) = IonSources(iNOP_) + Reaction
               reactionrate(16) = reaction
               ! -----------------------------------------------------------
-              ! N2 + O+ ==> NO+ + N4S  
+              ! N2 + O+ ==> NO+ + N4S
               ! -----------------------------------------------------------
-              Reaction = rtN2_OP * Neutrals(iN2_) * Ions(iOP_) 
+              Reaction = rtN2_OP * Neutrals(iN2_) * Ions(iOP_)
               !if (ialt .eq. 47) write(*,*) reaction, "N2 + O+ ==> NO+ + N4S "
               NeutralLosses(iN2_) = NeutralLosses(iN2_) + Reaction
               IonLosses(iOP_) = IonLosses(iOP_) + Reaction
@@ -432,9 +443,9 @@ subroutine calc_chemical_sources(iLon,iLat,iAlt,iBlock,IonSources, &
 !              if (ialt .eq. 41) write(*,*) "N2 + O+: ",reaction
 !              if (ialt .eq. 41) stop
               ! -----------------------------------------------------------
-              ! N4S+ O2+ ==> NO+ + O  
+              ! N4S+ O2+ ==> NO+ + O
               ! -----------------------------------------------------------
-              Reaction = rtN4S_O2P * Neutrals(iN4S_) * Ions(iO2P_) 
+              Reaction = rtN4S_O2P * Neutrals(iN4S_) * Ions(iO2P_)
               !if (ialt .eq. 47) write(*,*) reaction, "N4S+ O2+ ==> NO+ + O  "
               NeutralLosses(iN4S_) = NeutralLosses(iN4S_) + Reaction
               IonLosses(iO2P_) = IonLosses(iO2P_) + Reaction
@@ -453,8 +464,8 @@ subroutine calc_chemical_sources(iLon,iLat,iAlt,iBlock,IonSources, &
 !               IonLosses(iCO2P_) = IonLosses(iCO2P_) + Reaction
 !               NeutralSources(iCO2_) = NeutralSources(iCO2_) + Reaction
 !               IonSources(iO2P_) = IonSources(iO2P_) + Reaction
-!                
-!                
+!
+!
 !                ! -----------------------------------------------------------
 !                !CO2+ + NO ==> NO+ + CO2
 !                ! -----------------------------------------------------------
@@ -465,7 +476,7 @@ subroutine calc_chemical_sources(iLon,iLat,iAlt,iBlock,IonSources, &
 !                NeutralSources(iCO2_) = NeutralSources(iCO2_) + Reaction
 !                IonSources(iNOP_) = IonSources(iNOP_) + Reaction
 !                reactionrate(19) = reaction
-!  
+!
 !                 ! -----------------------------------------------------------
 !                ! CO2+ + N2D ==> N+ + CO2
 !                ! -----------------------------------------------------------
@@ -474,8 +485,8 @@ subroutine calc_chemical_sources(iLon,iLat,iAlt,iBlock,IonSources, &
 !  !              IonLosses(iCO2P_) = IonLosses(iCO2P_) + Reaction
 !  !              NeutralSources(iCO2_) = NeutralSources(iCO2_) + Reaction
 !  !              IonSources(iNP_) = IonSources(iNP_) + Reaction
-!  
-!  
+!
+!
 !                ! -----------------------------------------------------------
 !                ! O2+ + N4S ==> NO+ + O
 !                ! -----------------------------------------------------------
@@ -498,7 +509,7 @@ subroutine calc_chemical_sources(iLon,iLat,iAlt,iBlock,IonSources, &
 !                reactionrate(21) = reaction
 !                ! -----------------------------------------------------------
 !                ! O2+ + N2 ==> NO+ + NO
-!                ! ----------------------------------------------------------- 
+!                ! -----------------------------------------------------------
 !                reaction = rtO2P_N2 * Neutrals(iN2_) * Ions(iO2P_)
 !               !if (ialt .eq. 47)  write(*,*) reaction, "O2+ + N2 ==> NO+ + NO",rtO2P_N2,Neutrals(iN2_) ,Ions(iO2P_)
 !                NeutralLosses(iN2_) = NeutralLosses(iN2_) + Reaction
@@ -506,29 +517,29 @@ subroutine calc_chemical_sources(iLon,iLat,iAlt,iBlock,IonSources, &
 !                NeutralSources(iNO_) = NeutralSources(iNO_) + Reaction
 !                IonSources(iNOP_) = IonSources(iNOP_) + Reaction
 !                reactionrate(22) = reaction
-!  
-!  
+!
+!
 !                ! -----------------------------------------------------------
 !                ! N2+ + O2 ==> N2 + O2+
-!                ! ----------------------------------------------------------- 
+!                ! -----------------------------------------------------------
 !                reaction = rtN2P_O2 * Neutrals(iO2_) * Ions(iN2P_)
 !                NeutralLosses(iO2_) = NeutralLosses(iO2_) + Reaction
 !                IonLosses(iN2P_) = IonLosses(iN2P_) + Reaction
 !                NeutralSources(iN2_) = NeutralSources(iN2_) + Reaction
 !                IonSources(iO2P_) = IonSources(iO2P_) + Reaction
-!  
+!
 !                ! -----------------------------------------------------------
 !                ! N2+ + O ==> O+ + N2
-!                ! ----------------------------------------------------------- 
+!                ! -----------------------------------------------------------
 !                reaction = rtN2P_O * Neutrals(iO_) * Ions(iN2P_)
 !                NeutralLosses(iO_) = NeutralLosses(iO_) + Reaction
 !                IonLosses(iN2P_) = IonLosses(iN2P_) + Reaction
 !                NeutralSources(iN2_) = NeutralSources(iN2_) + Reaction
 !                IonSources(iOP_) = IonSources(iOP_) + Reaction
-!  
+!
 !                ! -----------------------------------------------------------
 !                ! N2+ + NO ==> N2 + NO+
-!                ! ----------------------------------------------------------- 
+!                ! -----------------------------------------------------------
 !                reaction = rtN2P_NO* Neutrals(iNO_) * Ions(iN2P_)
 !                !if (ialt .eq. 47) write(*,*) reaction, "N2+ + NO ==> N2 + NO+"
 !                NeutralLosses(iNO_) = NeutralLosses(iNO_) + Reaction
@@ -536,10 +547,10 @@ subroutine calc_chemical_sources(iLon,iLat,iAlt,iBlock,IonSources, &
 !                NeutralSources(iN2_) = NeutralSources(iN2_) + Reaction
 !                IonSources(iNOP_) = IonSources(iNOP_) + Reaction
 !                reactionrate(23) = reaction
-!  
+!
 !                 ! -----------------------------------------------------------
 !                ! O+ + O2 ==> O + O2+
-!                ! ----------------------------------------------------------- 
+!                ! -----------------------------------------------------------
 !                reaction = rtOP_O2* Neutrals(iO2_) * Ions(iOP_)
 !                NeutralLosses(iO2_) = NeutralLosses(iO2_) + Reaction
 !                IonLosses(iOP_) = IonLosses(iOP_) + Reaction
@@ -553,7 +564,7 @@ subroutine calc_chemical_sources(iLon,iLat,iAlt,iBlock,IonSources, &
 !-----------Ter-Molecular Neutral-Neutral Chemistry-------------------------------+
 !/
               ! -----------------------------------------------------------
-              ! O + O + CO2 ==> O2 + CO2  
+              ! O + O + CO2 ==> O2 + CO2
               ! -----------------------------------------------------------
               Reaction = rtO_O_CO2*Neutrals(iO_)*Neutrals(iO_)*Neutrals(iCO2_)
 
@@ -561,7 +572,7 @@ subroutine calc_chemical_sources(iLon,iLat,iAlt,iBlock,IonSources, &
               NeutralSources(iO2_) = NeutralSources(iO2_) + Reaction
 
               ! -----------------------------------------------------------
-              ! O + O2 + CO2 ==> stuff + CO2  
+              ! O + O2 + CO2 ==> stuff + CO2
               ! -----------------------------------------------------------
 !             Reaction = rtO_O_CO2 *Neutrals(iO_)*Neutrals(iO_)*Neutrals(iCO2_)
               Reaction = rtO_O2_CO2 *Neutrals(iO_)*Neutrals(iO2_)*Neutrals(iCO2_)
@@ -570,7 +581,7 @@ subroutine calc_chemical_sources(iLon,iLat,iAlt,iBlock,IonSources, &
               NeutralLosses(iO2_) = NeutralLosses(iO2_) + Reaction
 
               ! -----------------------------------------------------------
-              ! O + CO + CO2 ==> 2.*CO2  
+              ! O + CO + CO2 ==> 2.*CO2
               ! -----------------------------------------------------------
               Reaction = rtO_CO_CO2 *Neutrals(iO_)*Neutrals(iCO_)*Neutrals(iCO2_)
 
@@ -600,7 +611,7 @@ subroutine calc_chemical_sources(iLon,iLat,iAlt,iBlock,IonSources, &
 !              NeutralLosses(iCO2_) = 0.0
               NeutralSources(iNO_) = NeutralSources(iNO_) + Reaction
               NeutralSources(iCO_) = NeutralSources(iCO_) + Reaction
- 
+
               ! -----------------------------------------------------------
               ! N2D + CO  ==> N4S + CO
               ! -----------------------------------------------------------
@@ -655,7 +666,7 @@ subroutine calc_chemical_sources(iLon,iLat,iAlt,iBlock,IonSources, &
 
 !             Total NO (delta plus gamma band system) mission (190-260 nm)
 !             Initially Should be ph/m3.sec units  (check)
-!             Convert to ph/cm3.sec units  
+!             Convert to ph/cm3.sec units
               Emission(iENOUV_) = Emission(iENOUV_) + Reaction*1.0E-06
 
 !----------------------------------
@@ -665,27 +676,27 @@ subroutine calc_chemical_sources(iLon,iLat,iAlt,iBlock,IonSources, &
 !               ! N + CO2  ==> NO + CO
 !               ! -----------------------------------------------------------
 !               Reaction = rtN4S_CO2*Neutrals(iN4S_)*Neutrals(iCO2_)
-! 
+!
 !               NeutralLosses(iN4S_) = NeutralLosses(iN4S_) + Reaction
 !               NeutralLosses(iCO2_) = NeutralLosses(iCO2_) + Reaction
 !               NeutralSources(iNO_) = NeutralSources(iNO_) + Reaction
 !               NeutralSources(iCO_) = NeutralSources(iCO_) + Reaction
-! 
+!
 !               ! -----------------------------------------------------------
 !               ! N(2D) + NO  ==> N2 + O
 !               ! -----------------------------------------------------------
 !               Reaction = rtN2D_NO*Neutrals(iN2D_)*Neutrals(iNO_)
-! 
+!
 !               NeutralLosses(iN2D_) = NeutralLosses(iN2D_) + Reaction
 !               NeutralLosses(iNO_) = NeutralLosses(iNO_) + Reaction
 !               NeutralSources(iN2_) = NeutralSources(iN2_) + Reaction
-!               NeutralSources(iO_) = NeutralSources(iO_) + Reaction  
-! 
+!               NeutralSources(iO_) = NeutralSources(iO_) + Reaction
+!
 !               ! -----------------------------------------------------------
 !               ! N(2D) + e  ==> N(4S) + e
 !               ! -----------------------------------------------------------
 !               Reaction = rtN2D_e*Neutrals(iN2D_)*Ions(ie_)
-! 
+!
 !               NeutralLosses(iN2D_) = NeutralLosses(iN2D_) + Reaction
 !               NeutralSources(iN4S_) = NeutralSources(iN4S_) + Reaction
 !\
@@ -710,16 +721,15 @@ subroutine calc_chemical_sources(iLon,iLat,iAlt,iBlock,IonSources, &
 !-----------End Total Chemistry-------------------------------------------+
 !------------------------------------------------------+
 
-if (.NOT. useNeutralChemistry) then 
+if (.NOT. useNeutralChemistry) then
 
    NeutralSources = 0.0
    NeutralLosses = 0.0
 endif
 
-call end_timing("chemsources")    
+call end_timing("chemsources")
    end subroutine calc_chemical_sources
 
 
 
 end Module ModChemistry
-

@@ -21,16 +21,12 @@ subroutine init_b0
 
   if (IsMars .and. UseCrustalField) then
 
-        Call ReadMagField
+    Call ReadMagField
+    if (UseEmpiricalIonization) then
+      call readLillisModel
+    endif
 
-        ! do i=1,nBlocks
-        !    UserData3D(:,:,:,12,i)=B0(:,:,:,1,i)
-        !    UserData3D(:,:,:,13,i)=B0(:,:,:,2,i)
-        !    UserData3D(:,:,:,14,i)=B0(:,:,:,3,i)
-        !    UserData3D(:,:,:,15,i)=B0(:,:,:,4,i)
-        ! enddo
-
-      else
+  else
 
     AltMinIono=(2*RadialDistance_GB(1,1,-1,1) - &
          RadialDistance_GB(1,1,1,1) - RBody)/1000.0

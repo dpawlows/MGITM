@@ -22,11 +22,9 @@ subroutine advance
   if (UseWACCMTides) call update_waccm_tides
 
   if (.not. UseStatisticalModelsOnly) then
-
      call advance_vertical_all
-     call add_sources 
+     call add_sources
      if (.not. Is1D) call advance_horizontal_all
- 
   else
 
      Dt = DtStatisticalModels
@@ -49,7 +47,7 @@ subroutine advance
   iDay  = DTime / Rotation_Period
   uTime = (DTime / Rotation_Period - iDay) * Rotation_Period
 
-  iJulianDay = jday(iTimeArray(1), iTimeArray(2), iTimeArray(3)) 
+  iJulianDay = jday(iTimeArray(1), iTimeArray(2), iTimeArray(3))
 
   if (UseStatisticalModelsOnly) then
 

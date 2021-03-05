@@ -181,6 +181,7 @@ module ModInputs
   logical :: IsAsymmetric          = .false.
   Real :: BetaPointImpl         = 1.0
 
+  logical :: UseEmpiricalIonization = .false.
   logical :: UseDynamo              = .false.
   real    :: DynamoHighLatBoundary  = 65.0
   integer :: nItersMax              = 500

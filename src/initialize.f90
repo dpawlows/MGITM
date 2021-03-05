@@ -398,7 +398,6 @@ subroutine initialize_gitm(TimeIn)
   if (.not.Is1D) call exchange_messages_sphere
 
   call calc_pressure
-
   ! The iLon and iLat are dummy variables...
   call UA_calc_electrodynamics(iLon,iLat)
 
