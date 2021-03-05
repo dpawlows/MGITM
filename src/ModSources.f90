@@ -60,7 +60,7 @@ module ModSources
   !      ino_n  -->  no + n
   !/
 
-  
+
   integer, parameter :: nReactions = 26
  real :: ChemicalHeatingSpecies(nLons, nLats, nAlts,nReactions)
   real :: ChemicalHeatingS(nReactions)
