@@ -1455,6 +1455,7 @@ end subroutine init_isochem
     enddo ! LON-loop
 ! -----------------------------------------------------------------------
 ! Stuff 3-D internal arrays back into MGITM allocated arrays for usage
+    write(*,*) iEast_,iNorth_
   GWDrag(1:nLons,1:nLats,1:nAlts,iEast_,iBlock) = &
         udrag(1:nLons,1:nLats,1:nAlts)             ![m/s^2]
   GWDrag(1:nLons,1:nLats,1:nAlts,iNorth_,iBlock) = &
@@ -1463,7 +1464,7 @@ end subroutine init_isochem
         gwheat_ir(1:nLons,1:nLats,1:nAlts)         ![K/s]
   GWDHeat(1:nLons,1:nLats,1:nAlts,iBlock) = &
         gwheat_dif(1:nLons,1:nLats,1:nAlts)        ![K/s]
-
+stop
   GW_net_heating(1:nLons,1:nLats,1:nAlts,iBlock) = &
 	net_heating_t(1:nLons,1:nLats,1:nAlts)
   GW_flux_tot(1:nLons,1:nLats,1:nAlts,iBlock) = &
@@ -9976,25 +9977,26 @@ subroutine ReadMagField
                  c1= c01*(1-Blat)+c11*Blat
                  c= c0*(1-Balt)+c1*Balt
                  B0(iLon,iLat,iAlt,Magdim,iBlock)=c*1.8
-                ! if(iproc==0)then
-                  ! write(*,*)c
+                 !if(iproc==0)then
+                 ! write(*,*)c
                   ! write(*,*)Magdim
                   ! write(*,*)iBlock
-                   !write(*,*)Magdimfix
-                   !write(*,*) B0(iLon,iLat,iAlt,1,1)
-                   !write(*,*) B0(iLon,iLat,iAlt,2,1)
-                   !write(*,*) B0(iLon,iLat,iAlt,3,1)
-                   !write(*,*) B0(iLon,iLat,iAlt,4,1)
-                ! endif
+                  ! write(*,*)Magdimfix
+                  ! write(*,*) B0(iLon,iLat,iAlt,1,1)
+                  ! write(*,*) B0(iLon,iLat,iAlt,2,1)
+                  ! write(*,*) B0(iLon,iLat,iAlt,3,1)
+                  ! write(*,*) B0(iLon,iLat,iAlt,4,1)
+              !endif
 
               endif
 
            enddo
         enddo
      enddo
-   enddo
   enddo
-
+enddo
+!write(*,*) iproc, minval(B0(:,:,:,1,1)),minval(B0(:,:,:,2,1)),minval(B0(:,:,:,3,1)),minval(B0(:,:,:,4,1))
+!stop
 end subroutine ReadMagField
 
 subroutine ReadLillisModel

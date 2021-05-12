@@ -218,6 +218,7 @@ module ModInputs
 
   logical :: DoCheckStopFile = .true.
 
+  real :: MaxVParallel = 100.0
   !\
   ! Methods for completing chemistry
   !/
