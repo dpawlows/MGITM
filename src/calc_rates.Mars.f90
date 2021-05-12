@@ -342,7 +342,8 @@ trouble = .false.
                    KappaEddyDiffusion(iLon,iLat,iAlt,iBlock) * cp(iLon,iLat,iAlt,iBlock) * &
                    Rho(iLon,iLat,iAlt,iBlock)/10.
 
-             if (UseEmpiricalIonization .and. Altitude_GB(iLon,iLat,iAlt,iBlock) >= minval(EIMAltitude)) then
+             if (UseEmpiricalIonization .and. Altitude_GB(iLon,iLat,iAlt,iBlock) >= minval(EIMAltitude) &
+                  .and. Altitude_GB(iLon,iLat,iAlt,iBlock) <= nAlts) then
                !Nightside impact ionization
                if (floor((tSimulation-dt)/dtImpactIonization) /= &
                     floor((tsimulation)/dtImpactIonization) .or. IsFirstTime) then
