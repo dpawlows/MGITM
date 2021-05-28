@@ -1,4 +1,4 @@
-!  Copyright (C) 2002 Regents of the University of Michigan, portions used with permission 
+!  Copyright (C) 2002 Regents of the University of Michigan, portions used with permission
 !  For more information, see http://csem.engin.umich.edu/tools/swmf
 
 subroutine calc_ion_v(iBlock)
@@ -20,13 +20,13 @@ subroutine calc_ion_v(iBlock)
                   LocalGravity, ViDotB
 
   real, dimension(-1:nLons+2, -1:nLats+2, -1:nAlts+2, 3) ::           &
-                  Force, BLocal, & 
+                  Force, BLocal, &
                   ForceCrossB, ForcePerp, &
                   LocalPressureGradient, &
                   LocalNeutralWinds, IVelGradient
 
   real, dimension(-1:nLons+2, -1:nLats+2, -1:nAlts+2):: Pressure_G, nu_in
-  
+
   logical :: UseImplicitFieldAlignedMomentum = .false.
 
  !---------------------------------------------------------------------------
@@ -42,7 +42,7 @@ subroutine calc_ion_v(iBlock)
   ! The electron pressure is included here because of the electron momentum equation:
   !   When all terms multipled by the electron mass are ignored, you get grad(Pe) = E-par,
   !   When you put E-par into ion momentum eqn, you can simply add grad(Pe) to grad(Pi).
-  
+
   Pressure_G = IPressure(:,:,:,iBlock)+ePressure(:,:,:,iBlock)
   call UAM_Gradient_GC(Pressure_G, LocalPressureGradient, iBlock)
 
@@ -65,12 +65,12 @@ subroutine calc_ion_v(iBlock)
      LocalGravity = 0.0
   endif
 
-  if (UseNeutralDrag) then 
+  if (UseNeutralDrag) then
      LocalNeutralWinds = Velocity(:,:,:,:,iBlock)
   else
      LocalNeutralWinds = 0.0
   endif
-  
+
   Force = 0.0
 
   IRho = IDensityS(:,:,:,ie_,iBlock) * &
@@ -104,7 +104,7 @@ subroutine calc_ion_v(iBlock)
   enddo
 
   nu_in = RhoNu / iRho
-  
+
   if (UseNeutralDrag) then
      do iDir = 1, 3
         Force(:,:,:,iDir) = Force(:,:,:,iDir) + &
@@ -138,7 +138,7 @@ subroutine calc_ion_v(iBlock)
      IVelocity(:,:,:,iNorth_,iBlock) = &
           LocalNeutralWinds(:,:,:,iNorth_) - &
           LocalPressureGradient(:,:,:,iNorth_) / RhoNu
-         
+
   else
 
      UDotB = sum(LocalNeutralWinds(:,:,:,:) * BLocal, dim=4)/ &
@@ -178,7 +178,7 @@ subroutine calc_ion_v(iBlock)
 
         ViDotB = VIParallel*BLocal(:,:,:,iDir)/&
              B0(:,:,:,iMag_,iBlock)
-        
+
         ! Calculate Gradient First:
         call UAM_Gradient_GC(ViDotB, IVelGradient, iBlock)
 
@@ -246,14 +246,13 @@ subroutine calc_ion_v(iBlock)
         IVelocity(:,:,:,iDir, iBlock) = &
              IVelocityPar(:,:,:,iDir, iBlock) + &
              IVelocityPerp(:,:,:,iDir, iBlock)
-             
+
      enddo
 
   endif
-write(*,*) iproc, minval(ivelocitypar(:,:,:,1,1)),minval(ivelocitypar(:,:,:,2,1)),minval(ivelocitypar(:,:,:,3,1))
-write(*,*) iproc, maxval(ivelocityperp(:,:,:,1,1)),maxval(ivelocityperp(:,:,:,2,1)),maxval(ivelocityperp(:,:,:,3,1))
-write(*,*) "-----------------"
-stop
+! write(*,*) iproc, minval(ivelocitypar(:,:,:,1,1)),minval(ivelocitypar(:,:,:,2,1)),minval(ivelocitypar(:,:,:,3,1))
+! write(*,*) iproc, maxval(ivelocityperp(:,:,:,1,1)),maxval(ivelocityperp(:,:,:,2,1)),maxval(ivelocityperp(:,:,:,3,1))
+! write(*,*) "-----------------"
 
   IVelocity(:,:,:,:,iBlock) = min( 3000.0, IVelocity(:,:,:,:,iBlock))
   IVelocity(:,:,:,:,iBlock) = max(-3000.0, IVelocity(:,:,:,:,iBlock))

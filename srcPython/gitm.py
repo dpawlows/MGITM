@@ -36,7 +36,7 @@
 #------------------------------------------------------------------------------
 
 '''
-PyBats submodule for handling input/output for the Global 
+PyBats submodule for handling input/output for the Global
 Ionosphere-Thermosphere Model (GITM), one of the choices for the UA module
 in the SWMF.
 '''
@@ -104,7 +104,7 @@ class GitmBin(PbData):
         from re import sub
         from struct import unpack
         import sys
-        
+
         # Read data and header info
         f=open(self.attrs['file'], 'rb')
 
@@ -114,7 +114,7 @@ class GitmBin(PbData):
         endChar='>'
         rawRecLen=f.read(4)
         if len(rawRecLen) < 4:
-            print "GitmBin ERROR: empty file [", self.attrs['file'], "]"
+            print("GitmBin ERROR: empty file [", self.attrs['file'], "]")
             sys.exit(1)
         recLen=(unpack(endChar+'l',rawRecLen))[0]
         if (recLen>10000)or(recLen<0):
@@ -142,7 +142,7 @@ class GitmBin(PbData):
             var.append(unpack(endChar+'%is'%(recLen),f.read(recLen))[0])
             (oldLen, recLen)=unpack(endChar+'2l',f.read(8))
 
-        # Extract time. 
+        # Extract time.
         (yy,mm,dd,hh,mn,ss,ms)=unpack(endChar+'lllllll',f.read(recLen))
         self['time']=dt.datetime(yy,mm,dd,hh,mn,ss,ms/1000)
         (oldLen)=unpack(endChar+'l',f.read(4))
@@ -168,10 +168,10 @@ class GitmBin(PbData):
             if gvar:
                 self[v]=dmarray(np.array(temp))
                 # Reshape arrays, note that ordering in file is Fortran-like.
-                self[v]=self[v].reshape( 
+                self[v]=self[v].reshape(
                     (self.attrs['nLon'],self.attrs['nLat'],self.attrs['nAlt']),
                     order='fortran')
-                
+
             f.read(4)
 
 
@@ -185,10 +185,10 @@ class GitmBin(PbData):
         from numpy import pi
         import string
 
-        self['dLat'] = dmarray(self['Latitude']*180.0/pi, 
+        self['dLat'] = dmarray(self['Latitude']*180.0/pi,
                                attrs={'units':'degrees', 'scale':'linear',
                                       'name':'Latitude'})
-        self['dLon'] = dmarray(self['Longitude']*180.0/pi, 
+        self['dLon'] = dmarray(self['Longitude']*180.0/pi,
                                attrs={'units':'degrees', 'scale':'linear',
                                       'name':'Longitude'})
 
@@ -240,10 +240,10 @@ class GitmBin(PbData):
             mag = self
         else:
             if not self.attrs.has_key('magfile'):
-                print "No 3D MAG/ION file associated with this GITM Binary"
+                print("No 3D MAG/ION file associated with this GITM Binary")
             elif(self.attrs['magfile'].find("ION") <= 0 and
                  self.attrs['magfile'].find("MAG") <= 0):
-                print "No 3D MAG/ION file associated with this GITM Binary"
+                print("No 3D MAG/ION file associated with this GITM Binary")
             else:
                 mag = GitmBin(self.attrs['magfile'])
 
@@ -301,10 +301,10 @@ class GitmBin(PbData):
             ion = self
         else:
             if not self.attrs.has_key('magfile'):
-                print "No 3D MAG/ION file associated with this GITM Binary"
+                print("No 3D MAG/ION file associated with this GITM Binary")
             elif(self.attrs['magfile'].find("ION") <= 0 and
                  self.attrs['magfile'].find("MAG") <= 0):
-                print "No 3D MAG/ION file associated with this GITM Binary"
+                print("No 3D MAG/ION file associated with this GITM Binary")
             else:
                 ion = GitmBin(self.attrs['magfile'])
 
@@ -371,7 +371,7 @@ class GitmBin(PbData):
                     self[zon].attrs = {'units':'%s{\mathdefault{,\,positive\,east}}'%(units), 'scale':scale, 'name':name.replace("east", "zon")}
                     self[mer] = dmarray.copy(vm)
                     self[mer].attrs = {'units':'%s{\mathdefault{,\,positive\,up}}'%(units), 'scale':scale, 'name':name.replace("east", "mer")}
-        
+
             if not self.has_key('B.F. East'):
                 self['B.F. East'] = dmarray.copy(ion['B.F. East'])
                 self['B.F. North'] = dmarray.copy(ion['B.F. North'])
@@ -577,7 +577,7 @@ class GitmBin(PbData):
 
                 # Different versions of GITM differ in header capitalization
                 if not name_dict.has_key(nk):
-                    print nk
+                    print(nk)
                     # Try to capitalize or lowercase the key
                     if nk == nk.capitalize():
                         nk = k.lower()

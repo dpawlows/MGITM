@@ -11,7 +11,7 @@ from pylab import cm
 
 
 #-----------------------------------------------------------------------------
-# 
+#
 #-----------------------------------------------------------------------------
 
 def read_gitm_header(file):
@@ -31,7 +31,7 @@ def read_gitm_header(file):
     else:
         filelist = glob(file[0])
         file = filelist[0]
-            
+
     header = {}
     header["nFiles"] = len(filelist)
     header["version"] = 0
@@ -76,7 +76,7 @@ def read_gitm_header(file):
         header["vars"].append(v.decode('utf-8').replace(" ",""))
         (oldLen, recLen)=unpack(endChar+'2l',f.read(8))
 
-    # Extract time. 
+    # Extract time.
     (yy,mm,dd,hh,mn,ss,ms)=unpack(endChar+'lllllll',f.read(recLen))
     header["time"].append(datetime(yy,mm,dd,hh,mn,ss,ms*1000))
     # print(header["time"][-1])
@@ -86,7 +86,7 @@ def read_gitm_header(file):
     return header
 
 #-----------------------------------------------------------------------------
-# 
+#
 #-----------------------------------------------------------------------------
 
 def read_gitm_headers():
@@ -140,7 +140,7 @@ def read_gitm_headers():
                 header["vars"].append(v.decode('utf-8').replace(" ",""))
             (oldLen, recLen)=unpack(endChar+'2l',f.read(8))
 
-        # Extract time. 
+        # Extract time.
         (yy,mm,dd,hh,mn,ss,ms)=unpack(endChar+'lllllll',f.read(recLen))
         header["time"].append(datetime(yy,mm,dd,hh,mn,ss,ms*1000))
         # print(header["time"][-1])
@@ -150,7 +150,7 @@ def read_gitm_headers():
     return header
 
 #-----------------------------------------------------------------------------
-# 
+#
 #-----------------------------------------------------------------------------
 
 def read_gitm_one_file(file_to_read, vars_to_read=-1):
@@ -199,7 +199,7 @@ def read_gitm_one_file(file_to_read, vars_to_read=-1):
         data["vars"].append(unpack(endChar+'%is'%(recLen),f.read(recLen))[0])
         (oldLen, recLen)=unpack(endChar+'2l',f.read(8))
 
-    # Extract time. 
+    # Extract time.
     (yy,mm,dd,hh,mn,ss,ms)=unpack(endChar+'lllllll',f.read(recLen))
     data["time"] = datetime(yy,mm,dd,hh,mn,ss,ms*1000)
     #print(data["time"])
@@ -220,7 +220,7 @@ def read_gitm_one_file(file_to_read, vars_to_read=-1):
         f.seek(iHeaderLength+iVar*iDataLength)
         s=unpack(endChar+'l',f.read(4))[0]
         data[iVar] = np.array(unpack(endChar+'%id'%(nTotal),f.read(s)))
-        data[iVar] = data[iVar].reshape( 
+        data[iVar] = data[iVar].reshape(
             (data["nLons"],data["nLats"],data["nAlts"]),order="F")
 
     f.close()
@@ -229,6 +229,5 @@ def read_gitm_one_file(file_to_read, vars_to_read=-1):
 
 
 #-----------------------------------------------------------------------------
-# 
+#
 #-----------------------------------------------------------------------------
-

@@ -39,9 +39,6 @@ subroutine calc_rates(iBlock)
        Ne, mnd, Te, tmp,invmnd,invNe
 
   real :: ScaleHeight(nLons, nLats)
-  real :: EIMIZ(nSpecies_EIM)
-  real, dimension(1:nLons, 1:nLats, 1:nAlts, 4) ::  BLocal
-  logical :: IsFirstTime=.true.
 
   real :: e2
 
@@ -229,8 +226,6 @@ trouble = .false.
                          TempUnit
    tt = ttot**0.69
 
-   BLocal = B0(1:nLons,1:nLats,1:nAlts,1:4,iBlock)
-
 
 !  enddo
 
@@ -342,19 +337,7 @@ trouble = .false.
                    KappaEddyDiffusion(iLon,iLat,iAlt,iBlock) * cp(iLon,iLat,iAlt,iBlock) * &
                    Rho(iLon,iLat,iAlt,iBlock)/10.
 
-             if (UseEmpiricalIonization .and. Altitude_GB(iLon,iLat,iAlt,iBlock) >= minval(EIMAltitude) &
-                  .and. Altitude_GB(iLon,iLat,iAlt,iBlock) <= nAlts) then
-               !Nightside impact ionization
-               if (floor((tSimulation-dt)/dtImpactIonization) /= &
-                    floor((tsimulation)/dtImpactIonization) .or. IsFirstTime) then
-                    IsFirstTime = .false.
-                    impactIonizationFrequency = 0.0
 
-                    call interpolateEIM(Altitude_GB(iLon,iLat,iAlt,iBlock),Blocal(iLon,iLat,iAlt,iUp_),&
-                      Blocal(iLon,iLat,iAlt,iMag_),EIMIZ)
-                    impactionizationFrequency(ilon,ilat,ialt,:,iBlock) = EIMIZ
-                endif
-             end if
         enddo
      enddo
 
@@ -386,10 +369,12 @@ trouble = .false.
 ! -------------------------------------------------------------------------------
   enddo
 
+
   call end_timing("calc_rates")
 
   if (UseBarriers) call MPI_BARRIER(iCommGITM,iError)
   if (iDebugLevel > 4) write(*,*) "=====> Done with calc_rates"
+
 
 end subroutine calc_rates
 

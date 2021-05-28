@@ -219,19 +219,11 @@ subroutine calc_chemical_sources(iLon,iLat,iAlt,iBlock,IonSources, &
               ! ----------------------------------------------------------
 
               Reaction = EuvIonRateS(iLon,iLat,iAlt,iCO2P_,iBlock)*Neutrals(iCO2_)
-!if (ialt .eq. 42) then
-!   write(*,*) reaction,EuvIonRateS(iLon,iLat,iAlt,iCO2P_,iBlock),Neutrals(iCO2_)
-!endif
-             NeutralLosses(iCO2_) = NeutralLosses(iCO2_) + Reaction
-!              NeutralLosses(iCO2_) = 0.0
-              IonSources(iCO2P_) = IonSources(iCO2P_) + Reaction
 
-!              write(*,*) "in calc chem: ",reaction,euvionrates(1,1,ialt,ico2P_,iblock), neutrals(ico2_)
+              NeutralLosses(iCO2_) = NeutralLosses(iCO2_) + Reaction
+              IonSources(iCO2P_) = IonSources(iCO2P_) + Reaction
               reactionrate(1) = reaction
-              !if (ialt .eq. 50) write(*,*) " CO2 + hv ==> CO2+  ",niters,&
-!                   ialt,reaction,euvionrates(1,1,ialt,ico2p_,iblock),neutrals(ico2_)
-!write(*,*) reaction,EuvIonRateS(iLon,iLat,iAlt,iCO2P_,iBlock),Neutrals(iCO2_)
-!stop
+
               ! ----------------------------------------------------------
               ! CO2 + hv ==> CO + O
               ! ----------------------------------------------------------
@@ -245,13 +237,23 @@ subroutine calc_chemical_sources(iLon,iLat,iAlt,iBlock,IonSources, &
 
               ! ----------------------------------------------------------
               ! CO2 impact ionization
-              ! ----------------------------------------------------------
-              if (UseEmpiricalIonization) then
+                ! ! ----------------------------------------------------------
+
+                if (UseEmpiricalIonization) then
+
                   Reaction = impactIonizationFrequency(iLon,iLat,iAlt,iImpactCO2_,iBlock)*Neutrals(iCO2_)
+                  IonSources(iCO2P_) = IonSources(iCO2P_) + Reaction
                   NeutralLosses(iCO2_) = NeutralLosses(iCO2_) + Reaction
-                  !              NeutralLosses(iCO2_) = 0.0
-                   IonSources(iCO2P_) = IonSources(iCO2P_) + Reaction
-              endif
+                  ! if (iproc == 7 .and. ilon == 5 .and. ilat == 13 .and. ialt == 90 ) then
+                  !     write(*,*) neutrals(iCO2_),reaction,neutrallosses(iCO2_), IonSources(iCO2P_),&
+                  !     impactIonizationFrequency(ilon,ilat,iAlt,iImpactCO2_,1),&
+                  !       Altitude_GB(iLon,iLat,iAlt,iBlock)
+                  !     stop
+                  !   endif
+
+            
+                endif
+
 
 !\
 ! O2 Photochemistry:-----------------------------------------------------+

@@ -9904,7 +9904,7 @@ subroutine ReadMagField
                  LatFind = latitude(iLat,iBlock)*180/pi
                  AltFind = Altitude_GB(ilon,ilat,ialt,iBlock)/1000
 
-                 
+
                 if (LonFind < MagFieldLon(1)) then
                   !In between 0 deg and first lon
                   iiLon = MagLons
@@ -10011,13 +10011,9 @@ subroutine ReadLillisModel
   real :: tempswp(nSW_EIM),invSWdiff,SWPlow, SWPHigh
   real, dimension(nspecies_EIM,nAlts_EIM,nBmags_EIM,nBelvs_EIM) :: V1, V2
 
-  !!Only allocate if UseEmpiricalIonization is True
-  if(.not. allocated(EIM_IonizationFrequency)) then
-    allocate(EIM_IonizationFrequency(nspecies_EIM,nAlts_EIM,nBmags_EIM,nBelvs_EIM))
-    allocate(impactIonizationFrequency(nLons,nLats,nAlts,nSpecies_EIM,nBlocks))
-  endif
   EIM_IonizationFrequency = 0.0
-
+  impactIonizationFrequency = 0.0
+  
   EIMSpecies(iImpactCO2_) = 'CO2_'
   EIMSpecies(iImpactO_) = 'O_'
   EIMSpecies(iImpactN2_) = 'N2_'
