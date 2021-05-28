@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#  Copyright (C) 2002 Regents of the University of Michigan, portions used with permission 
+#  Copyright (C) 2002 Regents of the University of Michigan, portions used with permission
 #  For more information, see http://csem.engin.umich.edu/tools/swmf
 
 '''
@@ -66,7 +66,7 @@ def plot_sat_gitm_comp(sat_datetime, sat_data, gtrack, gkey, skey, tkey, bkey,
     mpl.rc('font', size=fsize)
     ms = 8
     lw = 3
-    
+
     # Initialize the figure
     f = plt.figure(figsize=(12,12))
     if not tmin:
@@ -170,7 +170,7 @@ def plot_sat_gitm_comp(sat_datetime, sat_data, gtrack, gkey, skey, tkey, bkey,
         if plt.isinteractive():
             plt.draw() #In interactive mode, you just "draw".
         else:
-            # W/o interactive mode, "show" stops the user from typing more 
+            # W/o interactive mode, "show" stops the user from typing more
             # at the terminal until plots are drawn.
             plt.show()
 
@@ -179,6 +179,11 @@ def plot_sat_gitm_comp(sat_datetime, sat_data, gtrack, gkey, skey, tkey, bkey,
         plt.savefig(figname)
 
     return f
+
+
+
+if __name__ == "__main__":
+    print("main"    )
 # END plot_sat_gitm_comp
 
 # Interesting plot, needs to be cleaned and inputs fixed
@@ -204,7 +209,7 @@ def plot_sat_gitm_comp(sat_datetime, sat_data, gtrack, gkey, skey, tkey, bkey,
 #    xtics  = matplotlib.dates.MinuteLocator(interval=30)
 #    xmtics = matplotlib.dates.MinuteLocator(interval=5)
 #    xmin   = fstart + timedelta(hours=-1)
-#    xmax   = fend + timedelta(hours=3)    
+#    xmax   = fend + timedelta(hours=3)
     # Find the index range that match the desired time range
 #    imin = self['time'][0][0].searchsorted(xmin)
 #    imax = self['time'][0][0].searchsorted(xmax)

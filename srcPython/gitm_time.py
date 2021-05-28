@@ -37,7 +37,7 @@ import gitm
 
 class GitmTime(PbData):
     '''
-    Object containing GITM data from multiple GTIM binaries, providing a 
+    Object containing GITM data from multiple GTIM binaries, providing a
     data structure with UT time dependence.  Requires a list of GitmBin
     data structures as input
     '''
@@ -48,7 +48,7 @@ class GitmTime(PbData):
         self.attrs['nFiles'] = 0
 
         self._appendgitm(gitmlist)
-        
+
     def __repr__(self):
         return 'File with list of GITM binaries: %s' % (self.attrs['file'])
 
@@ -81,7 +81,7 @@ class GitmTime(PbData):
                         newkeys.pop(n)
                     except ValueError:
                         if old != 'file' and old != 'magfile':
-                            print "ADVISEMENT: file [",i+1,"] is missing [",old,"]"
+                            print("ADVISEMENT: file [",i+1,"] is missing [",old,"]")
             else:
                 # Add the filename as a key
                 if self.has_key('file'):
@@ -119,7 +119,7 @@ class GitmTime(PbData):
                         else:
                             data = np.append(data, [gData[k]*scale], 0)
                 elif i != 0:
-                    print "WARNING: key [",k,"] not temporally aligned"
+                    print("WARNING: key [",k,"] not temporally aligned")
                 else:
                     data = np.array([gData[k]])
 
@@ -219,7 +219,7 @@ class GitmTime(PbData):
         if match_method.find("none") >= 0:
             # Append the desired data to the GitmLoc structure
             for i,k in enumerate(obs_keylist):
-                self[k] = dc(nplist[i])        
+                self[k] = dc(nplist[i])
 
         elif match_method.find("nearest") >= 0:
             # Match the nearest observational and GitmLoc data.  Begin by
@@ -290,7 +290,7 @@ class GitmTime(PbData):
 
                         if(selfdelt[itime][0] > abs(timedelt)):
                             selfdelt[itime]=[abs(timedelt),0.0,i,0]
-                                
+
             for itime,delt in enumerate(selfdelt):
                 if delt[2] >= 0:
                     # Then the time and location are appropriate,
@@ -298,13 +298,13 @@ class GitmTime(PbData):
                     ilon = int(delt[3] / (dims[2] * dims[3]))
                     ilat = int((delt[3] - ilon * dims[2] * dims[3]) / dims[3])
                     ialt = int(delt[3] - (ilon * dims[2] + ilat) * dims[3])
-                    
+
                     for ik,k in enumerate(obs_keylist):
                         self[k][itime,ilon,ilat,ialt] = nplist[ik][delt[2]]
 
         elif match_method.find("average")<0 and match_method.find("method")<0:
             # This is an unknown matching method
-            print "append_obs ERROR: unknown matching method", match_method
+            print("append_obs ERROR: unknown matching method", match_method)
 
         else:
             # Compute a running median or average at the GitmLoc times.  Begin
@@ -356,7 +356,7 @@ class GitmTime(PbData):
                                                                 boxcar_sec,
                                                                 max_locdelt, 0,
                                                                 locwrap)
-            
+
             # Assign output
             for i,k in enumerate(obs_keylist):
                 self[k] = np.ndarray(shape=dims, buffer=yout[i])
@@ -382,15 +382,15 @@ class GitmTime(PbData):
         '''
         from matplotlib.dates import num2date
         import datetime as dt
-        
+
         # Format the UT date
         nt = num2date(x, tz=None)
-        nowtime = dt.datetime(nt.year, nt.month, nt.day, nt.hour, nt.minute, 
+        nowtime = dt.datetime(nt.year, nt.month, nt.day, nt.hour, nt.minute,
                               nt.second, tzinfo=None)
         nowstring = str(nowtime)
         fmtstring = "{:s}".format(nowstring.replace(" ", "\n "))
 
-        # Get the time index 
+        # Get the time index
         deltime = (self['time']-nowtime)
         mintime = min(abs(deltime))
         try:
@@ -438,10 +438,10 @@ def load_multiple_gitm_bin(filelist, magfile=None, *args, **kwargs):
         fsize = path.getsize(filelist)
 
         if(fsize > 2.0e9):
-            print func_name,"ERROR: File list size [",(fsize*1e-9),"GB > 2 GB]"
+            print(func_name,"ERROR: File list size [",(fsize*1e-9),"GB > 2 GB]")
             return outlist
         elif(fsize == 0.0):
-            print func_name, "ERROR: empty file list [", filelist, "]"
+            print(func_name, "ERROR: empty file list [", filelist, "]")
             return outlist
 
         # Read in the list of files

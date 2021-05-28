@@ -7,6 +7,7 @@ subroutine calc_GITM_sources(iBlock)
   use ModInputs
   use ModSources
   use ModGITM
+  use ModTime, only : tSimulation
 
   implicit none
 
@@ -26,6 +27,10 @@ subroutine calc_GITM_sources(iBlock)
   real :: NF_Gravity(1:nAlts)
   real :: NF_GradLogCon(1:nAlts,1:nSpecies)
   real :: Prandtl(nLons,nLats,0:nalts+1)
+  real :: EIMIZ(nSpecies_EIM)
+  real, dimension(1:nLons, 1:nLats, 1:nAlts, 4) ::  BLocal
+
+  logical :: IsFirstTime = .true.
 
 ! Potential Temperature
 ! Used in New Eddy Conduction Calculations:  Bell 1-15-2009
@@ -51,7 +56,7 @@ subroutine calc_GITM_sources(iBlock)
 
   ChemicalHeatingRate = 0.0
   ChemicalHeatingSpecies = 0.0
-  call calc_eddy_diffusion_coefficient(iBlock)  
+  call calc_eddy_diffusion_coefficient(iBlock)
   call calc_rates(iBlock)
   call calc_collisions(iBlock)
 
@@ -102,7 +107,7 @@ subroutine calc_GITM_sources(iBlock)
 
      tmp = Collisions(1:nLons,1:nLats,1:nAlts,iVIN_) * &
           RhoI(1:nLons,1:nLats,1:nAlts)/ &
-          Rho(1:nLons,1:nLats,1:nAlts,iBlock) 
+          Rho(1:nLons,1:nLats,1:nAlts,iBlock)
 
      ! After reading the Thayer paper, this term needs to be taken
      ! out, since it is approximately 1/2, which is the contribution
@@ -142,17 +147,17 @@ subroutine calc_GITM_sources(iBlock)
 
      tmp2 = Rho(1:nLons, 1:nLats,0:nAlts+1, iBlock) * &
           cp(1:nLons, 1:nLats,0:nAlts+1, iBlock)
-     
+
      Prandtl = 0.0
-  
+
      call calc_conduction(iBlock, &
           Temperature(1:nLons, 1:nLats,-1:nAlts+2, iBlock) * &
           TempUnit(1:nLons, 1:nLats,-1:nAlts+2), &
           KappaTemp(1:nLons, 1:nLats,0:nAlts+1, iBlock), &
           tmp2, &
           MoleConduction)
-     
-      Conduction = MoleConduction/TempUnit(1:nLons, 1:nLats,1:nAlts) 
+
+      Conduction = MoleConduction/TempUnit(1:nLons, 1:nLats,1:nAlts)
 
       if (UseTurbulentCond) then
 
@@ -177,12 +182,12 @@ subroutine calc_GITM_sources(iBlock)
 
             do iAlt = -1,0
                GammaScale(1:nLons,1:nLats,iAlt) = &
-                    GammaScale(1:nLons,1:nLats,1) 
+                    GammaScale(1:nLons,1:nLats,1)
             enddo
 
             do iAlt = nAlts,nAlts+2
                GammaScale(1:nLons,1:nLats,iAlt) = &
-                    GammaScale(1:nLons,1:nLats,nAlts) 
+                    GammaScale(1:nLons,1:nLats,nAlts)
             enddo
 
             Theta(1:nLons,1:nLats,-1:nAlts+2) = &
@@ -191,8 +196,8 @@ subroutine calc_GITM_sources(iBlock)
                  (P0(1:nLons,1:nLats,-1:nAlts+2)/ &
                  Pressure(1:nLons,1:nLats,-1:nAlts+2,iBlock))**&
                  GammaScale(1:nLons,1:nLats,-1:nAlts+2)
- 
-!! Prandtl is the Eddy Heat Conduction Coefficient After Hickey et al [2000] 
+
+!! Prandtl is the Eddy Heat Conduction Coefficient After Hickey et al [2000]
 
             Prandtl = &
                  KappaEddyDiffusion(1:nLons,1:nLats,0:nAlts+1,iBlock) * &
@@ -215,10 +220,10 @@ subroutine calc_GITM_sources(iBlock)
                  (1.0/EddyScaling)* &
                  (Temperature(1:nLons,1:nLats,1:nAlts,iBlock) / &
                  Theta(1:nLons,1:nLats,1:nAlts))*EddyCond
-            
-         else  !! Use The Old Version 
 
-            Prandtl = & 
+         else  !! Use The Old Version
+
+            Prandtl = &
                  KappaEddyDiffusion(1:nLons, 1:nLats,0:nAlts+1, iBlock) * &
                  Rho(1:nLons, 1:nLats,0:nAlts+1, iBlock) * &
                  Cp(1:nLons, 1:nLats,0:nAlts+1, iBlock)
@@ -231,7 +236,7 @@ subroutine calc_GITM_sources(iBlock)
                  EddyCond)
 
              Conduction = Conduction + &
-                   EddyCond/TempUnit(1:nLons, 1:nLats,1:nAlts) 
+                   EddyCond/TempUnit(1:nLons, 1:nLats,1:nAlts)
 
             tmp3 = &
                  Prandtl      / &
@@ -244,10 +249,10 @@ subroutine calc_GITM_sources(iBlock)
                  tmp3, &
                  tmp2, &
                  EddyCondAdia)
-   
+
              Conduction = Conduction - &
                    EddyCondAdia/TempUnit(1:nLons, 1:nLats,1:nAlts)
-   
+
          endif  !! UseUpdatedTurbulentCond Check
       endif  ! THE USETurbulentCond Check
 
@@ -273,7 +278,7 @@ subroutine calc_GITM_sources(iBlock)
      enddo
 
      ! F_iondrag = rho_i/rho * Vis * (Ui-Un)
-     ! where Vis = Vin *(Ns/N)  
+     ! where Vis = Vin *(Ns/N)
 
      do iSpecies = 1, nSpecies
         tmp = Collisions(1:nLons,1:nLats,1:nAlts,iVIN_)*&
@@ -315,10 +320,10 @@ subroutine calc_GITM_sources(iBlock)
                   -1.0*Gravity_GB(iLon,iLat,iAlt,iBlock)*&
                    (1.0 -  (MeanMajorMass(iLon,iLat,iAlt)/Mass(iSpecies)) )
 
-               enddo 
-             enddo 
-           enddo 
-         enddo 
+               enddo
+             enddo
+           enddo
+         enddo
 
      else
 
@@ -331,10 +336,10 @@ subroutine calc_GITM_sources(iBlock)
                   NDensityS(iLon,iLat,iAlt,iSpecies,iBlock)/&
                    NDensity(iLon,iLat,iAlt,iBlock)
 
-               enddo 
-             enddo 
-           enddo 
-         enddo 
+               enddo
+             enddo
+           enddo
+         enddo
 
          LogConS(1:nLons,1:nLats,-1:nAlts+2,1:nSpecies) = &
              alog(ConS(1:nLons,1:nLats,-1:nAlts+2,1:nSpecies) )
@@ -342,13 +347,13 @@ subroutine calc_GITM_sources(iBlock)
          do iSpecies = 1, nSpecies
            do iAlt = 1, nAlts
                  GradLogConS(1:nLons,1:nLats,iAlt,  iSpecies) = &
-               (-1.0*LogConS(1:nLons,1:nLats,iAlt+2,iSpecies) + & 
+               (-1.0*LogConS(1:nLons,1:nLats,iAlt+2,iSpecies) + &
                  8.0*LogConS(1:nLons,1:nLats,iAlt+1,iSpecies) - &
                  8.0*LogConS(1:nLons,1:nLats,iAlt-1,iSpecies) + &
                  1.0*LogConS(1:nLons,1:nLats,iAlt-2,iSpecies) )/&
                   (12.0*dAlt_GB(1:nLons,1:nLats,iAlt,iBlock))
-           enddo 
-         enddo 
+           enddo
+         enddo
 
      endif
 
@@ -383,7 +388,7 @@ subroutine calc_GITM_sources(iBlock)
            do iAlt = 1, nAlts
               NeutralFriction(iLon, iLat, iAlt, 1:nSpecies) = &
                    nVel(iAlt,1:nSpecies) - VerticalVelocity(iLon,iLat,iAlt,1:nSpecies,iBlock)
-!              
+!
 !              EddyCoefRatio(iLon, iLat, iAlt, 1:nSpecies,iBlock) = &
 !                    NF_EddyRatio(iAlt,1:nSpecies)
 !
@@ -458,6 +463,42 @@ subroutine calc_GITM_sources(iBlock)
 
   ! The Emissions array was never set. Should this be here or earlier ????
   ! Emissions(:,:,:,:,iBlock) = 0.0
+
+  ! if (iproc == 0 .and. ilat == 1 .and. ilon == 1 .and. ialt == 100) then
+  !   write(*,*)Altitude_GB(iLon,iLat,iAlt,iBlock),minval(EIMAltitude),
+   if (UseEmpiricalIonization) then
+     !Nightside impact ionization
+
+     if (floor((tSimulation-dt)/dtImpactIonization) /= &
+          floor((tsimulation)/dtImpactIonization) .or. IsFirstTime) then
+          IsFirstTime = .false.
+          impactionizationFrequency = 0.0
+          BLocal = B0(1:nLons,1:nLats,1:nAlts,1:4,iBlock)
+
+          do ilon = 1, nlons
+            do ilat = 1, nlats
+              do ialt = 1, nalts
+                if (Altitude_GB(iLon,iLat,iAlt,iBlock) >= minval(EIMAltitude) &
+                  .and. Altitude_GB(iLon,iLat,iAlt,iBlock) <= maxval(EIMAltitude)) then
+
+                  call interpolateEIM(Altitude_GB(iLon,iLat,iAlt,iBlock),Blocal(iLon,iLat,iAlt,iUp_),&
+                  Blocal(iLon,iLat,iAlt,iMag_),EIMIZ)
+
+                 ! ! EIM is in units of log(#/s)
+                 !  impactionizationFrequency(ilon,ilat,ialt,:,iBlock) = 10**EIMIZ
+                 !  if (iproc == 7 .and. ilon == 5 .and. ilat == 13 .and. ialt == 90 ) then
+                 !      write(*,*) impactIonizationFrequency(5,13,90,iImpactCO2_,1),&
+                 !        Altitude_GB(iLon,iLat,iAlt,iBlock)
+                  !
+                  ! endif
+
+                endif
+              enddo
+            end do
+          end do
+      endif
+   end if
+
   call calc_chemistry(iBlock)
 
   ChemicalHeatingRate(:,:,:) = &

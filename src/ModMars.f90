@@ -43,6 +43,7 @@ module ModPlanet
 
   real :: Mass(nSpeciesTotal), MassI(nIons)
 
+
   real :: Vibration(nSpeciesTotal)
 
   integer, parameter :: nEmissionWavelengths = 1

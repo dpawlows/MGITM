@@ -26,10 +26,11 @@ subroutine calc_chemistry(iBlock)
   real :: dttotal, dtsub, dtMin
   real :: tli(nIons), tsi(nIons), tln(nSpeciesTotal), tsn(nSpeciesTotal)
 
-  real :: EmissionTotals(nEmissions), F
+  real :: EmissionTotals(nEmissions), F, r
 
   logical :: doImplicit = .true.
   !---------------------------------------------------------------------------
+
   UseNeutralConstituent = .true.
   UseIonConstituent     = .true.
 
@@ -58,7 +59,7 @@ subroutine calc_chemistry(iBlock)
         iMinIono = iAltMinIono(iLon,iLat,iBlock)
 
         do ialt = iminiono, nAlts
-
+        
            dtTotal = 0.0
            DtMin = Dt
            DtSub = Dt - DtTotal
@@ -72,6 +73,8 @@ subroutine calc_chemistry(iBlock)
 
            !        write(*,*) dtsub
            call calc_dtsub(IonSources,IonLosses,NeutralSources,NeutralLosses,dtSub)
+
+
 
            !          write(*,*)ialt, "predicted: ",dt/dtsub,dtsub,dt,nimplicitsourcecalls
            if (.05*Dt/DtSub > nImplicitSourceCalls .and. useImplicitChemistry) then
@@ -135,11 +138,12 @@ subroutine calc_chemistry(iBlock)
 
                  if (Ions(iIon) < 0.0) then
                     write(*,*) "Negative Ion Density : ", &
-                         iIon, iLon, iLat, iAlt, &
+                         iIon, iLon, iLat, iAlt, iProc, &
                          Ions(iIon), &
                          IonSources(iIon), IonLosses(iIon)
                  endif
               enddo
+
 
               userdata1d(1,1,ialt,25) = 0
               userdata1d(1,1,ialt,25) = (NeutralSources(1)-NeutralLosses(1)) * DtSub
