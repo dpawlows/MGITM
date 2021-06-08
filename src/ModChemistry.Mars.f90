@@ -39,7 +39,7 @@ Module ModChemistry
   real :: rt300te, rt300tn, rttn300
   logical :: useNeutralConstituent(nSpeciesTotal),useIonConstituent(nIons)
   integer :: nittot = 0
-  real :: reactionrate(23)
+  real :: reactionrate(24)
 
 contains
 !-----------------------------------
@@ -244,14 +244,17 @@ subroutine calc_chemical_sources(iLon,iLat,iAlt,iBlock,IonSources, &
                   Reaction = impactIonizationFrequency(iLon,iLat,iAlt,iImpactCO2_,iBlock)*Neutrals(iCO2_)
                   IonSources(iCO2P_) = IonSources(iCO2P_) + Reaction
                   NeutralLosses(iCO2_) = NeutralLosses(iCO2_) + Reaction
-                  ! if (iproc == 7 .and. ilon == 5 .and. ilat == 13 .and. ialt == 90 ) then
-                  !     write(*,*) neutrals(iCO2_),reaction,neutrallosses(iCO2_), IonSources(iCO2P_),&
+                  reactionrate(24) = reaction
+
+
+                  ! if (iproc == 7 .and. ilon == 5 .and. ilat == 13 .and. ialt == 80 ) then
+                  !     write(*,*) "first:", neutrals(iCO2_),reactionr,neutrallosses(iCO2_), IonSources(iCO2P_),&
                   !     impactIonizationFrequency(ilon,ilat,iAlt,iImpactCO2_,1),&
                   !       Altitude_GB(iLon,iLat,iAlt,iBlock)
-                  !     stop
+                  !     ! stop
                   !   endif
 
-            
+
                 endif
 
 
@@ -420,6 +423,7 @@ subroutine calc_chemical_sources(iLon,iLat,iAlt,iBlock,IonSources, &
               IonLosses(iN2P_) = IonLosses(iN2P_) + Reaction
               NeutralSources(iN2_) = NeutralSources(iN2_) + Reaction
               IonSources(iCO2P_) = IonSources(iCO2P_) + Reaction
+              reactionrate(16) = reaction
 
 
               ! -----------------------------------------------------------
@@ -431,7 +435,7 @@ subroutine calc_chemical_sources(iLon,iLat,iAlt,iBlock,IonSources, &
               IonLosses(iN2P_) = IonLosses(iN2P_) + Reaction
               NeutralSources(iN4S_) = NeutralSources(iN4S_) + Reaction
               IonSources(iNOP_) = IonSources(iNOP_) + Reaction
-              reactionrate(16) = reaction
+
               ! -----------------------------------------------------------
               ! N2 + O+ ==> NO+ + N4S
               ! -----------------------------------------------------------
@@ -722,6 +726,12 @@ subroutine calc_chemical_sources(iLon,iLat,iAlt,iBlock,IonSources, &
 !------------------------------------------------------+
 !-----------End Total Chemistry-------------------------------------------+
 !------------------------------------------------------+
+
+! if (iproc == 7 .and. ilon == 5 .and. ilat == 13 .and. ialt == 80 ) then
+!     write(*,*) reactionrate(1),reactionrate(24),reactionrate(16),reactionrate(7),&
+!     impactIonizationFrequency(ilon,ilat,iAlt,iImpactCO2_,1)
+!     ! stop
+!   endif
 
 if (.NOT. useNeutralChemistry) then
 

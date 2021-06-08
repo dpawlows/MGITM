@@ -702,42 +702,7 @@ subroutine nlte_tcool(iBlock)
   RadCoolingRate(1:nLons,1:nLats,1:nAlts,iBlock) = &
        -q15umco2_gcm(1:nLons,1:nLats,1:nAlts)/86400.
 
-!  Diagnostics
-     !-----------------------------------------------------------------
-     ! S. W. BOUGHER defined:  11-11-01 UserData1D
-     ! S. W. BOUGHER defined:  11-11-01 UserData3D
-     ! Pressure (ubar units for MTGCM compatibility)
-     !-----------------------------------------------------------------
-!    UserData3D(:,:,:,8,iBlock) = 0.0
-!    UserData3D(1:nLons, 1:nLats, 1:nAlts, 8, iBlock) =  &
-!              Pressure(1:nLons, 1:nLats, 1:nAlts, iBlock)*10.0
-!    UserData3D(:,:,:,9,iBlock) = 0.0
-!    UserData3D(1:nLons, 1:nLats, 1:nAlts, 9, iBlock) =  &
-!              Temperature(1:nLons,1:nLats,1:nAlts,iBlock)*  &
-!              TempUnit(1:nLons,1:nLats,1:nAlts)
-!    UserData3D(:,:,:,10,iBlock) = 0.0
-!    UserData3D(1:nLons, 1:nLats, 1:nAlts, 10, iBlock) =  &
-!              vmro(1:nLons,1:nLats,1:nAlts)
-!    UserData3D(:,:,:,11,iBlock) = 0.0
-!    UserData3D(1:nLons, 1:nLats, 1:nAlts, 11, iBlock) =  &
-!              vmrco2(1:nLons,1:nLats,1:nAlts)
-!
-     !-----------------------------------------------------------------
-     UserData1D(1,1,:,4) = 0.0
-     UserData1D(1, 1, 1:nAlts, 4) =    &
-               RadCoolingRate(1,1,1:nAlts,iBlock)
-     UserData1D(1,1,:,8) = 0.0
-     UserData1D(1, 1, 1:nAlts, 8) =  Pressure(1, 1, 1:nAlts, iBlock)*10.0
-     UserData1D(1,1,:,9) = 0.0
-     UserData1D(1, 1, 1:nAlts, 9) =   &
-               Temperature(1,1,1:nAlts,iBlock)*  &
-               TempUnit(1,1,1:nAlts)
-     UserData1D(1,1,:,10) = 0.0
-     UserData1D(1, 1, 1:nAlts, 10) = vmro(1,1,1:nAlts)
-     UserData1D(1,1,:,11) = 0.0
-     UserData1D(1, 1, 1:nAlts, 11) =  vmrco2(1,1,1:nAlts)
 
-  !-------------------------------------------------------------
 
   !-------------------------------------------------------------
 
@@ -10012,8 +9977,7 @@ subroutine ReadLillisModel
   real, dimension(nspecies_EIM,nAlts_EIM,nBmags_EIM,nBelvs_EIM) :: V1, V2
 
   EIM_IonizationFrequency = 0.0
-  impactIonizationFrequency = 0.0
-  
+
   EIMSpecies(iImpactCO2_) = 'CO2_'
   EIMSpecies(iImpactO_) = 'O_'
   EIMSpecies(iImpactN2_) = 'N2_'
@@ -10071,3 +10035,93 @@ subroutine ReadLillisModel
 
 
 end subroutine ReadLillisModel
+
+subroutine interpolateEIM(altitude,Bz,Bmag,c)
+
+  !Interpolate the Lillis Empirical Ionization Model to a point.
+
+  use ModGITM, only: EIMAltitude,EIMBMag,EIMBElvs,EIM_IonizationFrequency, &
+    nSpecies_EIM,nBmags_EIM,nBelvs_EIM,nAlts_EIM, iproc
+  use ModConstants, only: Pi
+
+
+  implicit none
+
+  real, intent(in) :: Bz,Bmag,altitude
+  real :: BelevationAngle,VHigh,Vlow,invValDiff, altd, elvd, magd
+  real, dimension(nSpecies_EIM) :: c000, c001, c011, c010, c100, c101, c110, c111
+  real, dimension(nSpecies_EIM) :: c00, c01, c10, c11, c0, c1
+  real :: tempBMag(nBmags_EIM),tempBElev(nBelvs_EIM), tempAlt(nAlts_EIM)
+  real,intent(out) :: c(nSpecies_EIM)
+  integer :: ialtlow,ialthigh,imaglow,imaghigh,ielvlow,ielvhigh
+
+
+  !Only need Bz and Bmag to calculate elevation angle
+  BelevationAngle = asin(abs(Bz)/Bmag)*180/pi
+
+
+  tempalt = EIMAltitude
+  tempBmag = EIMBMag
+  tempBElev = EIMBElvs
+
+  !!! Interpolate to altitude
+  where(altitude - tempalt .lt. -0.00001) tempalt = -1.0e9
+  ialtlow =  maxloc(tempalt,1)
+  if (ialtlow == nAlts_EIM) ialtlow = ialtlow - 1
+  ialthigh = ialtlow + 1
+
+  !!! Interpolate to BMagnitude
+  where(BMag - tempBMag .lt. -0.00001) tempBMag = -1.0e9
+  imaglow =  maxloc(tempBMag,1)
+  if (imaglow == nBmags_EIM) imaglow = imaglow - 1
+  imaghigh = imaglow + 1
+
+  !!! Interpolate to BMagnitude
+  where(BelevationAngle - tempBElev .lt. -0.00001) tempBElev = -1.0e9
+  ielvlow =  maxloc(tempBElev,1)
+  if (ielvlow == nBelvs_EIM) ielvlow = ielvlow - 1
+  ielvhigh = ielvlow + 1
+
+  vlow = EIMAltitude(ialtlow)
+  vhigh = EIMAltitude(ialthigh)
+  invvaldiff = 1/(vhigh-vlow)
+  altd = (altitude-vlow)*invvalDiff
+
+  vlow = EIMBmag(imaglow)
+  vhigh = EIMBMag(imaghigh)
+  invvaldiff = 1/(Vhigh-Vlow)
+  magd = (BMag-vlow)*invvalDiff
+
+  vlow = EIMBElvs(ielvlow)
+  vhigh = EIMBElvs(ielvhigh)
+  invvaldiff = 1/(Vhigh-Vlow)
+  elvd = (BelevationAngle-vlow)*invvalDiff
+
+  c000 = EIM_IonizationFrequency(:,ialtlow,imaglow,ielvlow)
+  c100 = EIM_IonizationFrequency(:,ialthigh,imaglow,ielvlow)
+  c010 = EIM_IonizationFrequency(:,ialtlow,imaghigh,ielvlow)
+  c110 = EIM_IonizationFrequency(:,ialthigh,imaghigh,ielvlow)
+  c001 = EIM_IonizationFrequency(:,ialtlow,imaglow,ielvhigh)
+  c101 = EIM_IonizationFrequency(:,ialthigh,imaglow,ielvhigh)
+  c011 = EIM_IonizationFrequency(:,ialtlow,imaghigh,ielvhigh)
+  c111 = EIM_IonizationFrequency(:,ialthigh,imaghigh,ielvhigh)
+
+  c00 = c000*(1-altd)+c100*altd
+  c01 = c001*(1-altd)+c101*altd
+  c10 = c010*(1-altd)+c110*altd
+  c11 = c011*(1-altd)+c111*altd
+
+  c0 = c00*(1-magd) + c10*magd
+  c1 = c01*(1-magd) + c11*magd
+
+  c = c0 * (1-elvd) + c1 * elvd
+
+
+!   !!! Check the interpolation
+!   if (iproc .eq. 0) then
+!     ! write(*,*) EIMBmag
+!      write(*,*)  c(1), c000(1), c001(1), c011(1), c010(1), c100(1), c101(1), c110(1), c111(1)
+!   endif
+! stop
+
+end subroutine interpolateEIM

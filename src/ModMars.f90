@@ -278,7 +278,8 @@ module ModPlanet
   real :: EIMBMag(nBmags_EIM),EIMBElvs(nBelvs_EIM),solarWindPressure
   character (len = 20) :: EIMSpecies(nSpecies_EIM)
   real, allocatable :: EIM_IonizationFrequency(:,:,:,:)
-  real :: dtImpactIonization = 300
+  real :: dtImpactIonization = 60
+
 !################ Nelli, April 07 ##########################
 !Setting up parameters needed by the correlated k lower
 !atmosphere radiation code

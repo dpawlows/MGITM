@@ -8,6 +8,7 @@ subroutine calc_GITM_sources(iBlock)
   use ModSources
   use ModGITM
   use ModTime, only : tSimulation
+  use ModUserGITM
 
   implicit none
 
@@ -469,7 +470,7 @@ subroutine calc_GITM_sources(iBlock)
    if (UseEmpiricalIonization) then
      !Nightside impact ionization
 
-     if (floor((tSimulation-dt)/dtImpactIonization) /= &
+      if (floor((tSimulation-dt)/dtImpactIonization) /= &
           floor((tsimulation)/dtImpactIonization) .or. IsFirstTime) then
           IsFirstTime = .false.
           impactionizationFrequency = 0.0
@@ -485,19 +486,26 @@ subroutine calc_GITM_sources(iBlock)
                   Blocal(iLon,iLat,iAlt,iMag_),EIMIZ)
 
                  ! ! EIM is in units of log(#/s)
-                 !  impactionizationFrequency(ilon,ilat,ialt,:,iBlock) = 10**EIMIZ
+                   impactionizationFrequency(ilon,ilat,ialt,:,iBlock) = 10**EIMIZ
                  !  if (iproc == 7 .and. ilon == 5 .and. ilat == 13 .and. ialt == 90 ) then
                  !      write(*,*) impactIonizationFrequency(5,13,90,iImpactCO2_,1),&
                  !        Altitude_GB(iLon,iLat,iAlt,iBlock)
                   !
                   ! endif
 
+
                 endif
               enddo
             end do
           end do
-      endif
-   end if
+
+          userdata3D(:,:,:,2,iblock) = 0.0
+          userdata3D(:,:,:,3,iblock) = 0.0
+          userdata3D(1:nlons,1:nlats,1:nalts,2,iBlock) = impactIonizationFrequency(:,:,:,iimpactCO2_,iBlock)
+          userdata3D(1:nlons,1:nlats,1:nalts,3,iBlock) = blocal(1:nLons,1:nLats,1:nalts,iMag_)
+
+       endif
+   endif
 
   call calc_chemistry(iBlock)
 
