@@ -59,7 +59,7 @@ subroutine calc_chemistry(iBlock)
         iMinIono = iAltMinIono(iLon,iLat,iBlock)
 
         do ialt = iminiono, nAlts
-        
+
            dtTotal = 0.0
            DtMin = Dt
            DtSub = Dt - DtTotal
@@ -144,9 +144,6 @@ subroutine calc_chemistry(iBlock)
                  endif
               enddo
 
-
-              userdata1d(1,1,ialt,25) = 0
-              userdata1d(1,1,ialt,25) = (NeutralSources(1)-NeutralLosses(1)) * DtSub
               do iNeutral = 1, nSpeciesTotal
                  Neutrals(iNeutral) = &
                       Neutrals(iNeutral) + &
@@ -307,24 +304,9 @@ subroutine calc_chemistry(iBlock)
 
                  nIters = nIters + 1
 
+
               enddo
-              !              write(*,*)"actual: ", niters
-
-              !               if (ialt .eq. 42 .and. istep .eq. 10000) then
-              !                  write(*,*) "expl:"
-              !                  do ineutral = 1, nspeciestotal
-              !                     write(*,*) ialt,"end chem: ",iNeutral,neutrals(ineutral),NDensityS(1,1,ialt,ineutral,1),&
-              !                          Neutrals(ineutral)-NDensityS(1,1,ialt,ineutral,1)
-              !                  enddo
-              !                  do iion = 1, nions - 1
-              !                     write(*,*) ialt,"end chem: ",iIon,Ions(iion),IDensityS(1,1,ialt,iion,1),&
-              !                          ions(iion)-IDensityS(1,1,ialt,iion,1)
-              !
-              !                  enddo
-              !                  stop
-              !               endif
-
-
+              UserData3D(ilon,ilat,ialt,1,iblock) = reactionrate(24)
 
               IDensityS(iLon,iLat,iAlt,1:nIons,iBlock) = Ions
               NDensityS(iLon,iLat,iAlt,:,iBlock) = Neutrals
