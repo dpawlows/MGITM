@@ -1,5 +1,5 @@
 run
-#*#
+*#*#
 *.o
 *.mod
 Makefile.conf
