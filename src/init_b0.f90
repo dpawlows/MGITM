@@ -22,6 +22,7 @@ subroutine init_b0
   if (IsMars .and. UseCrustalField) then
 
     Call ReadMagField
+
     if (UseEmpiricalIonization) then
       call readLillisModel
     endif

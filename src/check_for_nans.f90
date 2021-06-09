@@ -1,3 +1,33 @@
+subroutine check_for_nans_ivelocities(cMarker)
+
+  use ModSizeGitm
+  use ModGITM
+  use ModPlanet
+
+  implicit none
+
+  character (LEN=*), intent(in) :: cMarker
+  integer :: iLon, iLat, iAlt, idir
+  logical :: IsFound
+
+  IsFound = .false.
+  do iLon=-1,nLons+2
+     do iLat=-1,nLats+2
+        do iAlt=-1,nAlts+2
+           do idir=1,3
+              if (isnan(iVelocity(iLon,iLat,iAlt,idir,1))) then
+                 write(*,*) 'Nan found in ivelocity : '
+                 write(*,*) cMarker
+                 write(*,*) iLon,iLat,iAlt,iProc,idir
+                 IsFound = .true.
+              endif
+           enddo
+        enddo
+     enddo
+  enddo
+
+  if (IsFound) call stop_gitm("Stopping...")
+end subroutine check_for_nans_ivelocities
 
 subroutine check_for_nans_ions(cMarker)
 
