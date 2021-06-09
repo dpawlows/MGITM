@@ -266,7 +266,7 @@ module ModPlanet
   integer, parameter :: nAlts_EIM = 28
   integer, parameter :: nBmags_EIM = 60
   integer, parameter :: nBelvs_EIM = 18
-
+  integer :: minMagFieldAlt,maxMagFieldAlt
 
   integer, parameter ::  iImpactCO2_ = 1
   integer, parameter ::  iImpactO_ = 2
@@ -278,7 +278,7 @@ module ModPlanet
   real :: EIMBMag(nBmags_EIM),EIMBElvs(nBelvs_EIM),solarWindPressure
   character (len = 20) :: EIMSpecies(nSpecies_EIM)
   real, allocatable :: EIM_IonizationFrequency(:,:,:,:)
-  real :: dtImpactIonization = 60
+  real :: dtImpactIonization = 300
 
 !################ Nelli, April 07 ##########################
 !Setting up parameters needed by the correlated k lower

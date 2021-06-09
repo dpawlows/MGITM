@@ -9820,13 +9820,10 @@ subroutine ReadMagField
 
   implicit None
 
-!  real, intent(out) :: altzero2(nLons,nLats,nBlocks)
-
   integer, parameter :: MagLons = 360 , MagLats=180, MagAlts=89, Maxdim=4
 
   real, dimension(MagAlts,MagLons,MagLats, Maxdim) :: MagField
-  !real, dimension(1:54,1:54,1:124) :: Magdata64
-  !real, dimension(1:89, 1:360,1:180,1) :: MagFieldMagnitude
+
   integer :: ilon, ilat, ialt, iblock, Mlat1, MLat2,i,j,k,jlon,jlat,jalt,Magdim
   integer :: iilon,iialt,iilat, ii, jj, kk, tt, Magdimfix, iilon2
   real :: Blat, Blon,Balt, latfind,lonfind,Altfind,c00,c10,c01,c11,c0,c1,c
@@ -9842,6 +9839,9 @@ subroutine ReadMagField
   do i=1,MagAlts
      MagFieldAlt(i)=80+(2.5*(i-1))
   enddo
+  minMagFieldAlt = minval(MagFieldAlt)
+  maxMagFieldAlt = maxval(MagFieldAlt)
+
   do j=1,MagLons
      MagFieldLon(j)=j
   enddo
@@ -9861,16 +9861,15 @@ subroutine ReadMagField
 
   do iBlock = 1, nBlocks
      do Magdim =1, Maxdim
-        do ialt = 1, nAlts
-           do iLon = 1, nLons
-              do iLat = 1, nLats
+        do ialt = -1, nAlts +2
+           do iLon = -1, nLons+2
+              do iLat = -1, nLats+2
 
                  LonFind = Longitude(iLon,iBlock)*180/pi
                  LatFind = latitude(iLat,iBlock)*180/pi
                  AltFind = Altitude_GB(ilon,ilat,ialt,iBlock)/1000
 
-
-                if (LonFind < MagFieldLon(1)) then
+                 if (LonFind < MagFieldLon(1)) then
                   !In between 0 deg and first lon
                   iiLon = MagLons
                   iiLon2 = 1
@@ -9887,9 +9886,6 @@ subroutine ReadMagField
                          iiLon2 = iiLon + 1
                          BLon = (LonFind-MagFieldLon(jLon))/&
                               (MagFieldLon(iiLon2)-MagFieldLon(iiLon))
-                       !  Print*, MagFieldLon(jLon), LonFind, MagFieldLon(jlon+1),&
-
-
 
                       endif
 
@@ -9926,6 +9922,7 @@ subroutine ReadMagField
 
                 enddo
 
+
                if (altFind <= minval(MagFieldAlt) .or. altFind > maxval(MagFieldAlt)) then
                  B0(iLon,iLat,iAlt,Magdim,iBlock)=0
                else
@@ -9960,8 +9957,7 @@ subroutine ReadMagField
      enddo
   enddo
 enddo
-!write(*,*) iproc, minval(B0(:,:,:,1,1)),minval(B0(:,:,:,2,1)),minval(B0(:,:,:,3,1)),minval(B0(:,:,:,4,1))
-!stop
+
 end subroutine ReadMagField
 
 subroutine ReadLillisModel
