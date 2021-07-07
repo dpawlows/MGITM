@@ -9820,7 +9820,7 @@ subroutine ReadMagField
 
   implicit None
 
-  integer, parameter :: MagLons = 360 , MagLats=180, MagAlts=89, Maxdim=4
+  integer, parameter :: MagLons = 360 , MagLats=180, MagAlts=89, Maxdim=3
 
   real, dimension(MagAlts,MagLons,MagLats, Maxdim) :: MagField
 
@@ -9956,7 +9956,10 @@ subroutine ReadMagField
         enddo
      enddo
   enddo
+B0(:,:,:,iMag_,iBlock) = sqrt(B0(:,:,:,1,iBlock)**2+B0(:,:,:,2,iBlock)**2+B0(:,:,:,3,iBlock)**2)
 enddo
+
+
 
 end subroutine ReadMagField
 
