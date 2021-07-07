@@ -169,7 +169,6 @@ if (args["winds"]):
     AllWindsY = []
 
 Var = header["vars"][args["var"]]
-
 AllData2D = []
 AllAlts = []
 AllTimes = []
@@ -266,11 +265,11 @@ Negative = 0
 
 AllData2D = np.log10(AllData2D) if (args['IsLog']) else AllData2D
 
-maxi  = np.max(AllData2D)*1.05
-mini  = np.min(AllData2D)*0.95
+maxi  = np.max(AllData2D[0,2:-2,2:-2])*1.05
+mini  = np.min(AllData2D[0,2:-2,2:-2])*0.95
 
-if (mini < 0):
-    Negative = 1
+# if (mini < 0):
+#     Negative = 1
 
 if (Negative):
     maxi = np.max(abs(AllData2D))*1.05
@@ -283,18 +282,17 @@ if (cut == 'alt'):
     DoPlotNorth = np.max(maskNorth)
     DoPlotSouth = np.max(maskSouth)
     if (DoPlotNorth):
-        maxiN = np.max(abs(AllData2D[:,:,maskNorth]))*1.05
+        maxiN = np.max(abs(AllData2D[:,2:-2,maskNorth]))*1.05
         if (Negative):
             miniN = -maxiN
         else:
-            miniN = np.min(AllData2D[:,:,maskNorth])*0.95
+            miniN = np.min(AllData2D[:,2:-2,maskNorth])*0.95
     if (DoPlotSouth):
-        maxiS = np.max(abs(AllData2D[:,:,maskSouth]))*1.05
+        maxiS = np.max(abs(AllData2D[:,2:-2,maskSouth]))*1.05
         if (Negative):
             miniS = -maxiS
         else:
-            miniS = np.min(AllData2D[:,:,maskSouth])*0.95
-
+            miniS = np.min(AllData2D[:,2:-2,maskSouth])*0.95
 dr = (maxi-mini)/31
 levels = np.arange(mini, maxi, dr)
 
@@ -323,10 +321,10 @@ for time in AllTimes:
 
     norm = cm.colors.Normalize(vmax=mini, vmin=maxi)
     print(mini)
-    if (mini >= 0):
-        cmap = cm.plasma
-    else:
-        cmap = cm.bwr
+    # if (mini >= 0):
+    cmap = cm.plasma
+    # else:
+    #     cmap = cm.bwr
 
     d2d = np.transpose(AllData2D[i])
     if (args["winds"]):
