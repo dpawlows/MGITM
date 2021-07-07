@@ -391,20 +391,24 @@ subroutine calc_collisions(iBlock)
 
   integer, intent(in) :: iBlock
 
-  real, dimension(nLons, nLats, nAlts) :: Tn, Ti, e2
+  real, dimension(nLons, nLats, nAlts) :: e2
 
   integer :: iError
 
   real, dimension(-1:nLons+2, -1:nLats+2, -1:nAlts+2) :: &
-       Ne, mnd, Te
+       Ne, mnd, Te, Tr, Tn, Ti
 
   !\
   ! Need to get the neutral, ion, and electron temperature
   !/
 
-  Tn = Temperature(1:nLons,1:nLats,1:nAlts,iBlock)*&
-       TempUnit(1:nLons,1:nLats,1:nAlts)
-  Ti = ITemperature(1:nLons,1:nLats,1:nAlts,iBlock)
+  Tn = Temperature(:,:,:,iBlock)*&
+       TempUnit(:,:,:)
+  Ti = ITemperature(:,:,:,iBlock)
+  Tr = (Tn+Ti)/2
+  ! Set a floor on Tr:
+  where (Tr < 200) Tr = 200.0
+
 
   mnd = NDensity(:,:,:,iBlock)+1.0
   Ne  = IDensityS(:,:,:,ie_,iBlock)
@@ -426,8 +430,61 @@ subroutine calc_collisions(iBlock)
 
   if (UseBarriers) call MPI_BARRIER(iCommGITM,iError)
   if (iDebugLevel > 4) write(*,*) "=====> vin",iblock
+  IonCollisions = 0.0
 
   Collisions(:,:,:,iVIN_) = 2.6e-15 * (mnd + Ne)/sqrt(MeanMajorMass/AMU)
+
+ ! O+ with ... (Fox & Hac, 2014)
+  IonCollisions(:,:,:,iOP_,iCO2_) = 2.0e-14*nDensityS(:,:,:,iCO2_,iBlock)
+  IonCollisions(:,:,:,iOP_,iAr_) = 1.2e-14*nDensityS(:,:,:,iAr_,iBlock)
+  IonCollisions(:,:,:,iOP_,iN2_) = 1.8e-14*nDensityS(:,:,:,iN2_,iBlock)
+  IonCollisions(:,:,:,iOP_,iO2_) = 1.8e-14*nDensityS(:,:,:,iO2_,iBlock)
+  IonCollisions(:,:,:,iOP_,iCO_) = 1.8e-14*nDensityS(:,:,:,iCO_,iBlock)
+  IonCollisions(:,:,:,iOP_,iHe_) = 6.4e-15*nDensityS(:,:,:,iHe_,iBlock)
+  IonCollisions(:,:,:,iOP_,iN4S_) = 9.0e-15*nDensityS(:,:,:,iN4S_,iBlock)
+  IonCollisions(:,:,:,iOP_,iO_) = 6.4e-15*nDensityS(:,:,:,iO_,iBlock)
+
+! O2+ ...
+  where (tr > 800.) IonCollisions(:,:,:,iO2P_,iO2_) = &
+       2.59e-17 * NDensityS(:,:,:,iO2_,iBlock) * tr**0.5 * &
+       (1 - 0.073*log10(tr))**2
+  where (tr <= 800) IonCollisions(:,:,:,iO2P_,iO2_) = 8.2e-16 * &
+       NDensityS(:,:,:,iO2_,iBlock)
+  
+  IonCollisions(:,:,:,iO2P_,iO_) = 2.31e-16 * NDensityS(:,:,:,iO_,iBlock)
+  IonCollisions(:,:,:,iO2P_,iN2_)   = 4.13e-16 * NDensityS(:,:,:,iN2_,iBlock)
+  IonCollisions(:,:,:,iO2P_,iN4S_) = 2.64e-16 * NDensityS(:,:,:,iN4S_,iBlock)
+   ! This is (ave CO and N2)??
+  IonCollisions(:,:,:,iO2P_,iCO_)   = 4.25e-16*NDensityS(:,:,:,iCO_,iBlock)
+  IonCollisions(:,:,:,iO2P_,iCO2_)   = 4.25e-16*NDensityS(:,:,:,iCO2_,iBlock)
+ 
+
+! N2+ ...
+IonCollisions(:,:,:,iN2P_,iN2_) = &
+       5.14e-17 * NDensityS(:,:,:,iN2_,iBlock) * tr**0.5 * (1 - 0.069*log10(tr))**2
+
+  IonCollisions(:,:,:,iN2P_,iO2_)   = 4.49e-16 * NDensityS(:,:,:,iO2_,iBlock)
+  IonCollisions(:,:,:,iN2P_,iO_) = 2.58e-16 * NDensityS(:,:,:,iO_,iBlock)
+  IonCollisions(:,:,:,iN2P_,iN4S_) = 2.95e-16 * NDensityS(:,:,:,iN4S_,iBlock)
+  ! This is just N2, since NO doesn't exist (ave CO and O2)
+  IonCollisions(:,:,:,iN2P_,iCO_)   = 4.66e-16 * NDensityS(:,:,:,iCO_,iBlock)
+  IonCollisions(:,:,:,iN2P_,iCO2_)   = 4.66e-16 * NDensityS(:,:,:,iCO2_,iBlock)
+
+  ! NO+ (with NO, O, N2, N, O2)
+
+  if (iDebugLevel > 5) write(*,*) "======> no+ ",iblock
+
+  ! This resonant ion-neutral is made up, since NO-NO+ doesn't exist
+  where (tr > 800.) IonCollisions(:,:,:,iNOP_,iNO_) = &
+       2.59e-17 * NDensityS(:,:,:,iNO_,iBlock) * tr**0.5 * (1 - 0.073*log10(tr))**2
+  where (tr <= 800) IonCollisions(:,:,:,iNOP_,iNO_) = 8.2e-16 * NDensityS(:,:,:,iNO_,iBlock)
+
+  IonCollisions(:,:,:,iNOP_,iO_) = 2.44e-16 * NDensityS(:,:,:,iO_,iBlock)
+  IonCollisions(:,:,:,iNOP_,iN2_)   = 4.34e-16 * NDensityS(:,:,:,iN2_,iBlock)
+  IonCollisions(:,:,:,iNOP_,iN4S_) = 2.79e-16 * NDensityS(:,:,:,iN4S_,iBlock)
+  IonCollisions(:,:,:,iNOP_,iO2_)   = 4.27e-16 * NDensityS(:,:,:,iO2_,iBlock)
+
+
 
 !
 ! Electron Neutral Collision Frequency
