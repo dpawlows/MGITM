@@ -52,9 +52,11 @@ contains
     type(AB_ARRAY_INT_2D), pointer :: snd_bufs(:) 
     type (AB_NBR_ITER) :: iter
     logical :: tmp_ok
-    integer :: ind,dir,nbr_p,nbr_i, nbr_dir
+    integer :: ind,dir,nbr_p,nbr_i, nbr_dir,iproc
     logical :: done, pole
 
+
+    iproc = -1
     ! initialize stat
     ok=.true.
 
@@ -163,7 +165,7 @@ contains
     deallocate(snd_bufs)
 
     ! wait until we've received everything before exiting
-    call AB_COMM_XCHNG_finish_rcv(xfer%xchng,tmp_ok)
+    call AB_COMM_XCHNG_finish_rcv(xfer%xchng,tmp_ok,iproc)
     if (.not. tmp_ok) then
        ok=.false.
        return
@@ -463,10 +465,11 @@ contains
  !  we need to change how the code around the put function operates.
  !
  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  subroutine AB_XFER_finish(xfer, put, put4, ok)
+  subroutine AB_XFER_finish(xfer, put, put4, ok,iproc)
     type (AB_XFER), intent(inout) :: xfer
     logical, intent(out) :: ok
     logical :: tmp_ok
+    integer, intent(in) :: iproc
     external put4
     interface
        subroutine put(index,dir,in_array)
@@ -478,6 +481,7 @@ contains
     integer :: i,j,min_buf,max_buf,p,num_rcv,pos
     integer, pointer :: rcv_order(:,:)
 
+
     ! initialize status 
     ok=.true.
 
@@ -488,7 +492,7 @@ contains
 
 
     ! wait for all our data to arrive
-    call AB_COMM_XCHNG_finish_rcv(xfer%xchng,tmp_ok)
+    call AB_COMM_XCHNG_finish_rcv(xfer%xchng,tmp_ok,iproc)
     if (.not. tmp_ok) then
        ok=.false.
        return
