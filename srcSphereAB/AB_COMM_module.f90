@@ -272,22 +272,30 @@ subroutine AB_COMM_XCHNG_INT_2D_start(xchng,snd_size,snd_size_mult,snd, &
 
 end subroutine AB_COMM_XCHNG_INT_2D_start
 
-subroutine AB_COMM_XCHNG_finish_rcv(xchng,ok)
+subroutine AB_COMM_XCHNG_finish_rcv(xchng,ok,iproc)
   use ModMpi
   type(AB_COMM_XCHNG), intent(inout) :: xchng
   logical, intent(out) :: ok
   integer :: ierror
+  integer, intent(in) :: iproc
 
   ! intialize status flag
   ok=.true.
 
   ! wait for all the receives to finish
+  if (iproc .eq. 0) then
+     write(*,*) "Begin"
+  endif
   call MPI_waitall(xchng%comm%np,xchng%rcv_req,xchng%status,ierror)
+  if (iproc .eq. 0) then
+     write(*,*) "End"
+  endif
   if (ierror .ne. MPI_SUCCESS) then
      ok=.false.
      call AB_ERROR_set("AB_COMM_XCHNG_finish_rcv","MPI error ",ierror)
      return
   endif
+
 
 end subroutine AB_COMM_XCHNG_finish_rcv
 

@@ -32,7 +32,7 @@ subroutine calc_timestep_horizontal
         ! Calculate maximum propagation speeds for the horizontal directions
         cSound_H = sqrt(Gamma(0:nLons+1,0:nLats+1,iAlt,iBlock) * &
                    Temperature(0:nLons+1,0:nLats+1,iAlt,iBlock))
-
+        
         cMax_GDB(:,:,iAlt,iNorth_,iBlock) = &
              abs(Velocity(0:nLons+1,0:nLats+1,iAlt,iNorth_,iBlock)) + cSound_H
 
@@ -124,7 +124,7 @@ subroutine calc_timestep_vertical
 
               cm = abs(IVelocity(iLon,iLat,1:nAlts,iUp_,iBlock)) + &
                 sqrt(Gamma(iLon,iLat,1:nAlts,iBlock) * Temperature(iLon,iLat,1:nAlts,iBlock))
-
+              
               DtLocal = min(DtLocal, &
                    Cfl / &
                    maxval(cm/dAlt_GB(iLon,iLat,1:nAlts,iBlock)))

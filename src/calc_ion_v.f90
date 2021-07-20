@@ -123,7 +123,7 @@ subroutine calc_ion_v(iBlock)
   VNParallel = 0.0
 
   if (maxval(blocal) == 0) then
-     
+
      IVelocity(:,:,:,iUp_,iBlock) = &
           LocalNeutralWinds(:,:,:,iUp_) + &
           (LocalGravity(:,:,:)*iRho - &
@@ -137,6 +137,7 @@ subroutine calc_ion_v(iBlock)
      IVelocity(:,:,:,iNorth_,iBlock) = &
           LocalNeutralWinds(:,:,:,iNorth_) - &
           LocalPressureGradient(:,:,:,iNorth_) / RhoNu
+
 
   else
 
@@ -258,6 +259,7 @@ subroutine calc_ion_v(iBlock)
 
   IVelocity(:,:,:,:,iBlock) = min( 3000.0, IVelocity(:,:,:,:,iBlock))
   IVelocity(:,:,:,:,iBlock) = max(-3000.0, IVelocity(:,:,:,:,iBlock))
+
 
   call end_timing("Ion Forcing")
 

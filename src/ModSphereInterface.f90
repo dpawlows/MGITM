@@ -14,7 +14,7 @@ module ModSphereInterface
   use ModSizeGitm
   use ModPlanet, only: nSpecies
   use ModInputs, only: UseIonAdvection
-
+  
   implicit none
 
   integer :: iStartBLK
@@ -275,7 +275,7 @@ contains
 
     ! Ion Species
     if (UseIonAdvection) &
-         call AB_1blk4_gc_add_size(nLons,nLats,nAlts,nIons,2,size)
+         call AB_1blk4_gc_add_size(nLons,nLats,nAlts,nIonsAdvect,2,size)
 
   end subroutine size_vars_1blk
 
@@ -311,7 +311,7 @@ contains
          eTemperature(:,:,1:nAlts,index),dir,pole,p,out_array)
 
     if (UseIonAdvection) &
-         call AB_1blk4_gc_pack(nLons,nLats,nAlts,nIons,2, &
+         call AB_1blk4_gc_pack(nLons,nLats,nAlts,nIonsAdvect,2, &
          IDensityS(:,:,1:nAlts,:,index),dir,pole,p,out_array)
 
   end subroutine pack_vars_1blk
@@ -345,7 +345,7 @@ contains
          eTemperature(:,:,1:nAlts,index),dir,p,in_array)
 
     if (UseIonAdvection) &
-         call AB_1blk4_gc_unpack(nLons,nLats,nAlts,nIons,2, &
+         call AB_1blk4_gc_unpack(nLons,nLats,nAlts,nIonsAdvect,2, &
          IDensityS(:,:,1:nAlts,:,index),dir,p,in_array)
 
   end subroutine unpack_vars_1blk
@@ -369,7 +369,7 @@ contains
     call AB_array3_gc_add_size(nLons,nLats,nAlts,2,size)
 
     if (UseIonAdvection) &
-         call AB_array4_gc_add_size(nLons,nLats,nAlts,nIons,2,size)
+         call AB_array4_gc_add_size(nLons,nLats,nAlts,nIonsAdvect,2,size)
 
   end subroutine size_vars_nblk
 
@@ -378,7 +378,7 @@ contains
     logical, intent(in) :: pole
     real, dimension(:),intent(out) :: out_array
     integer :: p,i, iIon
-    real :: tmpI(-1:nLons+2, -1:nLats+2, 1:nAlts, 1:nIons)
+    real :: tmpI(-1:nLons+2, -1:nLats+2, 1:nAlts, 1:nIonsAdvect)
     real :: tmpN(-1:nLons+2, -1:nLats+2, 1:nAlts, 1:nSpecies)
 
     p=1 ! start packing at position 1 in out_array
@@ -407,10 +407,11 @@ contains
          eTemperature(:,:,1:nAlts,index),dir,pole,p,out_array)
 
     if (UseIonAdvection) then
-       do iIon = 1, nIons
-          tmpI(:,:,:,iIon) = IDensityS(:,:,1:nAlts,iIon,index)
-       enddo
-       call AB_array4_gc_pack(nLons,nLats,nAlts,nIons,2, &
+!       do iIon = 1, nIonsAdvect
+!          tmpI(:,:,:,iIon) = IDensityS(:,:,1:nAlts,iIon,index)
+!       enddo
+       tmpI = IDensityS(:,:,1:nAlts,1:nIonsAdvect,index)
+       call AB_array4_gc_pack(nLons,nLats,nAlts,nIonsAdvect,2, &
             tmpI,dir,pole,p,out_array)
     endif
   end subroutine pack_vars_nblk
@@ -420,7 +421,7 @@ contains
     integer, intent(in) :: index,dir
     real, dimension(:), intent(in) :: in_array
     integer :: p,i, iIon
-    real :: tmpI(-1:nLons+2, -1:nLats+2, 1:nAlts, 1:nIons)
+    real :: tmpI(-1:nLons+2, -1:nLats+2, 1:nAlts, 1:nIonsAdvect)
     real :: tmpN(-1:nLons+2, -1:nLats+2, 1:nAlts, 1:nSpecies)
 
     p=1 ! start unpacking at position 1 in in_array
@@ -451,16 +452,18 @@ contains
          eTemperature(:,:,1:nAlts,index),dir,p,in_array)
 
     if (UseIonAdvection) then
-!       call AB_array4_gc_unpack(nLons,nLats,nAlts,nIons,2, &
+!       call AB_array4_gc_unpack(nLons,nLats,nAlts,nIonsAdvect,2, &
 !            IDensityS(:,:,1:nAlts,:,index),dir,p,in_array)
-       do iIon = 1, nIons
-          tmpI(:,:,:,iIon) = IDensityS(:,:,1:nAlts,iIon,index)
-       enddo
-       call AB_array4_gc_unpack(nLons,nLats,nAlts,nIons,2, &
+!       do iIon = 1, nIonsAdvect
+!          tmpI(:,:,:,iIon) = IDensityS(:,:,1:nAlts,iIon,index)
+!       enddo
+       tmpI = IDensityS(:,:,1:nAlts,1:nIonsAdvect,index)
+       call AB_array4_gc_unpack(nLons,nLats,nAlts,nIonsAdvect,2, &
             tmpI,dir,p,in_array)
-       do iIon = 1, nIons
-          IDensityS(:,:,1:nAlts,iIon,index) = tmpI(:,:,:,iIon)
-       enddo
+!       do iIon = 1, nIonsAdvect
+!          IDensityS(:,:,1:nAlts,iIon,index) = tmpI(:,:,:,iIon)
+!       enddo
+       IDensityS(:,:,1:nAlts,1:nIonsAdvect,index) = tmpI
     endif
 
   end subroutine unpack_vars_nblk
@@ -810,15 +813,15 @@ contains
   subroutine UAM_XFER_finish(ok)
     logical, optional, intent(out) :: ok
     logical :: tmp_ok
-
+    call start_timing("xfer")
     if (blks_long==1) then
        call AB_XFER_finish(uam_xfer,unpack_vars_1blk,unpack_vars_1blk, &
-            tmp_ok)
+            tmp_ok,iproc)
     else
        call AB_XFER_finish(uam_xfer,unpack_vars_nblk,unpack_vars_nblk, &
-            tmp_ok)
+            tmp_ok,iproc)
     endif
-
+    call end_timing("xfer")
     if (present(ok)) ok=tmp_ok 
 
   end subroutine UAM_XFER_finish
@@ -859,10 +862,10 @@ contains
 
     if (blks_long==1) then
        call AB_XFER_finish(uam_xfer,unpack_vars_1blk,unpack_vars_1blk, &
-            tmp_ok)
+            tmp_ok,iproc)
     else
        call AB_XFER_finish(uam_xfer,unpack_vars_nblk,unpack_vars_nblk, &
-            tmp_ok)
+            tmp_ok,iproc)
     endif
 
     if (.not. tmp_ok) then

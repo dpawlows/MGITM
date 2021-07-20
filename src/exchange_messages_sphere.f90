@@ -20,7 +20,6 @@ subroutine exchange_messages_sphere
   !
   ! End the message passing
   !
-
   call UAM_XFER_finish(ok=isOK)
   if (.not. isOK) then
      call UAM_write_error()
