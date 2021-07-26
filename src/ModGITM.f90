@@ -305,7 +305,7 @@ contains
     deallocate(PhotoEFluxTotal)
     deallocate(EIM_IonizationFrequency)
     deallocate(impactIonizationFrequency)
-    
+
 
   end subroutine clean_mod_gitm
   !=========================================================================

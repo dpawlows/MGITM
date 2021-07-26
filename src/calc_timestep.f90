@@ -32,7 +32,7 @@ subroutine calc_timestep_horizontal
         ! Calculate maximum propagation speeds for the horizontal directions
         cSound_H = sqrt(Gamma(0:nLons+1,0:nLats+1,iAlt,iBlock) * &
                    Temperature(0:nLons+1,0:nLats+1,iAlt,iBlock))
-        
+
         cMax_GDB(:,:,iAlt,iNorth_,iBlock) = &
              abs(Velocity(0:nLons+1,0:nLats+1,iAlt,iNorth_,iBlock)) + cSound_H
 
@@ -42,7 +42,7 @@ subroutine calc_timestep_horizontal
         ! Find stability limit on the time step
         do iLat = 1,nLats
            do iLon = 1,nLons
-           
+
               DtLocal = min(DtLocal, Cfl / ( &
                    cMax_GDB(iLon, iLat, iAlt, iEast_,  iBlock) / &
                    dLonDist_GB(iLon,iLat,iAlt,iBlock) + &
@@ -124,7 +124,7 @@ subroutine calc_timestep_vertical
 
               cm = abs(IVelocity(iLon,iLat,1:nAlts,iUp_,iBlock)) + &
                 sqrt(Gamma(iLon,iLat,1:nAlts,iBlock) * Temperature(iLon,iLat,1:nAlts,iBlock))
-              
+
               DtLocal = min(DtLocal, &
                    Cfl / &
                    maxval(cm/dAlt_GB(iLon,iLat,1:nAlts,iBlock)))
@@ -146,11 +146,12 @@ subroutine calc_timestep_vertical
 
   if (iDebugLevel > 2) &
        write(*,*) "===> DtVertical : ", Dt
+       if (iproc == 0) then
+           write(*,*)"dt: ", dt
+         endif
 
   if (dt < cfl/100.0 .and. dt < 0.99*DtEnd) then
      write(*,*) "Dt too slow!!!", dt
      call stop_gitm("Stopping in calc_timestep_vertical")
   endif
-
 end subroutine calc_timestep_vertical
-

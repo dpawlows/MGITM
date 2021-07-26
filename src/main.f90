@@ -24,9 +24,7 @@ program GITM
   call set_inputs
 
   call initialize_gitm(CurrentTime)
-
   call write_output
-
   call report("Starting Main Time Loop",0)
 
   ! ------------------------------------------------------------------------
@@ -39,12 +37,10 @@ program GITM
 
      !!! We may have to split cMax and Dt calculation!!!
      Dt = 1.e32
-
      call calc_timestep_vertical
      if (.not. Is1D) call calc_timestep_horizontal
 
      call advance
-
      if (.not.IsFramework) call check_stop
 
      iStep = iStep + 1
@@ -60,25 +56,25 @@ program GITM
   call finalize_gitm
 
 !!!  contains
-!!!  
+!!!
 !!!    subroutine write_output
-!!!  
+!!!
 !!!      real, external :: get_timing
 !!!      integer :: i, nMLTsTmp,nLatsTmp
 !!!      logical :: IsDone
-!!!  
+!!!
 !!!      if (floor((tSimulation-dt)/DtReport) /= &
 !!!           floor((tsimulation)/DtReport) .and. iDebugLevel >= 0) then
 !!!         write(*,"(a,i6,a,3i2.2,a,f10.2,a)") "iStep ", iStep, &
 !!!              ", Time : ",iTimeArray(4:6), &
 !!!              ", RealTime : ",get_timing("GITM")/60.0," min"
 !!!      endif
-!!!  
+!!!
 !!!      if (floor((tSimulation-dt)/DtLogFile) /= &
 !!!           floor((tsimulation)/DtLogFile)) then
 !!!         call logfile("UA/data")
 !!!      endif
-!!!  
+!!!
 !!!      IsDone = .false.
 !!!      do i = 1, nOutputTypes
 !!!         if (floor((tSimulation-dt)/DtPlot(i)) /= &
@@ -92,14 +88,14 @@ program GITM
 !!!            enddo
 !!!         endif
 !!!      enddo
-!!!  
+!!!
 !!!      call move_satellites
-!!!  
+!!!
 !!!      if (floor((tSimulation-dt)/DtRestart) /= &
 !!!           floor((tsimulation)/DtRestart)) then
 !!!         call write_restart("UA/restartOUT/")
 !!!      endif
-!!!  
+!!!
 !!!    end subroutine write_output
 
 end program GITM
@@ -137,4 +133,3 @@ subroutine CON_io_unit_new(iUnit)
 end subroutine CON_io_unit_new
 
 !---------------------------------------------------------------------------
-

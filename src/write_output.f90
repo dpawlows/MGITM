@@ -30,7 +30,7 @@ subroutine write_output
 
   DtPlot = DtPlotSave
   if ( CurrentTime >= PlotTimeChangeStart .and. &
-       CurrentTime <= PlotTimeChangeEnd) then 
+       CurrentTime <= PlotTimeChangeEnd) then
      DtPlot = PlotTimeChangeDt
   endif
 
@@ -57,4 +57,3 @@ subroutine write_output
   endif
 
 end subroutine write_output
-
