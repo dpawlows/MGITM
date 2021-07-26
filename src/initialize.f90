@@ -178,7 +178,6 @@ subroutine initialize_gitm(TimeIn)
                    RadialDistance_GB(iLon, iLat, iAlt, iBlock)* &
                    max(abs(CosLatitude(iLat,iBlock)),0.01)
 
-              ! This is the distance between neighboring cells
               dLonDist_FB(iLon, iLat, iAlt, iBlock) = &
                    (Longitude(iLon,iBlock) - Longitude(iLon-1,iBlock)) * &
                    0.5*(RadialDistance_GB(iLon,   iLat, iAlt, iBlock) &
@@ -189,7 +188,6 @@ subroutine initialize_gitm(TimeIn)
                    dLonDist_GB(iLon, iLat, iAlt, iBlock) * &
                    dLatDist_GB(iLon, iLat, iAlt, iBlock) * &
                    dAlt_GB(iLon,iLat,iAlt,iBlock)
-
            enddo
 
            ! Fill in longitude ghost cells
@@ -213,7 +211,6 @@ subroutine initialize_gitm(TimeIn)
              dLatDist_FB(:, nLats+1, iAlt, iBlock)
      enddo
   enddo
-
   InvDLatDist_GB = 1.0/dLatDist_GB
   InvDLatDist_FB = 1.0/dLatDist_FB
   InvDLonDist_GB = 1.0/dLonDist_GB

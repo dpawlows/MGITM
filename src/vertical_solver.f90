@@ -80,7 +80,7 @@ subroutine advance_vertical_1d
 !!! General RK4 Update:
 !!! Y(n+1) = Y(n) + Dt/6*(k1 + 2k2 + 2k3 + k4)
 !!! Time(n+1) = Time(n) + Dt
-!!! 
+!!!
 !!! k1 = f(tn,yn)
 !!! k2 = f(tn + Dt/2, Yn + Dt/2*k1)
 !!! k3 = f(tn + Dt/2, Yn + Dt/2*k2)
@@ -126,7 +126,7 @@ subroutine advance_vertical_1d
       K1LogRho(-1:nAlts+2)                = &
     (NewLogRho(-1:nAlts+2) - LogRho(-1:nAlts+2))
 
-      K1Vel_GD(-1:nAlts+2,1:3)            = & 
+      K1Vel_GD(-1:nAlts+2,1:3)            = &
     (NewVel_GD(-1:nAlts+2,1:3) - Vel_GD(-1:nAlts+2,1:3))
 
         K1Temp(-1:nAlts+2)                  = &
@@ -140,7 +140,7 @@ subroutine advance_vertical_1d
 
    UpdatedVel_GD(-1:nAlts+2,1:3) = &
       OrigVel_GD(-1:nAlts+2,1:3) + &
-        0.5*K1Vel_GD(-1:nAlts+2,1:3) 
+        0.5*K1Vel_GD(-1:nAlts+2,1:3)
 
     UpdatedLogNS(-1:nAlts+2,1:nSpecies) = &
        OrigLogNS(-1:nAlts+2,1:nSpecies) +  &
@@ -148,19 +148,19 @@ subroutine advance_vertical_1d
 
    UpdatedLogINS(-1:nAlts+2,1:nIonsAdvect) = &
       OrigLogINS(-1:nAlts+2,1:nIonsAdvect) + &
-        0.5*K1LogINS(-1:nAlts+2,1:nIonsAdvect) 
+        0.5*K1LogINS(-1:nAlts+2,1:nIonsAdvect)
 
    UpdatedLogRho(-1:nAlts+2) = &
       OrigLogRho(-1:nAlts+2) + &
-        0.5*K1LogRho(-1:nAlts+2) 
+        0.5*K1LogRho(-1:nAlts+2)
 
      UpdatedTemp(-1:nAlts+2) = &
         OrigTemp(-1:nAlts+2) + &
-         0.5*K1Temp(-1:nAlts+2) 
+         0.5*K1Temp(-1:nAlts+2)
 
        UpdatedVS(-1:nAlts+2,1:nSpecies) = &
           OrigVS(-1:nAlts+2,1:nSpecies)   + &
-            0.5*K1VS(-1:nAlts+2,1:nSpecies) 
+            0.5*K1VS(-1:nAlts+2,1:nSpecies)
 
 !!! UpdateStage 1 Upper Boundary
   call set_vertical_bcs(UpdatedLogRho, UpdatedLogNS, UpdatedVel_GD, &
@@ -196,7 +196,7 @@ subroutine advance_vertical_1d
       K2LogRho(-1:nAlts+2)                = &
     (NewLogRho(-1:nAlts+2) - LogRho(-1:nAlts+2))
 
-      K2Vel_GD(-1:nAlts+2,1:3)            = & 
+      K2Vel_GD(-1:nAlts+2,1:3)            = &
     (NewVel_GD(-1:nAlts+2,1:3) - Vel_GD(-1:nAlts+2,1:3))
 
         K2Temp(-1:nAlts+2)                  = &
@@ -209,7 +209,7 @@ subroutine advance_vertical_1d
 
    UpdatedVel_GD(-1:nAlts+2,1:3) = &
       OrigVel_GD(-1:nAlts+2,1:3) + &
-    0.5*K2Vel_GD(-1:nAlts+2,1:3) 
+    0.5*K2Vel_GD(-1:nAlts+2,1:3)
 
     UpdatedLogNS(-1:nAlts+2,1:nSpecies) = &
        OrigLogNS(-1:nAlts+2,1:nSpecies) +  &
@@ -217,19 +217,19 @@ subroutine advance_vertical_1d
 
    UpdatedLogINS(-1:nAlts+2,1:nIonsAdvect) = &
       OrigLogINS(-1:nAlts+2,1:nIonsAdvect) + &
-    0.5*K2LogINS(-1:nAlts+2,1:nIonsAdvect) 
+    0.5*K2LogINS(-1:nAlts+2,1:nIonsAdvect)
 
    UpdatedLogRho(-1:nAlts+2) = &
       OrigLogRho(-1:nAlts+2) + &
-    0.5*K2LogRho(-1:nAlts+2) 
+    0.5*K2LogRho(-1:nAlts+2)
 
      UpdatedTemp(-1:nAlts+2) = &
         OrigTemp(-1:nAlts+2) + &
-     0.5*K2Temp(-1:nAlts+2) 
+     0.5*K2Temp(-1:nAlts+2)
 
        UpdatedVS(-1:nAlts+2,1:nSpecies) = &
           OrigVS(-1:nAlts+2,1:nSpecies)   + &
-        0.5*K2VS(-1:nAlts+2,1:nSpecies) 
+        0.5*K2VS(-1:nAlts+2,1:nSpecies)
 
 
 !! Update Boundary Conditions
@@ -267,7 +267,7 @@ subroutine advance_vertical_1d
   K3LogRho(-1:nAlts+2)                = &
       (NewLogRho(-1:nAlts+2) - LogRho(-1:nAlts+2))
 
-  K3Vel_GD(-1:nAlts+2,1:3)            = & 
+  K3Vel_GD(-1:nAlts+2,1:3)            = &
   (NewVel_GD(-1:nAlts+2,1:3) - Vel_GD(-1:nAlts+2,1:3))
 
   K3Temp(-1:nAlts+2)                  =  &
@@ -280,7 +280,7 @@ subroutine advance_vertical_1d
 
    UpdatedVel_GD(-1:nAlts+2,1:3) = &
       OrigVel_GD(-1:nAlts+2,1:3) + &
-        K3Vel_GD(-1:nAlts+2,1:3) 
+        K3Vel_GD(-1:nAlts+2,1:3)
 
     UpdatedLogNS(-1:nAlts+2,1:nSpecies) = &
        OrigLogNS(-1:nAlts+2,1:nSpecies) +  &
@@ -288,19 +288,19 @@ subroutine advance_vertical_1d
 
    UpdatedLogINS(-1:nAlts+2,1:nIonsAdvect) = &
       OrigLogINS(-1:nAlts+2,1:nIonsAdvect) + &
-        K3LogINS(-1:nAlts+2,1:nIonsAdvect) 
+        K3LogINS(-1:nAlts+2,1:nIonsAdvect)
 
    UpdatedLogRho(-1:nAlts+2) = &
       OrigLogRho(-1:nAlts+2) + &
-        K3LogRho(-1:nAlts+2) 
+        K3LogRho(-1:nAlts+2)
 
      UpdatedTemp(-1:nAlts+2) = &
         OrigTemp(-1:nAlts+2) + &
-         K3Temp(-1:nAlts+2) 
+         K3Temp(-1:nAlts+2)
 
        UpdatedVS(-1:nAlts+2,1:nSpecies) = &
           OrigVS(-1:nAlts+2,1:nSpecies)   + &
-            K3VS(-1:nAlts+2,1:nSpecies) 
+            K3VS(-1:nAlts+2,1:nSpecies)
 
 !!!! Update Boundary Conditions
   call set_vertical_bcs(UpdatedLogRho, UpdatedLogNS, UpdatedVel_GD, &
@@ -319,13 +319,13 @@ subroutine advance_vertical_1d
   NewVel_GD = Vel_GD
   NewTemp = Temp
   NewVertVel = VertVel
-  
+
 !! Calculate K4 (Final Coefficient)
 
   call advance_vertical_1stage(&
        LogRho, LogNS, Vel_GD, Temp, NewLogRho, NewLogNS, NewVel_GD, NewTemp, &
        LogINS, NewLogINS, IVel, VertVel, NewVertVel)
-  
+
 !!! K4 Coefficients for RK-4
   K4LogNS(-1:nAlts+2,1:nSpecies)      = &
      (NewLogNS(-1:nAlts+2,1:nSpecies) - LogNS(-1:nAlts+2,1:nSpecies))
@@ -336,7 +336,7 @@ subroutine advance_vertical_1d
   K4LogRho(-1:nAlts+2)                = &
       (NewLogRho(-1:nAlts+2) - LogRho(-1:nAlts+2))
 
-  K4Vel_GD(-1:nAlts+2,1:3)            = & 
+  K4Vel_GD(-1:nAlts+2,1:3)            = &
   (NewVel_GD(-1:nAlts+2,1:3) - Vel_GD(-1:nAlts+2,1:3))
 
   K4Temp(-1:nAlts+2)                  = &
@@ -486,7 +486,7 @@ subroutine advance_vertical_1stage( &
   Rho = exp(LogRho)
   LogNum = alog(sum(NS,dim=2))
   nFilter = 10
-  
+
   NT(-1:nAlts+2) = exp(LogNum(-1:nAlts+2))
   do iAlt = -1, nAlts + 2
     Press(iAlt) = NT(iAlt)*Boltzmanns_Constant*Temp(iAlt)
@@ -509,7 +509,7 @@ subroutine advance_vertical_1stage( &
 
     !LogConS(-1:nAlts+2,iSpecies) = &
     !     alog(NS(-1:nAlts+2,iSpecies)/NT(-1:nAlts+2))
-  enddo 
+  enddo
 
   ! Add geometrical correction to gradient and obtain divergence
   DivVel = GradVel_CD(:,iUp_) + &
@@ -544,7 +544,7 @@ subroutine advance_vertical_1stage( &
                  (1.0 -  (MeanMajorMass_1d(iAlt)/Mass(iSpecies)) )
         enddo
      enddo
-  else 
+  else
 !     write(*,*) 'UseBoquehoAndBlelly =', UseBoquehoAndBlelly
 
     do iAlt = 1, nAlts
@@ -560,7 +560,7 @@ subroutine advance_vertical_1stage( &
 
        MeshCoef0 = (h2*h3*(h3+h4))/(h1*MeshH2*MeshH3*MeshH4)
        MeshCoef1 = -1.0*(MeshH2*h3*(h3 + h4))/(h1*h2*(h2+h3)*(h2+h3+h4))
-       MeshCoef3 = MeshH2*h2*(h4 + h3)/(MeshH3*(h2+h3)*h3*h4) 
+       MeshCoef3 = MeshH2*h2*(h4 + h3)/(MeshH3*(h2+h3)*h3*h4)
        MeshCoef4 = -1.0*MeshH2*h2*h3/(MeshH4*(h2+h3+h4)*(h3+h4)*h4)
 
        MeshCoef2 = (h2*h3*(h3+h4) + &
@@ -576,11 +576,11 @@ subroutine advance_vertical_1stage( &
            +  MeshCoef2*LogConS(iAlt  ,iSpecies)&
            +  MeshCoef3*LogConS(iAlt+1,iSpecies)&
            +  MeshCoef4*LogConS(iAlt+2,iSpecies)
-          enddo 
-       
-    enddo !iAlt 
+          enddo
 
-  endif 
+    enddo !iAlt
+
+  endif
 
   AmpSP = (1.0/(10.0*Dt))
   kSP = nAltsSponge + 1
@@ -605,7 +605,7 @@ subroutine advance_vertical_1stage( &
      enddo
 
 !     ! dVr/dt = -[ (V grad V)_r + grad T + T grad ln Rho - g ]
-!     ! and V grad V contains the centripetal acceleration 
+!     ! and V grad V contains the centripetal acceleration
 !     ! (Vphi**2+Vtheta**2)/R
      NewVel_GD(iAlt,iUp_) = 0.0
 
@@ -665,7 +665,7 @@ subroutine advance_vertical_1stage( &
                                       Temp(1:nAlts), cMax(1:nAlts) )
 
            NewVertVel(1:nAlts,1:nSpecies) = nVel(1:nAlts,1:nSpecies)
-  endif 
+  endif
 
   NewVel_GD(-1:nAlts+2,iUp_) = 0.0
 !  TimeFactor = exp(-tSimulation/(2.0*86400.0))
@@ -691,7 +691,7 @@ subroutine advance_vertical_1stage( &
 
   if (UseStressHeating) then
 
-    do iAlt = 1, nAlts 
+    do iAlt = 1, nAlts
 
       StressHeating(iAlt) = ViscCoef_1d(iAlt)* &
        (  (  (Gamma_1d(iAlt) - 1.0)/ ( NT(iAlt)*Boltzmanns_Constant) ) * &
@@ -718,13 +718,13 @@ subroutine advance_vertical_1stage( &
           + Dt * DiffVel_CD(iAlt,iNorth_)
 
      ! dT/dt = -(V.grad T + (gamma - 1) T div V +  &
-     !        (gamma - 1) * g  * grad (KeH^2  * rho) /rho 
+     !        (gamma - 1) * g  * grad (KeH^2  * rho) /rho
         NewTemp(iAlt)   = Temp(iAlt) - Dt * &
              (Vel_GD(iAlt,iUp_)*GradTemp(iAlt) + &
              (Gamma_1d(iAlt) - 1.0) * ( &
              Temp(iAlt)*DivVel(iAlt))) &
-             + Dt * DiffTemp(iAlt) & 
-             + Dt * StressHeating(iAlt) 
+             + Dt * DiffTemp(iAlt) &
+             + Dt * StressHeating(iAlt)
 
 ! Already in K/s
        UserData1D(1,1,iAlt,42) = &
@@ -736,7 +736,7 @@ subroutine advance_vertical_1stage( &
 
 ! Already in K/s
        UserData1D(1,1,iAlt,44) = &
-              StressHeating(iAlt) 
+              StressHeating(iAlt)
   end do
 
   do iAlt = 1, nAlts
@@ -791,7 +791,7 @@ subroutine calc_facevalues_alts(Var, VarLeft, VarRight)
   use ModLimiterGitm
 
   implicit none
-  
+
   real, intent(in) :: Var(-1:nAlts+2)
   real, intent(out):: VarLeft(1:nAlts+1), VarRight(1:nAlts+1)
 
@@ -838,5 +838,3 @@ subroutine calc_facevalues_alts(Var, VarLeft, VarRight)
   end do
 
 end subroutine calc_facevalues_alts
-
-

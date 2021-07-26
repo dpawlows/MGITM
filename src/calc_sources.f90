@@ -469,40 +469,40 @@ subroutine calc_GITM_sources(iBlock)
 
   if (UseEmpiricalIonization) then
      !Nightside impact ionization
-     
+
      if (floor((tSimulation-dt)/dtImpactIonization) /= &
           floor((tsimulation)/dtImpactIonization) .or. IsFirstTime) then
         IsFirstTime = .false.
         impactionizationFrequency = 0.0
         BLocal = B0(1:nLons,1:nLats,1:nAlts,1:4,iBlock)
-        
+
         do ilon = 1, nlons
            do ilat = 1, nlats
               do ialt = 1, nalts
                  if (Altitude_GB(iLon,iLat,iAlt,iBlock) >= minval(EIMAltitude) &
                       .and. Altitude_GB(iLon,iLat,iAlt,iBlock) <= maxval(EIMAltitude)) then
-                    
+
                     call interpolateEIM(Altitude_GB(iLon,iLat,iAlt,iBlock),Blocal(iLon,iLat,iAlt,iUp_),&
                          Blocal(iLon,iLat,iAlt,iMag_),EIMIZ)
-                    
+
                     ! ! EIM is in units of log(#/s)
                     impactionizationFrequency(ilon,ilat,ialt,:,iBlock) = 10**EIMIZ
-                    
+
                  endif
               enddo
            end do
         end do
-        
+
         userdata3D(:,:,:,2,iblock) = 0.0
         userdata3D(:,:,:,3,iblock) = 0.0
         userdata3D(1:nlons,1:nlats,1:nalts,2,iBlock) = impactIonizationFrequency(:,:,:,iimpactCO2_,iBlock)
         userdata3D(1:nlons,1:nlats,1:nalts,3,iBlock) = blocal(1:nLons,1:nLats,1:nalts,iMag_)
-        
+
      endif
   endif
-  
+
   call calc_chemistry(iBlock)
-  
+
   ChemicalHeatingRate(:,:,:) = &
        ChemicalHeatingRate(:,:,:) * Element_Charge / &
        TempUnit(1:nLons,1:nLats,1:nAlts) / cp(1:nLons,1:nLats,1:nAlts,iBlock)/&

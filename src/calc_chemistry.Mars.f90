@@ -21,7 +21,7 @@ subroutine calc_chemistry(iBlock)
   real  :: NeutralSources(nSpeciesTotal), NeutralLosses(nSpeciesTotal)
   real  :: ChemicalHeatingSub,Emission(nEmissions)
 
-  integer :: iLon,iLat,iAlt,niters,iIon, iNeutral, ivar,nImplicitSourceCalls,iminiono
+  integer :: iLon,iLat,iAlt,niters,iIon, iNeutral, ivar,nImplicitSourceCalls,iminiono,totalsteps
 
   real :: dttotal, dtsub, dtMin
   real :: tli(nIons), tsi(nIons), tln(nSpeciesTotal), tsn(nSpeciesTotal)
@@ -52,13 +52,13 @@ subroutine calc_chemistry(iBlock)
   !   endif
 !  neutralsourcestotal = 0.0
 !  neutrallossestotal = 0.0
-
   do iLon = 1, nLons
      do iLat = 1, nLats
 
         iMinIono = iAltMinIono(iLon,iLat,iBlock)
-
         do ialt = iminiono, nAlts
+          totalsteps = 0
+
 
            dtTotal = 0.0
            DtMin = Dt
@@ -306,7 +306,13 @@ subroutine calc_chemistry(iBlock)
 
 
               enddo
+
+              totalsteps = totalsteps + niters
               UserData3D(ilon,ilat,ialt,1,iblock) = reactionrate(24)
+              ! if (iproc == 6 .and. ilon == 16 .and. ilat == 1) then
+              !   write(*,*) ialt,totalsteps, IDensityS(ilon,ilat,ialt,1,1),altitude_GB(ilon,ilat,ialt,1),&
+              !    NDensityS(ilon,ilat,ialt,iCO2_,1)
+              ! endif
 
               IDensityS(iLon,iLat,iAlt,1:nIons,iBlock) = Ions
               NDensityS(iLon,iLat,iAlt,:,iBlock) = Neutrals
@@ -316,6 +322,11 @@ subroutine calc_chemistry(iBlock)
 
 
            endif
+           ! if (iproc == 6 .and. ilon == 16 .and. ilat == 15) then
+           !   write(*,*) ialt, nIters
+           ! endif
+
+
         enddo
      enddo
   enddo
@@ -324,6 +335,7 @@ subroutine calc_chemistry(iBlock)
        write(*,*) "===> calc_chemistry: Average Dt for this timestep : ", &
        (Dt*nLats*nLons*nAlts)/nIters
 
+       ! write(*,*) iproc, totalsteps, "begin"
 
 
   if (iDebugLevel > 3) then
