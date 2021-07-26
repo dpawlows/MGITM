@@ -586,11 +586,26 @@ subroutine set_inputs
 !             write(*,*) 'W Value                 (real)'
 !          endif
 
+        case ("#CRUSTAL")
+          call read_in_logical(UseCrustalField,iError)
+
+          if (iError /= 0) then
+             write(*,*) 'Incorrect format for #CRUSTAL:'
+             write(*,*) '#CRUSTAL'
+             write(*,*) 'UseCrustalField   (logical)'
+          endif
+
+
         case ("#CHEMISTRY")
 
            call read_in_logical(UseIonChemistry, iError)
            call read_in_logical(UseIonAdvection, iError)
            call read_in_logical(UseNeutralChemistry, iError)
+
+           if (UseIonAdvection .and. .not.(UseCrustalField)) then
+             write(*,*) "!!! Warning: Ion advection is turned on but you are not "
+             write(*,*) "using crustal fields. This can result in huge ion velocities!!"
+           endif
 
 !           call read_in_string(sNeutralChemistry, iError)
 !           call read_in_string(sIonChemistry, iError)
@@ -623,14 +638,6 @@ subroutine set_inputs
 !              IsDone = .true.
 !           endif
 
-      case ("#CRUSTAL")
-        call read_in_logical(UseCrustalField,iError)
-
-        if (iError /= 0) then
-           write(*,*) 'Incorrect format for #CRUSTAL:'
-           write(*,*) '#CRUSTAL'
-           write(*,*) 'UseCrustalField   (logical)'
-        endif
 
       case ("#USELILLIS")
           call read_in_logical(UseEmpiricalIonization,iError)
@@ -639,7 +646,7 @@ subroutine set_inputs
              write(*,*) 'Incorrect format for #CRUSTAL:'
              write(*,*) '#USELILLIS'
              write(*,*) 'UseEmpiricalIonization   (logical)'
-             write(*,*) 'solarWindPressure        (real)'             
+             write(*,*) 'solarWindPressure        (real)'
           endif
 
       case ("#DIPOLE")
