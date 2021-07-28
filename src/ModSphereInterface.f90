@@ -453,21 +453,21 @@ contains
          eTemperature(:,:,1:nAlts,index),dir,p,in_array)
 
     if (UseIonAdvection) then
-!       call AB_array4_gc_unpack(nLons,nLats,nAlts,nIonsAdvect,2, &
-!            IDensityS(:,:,1:nAlts,:,index),dir,p,in_array)
-!       do iIon = 1, nIonsAdvect
-!          tmpI(:,:,:,iIon) = IDensityS(:,:,1:nAlts,iIon,index)
-!       enddo
-       tmpI = IDensityS(:,:,1:nAlts,1:nIonsAdvect,index)
-       ! write(*,*) "begin"
+       call AB_array4_gc_unpack(nLons,nLats,nAlts,nIonsAdvect,2, &
+            IDensityS(:,:,1:nAlts,:,index),dir,p,in_array)
+       do iIon = 1, nIonsAdvect
+          tmpI(:,:,:,iIon) = IDensityS(:,:,1:nAlts,iIon,index)
+       enddo
+
+
        call AB_array4_gc_unpack(nLons,nLats,nAlts,nIonsAdvect,2, &
             tmpI,dir,p,in_array)
-            ! write(*,*) "end"
 
-!       do iIon = 1, nIonsAdvect
-!          IDensityS(:,:,1:nAlts,iIon,index) = tmpI(:,:,:,iIon)
-!       enddo
-       IDensityS(:,:,1:nAlts,1:nIonsAdvect,index) = tmpI
+
+       do iIon = 1, nIonsAdvect
+          IDensityS(:,:,1:nAlts,iIon,index) = tmpI(:,:,:,iIon)
+       enddo
+
     endif
 
   end subroutine unpack_vars_nblk
