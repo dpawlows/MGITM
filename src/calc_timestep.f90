@@ -146,9 +146,7 @@ subroutine calc_timestep_vertical
 
   if (iDebugLevel > 2) &
        write(*,*) "===> DtVertical : ", Dt
-       if (iproc == 0) then
-           write(*,*)"dt: ", dt
-         endif
+
 
   if (dt < cfl/100.0 .and. dt < 0.99*DtEnd) then
      write(*,*) "Dt too slow!!!", dt

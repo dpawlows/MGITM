@@ -282,13 +282,8 @@ subroutine AB_COMM_XCHNG_finish_rcv(xchng,ok,iproc)
   ! intialize status flag
   ok=.true.
 
-  ! wait for all the receives to finish
-  ! if (iproc .eq. 0) then
-  ! endif
   call MPI_waitall(xchng%comm%np,xchng%rcv_req,xchng%status,ierror)
-  ! if (iproc .eq. 0) then
-     write(*,*) iproc, "End"
-  ! endif
+
   if (ierror .ne. MPI_SUCCESS) then
      ok=.false.
      call AB_ERROR_set("AB_COMM_XCHNG_finish_rcv","MPI error ",ierror)
