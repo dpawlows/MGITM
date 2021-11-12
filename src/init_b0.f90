@@ -19,14 +19,17 @@ subroutine init_b0
   call report("init_b0",1)
   call start_timing("init_b0")
 
-  if (IsMars .and. UseCrustalField) then
-
-    Call ReadMagField
+  if (IsMars) then
+    if (UseCrustalField) then
+      Call ReadMagField
+    elseif (UseMHDField) then
+      call ReadMHDField
+    endif
 
     if (UseEmpiricalIonization) then
       call readLillisModel
     endif
-
+  
   else
 
     AltMinIono=(2*RadialDistance_GB(1,1,-1,1) - &

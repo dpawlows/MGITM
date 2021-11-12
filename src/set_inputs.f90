@@ -594,7 +594,25 @@ subroutine set_inputs
              write(*,*) '#CRUSTAL'
              write(*,*) 'UseCrustalField   (logical)'
           endif
+          if (UseMHDField .and. UseCrustalField) then
+            UseCrustalField = .false. !Don't use both
+            write(*,*) "Setting UseCrustalField to false as both can't be used"
+          endif
 
+        case ("#MHDFIELD")
+          call read_in_logical(UseMHDField,iError)
+          call read_in_string(cMHDFile,iError)
+          if (iError /= 0) then
+             write(*,*) 'Incorrect format for #MHDFIELD:'
+             write(*,*) '#MHDFIELD'
+             write(*,*) 'UseCrustalField   (logical)'
+             write(*,*) 'cMHDFile   (string)'
+          endif
+
+          if (UseMHDField .and. UseCrustalField) then
+            UseCrustalField = .false. !Don't use both
+            write(*,*) "Setting UseCrustalField to false as both can't be used"
+          endif
 
         case ("#CHEMISTRY")
 
