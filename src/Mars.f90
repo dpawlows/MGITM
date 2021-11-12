@@ -9963,6 +9963,74 @@ enddo
 
 end subroutine ReadMagField
 
+
+subroutine ReadMHDField
+
+use ModGITM
+use ModInputs
+
+implicit None
+
+integer, parameter :: nMagLons=120, nMagLats=61, nMagAlts=21, Maxdim=3
+
+real, dimension(nMagLons,nMagLats,nMagAlts, Maxdim) :: inducedMagField,DipoleField
+
+integer :: ilon, ilat, ialt, iblock, Mlat1, MLat2,i,j,k,jlon,jlat,jalt,Magdim
+integer :: iilon,iialt,iilat, ii, jj, kk, tt, Magdimfix, iilon2, iError, started
+real :: Blat, Blon,Balt, latfind,lonfind,Altfind,c00,c10,c01,c11,c0,c1,c
+real, dimension(nMagLons) :: MagFieldLon
+real, dimension(nMagLats) :: MagFieldLat
+real, dimension(nMagAlts) :: MagFieldAlt
+real :: lon,lat,alt, bdup,bdnorth,bdeast,biup,bieast,binorth
+
+real, dimension(9) :: temp
+character    (len=20)                           :: cline
+
+
+write(*,*) "==> Now Reading Mars MHD Magnetic Field"
+open(unit=iInputUnit_, file=cMHDFile, action='read')
+
+iError = 0
+started = 0
+do while (started == 0)
+      read(iInputUnit_,'(a)',iostat=iError) cLine
+      if (cline(1:1) .eq. '#') started = 1
+end do
+
+do i = 1, nMagLons
+  do j = 1, nMagLats
+      do k = 1, nMagAlts
+        read(iInputUnit_,*,iostat=iError) lon,lat,alt,bdup,bdnorth,bdeast,biup,binorth,bieast
+        if (j==1 .and. k==1) MagFieldLon(i) = lon
+        if (i == 1 .and. k ==1) MagFieldLat(j) = lat
+        if (i==1 .and. j==1) MagFieldAlt(k) = alt
+        DipoleField(i,j,k,1) = bdnorth
+        DipoleField(i,j,k,2) = bdeast
+        DipoleField(i,j,k,3) = bdup
+        inducedMagField(i,j,k,1) = binorth
+        inducedMagField(i,j,k,2) = bieast
+        inducedMagField(i,j,k,3) = biup
+
+        if (iproc == 0 .and. i==120 .and.j==60 .and. k==20) then
+          write(*,*) i,j,k
+          write(*,*) lon,lat,alt,bdup,bdnorth,bdeast,biup,binorth,bieast
+        endif
+      enddo
+    end do
+  end do
+  if (iproc == 0) then
+      ! write(*,*) magfieldlon,i,j,k
+        write(*,*) magfieldlon(120),magfieldlat(60),magfieldalt(20),inducedMagField(120,60,20,:)
+      stop
+    endif
+
+
+close(iInputUnit_)
+
+
+end subroutine ReadMHDField
+
+
 subroutine ReadLillisModel
 
   use ModGITM
