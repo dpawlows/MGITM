@@ -174,6 +174,7 @@ module ModInputs
 
   logical :: UseCrustalField        = .false.
   logical :: UseMHDField            = .false.
+  logical :: crustalFieldOnly       = .false.
   logical :: UseIonPressureGradient = .true.
   logical :: UseIonGravity          = .true.
   logical :: UseNeutralDrag         = .true.
