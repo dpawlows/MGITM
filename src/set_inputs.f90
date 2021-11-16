@@ -602,11 +602,13 @@ subroutine set_inputs
         case ("#MHDFIELD")
           call read_in_logical(UseMHDField,iError)
           call read_in_string(cMHDFile,iError)
+          call read_in_logical(crustalFieldOnly,iError)
           if (iError /= 0) then
              write(*,*) 'Incorrect format for #MHDFIELD:'
              write(*,*) '#MHDFIELD'
-             write(*,*) 'UseCrustalField   (logical)'
+             write(*,*) 'UseMHDlField   (logical)'
              write(*,*) 'cMHDFile   (string)'
+             write(*,*) 'crustalField Only   (logical)'
           endif
 
           if (UseMHDField .and. UseCrustalField) then

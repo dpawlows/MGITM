@@ -9811,54 +9811,28 @@ subroutine ERRORS (ierr,varerr)
 
       end subroutine rhist_03
 
+!  **************************************************************
+
+subroutine interpolateField(nMagLons,nMagLats,nMagAlts,MagFieldLon,MagFieldLat,MagFieldAlt,MagField)
 ! **************************************************************
 
-subroutine ReadMagField
-
   use ModGITM
-  use ModInputs
 
   implicit None
 
-  integer, parameter :: MagLons = 360 , MagLats=180, MagAlts=89, Maxdim=3
+  integer, parameter :: Maxdim = 3, iMag = 4
+  real :: LonFind, LatFind, AltFind,BLon,Blat,BAlt
+  real :: c00, c01, c10, c11, c0, c1, c, dLon, nlon, maxMagLon
+  integer :: iLon,iLat,iAlt,iBlock, iiLon, iiLat,iialt,jLon, jLat, jalt
+  integer :: iilon2, iilat2, magdim
 
-  real, dimension(MagAlts,MagLons,MagLats, Maxdim) :: MagField
-
-  integer :: ilon, ilat, ialt, iblock, Mlat1, MLat2,i,j,k,jlon,jlat,jalt,Magdim
-  integer :: iilon,iialt,iilat, ii, jj, kk, tt, Magdimfix, iilon2
-  real :: Blat, Blon,Balt, latfind,lonfind,Altfind,c00,c10,c01,c11,c0,c1,c
-  real, dimension(MagLons) :: MagFieldLon
-  real, dimension(MagLats) :: MagFieldLat
-  real, dimension(MagAlts) :: MagFieldAlt
-
-
-  !!!! Longitude: [1:360], Latitude: [-89,90]
-  !!!! Unsure if these should be centered. Need to compare
-  !!!! datafile with actual to determine.
-
-  do i=1,MagAlts
-     MagFieldAlt(i)=80+(2.5*(i-1))
-  enddo
-  minMagFieldAlt = minval(MagFieldAlt)
-  maxMagFieldAlt = maxval(MagFieldAlt)
-
-  do j=1,MagLons
-     MagFieldLon(j)=j
-  enddo
-  do k=1,MagLats
-     MagFieldLat(k)=(k)-90
-  enddo
-
-  write(*,*) "==> Now Reading Mars Magnetic Field"
-  open(unit=42, form="unformatted", file='DataIn/CrustalField.dat', action='read')
-
-  !if (iDebugLevel > 4) write(*,*) "=====> Reading Magnetic Field"
-  !PRINT *, iInputUnit_
-
-  read(42) MagField
-  close(42)
-
-
+  integer,intent(in) :: nMagAlts,nMagLons,nMagLats
+  real, intent(in) :: MagFieldLon(nMagLons),MagFieldLat(nMagLats),MagFieldAlt(nMagAlts)
+  real, intent(in) :: MagField(nMagLons,nMagLats,nMagAlts,MaxDim)
+if (iproc == 0) then
+write(*,*) MagFieldLon
+stop
+end if
   do iBlock = 1, nBlocks
      do Magdim =1, Maxdim
         do ialt = -1, nAlts +2
@@ -9868,16 +9842,27 @@ subroutine ReadMagField
                  LonFind = Longitude(iLon,iBlock)*180/pi
                  LatFind = latitude(iLat,iBlock)*180/pi
                  AltFind = Altitude_GB(ilon,ilat,ialt,iBlock)/1000
-
                  if (LonFind < MagFieldLon(1)) then
+                   ! if (LonFind < 0) LonFind = LonFind + 360
                   !In between 0 deg and first lon
-                  iiLon = MagLons
+                  iiLon = nMagLons
                   iiLon2 = 1
+                  maxmaglon = MagFieldLon(iiLon)
+                  if (maxMagLon > 180)  maxMagLon = maxMagLon - 360
 
-                  BLon = (LonFind-0)/&
-                       (MagFieldLon(iiLon2)-0)
+                  nLon = LonFind-maxMagLon
+                  dLon = (MagFieldLon(2)-MagfieldLon(1))
+
+                  BLon = nLon/dLon
+                     ! if(ilon==0 .and. ilat == 1 .and. ialt ==100 .and. iproc == 0) then
+                     !   ! write(*,*) LonFind,MagFieldLon(1),IILON ,MAGFIELDLON(nMagLons)
+                     !   write(*,*) MagFieldLon(iilon),magfieldlon(iilon2),lonfind,blon,dlon,&
+                     !   LonFind-MagFieldLon(iiLon2)
+                     !
+                     !
+                     ! endif
                 else
-                   do jLon = 1, MagLons-1
+                   do jLon = 1,nMagLons-1
 
 
                       if (MagFieldLon(jLon) <= LonFind .and. &
@@ -9898,7 +9883,7 @@ subroutine ReadMagField
                     BLat = 0
 
                   else
-                   do jLat = 1, MagLats-1
+                   do jLat = 1, nMagLats-1
 
                       if (MagFieldlat(jlat) <= LatFind .and. &
                            MagFieldLat(jlat+1) > LatFind) then
@@ -9909,7 +9894,7 @@ subroutine ReadMagField
                       endif
                    enddo
                  end if
-                 do jAlt=1, MagAlts-1
+                 do jAlt=1, nMagAlts-1
 
                     if (MagFieldAlt(jAlt)<= AltFind .and. &
                          MagFieldAlt(jAlt+1) > AltFind) then
@@ -9938,7 +9923,9 @@ subroutine ReadMagField
                  c0= c00*(1-Blat)+c10*Blat
                  c1= c01*(1-Blat)+c11*Blat
                  c= c0*(1-Balt)+c1*Balt
-                 B0(iLon,iLat,iAlt,Magdim,iBlock)=c*1.8
+                 B0(iLon,iLat,iAlt,Magdim,iBlock)=c!*1.8
+
+
                  !if(iproc==0)then
                  ! write(*,*)c
                   ! write(*,*)Magdim
@@ -9956,10 +9943,61 @@ subroutine ReadMagField
         enddo
      enddo
   enddo
-B0(:,:,:,iMag_,iBlock) = sqrt(B0(:,:,:,1,iBlock)**2+B0(:,:,:,2,iBlock)**2+B0(:,:,:,3,iBlock)**2)
-enddo
+  B0(:,:,:,iMag_,iBlock) = sqrt(B0(:,:,:,1,iBlock)**2+B0(:,:,:,2,iBlock)**2+B0(:,:,:,3,iBlock)**2)
+  ! if (iproc == 1) then
+  do ilon = 1, nlons
+    do ilat = 1, nlats
+      write(*,*) "Bfield: ",longitude(ilon,1),latitude(ilat,1),B0(ilon,ilat,82,4,1)
+    enddo
+  enddo
+! endif
+
+  enddo
+
+endsubroutine interpolateField
 
 
+subroutine ReadMagField
+
+  use ModInputs
+
+  implicit None
+
+  integer, parameter :: MagLons = 360 , MagLats=180, MagAlts=89, Maxdim=3
+  integer :: i,j,k
+
+  real, dimension(MagAlts,MagLons,MagLats, Maxdim) :: MagField
+
+  real, dimension(MagLons) :: MagFieldLon
+  real, dimension(MagLats) :: MagFieldLat
+  real, dimension(MagAlts) :: MagFieldAlt
+
+
+  !!!! Longitude: [1:360], Latitude: [-89,90]
+  !!!! Unsure if these should be centered. Need to compare
+  !!!! datafile with actual to determine.
+
+  do i=1,MagAlts
+     MagFieldAlt(i)=80+(2.5*(i-1))
+  enddo
+  do j=1,MagLons
+     MagFieldLon(j)=j
+  enddo
+  do k=1,MagLats
+     MagFieldLat(k)=(k)-90
+  enddo
+
+  write(*,*) "==> Now Reading Mars Magnetic Field"
+  open(unit=42, form="unformatted", file='DataIn/CrustalField.dat', action='read')
+
+  !if (iDebugLevel > 4) write(*,*) "=====> Reading Magnetic Field"
+  !PRINT *, iInputUnit_
+
+  read(42) MagField
+  close(42)
+
+
+  call interpolateField(MagLons,MagLats,MagAlts,MagFieldLon,MagFieldLat,MagFieldAlt,MagField)
 
 end subroutine ReadMagField
 
@@ -9973,10 +10011,10 @@ implicit None
 
 integer, parameter :: nMagLons=120, nMagLats=61, nMagAlts=21, Maxdim=3
 
-real, dimension(nMagLons,nMagLats,nMagAlts, Maxdim) :: inducedMagField,DipoleField
+real, dimension(nMagAlts,nMagLons,nMagLats, Maxdim) :: MagField
 
-integer :: ilon, ilat, ialt, iblock, Mlat1, MLat2,i,j,k,jlon,jlat,jalt,Magdim
-integer :: iilon,iialt,iilat, ii, jj, kk, tt, Magdimfix, iilon2, iError, started
+integer ::  i,j,k
+integer :: iError, started
 real :: Blat, Blon,Balt, latfind,lonfind,Altfind,c00,c10,c01,c11,c0,c1,c
 real, dimension(nMagLons) :: MagFieldLon
 real, dimension(nMagLats) :: MagFieldLat
@@ -10001,32 +10039,38 @@ do i = 1, nMagLons
   do j = 1, nMagLats
       do k = 1, nMagAlts
         read(iInputUnit_,*,iostat=iError) lon,lat,alt,bdup,bdnorth,bdeast,biup,binorth,bieast
-        if (j==1 .and. k==1) MagFieldLon(i) = lon
-        if (i == 1 .and. k ==1) MagFieldLat(j) = lat
+        if (j==1 .and. k==1) MagFieldLon(i) = lon*180/Pi
+        if (i == 1 .and. k ==1) MagFieldLat(j) = lat*180/Pi
         if (i==1 .and. j==1) MagFieldAlt(k) = alt
-        DipoleField(i,j,k,1) = bdnorth
-        DipoleField(i,j,k,2) = bdeast
-        DipoleField(i,j,k,3) = bdup
-        inducedMagField(i,j,k,1) = binorth
-        inducedMagField(i,j,k,2) = bieast
-        inducedMagField(i,j,k,3) = biup
 
-        if (iproc == 0 .and. i==120 .and.j==60 .and. k==20) then
-          write(*,*) i,j,k
-          write(*,*) lon,lat,alt,bdup,bdnorth,bdeast,biup,binorth,bieast
+        if (crustalFieldOnly) then
+          MagField(k,i,j,1) = bdnorth
+          MagField(k,i,j,2) = bdeast
+          MagField(k,i,j,3) = bdup
+        else
+          MagField(k,i,j,1) = binorth+bdnorth
+          MagField(k,i,j,2) = bieast+bdeast
+          MagField(k,i,j,3) = biup+bdup
         endif
+        !
+        ! if (iproc == 0 .and. i==120 .and.j==60 .and. k==20) then
+        !   write(*,*) i,j,k
+        !   write(*,*) lon,lat,alt,bdup,bdnorth,bdeast,biup,binorth,bieast
+        ! endif
       enddo
     end do
   end do
-  if (iproc == 0) then
-      ! write(*,*) magfieldlon,i,j,k
-        write(*,*) magfieldlon(120),magfieldlat(60),magfieldalt(20),inducedMagField(120,60,20,:)
-      stop
-    endif
+  ! if (iproc == 0) then
+  !     ! write(*,*) magfieldlon,i,j,k
+  !       write(*,*) magfieldlon(120),magfieldlat(60),magfieldalt(20),MagField(120,60,20,:)
+  !     stop
+  !   endif
 
 
-close(iInputUnit_)
 
+    close(iInputUnit_)
+
+    call interpolateField(nMagLons,nMagLats,nMagAlts,MagFieldLon,MagFieldLat,MagFieldAlt,MagField)
 
 end subroutine ReadMHDField
 

@@ -487,6 +487,35 @@ contains
 
     endif
 
+    if (cType(3:5) == "ION") then
+      iOff = 3
+      do iIon = 1, nIons
+         write(iOutputUnit_,"(I7,A1,a)") iOff+iIon, " ", "["//cIons(iIon)//"]"
+      enddo
+      iOff = iOff+nIons
+      write(iOutputUnit_,"(I7,A1,a)") iOff+1, " ", "eTemperature"
+      write(iOutputUnit_,"(I7,A1,a)") iOff+2, " ", "iTemperature"
+      write(iOutputUnit_,"(I7,A1,a)") iOff+3, " ", "Ion Velocity (North)"
+      write(iOutputUnit_,"(I7,A1,a)") iOff+3, " ", "Ion Velocity (East)"
+      write(iOutputUnit_,"(I7,A1,a)") iOff+3, " ", "Ion Velocity (Up)"
+      iOff = iOff + 5
+       write(iOutputUnit_,"(I7,A1,a)") iOff+1, " ", "Ed1"
+       write(iOutputUnit_,"(I7,A1,a)") iOff+2, " ", "Ed2"
+       write(iOutputUnit_,"(I7,A1,a)") iOff+3, " ", "Je1"
+       write(iOutputUnit_,"(I7,A1,a)") iOff+4, " ", "Je2"
+       write(iOutputUnit_,"(I7,A1,a)") iOff+5, " ", "Magnetic Latitude"
+       write(iOutputUnit_,"(I7,A1,a)") iOff+6, " ", "Magnetic Longitude"
+       write(iOutputUnit_,"(I7,A1,a)") iOff+8, " ", "B.F. East"
+       write(iOutputUnit_,"(I7,A1,a)") iOff+9, " ", "B.F. North"
+       write(iOutputUnit_,"(I7,A1,a)") iOff+10, " ", "B.F. Vertical"
+       write(iOutputUnit_,"(I7,A1,a)") iOff+11, " ", "B.F. Magnitude"
+       write(iOutputUnit_,"(I7,A1,a)") iOff+12, " ", "Potential"
+       write(iOutputUnit_,"(I7,A1,a)") iOff+13, " ", "E.F. East"
+       write(iOutputUnit_,"(I7,A1,a)") iOff+14, " ", "E.F. North"
+       write(iOutputUnit_,"(I7,A1,a)") iOff+15, " ", "E.F. Vertical"
+       write(iOutputUnit_,"(I7,A1,a)") iOff+16, " ", "E.F. Magnitude"
+
+     endif
     if (cType(3:5) == "CHM") then
 
        write(iOutputUnit_,"(I7,A1,a)") 4, " ", "N!D2!U+!N + e"
@@ -583,7 +612,7 @@ contains
 
     endif
 
-    if (cType(3:5) == "ALL" .or. cType(3:5) == "ION") then
+    if (cType(3:5) == "ALL" ) then
 
        iOff = 3
        if (cType(3:5) == "ALL") iOff = 8+nSpeciesTotal+nSpecies
@@ -619,7 +648,7 @@ contains
       write(iOutputUnit_,"(I7,A1,a)") iOff+1, " ", "NO Emissions (ph/cm^3/s)"
       iOff = iOff + 1
 
-       if (cType(3:5) == "ALL") then
+       ! if (cType(3:5) == "ALL") then
 
 !          write(iOutputUnit_,"(I7,A1,a)") iOff+1, " ", "N2 Mixing Ratio"
 !          write(iOutputUnit_,"(I7,A1,a)") iOff+2, " ", "CH4 Mixing Ratio"
@@ -637,27 +666,7 @@ contains
 !          write(iOutputUnit_,"(I7,A1,a)") iOff+4, " ", "Heat Balance Total"
 !          write(iOutputUnit_,"(I7,A1,a)") iOff+5, " ", "Heaing Efficiency"
 
-       else
-
-          write(iOutputUnit_,"(I7,A1,a)") iOff+1, " ", "Ed1"
-          write(iOutputUnit_,"(I7,A1,a)") iOff+2, " ", "Ed2"
-          write(iOutputUnit_,"(I7,A1,a)") iOff+3, " ", "Je1"
-          write(iOutputUnit_,"(I7,A1,a)") iOff+4, " ", "Je2"
-          write(iOutputUnit_,"(I7,A1,a)") iOff+5, " ", "Magnetic Latitude"
-          write(iOutputUnit_,"(I7,A1,a)") iOff+6, " ", "Magnetic Longitude"
-          write(iOutputUnit_,"(I7,A1,a)") iOff+8, " ", "B.F. East"
-          write(iOutputUnit_,"(I7,A1,a)") iOff+9, " ", "B.F. North"
-          write(iOutputUnit_,"(I7,A1,a)") iOff+10, " ", "B.F. Vertical"
-          write(iOutputUnit_,"(I7,A1,a)") iOff+11, " ", "B.F. Magnitude"
-          write(iOutputUnit_,"(I7,A1,a)") iOff+7, " ", "Potential"
-          write(iOutputUnit_,"(I7,A1,a)") iOff+8, " ", "E.F. East"
-          write(iOutputUnit_,"(I7,A1,a)") iOff+9, " ", "E.F. North"
-          write(iOutputUnit_,"(I7,A1,a)") iOff+10, " ", "E.F. Vertical"
-          write(iOutputUnit_,"(I7,A1,a)") iOff+11, " ", "E.F. Magnitude"
-
-       endif
-
-    endif
+end if
 
     write(iOutputUnit_,*) ""
 

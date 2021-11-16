@@ -141,7 +141,7 @@ subroutine calc_ion_v(iBlock)
 
   else
 
-     
+
      UDotB = sum(LocalNeutralWinds(:,:,:,:) * BLocal, dim=4)/ &
           B0(:,:,:,iMag_,iBlock)
      gpDotB = sum(LocalPressureGradient(:,:,:,:) * &
@@ -248,7 +248,7 @@ subroutine calc_ion_v(iBlock)
              IVelocityPar(:,:,:,iDir, iBlock) + &
              IVelocityPerp(:,:,:,iDir, iBlock)
 
-        !!!! If we are using the magnetic field, then don't move ions below the lowest altitude 
+        !!!! If we are using the magnetic field, then don't move ions below the lowest altitude
         !!!! at which the magfield is specified!
         where (altitude_GB(:,:,:,iblock)/1000.0 <= minMagFieldAlt .or. &
              altitude_GB(:,:,:,iblock)/1000.0 >= maxMagFieldAlt) &
@@ -259,7 +259,7 @@ subroutine calc_ion_v(iBlock)
 
   IVelocity(:,:,:,:,iBlock) = min( 3000.0, IVelocity(:,:,:,:,iBlock))
   IVelocity(:,:,:,:,iBlock) = max(-3000.0, IVelocity(:,:,:,:,iBlock))
-
+  
 
   call end_timing("Ion Forcing")
 
