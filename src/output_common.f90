@@ -151,7 +151,7 @@ subroutine output(dir, iBlock, iOutputType)
   call calc_collisions(iBlock)
   call chapman_integrals(iBlock)
   call set_horizontal_bcs(iBlock)
-  if (.not. Is1D) call calc_efield(iBlock)
+  if (.not. Is1D .and. .not. IsMars) call calc_efield(iBlock)
 
   iBLK = iStartBLK + iBlock
 
