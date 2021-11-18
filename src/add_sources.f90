@@ -28,6 +28,7 @@ subroutine add_sources
 
   call report("add_sources",2)
 
+  if (isEarth) then
   if (floor((tSimulation-dt)/DtPotential) /= &
        floor((tsimulation)/DtPotential) .or. IsFirstTime) then
      if (UseDynamo .and. .not. Is1D) then
@@ -37,6 +38,7 @@ subroutine add_sources
      endif
      IsFirstTime = .false.
   endif
+endif
 
   do iBlock = 1, nBlocks
 

@@ -448,8 +448,10 @@ subroutine calc_GITM_sources(iBlock)
   if (iDebugLevel > 4) write(*,*) "=====> calc_ion_v", iproc
 
   call get_potential(iBlock)
-  call calc_efield(iBlock)
-  call aurora(iBlock)
+  if (isEarth) then
+    call calc_efield(iBlock)
+    call  aurora(iBlock)
+  endif 
   if (UseAuroralHeating) then
      AuroralHeating = AuroralHeatingRate(:,:,:,iBlock) / &
           TempUnit(1:nLons,1:nLats,1:nAlts) / cp(:,:,1:nAlts,iBlock) / &
