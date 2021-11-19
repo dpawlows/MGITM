@@ -151,7 +151,7 @@ subroutine output(dir, iBlock, iOutputType)
   call calc_collisions(iBlock)
   call chapman_integrals(iBlock)
   call set_horizontal_bcs(iBlock)
-  if (.not. Is1D) call calc_efield(iBlock)
+  if (.not. Is1D .and. .not. IsMars) call calc_efield(iBlock)
 
   iBLK = iStartBLK + iBlock
 
@@ -487,6 +487,35 @@ contains
 
     endif
 
+    if (cType(3:5) == "ION") then
+      iOff = 3
+      do iIon = 1, nIons
+         write(iOutputUnit_,"(I7,A1,a)") iOff+iIon, " ", "["//cIons(iIon)//"]"
+      enddo
+      iOff = iOff+nIons
+      write(iOutputUnit_,"(I7,A1,a)") iOff+1, " ", "eTemperature"
+      write(iOutputUnit_,"(I7,A1,a)") iOff+2, " ", "iTemperature"
+      write(iOutputUnit_,"(I7,A1,a)") iOff+3, " ", "Ion Velocity (North)"
+      write(iOutputUnit_,"(I7,A1,a)") iOff+3, " ", "Ion Velocity (East)"
+      write(iOutputUnit_,"(I7,A1,a)") iOff+3, " ", "Ion Velocity (Up)"
+      iOff = iOff + 5
+       write(iOutputUnit_,"(I7,A1,a)") iOff+1, " ", "Ed1"
+       write(iOutputUnit_,"(I7,A1,a)") iOff+2, " ", "Ed2"
+       write(iOutputUnit_,"(I7,A1,a)") iOff+3, " ", "Je1"
+       write(iOutputUnit_,"(I7,A1,a)") iOff+4, " ", "Je2"
+       write(iOutputUnit_,"(I7,A1,a)") iOff+5, " ", "Magnetic Latitude"
+       write(iOutputUnit_,"(I7,A1,a)") iOff+6, " ", "Magnetic Longitude"
+       write(iOutputUnit_,"(I7,A1,a)") iOff+8, " ", "B.F. East"
+       write(iOutputUnit_,"(I7,A1,a)") iOff+9, " ", "B.F. North"
+       write(iOutputUnit_,"(I7,A1,a)") iOff+10, " ", "B.F. Vertical"
+       write(iOutputUnit_,"(I7,A1,a)") iOff+11, " ", "B.F. Magnitude"
+       write(iOutputUnit_,"(I7,A1,a)") iOff+12, " ", "Potential"
+       write(iOutputUnit_,"(I7,A1,a)") iOff+13, " ", "E.F. East"
+       write(iOutputUnit_,"(I7,A1,a)") iOff+14, " ", "E.F. North"
+       write(iOutputUnit_,"(I7,A1,a)") iOff+15, " ", "E.F. Vertical"
+       write(iOutputUnit_,"(I7,A1,a)") iOff+16, " ", "E.F. Magnitude"
+
+     endif
     if (cType(3:5) == "CHM") then
 
        write(iOutputUnit_,"(I7,A1,a)") 4, " ", "N!D2!U+!N + e"
@@ -583,7 +612,7 @@ contains
 
     endif
 
-    if (cType(3:5) == "ALL" .or. cType(3:5) == "ION") then
+    if (cType(3:5) == "ALL" ) then
 
        iOff = 3
        if (cType(3:5) == "ALL") iOff = 8+nSpeciesTotal+nSpecies
@@ -619,7 +648,7 @@ contains
       write(iOutputUnit_,"(I7,A1,a)") iOff+1, " ", "NO Emissions (ph/cm^3/s)"
       iOff = iOff + 1
 
-       if (cType(3:5) == "ALL") then
+       ! if (cType(3:5) == "ALL") then
 
 !          write(iOutputUnit_,"(I7,A1,a)") iOff+1, " ", "N2 Mixing Ratio"
 !          write(iOutputUnit_,"(I7,A1,a)") iOff+2, " ", "CH4 Mixing Ratio"
@@ -637,27 +666,7 @@ contains
 !          write(iOutputUnit_,"(I7,A1,a)") iOff+4, " ", "Heat Balance Total"
 !          write(iOutputUnit_,"(I7,A1,a)") iOff+5, " ", "Heaing Efficiency"
 
-       else
-
-          write(iOutputUnit_,"(I7,A1,a)") iOff+1, " ", "Ed1"
-          write(iOutputUnit_,"(I7,A1,a)") iOff+2, " ", "Ed2"
-          write(iOutputUnit_,"(I7,A1,a)") iOff+3, " ", "Je1"
-          write(iOutputUnit_,"(I7,A1,a)") iOff+4, " ", "Je2"
-          write(iOutputUnit_,"(I7,A1,a)") iOff+5, " ", "Magnetic Latitude"
-          write(iOutputUnit_,"(I7,A1,a)") iOff+6, " ", "Magnetic Longitude"
-          write(iOutputUnit_,"(I7,A1,a)") iOff+8, " ", "B.F. East"
-          write(iOutputUnit_,"(I7,A1,a)") iOff+9, " ", "B.F. North"
-          write(iOutputUnit_,"(I7,A1,a)") iOff+10, " ", "B.F. Vertical"
-          write(iOutputUnit_,"(I7,A1,a)") iOff+11, " ", "B.F. Magnitude"
-          write(iOutputUnit_,"(I7,A1,a)") iOff+7, " ", "Potential"
-          write(iOutputUnit_,"(I7,A1,a)") iOff+8, " ", "E.F. East"
-          write(iOutputUnit_,"(I7,A1,a)") iOff+9, " ", "E.F. North"
-          write(iOutputUnit_,"(I7,A1,a)") iOff+10, " ", "E.F. Vertical"
-          write(iOutputUnit_,"(I7,A1,a)") iOff+11, " ", "E.F. Magnitude"
-
-       endif
-
-    endif
+    end if
 
     write(iOutputUnit_,*) ""
 
@@ -920,11 +929,11 @@ subroutine output_3dall(iBlock)
                 eTemperature(iLon,iLat,iAlt,iBlock)  ,&
                 ITemperature(iLon,iLat,iAlt,iBlock)  ,&
                 (Ivelocity(iLon,iLat,iAlt,i,iBlock),i=1,3),&
-                EUVIonRateS(iLon,iLat,iAlt,1,iBlock),&
-                EUVIonRateS(iLon,iLat,iAlt,2,iBlock),&
-                EUVIonRateS(iLon,iLat,iAlt,3,iBlock),&
-                EUVIonRateS(iLon,iLat,iAlt,4,iBlock),&
-                EUVIonRateS(iLon,iLat,iAlt,5,iBlock),&
+                EUVIonRateS(iiLon,iiLat,iiAlt,1,iBlock),&
+                EUVIonRateS(iiLon,iiLat,iiAlt,2,iBlock),&
+                EUVIonRateS(iiLon,iiLat,iiAlt,3,iBlock),&
+                EUVIonRateS(iiLon,iiLat,iiAlt,4,iBlock),&
+                EUVIonRateS(iiLon,iiLat,iiAlt,5,iBlock),&
                 SZA(iiLon,iiLat,iBlock)*180/Pi, &
                 LocalTime(iiLon),        &
                 MarsOrbitalDistance(iiLon,iiLat,iiAlt),&
@@ -1046,7 +1055,7 @@ subroutine output_3dthm(iBlock)
 ! to allow us to quickly calculate the W/m^3 from the
 ! K/s variables below
                         Rho(iLon,iLat,iAlt,iBlock),   &
-                         cp(iLon,iLat,iAlt,iBlock),   &
+                         cp(iiLon,iiLat,iiAlt,iBlock),   &
 ! ------------------------------------------------------------------------------
 ! All Units: K/s
 ! EuvHeating*TempUnit -> K/s;
@@ -1084,18 +1093,18 @@ subroutine output_3dthm(iBlock)
 ! Near IR heating Heating  ! Units of K/sol
                 QnirTOT(iiLon, iiLat, iiAlt, iBlock)*88775., &
 ! Horizontal Adiabatic Heating/Cooling
-                UserData3D(iiLon,iiLat,iiAlt,40,iBlock)*88775., &
-! Horizontal Advective Heating (u dot grad T)
-                UserData3D(iiLon,iiLat,iiAlt,41,iBlock)*88775., &
-! Vertical Adiabatic Cooling/Heating
-                UserData3D(iiLon,iiLat,iiAlt,42,iBlock)*88775., &
-! Vertical Energy Transport
-                UserData3D(iiLon,iiLat,iiAlt,43,iBlock)*88775., &
-! Total Dynamical Heating  (40-43)
-                (UserData3D(iiLon,iiLat,iiAlt,40,iBlock)+ &
-                UserData3D(iiLon,iiLat,iiAlt,41,iBlock) + &
-                UserData3D(iiLon,iiLat,iiAlt,42,iBlock) + &
-                UserData3D(iiLon,iiLat,iiAlt,43,iBlock))*88775., &
+!                 UserData3D(iiLon,iiLat,iiAlt,40,iBlock)*88775., &
+! ! Horizontal Advective Heating (u dot grad T)
+!                 UserData3D(iiLon,iiLat,iiAlt,41,iBlock)*88775., &
+! ! Vertical Adiabatic Cooling/Heating
+!                 UserData3D(iiLon,iiLat,iiAlt,42,iBlock)*88775., &
+! ! Vertical Energy Transport
+!                 UserData3D(iiLon,iiLat,iiAlt,43,iBlock)*88775., &
+! ! Total Dynamical Heating  (40-43)
+!                 (UserData3D(iiLon,iiLat,iiAlt,40,iBlock)+ &
+!                 UserData3D(iiLon,iiLat,iiAlt,41,iBlock) + &
+!                 UserData3D(iiLon,iiLat,iiAlt,42,iBlock) + &
+!                 UserData3D(iiLon,iiLat,iiAlt,43,iBlock))*88775., &
 ! UDRAG and VDRAG Terms from EGWD2 (45-46):  m/sec/sol
                      GWDRAG(iiLon,iiLat,iiAlt,iEast_,iBlock)*88775., &
                      GWDRAG(iiLon,iiLat,iiAlt,iNorth_,iBlock)*88775., &
@@ -1138,8 +1147,13 @@ subroutine output_1dthm
      iiAlt = max(min(iAlt,nAlts),1)
 
      do iSpecies = 1, nSpeciesTotal
+<<<<<<< HEAD
         varsS(iSpecies) = NeutralSourcesTotal(iSpecies,iiAlt)
         varsL(iSpecies) = NeutralLossesTotal(iSpecies,iiAlt)
+=======
+        varsS(iSpecies) = NeutralSourcesTotal(iialt,iSpecies)
+        varsL(iSpecies) = NeutralLossesTotal(iialt,iSpecies)
+>>>>>>> newinterpolation
      enddo
 
      write(iOutputUnit_) &

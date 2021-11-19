@@ -586,11 +586,46 @@ subroutine set_inputs
 !             write(*,*) 'W Value                 (real)'
 !          endif
 
+        case ("#CRUSTAL")
+          call read_in_logical(UseCrustalField,iError)
+
+          if (iError /= 0) then
+             write(*,*) 'Incorrect format for #CRUSTAL:'
+             write(*,*) '#CRUSTAL'
+             write(*,*) 'UseCrustalField   (logical)'
+          endif
+          if (UseMHDField .and. UseCrustalField) then
+            UseCrustalField = .false. !Don't use both
+            write(*,*) "Setting UseCrustalField to false as both can't be used"
+          endif
+
+        case ("#MHDFIELD")
+          call read_in_logical(UseMHDField,iError)
+          call read_in_string(cMHDFile,iError)
+          call read_in_logical(crustalFieldOnly,iError)
+          if (iError /= 0) then
+             write(*,*) 'Incorrect format for #MHDFIELD:'
+             write(*,*) '#MHDFIELD'
+             write(*,*) 'UseMHDlField   (logical)'
+             write(*,*) 'cMHDFile   (string)'
+             write(*,*) 'crustalField Only   (logical)'
+          endif
+
+          if (UseMHDField .and. UseCrustalField) then
+            UseCrustalField = .false. !Don't use both
+            write(*,*) "Setting UseCrustalField to false as both can't be used"
+          endif
+
         case ("#CHEMISTRY")
 
            call read_in_logical(UseIonChemistry, iError)
            call read_in_logical(UseIonAdvection, iError)
            call read_in_logical(UseNeutralChemistry, iError)
+
+           if (UseIonAdvection .and. .not.(UseCrustalField)) then
+             write(*,*) "!!! Warning: Ion advection is turned on but you are not "
+             write(*,*) "using crustal fields. This can result in huge ion velocities!!"
+           endif
 
 !           call read_in_string(sNeutralChemistry, iError)
 !           call read_in_string(sIonChemistry, iError)
@@ -623,43 +658,46 @@ subroutine set_inputs
 !              IsDone = .true.
 !           endif
 
-      case ("#CRUSTAL")
-        call read_in_logical(UseCrustalField,iError)
-        if (iError /= 0) then
-           write(*,*) 'Incorrect format for #CRUSTAL:'
-           write(*,*) '#CRUSTAL'
-           write(*,*) 'UseCrustalField   (logical)'
-        endif
 
-        case ("#DIPOLE")
+      case ("#USELILLIS")
+          call read_in_logical(UseEmpiricalIonization,iError)
+          call read_in_real(solarWindPressure,iError)
+          if (iError /= 0) then
+             write(*,*) 'Incorrect format for #CRUSTAL:'
+             write(*,*) '#USELILLIS'
+             write(*,*) 'UseEmpiricalIonization   (logical)'
+             write(*,*) 'solarWindPressure        (real)'
+          endif
 
-           call read_in_real(MagneticPoleRotation, iError)
-           call read_in_real(MagneticPoleTilt    , iError)
-           call read_in_real(xDipoleCenter       , iError)
-           call read_in_real(yDipoleCenter       , iError)
-           call read_in_real(zDipoleCenter       , iError)
+      case ("#DIPOLE")
 
-           if (iError /= 0) then
-              write(*,*) 'Incorrect format for #DIPOLE:'
-              write(*,*) '#DIPOLE'
-              write(*,*) 'MagneticPoleRotation   (real)'
-              write(*,*) 'MagneticPoleTilt       (real)'
-              write(*,*) 'xDipoleCenter          (real)'
-              write(*,*) 'yDipoleCenter          (real)'
-              write(*,*) 'zDipoleCenter          (real)'
-              IsDone = .true.
+         call read_in_real(MagneticPoleRotation, iError)
+         call read_in_real(MagneticPoleTilt    , iError)
+         call read_in_real(xDipoleCenter       , iError)
+         call read_in_real(yDipoleCenter       , iError)
+         call read_in_real(zDipoleCenter       , iError)
 
-           else
+         if (iError /= 0) then
+            write(*,*) 'Incorrect format for #DIPOLE:'
+            write(*,*) '#DIPOLE'
+            write(*,*) 'MagneticPoleRotation   (real)'
+            write(*,*) 'MagneticPoleTilt       (real)'
+            write(*,*) 'xDipoleCenter          (real)'
+            write(*,*) 'yDipoleCenter          (real)'
+            write(*,*) 'zDipoleCenter          (real)'
+            IsDone = .true.
 
-              MagneticPoleRotation = MagneticPoleRotation * pi / 180.0
-              MagneticPoleTilt     = MagneticPoleTilt     * pi / 180.0
-              xDipoleCenter = xDipoleCenter * 1000.0
-              yDipoleCenter = yDipoleCenter * 1000.0
-              zDipoleCenter = zDipoleCenter * 1000.0
+         else
 
-           endif
+            MagneticPoleRotation = MagneticPoleRotation * pi / 180.0
+            MagneticPoleTilt     = MagneticPoleTilt     * pi / 180.0
+            xDipoleCenter = xDipoleCenter * 1000.0
+            yDipoleCenter = yDipoleCenter * 1000.0
+            zDipoleCenter = zDipoleCenter * 1000.0
 
-        case ("#APEX")
+         endif
+
+      case ("#APEX")
 
            if (IsFramework .and. UseApex) then
               if (iDebugLevel >= 0) then

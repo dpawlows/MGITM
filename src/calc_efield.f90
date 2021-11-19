@@ -15,6 +15,7 @@ subroutine calc_efield(iBlock)
   call report("Electric Field",2)
   call start_timing("calc_efield")
 
+
   EField = 0.0
   ExB    = 0.0
 
@@ -24,6 +25,7 @@ subroutine calc_efield(iBlock)
   do k=1,nAlts
      do i=1,nLats
         do j=1,nLons
+          
            EField(j,i,k,iEast_) = &
                -(Potential(j+1,i,k,iBlock)-Potential(j-1,i,k,iBlock)) &
                 *0.5*InvdLonDist_GB(j,i,k,iBlock)

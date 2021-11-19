@@ -52,7 +52,7 @@ subroutine set_vertical_bcs(LogRho,LogNS,Vel_GD,Temp, LogINS, iVel, VertVel)
   endif
 
   if (UseMsisBCs) then
-     call get_HPI(CurrentTime, HP, iError)  
+     call get_HPI(CurrentTime, HP, iError)
      if (iError > 0) hp = 40.0
      Ap = min(200.,max(-40.72 + 1.3 * HP, 10.))
      do iAlt = -1, 0
@@ -80,7 +80,7 @@ subroutine set_vertical_bcs(LogRho,LogNS,Vel_GD,Temp, LogINS, iVel, VertVel)
 
   do iSpecies=1,nIonsAdvect
      dn = (LogINS(2,iSpecies) - LogINS(1,iSpecies))
-     
+
      LogINS(0,iSpecies) = LogINS(1,iSpecies) - dn
      LogINS(-1,iSpecies) = LogINS(0,iSpecies) - dn
   enddo
@@ -118,7 +118,7 @@ subroutine set_vertical_bcs(LogRho,LogNS,Vel_GD,Temp, LogINS, iVel, VertVel)
   else
     VertVel( 0,iN4S_) =  1.0*VertVel(1,iN4S_)
     VertVel(-1,iN4S_) =  1.0*VertVel(1,iN4S_)
-  endif 
+  endif
 
   if(VertVel(1,iO_) .gt. 0.0 )then
   ! Don't allow upwelling of O
@@ -127,7 +127,7 @@ subroutine set_vertical_bcs(LogRho,LogNS,Vel_GD,Temp, LogINS, iVel, VertVel)
   else
     VertVel( 0,iO_) =  1.0*VertVel(1,iO_)
     VertVel(-1,iO_) =  1.0*VertVel(1,iO_)
-  endif 
+  endif
 !
 !  ! Lower boundary for NO on Earth
 !  if (nSpecies == iNO_) then
@@ -219,4 +219,3 @@ subroutine set_vertical_bcs(LogRho,LogNS,Vel_GD,Temp, LogINS, iVel, VertVel)
   enddo
 
 end subroutine set_vertical_bcs
-

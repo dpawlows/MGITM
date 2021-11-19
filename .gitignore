@@ -1,4 +1,5 @@
 run
+*#*#
 *.o
 *.mod
 Makefile.conf
@@ -40,3 +41,4 @@ util/EMPIRICAL/srcEE/Makefile.RULES
 util/EMPIRICAL/srcIE/Makefile.DEPEND
 util/EMPIRICAL/srcUA/Makefile.RULES
 util/NOMPI/src/Makefile.RULES
+srcPython/__pycache__

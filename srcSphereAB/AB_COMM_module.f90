@@ -1,11 +1,11 @@
-!  Copyright (C) 2002 Regents of the University of Michigan, portions used with permission 
+!  Copyright (C) 2002 Regents of the University of Michigan, portions used with permission
 !  For more information, see http://csem.engin.umich.edu/tools/swmf
 !-*- F90 -*- so emacs thinks this is an f90 file
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !
 ! NAME: AB_COMM_module_mpi
 !
-! PURPOSE: a module which implements the communication neccessary for 
+! PURPOSE: a module which implements the communication neccessary for
 !          AB2D using mpi.
 !
 ! HISTORY:
@@ -117,7 +117,7 @@ subroutine AB_COMM_XCHNG_REAL_start(xchng,snd_size,snd, &
   use ModMpi
   type(AB_COMM_XCHNG), intent(inout) :: xchng
   integer, dimension(0:) :: snd_size, rcv_size
-  type(AB_ARRAY_REAL), dimension(0:) :: snd, rcv 
+  type(AB_ARRAY_REAL), dimension(0:) :: snd, rcv
   logical, intent(out) :: ok
   integer :: p, buf_size, ierror
   integer :: max_pn,me,context,tag,np
@@ -150,7 +150,7 @@ subroutine AB_COMM_XCHNG_REAL_start(xchng,snd_size,snd, &
         if (buf_size .ne. 0) then
            call MPI_irecv(rcv(p)%array(1), buf_size, MPI_REAL, &
                 p, tag, context, &
-                xchng%rcv_req(p), ierror) 
+                xchng%rcv_req(p), ierror)
            if (ierror .ne. MPI_SUCCESS) then
               ok=.false.
               call AB_ERROR_set("AB_COMM_XCHNG_REAL_start","MPI error ",ierror)
@@ -170,7 +170,7 @@ subroutine AB_COMM_XCHNG_REAL_start(xchng,snd_size,snd, &
 
   ! initialize send requests to null
   xchng%snd_req=MPI_REQUEST_NULL
-  
+
   ! send data
   do p=0,max_pn
      if (p .ne. me) then
@@ -178,7 +178,7 @@ subroutine AB_COMM_XCHNG_REAL_start(xchng,snd_size,snd, &
         if (buf_size .ne. 0) then
            call MPI_isend(snd(p)%array(1), buf_size, MPI_REAL, &
                           p, tag, context, &
-                          xchng%snd_req(p), ierror)                     
+                          xchng%snd_req(p), ierror)
            if (ierror .ne. MPI_SUCCESS) then
               ok=.false.
               call AB_ERROR_set("AB_COMM_XCHNG_REAL_start","MPI error ",ierror)
@@ -198,7 +198,7 @@ subroutine AB_COMM_XCHNG_INT_2D_start(xchng,snd_size,snd_size_mult,snd, &
   type(AB_COMM_XCHNG), intent(inout) :: xchng
   integer, dimension(0:) :: snd_size, rcv_size
   type(AB_ARRAY_INT_2D), dimension(0:) :: snd, rcv
-  integer, intent(in) :: rcv_size_mult, snd_size_mult 
+  integer, intent(in) :: rcv_size_mult, snd_size_mult
   logical, intent(out) :: ok
   integer :: p, buf_size, ierror
   integer :: max_pn,me,context,tag,np
@@ -231,7 +231,7 @@ subroutine AB_COMM_XCHNG_INT_2D_start(xchng,snd_size,snd_size_mult,snd, &
         if (buf_size .ne. 0) then
            call MPI_irecv(rcv(p)%array(1,1), buf_size, MPI_INTEGER, &
                 p, tag, context, &
-                xchng%rcv_req(p), ierror) 
+                xchng%rcv_req(p), ierror)
            if (ierror .ne. MPI_SUCCESS) then
               ok=.false.
             call AB_ERROR_set("AB_COMM_XCHNG_INT_2D_start","MPI error ",ierror)
@@ -251,7 +251,7 @@ subroutine AB_COMM_XCHNG_INT_2D_start(xchng,snd_size,snd_size_mult,snd, &
 
   ! initialize send requests to null
   xchng%snd_req=MPI_REQUEST_NULL
-  
+
   ! send data
   do p=0,max_pn
      if (p .ne. me) then
@@ -259,7 +259,7 @@ subroutine AB_COMM_XCHNG_INT_2D_start(xchng,snd_size,snd_size_mult,snd, &
         if (buf_size .ne. 0) then
            call MPI_isend(snd(p)%array(1,1), buf_size, MPI_INTEGER, &
                           p, tag, context, &
-                          xchng%snd_req(p), ierror)                     
+                          xchng%snd_req(p), ierror)
            if (ierror .ne. MPI_SUCCESS) then
               ok=.false.
               call AB_ERROR_set("AB_COMM_XCHNG_INT_2D_start","MPI error ",ierror)
@@ -272,22 +272,24 @@ subroutine AB_COMM_XCHNG_INT_2D_start(xchng,snd_size,snd_size_mult,snd, &
 
 end subroutine AB_COMM_XCHNG_INT_2D_start
 
-subroutine AB_COMM_XCHNG_finish_rcv(xchng,ok)
+subroutine AB_COMM_XCHNG_finish_rcv(xchng,ok,iproc)
   use ModMpi
   type(AB_COMM_XCHNG), intent(inout) :: xchng
   logical, intent(out) :: ok
   integer :: ierror
+  integer, intent(in) :: iproc
 
   ! intialize status flag
   ok=.true.
 
-  ! wait for all the receives to finish
   call MPI_waitall(xchng%comm%np,xchng%rcv_req,xchng%status,ierror)
+
   if (ierror .ne. MPI_SUCCESS) then
      ok=.false.
      call AB_ERROR_set("AB_COMM_XCHNG_finish_rcv","MPI error ",ierror)
      return
   endif
+
 
 end subroutine AB_COMM_XCHNG_finish_rcv
 
@@ -351,5 +353,3 @@ end subroutine AB_COMM_XCHNG_destroy
 
 
 end module AB_COMM_module
-
-

@@ -31,6 +31,7 @@ module ModGITM
 
   real, dimension(-1:nLons+2, nBlocksMax) :: Longitude
   real, dimension(-1:nLats+2, nBlocksMax) :: Latitude, TanLatitude, CosLatitude
+  real, allocatable :: impactIonizationFrequency(:,:,:,:,:)
 
   real, dimension(nLons, nBlocksMax) :: GradLonM_CB, GradLon0_CB, GradLonP_CB
   real, dimension(nLats, nBlocksMax) :: GradLatM_CB, GradLat0_CB, GradLatP_CB
@@ -49,7 +50,7 @@ module ModGITM
 
 real, allocatable :: SpeciesDensity(:,:,:,:,:)
 real, allocatable :: SpeciesDensityOld(:,:,:,:,:)
-  
+
   real, allocatable :: LogRhoS(:,:,:,:,:)
   real, allocatable :: LogNS(:,:,:,:,:)
   real, allocatable :: VerticalVelocity(:,:,:,:,:)
@@ -103,6 +104,8 @@ real, allocatable :: SpeciesDensityOld(:,:,:,:,:)
   real, dimension(1:nLons, 1:nLats, 1:nAlts, 3) :: &
        IonDrag, Viscosity
 
+  real, allocatable :: IonPressureGradient(:,:,:,:,:)
+
   real, dimension(1:nLons, 1:nLats, 1:nAlts, nSpecies) :: &
        VerticalIonDrag
 
@@ -118,27 +121,30 @@ real, allocatable :: SpeciesDensityOld(:,:,:,:,:)
 
   real, allocatable :: Velocity(:,:,:,:,:)
   real, allocatable :: IVelocity(:,:,:,:,:)
+  real, allocatable :: DivIVelocity(:,:,:,:)
+  real, allocatable :: IVelocityPar(:,:,:,:,:), IVelocityPerp(:,:,:,:,:)
 
-  logical            :: isFirstGlow = .True.  
-  logical            :: isInitialGlow 
+
+  logical            :: isFirstGlow = .True.
+  logical            :: isInitialGlow
 
   real, allocatable :: Emissions(:,:,:,:,:)
 
   real, allocatable :: vEmissionRate(:,:,:,:,:)
-  
+
   real, allocatable :: PhotoElectronDensity(:,:,:,:,:)
   real, allocatable :: PhotoElectronRate(:,:,:,:,:)
   real, allocatable :: PhotoEFluxU(:,:,:,:,:)
   real, allocatable :: PhotoEFluxD(:,:,:,:,:)
-  
+
   real, allocatable :: PhotoEFluxTotal(:,:,:,:,:)
-  
+
   real, dimension(nPhotoBins)                 :: PhotoEBins
   real, dimension(-1:nLons+2, -1:nLats+2, -1:nAlts+2) :: TempUnit
 
   real :: LocalTime(-1:nLons+2)
 
-  real :: SubsolarLatitude, SubsolarLongitude 
+  real :: SubsolarLatitude, SubsolarLongitude
   real :: MagneticPoleColat, MagneticPoleLon
   real :: HemisphericPowerNorth, HemisphericPowerSouth
 
@@ -209,9 +215,13 @@ contains
     allocate(b0_cD(-1:nLons+2,-1:nLats+2,-1:nAlts+2,nBlocks))
     allocate(b0_Be3(-1:nLons+2,-1:nLats+2,-1:nAlts+2,nBlocks))
     allocate(cMax_GDB(0:nLons+1,0:nLats+1,0:nAlts+1,3,nBlocks))
+    allocate(IonPressureGradient(-1:nLons+2, -1:nLats+2, -1:nAlts+2, 3, nBlocks))
     allocate(Potential(-1:nLons+2, -1:nLats+2, -1:nAlts+2, nBlocks))
     allocate(Velocity(-1:nLons+2, -1:nLats+2, -1:nAlts+2, 3, nBlocks))
     allocate(IVelocity(-1:nLons+2, -1:nLats+2, -1:nAlts+2, 3, nBlocks))
+    allocate(DivIVelocity(1:nLons, 1:nLats, 1:nAlts, nBlocks))
+    allocate(IVelocityPar(-1:nLons+2, -1:nLats+2, -1:nAlts+2, 3, nBlocks))
+    allocate(IVelocityPerp(-1:nLons+2, -1:nLats+2, -1:nAlts+2, 3, nBlocks))
     allocate(Emissions(nLons,nLats,nAlts,nEmissions,nBlocks))
     allocate(vEmissionRate(nLons,nLats,nAlts,nEmissionWavelengths,nBlocks))
     allocate(PhotoElectronDensity(nLons,nLats,nAlts,nPhotoBins,nBlocks))
@@ -219,6 +229,8 @@ contains
     allocate(PhotoEFluxU(nLons,nLats,nAlts,nPhotoBins,nBlocks))
     allocate(PhotoEFluxD(nLons,nLats,nAlts,nPhotoBins,nBlocks))
     allocate(PhotoEFluxTotal(nLons,nLats,nAlts,nBlocks,2))
+    allocate(EIM_IonizationFrequency(nspecies_EIM,nAlts_EIM,nBmags_EIM,nBelvs_EIM))
+    allocate(impactIonizationFrequency(nLons,nLats,nAlts,nSpecies_EIM,nBlocks))
   end subroutine init_mod_gitm
   !=========================================================================
   subroutine clean_mod_gitm
@@ -277,9 +289,13 @@ contains
     deallocate(b0_cD)
     deallocate(b0_Be3)
     deallocate(cMax_GDB)
+    deallocate(IonPressureGradient)
     deallocate(Potential)
     deallocate(Velocity)
     deallocate(IVelocity)
+    deallocate(DivIVelocity)
+    deallocate(IVelocityPerp)
+    deallocate(IVelocityPar)
     deallocate(Emissions)
     deallocate(vEmissionRate)
     deallocate(PhotoElectronDensity)
@@ -287,6 +303,10 @@ contains
     deallocate(PhotoEFluxU)
     deallocate(PhotoEFluxD)
     deallocate(PhotoEFluxTotal)
+    deallocate(EIM_IonizationFrequency)
+    deallocate(impactIonizationFrequency)
+
+
   end subroutine clean_mod_gitm
   !=========================================================================
 end module ModGITM

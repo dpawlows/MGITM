@@ -21,6 +21,8 @@ subroutine calc_rates(iBlock)
   use ModConstants
   use ModPlanet
   use ModInputs
+  use ModTime, only: tsimulation
+
   use ModEUV, only : SunOrbitEccentricity
   use ModSources, only : KappaEddyDiffusion
 
@@ -51,7 +53,7 @@ subroutine calc_rates(iBlock)
 
 ! ------------------------------------------------------------------------------
 
-  logical :: trouble 
+  logical :: trouble
 
   call report("calc_rates",2)
   call start_timing("calc_rates")
@@ -133,7 +135,7 @@ trouble = .false.
 !      enddo
 
 ! -------------------------------------------------------------------------------
-   
+
 
   if(trouble) then
     write(*,*) 'trouble found!!'
@@ -162,7 +164,7 @@ trouble = .false.
 
   Ne  = IDensityS(:,:,:,ie_,iBlock)
 
-  ! We add 1 because this is in the denominator a lot, and the corners 
+  ! We add 1 because this is in the denominator a lot, and the corners
   ! don't have anything. Total number density.
 
   mnd = (NDensity(:,:,:,iBlock)+1.0)
@@ -188,12 +190,12 @@ trouble = .false.
   invNe = 1/Ne
   do iIon = 1, nIons-1
      MeanIonMass = MeanIonMass + &
-          MassI(iIon) * IDensityS(:,:,:,iIon,iBlock) 
+          MassI(iIon) * IDensityS(:,:,:,iIon,iBlock)
   enddo
   MeanIonMass = MeanIonMass * invNe
 
 ! -------------------------------------------------------------------------------
-  TempUnit = MeanMajorMass / Boltzmanns_Constant       
+  TempUnit = MeanMajorMass / Boltzmanns_Constant
 ! -------------------------------------------------------------------------------
 
 !write(*,*) '==> calc_rates:  Before Mixing Ratio Calculation.'
@@ -203,26 +205,27 @@ trouble = .false.
 
  ! do iAlt = 0, nAlts+1
 
-!   Mixing Ratios 
+!   Mixing Ratios
 !    po(:,:,0:nAlts+1)   = NDensityS(:,:,0:nAlts+1,iO_,iBlock)*invmnd(:,:,0:nAlts+1)
 !    pco(:,:,0:nAlts+1)  = NDensityS(:,:,0:nAlts+1,iCO_,iBlock)*invmnd(:,:,0:nAlts+1)
 !    pn2(:,:,0:nAlts+1)  = NDensityS(:,:,0:nAlts+1,iN2_,iBlock)*invmnd(:,:,0:nAlts+1)
 !    pco2(:,:,0:nAlts+1) = NDensityS(:,:,0:nAlts+1,iCO2_,iBlock)*invmnd(:,:,0:nAlts+1)
- 
-! !   Temperature Based Arrays 
+
+! !   Temperature Based Arrays
 !    ttot(:,:,0:nAlts+1) = Temperature(:,:,0:nAlts+1,iBlock) * &
-!                          TempUnit(:,:,0:nAlts+1)   
+!                          TempUnit(:,:,0:nAlts+1)
 !    tt(:,:,0:nAlts+1) = ttot(:,:,0:nAlts+1)**0.69
 
    po   = NDensityS(:,:,:,iO_,iBlock)*invmnd
    pco  = NDensityS(:,:,:,iCO_,iBlock)*invmnd
    pn2  = NDensityS(:,:,:,iN2_,iBlock)*invmnd
    pco2 = NDensityS(:,:,:,iCO2_,iBlock)*invmnd
- 
-!   Temperature Based Arrays 
+
+!   Temperature Based Arrays
    ttot = Temperature(:,:,:,iBlock) * &
-                         TempUnit   
+                         TempUnit
    tt = ttot**0.69
+
 
 !  enddo
 
@@ -256,7 +259,7 @@ trouble = .false.
           if (ttot(iLon,iLat,iAlt) < 500.)    &
                crn = 1.64-(ttot(iLon,iLat,iAlt)-500.)*2.5e-4
           co2km(iLon,iLat,iAlt)=cmrf(is)+(cmrf(is+1)-cmrf(is))*  &
-               (ttot(iLon,iLat,iAlt)- (is*100.+73.3))*0.01 
+               (ttot(iLon,iLat,iAlt)- (is*100.+73.3))*0.01
 
           co2km(iLon,iLat,iAlt)=co2km(iLon,iLat,iAlt)*1.e-06
           cpco2=3.5*RGAS*AMU/Mass(iCO2_)
@@ -268,7 +271,7 @@ trouble = .false.
           if (is <= 1) is=1
           if (is >= 7) is=7
           if (ttot(iLon,iLat,iAlt) > 400.) prco=0.72
-          if (ttot(iLon,iLat,iAlt) > 300. .and. ttot(iLon,iLat,iAlt) < 400.)  & 
+          if (ttot(iLon,iLat,iAlt) > 300. .and. ttot(iLon,iLat,iAlt) < 400.)  &
               prco = 0.73-(ttot(iLon,iLat,iAlt)-350.)*1.5e-04
           if (ttot(iLon,iLat,iAlt) < 300.)  &
                      prco=0.75-(ttot(iLon,iLat,iAlt)-250.)*2.6e-04
@@ -294,6 +297,9 @@ trouble = .false.
             pco2(iLon,iLat,iAlt)*co2kt(iLon,iLat,iAlt))* &
             1.0E-05
 
+
+
+
           enddo
         enddo
       enddo
@@ -316,7 +322,7 @@ trouble = .false.
 !            TempUnit(1:nLons,1:nLats,iAlt))**0.75
 !    endif
 
-        KappaTemp(:,:,iAlt,iBlock) =  ktmix(1:nLons,1:nLats,iAlt) 
+        KappaTemp(:,:,iAlt,iBlock) =  ktmix(1:nLons,1:nLats,iAlt)
 
 ! -------------------------------------------------------------------------------
 ! This adds the eddy turbulent conduction Term (scaled by Prandtl number)
@@ -330,8 +336,11 @@ trouble = .false.
                    KappaTemp(iLon,iLat,iAlt,iBlock) + &
                    KappaEddyDiffusion(iLon,iLat,iAlt,iBlock) * cp(iLon,iLat,iAlt,iBlock) * &
                    Rho(iLon,iLat,iAlt,iBlock)/10.
+
+
         enddo
      enddo
+
 ! -------------------------------------------------------------------------------
 
 !   Earth GITM formulation for Molecular Viscosity (mks)
@@ -360,10 +369,12 @@ trouble = .false.
 ! -------------------------------------------------------------------------------
   enddo
 
+
   call end_timing("calc_rates")
 
   if (UseBarriers) call MPI_BARRIER(iCommGITM,iError)
   if (iDebugLevel > 4) write(*,*) "=====> Done with calc_rates"
+
 
 end subroutine calc_rates
 
@@ -380,20 +391,24 @@ subroutine calc_collisions(iBlock)
 
   integer, intent(in) :: iBlock
 
-  real, dimension(nLons, nLats, nAlts) :: Tn, Ti, e2
+  real, dimension(nLons, nLats, nAlts) :: e2
 
   integer :: iError
 
   real, dimension(-1:nLons+2, -1:nLats+2, -1:nAlts+2) :: &
-       Ne, mnd, Te
+       Ne, mnd, Te, Tr, Tn, Ti
 
   !\
   ! Need to get the neutral, ion, and electron temperature
   !/
 
-  Tn = Temperature(1:nLons,1:nLats,1:nAlts,iBlock)*&
-       TempUnit(1:nLons,1:nLats,1:nAlts)
-  Ti = ITemperature(1:nLons,1:nLats,1:nAlts,iBlock)
+  Tn = Temperature(:,:,:,iBlock)*&
+       TempUnit(:,:,:)
+  Ti = ITemperature(:,:,:,iBlock)
+  Tr = (Tn+Ti)/2
+  ! Set a floor on Tr:
+  where (Tr < 200) Tr = 200.0
+
 
   mnd = NDensity(:,:,:,iBlock)+1.0
   Ne  = IDensityS(:,:,:,ie_,iBlock)
@@ -415,8 +430,66 @@ subroutine calc_collisions(iBlock)
 
   if (UseBarriers) call MPI_BARRIER(iCommGITM,iError)
   if (iDebugLevel > 4) write(*,*) "=====> vin",iblock
+  IonCollisions = 0.0
 
   Collisions(:,:,:,iVIN_) = 2.6e-15 * (mnd + Ne)/sqrt(MeanMajorMass/AMU)
+
+ ! O+ with ... (Fox & Hac, 2014)
+  IonCollisions(:,:,:,iOP_,iCO2_) = 2.0e-14*nDensityS(:,:,:,iCO2_,iBlock)
+  IonCollisions(:,:,:,iOP_,iAr_) = 1.2e-14*nDensityS(:,:,:,iAr_,iBlock)
+  IonCollisions(:,:,:,iOP_,iN2_) = 1.8e-14*nDensityS(:,:,:,iN2_,iBlock)
+  IonCollisions(:,:,:,iOP_,iO2_) = 1.8e-14*nDensityS(:,:,:,iO2_,iBlock)
+  IonCollisions(:,:,:,iOP_,iCO_) = 1.8e-14*nDensityS(:,:,:,iCO_,iBlock)
+  IonCollisions(:,:,:,iOP_,iHe_) = 6.4e-15*nDensityS(:,:,:,iHe_,iBlock)
+  IonCollisions(:,:,:,iOP_,iN4S_) = 9.0e-15*nDensityS(:,:,:,iN4S_,iBlock)
+  IonCollisions(:,:,:,iOP_,iO_) = 6.4e-15*nDensityS(:,:,:,iO_,iBlock)
+
+!!!!! We only advect 1 ion, so we don't need these rates.
+!!!!! Update IonCollisions definition in ModGITM if more ions are advected
+
+! ! O2+ ...
+!   where (tr > 800.) IonCollisions(:,:,:,iO2P_,iO2_) = &
+!        2.59e-17 * NDensityS(:,:,:,iO2_,iBlock) * tr**0.5 * &
+!        (1 - 0.073*log10(tr))**2
+!   where (tr <= 800) IonCollisions(:,:,:,iO2P_,iO2_) = 8.2e-16 * &
+!        NDensityS(:,:,:,iO2_,iBlock)
+!
+!   IonCollisions(:,:,:,iO2P_,iO_) = 2.31e-16 * NDensityS(:,:,:,iO_,iBlock)
+!   IonCollisions(:,:,:,iO2P_,iN2_)   = 4.13e-16 * NDensityS(:,:,:,iN2_,iBlock)
+!
+!
+!   IonCollisions(:,:,:,iO2P_,iN4S_) = 2.64e-16 * NDensityS(:,:,:,iN4S_,iBlock)
+!    ! This is (ave CO and N2)??
+!   IonCollisions(:,:,:,iO2P_,iCO_)   = 4.25e-16*NDensityS(:,:,:,iCO_,iBlock)
+!   IonCollisions(:,:,:,iO2P_,iCO2_)   = 4.25e-16*NDensityS(:,:,:,iCO2_,iBlock)
+!
+!
+! ! N2+ ...
+! IonCollisions(:,:,:,iN2P_,iN2_) = &
+!        5.14e-17 * NDensityS(:,:,:,iN2_,iBlock) * tr**0.5 * (1 - 0.069*log10(tr))**2
+!
+!   IonCollisions(:,:,:,iN2P_,iO2_)   = 4.49e-16 * NDensityS(:,:,:,iO2_,iBlock)
+!   IonCollisions(:,:,:,iN2P_,iO_) = 2.58e-16 * NDensityS(:,:,:,iO_,iBlock)
+!   IonCollisions(:,:,:,iN2P_,iN4S_) = 2.95e-16 * NDensityS(:,:,:,iN4S_,iBlock)
+!   ! This is just N2, since NO doesn't exist (ave CO and O2)
+!   IonCollisions(:,:,:,iN2P_,iCO_)   = 4.66e-16 * NDensityS(:,:,:,iCO_,iBlock)
+!   IonCollisions(:,:,:,iN2P_,iCO2_)   = 4.66e-16 * NDensityS(:,:,:,iCO2_,iBlock)
+!
+!   ! NO+ (with NO, O, N2, N, O2)
+!
+!   if (iDebugLevel > 5) write(*,*) "======> no+ ",iblock
+!
+!   ! This resonant ion-neutral is made up, since NO-NO+ doesn't exist
+!   where (tr > 800.) IonCollisions(:,:,:,iNOP_,iNO_) = &
+!        2.59e-17 * NDensityS(:,:,:,iNO_,iBlock) * tr**0.5 * (1 - 0.073*log10(tr))**2
+!   where (tr <= 800) IonCollisions(:,:,:,iNOP_,iNO_) = 8.2e-16 * NDensityS(:,:,:,iNO_,iBlock)
+!
+!   IonCollisions(:,:,:,iNOP_,iO_) = 2.44e-16 * NDensityS(:,:,:,iO_,iBlock)
+!   IonCollisions(:,:,:,iNOP_,iN2_)   = 4.34e-16 * NDensityS(:,:,:,iN2_,iBlock)
+!   IonCollisions(:,:,:,iNOP_,iN4S_) = 2.79e-16 * NDensityS(:,:,:,iN4S_,iBlock)
+!   IonCollisions(:,:,:,iNOP_,iO2_)   = 4.27e-16 * NDensityS(:,:,:,iO2_,iBlock)
+
+
 
 !
 ! Electron Neutral Collision Frequency
@@ -441,7 +514,7 @@ subroutine calc_collisions(iBlock)
 
 !!  Collisions(:,:,:,VEI) = (34.0 + 4.18*log((TE**3.0)/(Ne*1.0e-6))) &
 !!       * Ne * TE**(-3.0/2.0) * 1.0e-6
-!  
+!
 
   i_gyro = Element_Charge * B0(:,:,:,iMag_,iBlock) / MeanIonMass
 

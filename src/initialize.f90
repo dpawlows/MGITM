@@ -34,8 +34,7 @@ subroutine initialize_gitm(TimeIn)
 !! Sorry but this is a double-negative
 !! This checks to see if the planet is not, not Titan.
 !! That is to say, it checks to see if this is actually Titan.
-
-  if (   .not. (index(cPlanet,"Titan") == 0)  ) then 
+  if (   .not. (index(cPlanet,"Titan") == 0)  ) then
      call init_radcooling
   endif
 
@@ -102,7 +101,7 @@ subroutine initialize_gitm(TimeIn)
   do iAlt = 0,nAlts+1
      ! Cell interface is taken to be half way between cell centers
      ! so the cell size is half of the cell center distance
-     ! between cells i-1 and i+1: 
+     ! between cells i-1 and i+1:
      dAlt_GB(:,:,iAlt,1:nBlocks) = 0.5* &
           ( Altitude_GB(:,:,iAlt+1,1:nBlocks) &
           - Altitude_GB(:,:,iAlt-1,1:nBlocks))
@@ -119,7 +118,7 @@ subroutine initialize_gitm(TimeIn)
   if (UseStretchedAltitude) then
      do iAlt=1,nAlts
         Gravity_GB(:,:,iAlt,:) = -Gravitational_Constant &
-             *(rBody/RadialDistance_GB(:,:,iAlt,:))**2 
+             *(rBody/RadialDistance_GB(:,:,iAlt,:))**2
      enddo
   endif
 
@@ -172,14 +171,13 @@ subroutine initialize_gitm(TimeIn)
                    (Latitude(iLat, iBlock) - Latitude(iLat-1, iBlock)) * &
                    0.5*(RadialDistance_GB(iLon, iLat  , iAlt, iBlock) &
                    +    RadialDistance_GB(iLon, iLat-1, iAlt, iBlock))
-              
+
               ! This is the cell size assuming that cell interface is half way
               dLonDist_GB(iLon, iLat, iAlt, iBlock) = 0.5 * &
                    (Longitude(iLon+1,iBlock) - Longitude(iLon-1,iBlock)) * &
                    RadialDistance_GB(iLon, iLat, iAlt, iBlock)* &
                    max(abs(CosLatitude(iLat,iBlock)),0.01)
 
-              ! This is the distance between neighboring cells
               dLonDist_FB(iLon, iLat, iAlt, iBlock) = &
                    (Longitude(iLon,iBlock) - Longitude(iLon-1,iBlock)) * &
                    0.5*(RadialDistance_GB(iLon,   iLat, iAlt, iBlock) &
@@ -189,8 +187,7 @@ subroutine initialize_gitm(TimeIn)
               CellVolume(iLon,iLat,iAlt,iBlock) = &
                    dLonDist_GB(iLon, iLat, iAlt, iBlock) * &
                    dLatDist_GB(iLon, iLat, iAlt, iBlock) * &
-                   dAlt_GB(iLon,iLat,iAlt,iBlock) 
-
+                   dAlt_GB(iLon,iLat,iAlt,iBlock)
            enddo
 
            ! Fill in longitude ghost cells
@@ -214,7 +211,6 @@ subroutine initialize_gitm(TimeIn)
              dLatDist_FB(:, nLats+1, iAlt, iBlock)
      enddo
   enddo
-
   InvDLatDist_GB = 1.0/dLatDist_GB
   InvDLatDist_FB = 1.0/dLatDist_FB
   InvDLonDist_GB = 1.0/dLonDist_GB
@@ -261,13 +257,13 @@ subroutine initialize_gitm(TimeIn)
 
 !! Some Titan-Specific Startup Routines here (Regardless of Restart or Not)
 
-  if (   .not. (index(cPlanet,"Titan") == 0)  ) then 
+  if (   .not. (index(cPlanet,"Titan") == 0)  ) then
      call init_magheat
      call init_isochem
      call init_aerosol
   endif
 
- if (   .not. (index(cPlanet,"Mars") == 0)  ) then 
+ if (   .not. (index(cPlanet,"Mars") == 0)  ) then
      call init_isochem
   endif
 
@@ -294,7 +290,7 @@ subroutine initialize_gitm(TimeIn)
            eTemperature(:,:,iAlt,iBlock) = t
            iTemperature(:,:,iAlt,iBlock) = t
         enddo
-           
+
         do iAlt=-1,nAlts+2
 
            InvScaleHeight(:,:,iAlt,iBlock)  =  &
@@ -333,12 +329,12 @@ subroutine initialize_gitm(TimeIn)
                       - Temperature(:,:,iAlt-1,iBlock)) &
                       /(Temperature(:,:,iAlt,iBlock))
               endif
-              
+
               NewSumRho      = NewSumRho + &
                    Mass(iSpecies)*exp(LogNS(:,:,iAlt,iSpecies,iBlock))
-              
+
            enddo
-              
+
            do iSpecies=1,nSpecies
 
               NDensityS(:,:,iAlt,iSpecies,iBlock) = &
@@ -353,7 +349,7 @@ subroutine initialize_gitm(TimeIn)
            enddo
 
         enddo
-           
+
      enddo
 
   endif
@@ -399,7 +395,6 @@ subroutine initialize_gitm(TimeIn)
   if (.not.Is1D) call exchange_messages_sphere
 
   call calc_pressure
-
   ! The iLon and iLat are dummy variables...
   call UA_calc_electrodynamics(iLon,iLat)
 
@@ -416,4 +411,3 @@ subroutine initialize_gitm(TimeIn)
   call end_timing("initialize")
 
 end subroutine initialize_gitm
-

@@ -27,17 +27,18 @@ subroutine add_sources
   logical :: IsFirstTime=.true.
 
   call report("add_sources",2)
+
   if (isEarth) then
     if (floor((tSimulation-dt)/DtPotential) /= &
-         floor((tsimulation)/DtPotential) .or. IsFirstTime) then
-       if (UseDynamo .and. .not. Is1D) then
-          call UA_calc_electrodynamics(iLon, iLat)
-       else
-          call UA_calc_electrodynamics_1d
-       endif
-       IsFirstTime = .false.
-    endif
+       floor((tsimulation)/DtPotential) .or. IsFirstTime) then
+     if (UseDynamo .and. .not. Is1D) then
+        call UA_calc_electrodynamics(iLon, iLat)
+     else
+        call UA_calc_electrodynamics_1d
+     endif
+     IsFirstTime = .false.
   endif
+endif
 
   do iBlock = 1, nBlocks
 
@@ -248,6 +249,7 @@ iAlt = 10
              NDensityS(1:nLons, 1:nLats, 1:nAlts, iSpecies, iBlock) / &
              Rho(1:nLons, 1:nLats, 1:nAlts, iBlock)
      enddo
+
 
   enddo
 
