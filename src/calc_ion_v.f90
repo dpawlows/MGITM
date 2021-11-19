@@ -42,7 +42,7 @@ subroutine calc_ion_v(iBlock)
   ! The electron pressure is included here because of the electron momentum equation:
   !   When all terms multipled by the electron mass are ignored, you get grad(Pe) = E-par,
   !   When you put E-par into ion momentum eqn, you can simply add grad(Pe) to grad(Pi).
-
+  B0(:,:,:,iMag_,iBlock) = B0(:,:,:,iMag_,iBlock) + 1e-5
   Pressure_G = IPressure(:,:,:,iBlock)+ePressure(:,:,:,iBlock)
   call UAM_Gradient_GC(Pressure_G, LocalPressureGradient, iBlock)
 
@@ -54,7 +54,6 @@ subroutine calc_ion_v(iBlock)
      LocalPressureGradient(:,:,:,iEast_) = 0.0
      LocalPressureGradient(:,:,:,iNorth_) = 0.0
   endif
-
   ! If the user doesn't want to use the pressure gradient, set it to zero:
   if (.not.useIonPressureGradient) LocalPressureGradient = 0.0
 
@@ -140,10 +139,9 @@ subroutine calc_ion_v(iBlock)
 
 
   else
-
-
      UDotB = sum(LocalNeutralWinds(:,:,:,:) * BLocal, dim=4)/ &
           B0(:,:,:,iMag_,iBlock)
+        
      gpDotB = sum(LocalPressureGradient(:,:,:,:) * &
           BLocal, dim=4) / B0(:,:,:,iMag_,iBlock)
 
@@ -167,7 +165,9 @@ subroutine calc_ion_v(iBlock)
 
      endif
 
+
      ! Let's limit the Parallel Flow to something reasonable...
+
 
      VIParallel = min( UDotB + MaxVParallel, VIParallel)
      VIParallel = max( UDotB - MaxVParallel, VIParallel)
@@ -259,7 +259,7 @@ subroutine calc_ion_v(iBlock)
 
   IVelocity(:,:,:,:,iBlock) = min( 3000.0, IVelocity(:,:,:,:,iBlock))
   IVelocity(:,:,:,:,iBlock) = max(-3000.0, IVelocity(:,:,:,:,iBlock))
-  
+
 
   call end_timing("Ion Forcing")
 
