@@ -429,13 +429,18 @@ contains
 
     call AB_array3_gc_unpack(nLons,nLats,nAlts,2, &
          Rho(:,:,1:nAlts,index),dir,p,in_array)
-
+         ! write(*,*) size(idensitys,1),size(idensitys,2),size(idensitys,3),size(idensitys,4)
+         ! write(*,*) size(tmpI,1),size(tmpI,2),size(tmpI,3),size(tmpI,4)
+         ! write(*,*) nlons,nlats,nalts,nionsadvect
+         ! write(*,*) size(in_array)
+         !  stop
     call AB_array4_gc_unpack(nLons,nLats,nAlts,3,2, &
          Velocity(:,:,1:nAlts,:,index),dir,p,in_array)
 
     tmpN = VerticalVelocity(:,:,1:nAlts,1:nSpecies,index)
     call AB_array4_gc_unpack(nLons,nLats,nAlts,nSpecies,2, &
          tmpN,dir,p,in_array)
+
     VerticalVelocity(:,:,1:nAlts,1:nSpecies,index) = tmpN
 
     tmpN = NDensityS(:,:,1:nAlts,1:nSpecies,index)
@@ -453,15 +458,15 @@ contains
          eTemperature(:,:,1:nAlts,index),dir,p,in_array)
 
     if (UseIonAdvection) then
-       call AB_array4_gc_unpack(nLons,nLats,nAlts,nIonsAdvect,2, &
-            IDensityS(:,:,1:nAlts,:,index),dir,p,in_array)
+       ! call AB_array4_gc_unpack(nLons,nLats,nAlts,nIonsAdvect,2, &
+       !      IDensityS(:,:,1:nAlts,:,index),dir,p,in_array)
        do iIon = 1, nIonsAdvect
           tmpI(:,:,:,iIon) = IDensityS(:,:,1:nAlts,iIon,index)
        enddo
 
-
        call AB_array4_gc_unpack(nLons,nLats,nAlts,nIonsAdvect,2, &
             tmpI,dir,p,in_array)
+
 
 
        do iIon = 1, nIonsAdvect
