@@ -42,7 +42,7 @@ subroutine calc_timestep_horizontal
         ! Find stability limit on the time step
         do iLat = 1,nLats
            do iLon = 1,nLons
-           
+
               DtLocal = min(DtLocal, Cfl / ( &
                    cMax_GDB(iLon, iLat, iAlt, iEast_,  iBlock) / &
                    dLonDist_GB(iLon,iLat,iAlt,iBlock) + &
@@ -147,10 +147,9 @@ subroutine calc_timestep_vertical
   if (iDebugLevel > 2) &
        write(*,*) "===> DtVertical : ", Dt
 
+
   if (dt < cfl/100.0 .and. dt < 0.99*DtEnd) then
      write(*,*) "Dt too slow!!!", dt
      call stop_gitm("Stopping in calc_timestep_vertical")
   endif
-
 end subroutine calc_timestep_vertical
-

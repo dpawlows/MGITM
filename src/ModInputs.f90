@@ -173,6 +173,8 @@ module ModInputs
   logical :: UseNeutralFriction  = .true.
 
   logical :: UseCrustalField        = .false.
+  logical :: UseMHDField            = .false.
+  logical :: crustalFieldOnly       = .false.
   logical :: UseIonPressureGradient = .true.
   logical :: UseIonGravity          = .true.
   logical :: UseNeutralDrag         = .true.
@@ -181,6 +183,7 @@ module ModInputs
   logical :: IsAsymmetric          = .false.
   Real :: BetaPointImpl         = 1.0
 
+  logical :: UseEmpiricalIonization = .false.
   logical :: UseDynamo              = .false.
   real    :: DynamoHighLatBoundary  = 65.0
   integer :: nItersMax              = 500
@@ -217,6 +220,7 @@ module ModInputs
 
   logical :: DoCheckStopFile = .true.
 
+  real :: MaxVParallel = 100.0
   !\
   ! Methods for completing chemistry
   !/
@@ -236,6 +240,7 @@ module ModInputs
 
   logical                   :: UseEUVData =.false.
   character (len=iCharLen_) :: cEUVFile
+  character (len=iCharLen_) :: cMHDFile
 
   ! These are Mars Specific, but ignored by other codes:
   ! Some are modified in Planet.f90 (set_planet_defaults)

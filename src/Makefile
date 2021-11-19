@@ -46,6 +46,7 @@ OBJECTS = \
 	time_routines.o\
 	vertical_solver.o\
 	library.o\
+	check_for_nans.o\
 	stretch_grid.o\
 	init_mpi.o\
 	restart.o\
@@ -143,7 +144,7 @@ ${MY_LIB}: ${LIBPREV} ${MF} ${MODULES} ${OBJECTS}
 # clean:
 		# rm -f *~ core *.o *.mod fort.* a.out *.exe *.a *.so *.protex
 
-distclean: 
+distclean:
 	rm -f 	ModSize.f90 \
 		ModPlanet.f90 \
 		ModChemistry.f90 \

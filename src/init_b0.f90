@@ -19,18 +19,18 @@ subroutine init_b0
   call report("init_b0",1)
   call start_timing("init_b0")
 
-  if (IsMars .and. UseCrustalField) then
+  if (IsMars) then
+    if (UseCrustalField) then
+      Call ReadMagField
+    elseif (UseMHDField) then
+      call ReadMHDField
+    endif
 
-        Call ReadMagField
-
-        ! do i=1,nBlocks
-        !    UserData3D(:,:,:,12,i)=B0(:,:,:,1,i)
-        !    UserData3D(:,:,:,13,i)=B0(:,:,:,2,i)
-        !    UserData3D(:,:,:,14,i)=B0(:,:,:,3,i)
-        !    UserData3D(:,:,:,15,i)=B0(:,:,:,4,i)
-        ! enddo
-
-      else
+    if (UseEmpiricalIonization) then
+      call readLillisModel
+    endif
+  
+  else
 
     AltMinIono=(2*RadialDistance_GB(1,1,-1,1) - &
          RadialDistance_GB(1,1,1,1) - RBody)/1000.0

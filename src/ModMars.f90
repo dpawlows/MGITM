@@ -35,13 +35,14 @@ module ModPlanet
   integer, parameter  :: iNOP_  = 5
   integer, parameter  :: ie_    = 6
   integer, parameter  :: nIons  = ie_
-  integer, parameter  :: nIonsAdvect = 0
+  integer, parameter  :: nIonsAdvect = 1
   integer, parameter  :: nSpeciesAll = 16 !Ions plus neutrals
 
   character (len=20) :: cSpecies(nSpeciesTotal)
   character (len=20) :: cIons(nIons)
 
   real :: Mass(nSpeciesTotal), MassI(nIons)
+
 
   real :: Vibration(nSpeciesTotal)
 
@@ -123,6 +124,8 @@ module ModPlanet
   integer, parameter :: i7774_ = 9
   integer, parameter :: i8446_ = 10
   integer, parameter :: i3726_ = 11
+
+
 !  real :: KappaTemp0 = 2.22e-4
 
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -257,6 +260,25 @@ module ModPlanet
 
   real, dimension(1:nLons,1:nLats,1:nAlts) :: MarsOrbitalDistance
 
+  !
+  integer, parameter :: nSpecies_EIM = 5
+  integer, parameter :: nSW_EIM = 21
+  integer, parameter :: nAlts_EIM = 28
+  integer, parameter :: nBmags_EIM = 60
+  integer, parameter :: nBelvs_EIM = 18
+  integer :: minMagFieldAlt,maxMagFieldAlt
+
+  integer, parameter ::  iImpactCO2_ = 1
+  integer, parameter ::  iImpactO_ = 2
+  integer, parameter ::  iImpactN2_ = 3
+  integer, parameter ::  iImpactCO_ = 4
+  integer, parameter ::  iImpactAr_ = 5
+
+  real :: EIMsolarwindpressure(nSW_EIM), EIMAltitude(nAlts_EIM)
+  real :: EIMBMag(nBmags_EIM),EIMBElvs(nBelvs_EIM),solarWindPressure
+  character (len = 20) :: EIMSpecies(nSpecies_EIM)
+  real, allocatable :: EIM_IonizationFrequency(:,:,:,:)
+  real :: dtImpactIonization = 300
 
 !################ Nelli, April 07 ##########################
 !Setting up parameters needed by the correlated k lower
@@ -1699,5 +1721,7 @@ contains
   subroutine init_aerosol
   return
   end subroutine init_aerosol
+
+
 
 end module ModPlanet

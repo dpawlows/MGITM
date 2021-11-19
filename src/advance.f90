@@ -24,9 +24,10 @@ subroutine advance
   if (.not. UseStatisticalModelsOnly) then
 
      call advance_vertical_all
-     call add_sources 
+     call add_sources
+
      if (.not. Is1D) call advance_horizontal_all
- 
+
   else
 
      Dt = DtStatisticalModels
@@ -49,7 +50,7 @@ subroutine advance
   iDay  = DTime / Rotation_Period
   uTime = (DTime / Rotation_Period - iDay) * Rotation_Period
 
-  iJulianDay = jday(iTimeArray(1), iTimeArray(2), iTimeArray(3)) 
+  iJulianDay = jday(iTimeArray(1), iTimeArray(2), iTimeArray(3))
 
   if (UseStatisticalModelsOnly) then
 
@@ -69,6 +70,7 @@ subroutine advance
      endif
 
      write(*,*) "F10.7 = ", f107, f107a
+
      call init_msis
      call init_iri
      call init_b0
@@ -105,14 +107,12 @@ contains
 
     call report("advance_horizontal_all",1)
     call start_timing("horizontal_all")
-
     call exchange_messages_sphere
 
     do iBlock = 1, nBlocks
 
        call calc_rates(iBlock)
        call calc_physics(iBlock)
-
        call advance_horizontal(iBlock)
 
     end do

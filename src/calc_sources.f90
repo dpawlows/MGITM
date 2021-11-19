@@ -7,6 +7,8 @@ subroutine calc_GITM_sources(iBlock)
   use ModInputs
   use ModSources
   use ModGITM
+  use ModTime, only : tSimulation,istep
+  use ModUserGITM
 
   implicit none
 
@@ -26,6 +28,10 @@ subroutine calc_GITM_sources(iBlock)
   real :: NF_Gravity(1:nAlts)
   real :: NF_GradLogCon(1:nAlts,1:nSpecies)
   real :: Prandtl(nLons,nLats,0:nalts+1)
+  real :: EIMIZ(nSpecies_EIM)
+  real, dimension(1:nLons, 1:nLats, 1:nAlts, 4) ::  BLocal
+
+  logical :: IsFirstTime = .true.
 
 ! Potential Temperature
 ! Used in New Eddy Conduction Calculations:  Bell 1-15-2009
@@ -389,6 +395,8 @@ subroutine calc_GITM_sources(iBlock)
 !
 !              EddyCoefRatio(iLon, iLat, iAlt, 1:nSpecies) = &
 !                    NF_EddyRatio(iAlt,1:nSpecies)
+
+
            enddo
 
         enddo
@@ -460,6 +468,41 @@ subroutine calc_GITM_sources(iBlock)
 
   ! The Emissions array was never set. Should this be here or earlier ????
   ! Emissions(:,:,:,:,iBlock) = 0.0
+
+  if (UseEmpiricalIonization) then
+     !Nightside impact ionization
+
+     if (floor((tSimulation-dt)/dtImpactIonization) /= &
+          floor((tsimulation)/dtImpactIonization) .or. IsFirstTime) then
+        IsFirstTime = .false.
+        impactionizationFrequency = 0.0
+        BLocal = B0(1:nLons,1:nLats,1:nAlts,1:4,iBlock)
+
+        do ilon = 1, nlons
+           do ilat = 1, nlats
+              do ialt = 1, nalts
+                 if (Altitude_GB(iLon,iLat,iAlt,iBlock) >= minval(EIMAltitude) &
+                      .and. Altitude_GB(iLon,iLat,iAlt,iBlock) <= maxval(EIMAltitude)) then
+
+                    call interpolateEIM(Altitude_GB(iLon,iLat,iAlt,iBlock),Blocal(iLon,iLat,iAlt,iUp_),&
+                         Blocal(iLon,iLat,iAlt,iMag_),EIMIZ)
+
+                    ! ! EIM is in units of log(#/s)
+                    impactionizationFrequency(ilon,ilat,ialt,:,iBlock) = 10**EIMIZ
+
+                 endif
+              enddo
+           end do
+        end do
+
+        userdata3D(:,:,:,2,iblock) = 0.0
+        userdata3D(:,:,:,3,iblock) = 0.0
+        userdata3D(1:nlons,1:nlats,1:nalts,2,iBlock) = impactIonizationFrequency(:,:,:,iimpactCO2_,iBlock)
+        userdata3D(1:nlons,1:nlats,1:nalts,3,iBlock) = blocal(1:nLons,1:nLats,1:nalts,iMag_)
+
+     endif
+  endif
+
   call calc_chemistry(iBlock)
 
   ChemicalHeatingRate(:,:,:) = &

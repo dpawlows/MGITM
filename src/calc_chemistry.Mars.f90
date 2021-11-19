@@ -4,7 +4,7 @@ subroutine calc_chemistry(iBlock)
 
   use ModGITM
   use ModInputs, only: iDebugLevel, UseIonChemistry, UseNeutralChemistry,f107,f107a, &
-       useImplicitChemistry
+       useImplicitChemistry, UseEmpiricalIonization
   use ModConstants
   use ModSources
   use ModChemistry
@@ -21,15 +21,16 @@ subroutine calc_chemistry(iBlock)
   real  :: NeutralSources(nSpeciesTotal), NeutralLosses(nSpeciesTotal)
   real  :: ChemicalHeatingSub,Emission(nEmissions)
 
-  integer :: iLon,iLat,iAlt,niters,iIon, iNeutral, ivar,nImplicitSourceCalls,iminiono
+  integer :: iLon,iLat,iAlt,niters,iIon, iNeutral, ivar,nImplicitSourceCalls,iminiono,totalsteps
 
   real :: dttotal, dtsub, dtMin
   real :: tli(nIons), tsi(nIons), tln(nSpeciesTotal), tsn(nSpeciesTotal)
 
-  real :: EmissionTotals(nEmissions), F
+  real :: EmissionTotals(nEmissions), F, r
 
   logical :: doImplicit = .true.
   !---------------------------------------------------------------------------
+
   UseNeutralConstituent = .true.
   UseIonConstituent     = .true.
 
@@ -46,18 +47,18 @@ subroutine calc_chemistry(iBlock)
 
   !   if (istep .lt. 10000) then
   !      useimplicitchemistry = .false.
-  !   else 
+  !   else
   !      useimplicitchemistry = .true.
   !   endif
 !  neutralsourcestotal = 0.0
 !  neutrallossestotal = 0.0
-
   do iLon = 1, nLons
      do iLat = 1, nLats
 
         iMinIono = iAltMinIono(iLon,iLat,iBlock)
-
         do ialt = iminiono, nAlts
+          totalsteps = 0
+
 
            dtTotal = 0.0
            DtMin = Dt
@@ -72,6 +73,8 @@ subroutine calc_chemistry(iBlock)
 
            !        write(*,*) dtsub
            call calc_dtsub(IonSources,IonLosses,NeutralSources,NeutralLosses,dtSub)
+
+
 
            !          write(*,*)ialt, "predicted: ",dt/dtsub,dtsub,dt,nimplicitsourcecalls
            if (.05*Dt/DtSub > nImplicitSourceCalls .and. useImplicitChemistry) then
@@ -103,7 +106,7 @@ subroutine calc_chemistry(iBlock)
               enddo
 
               NDensityS(iLon,iLat,iAlt,:,iBlock) =  NDensityS(iLon,iLat,iAlt,:,iBlock) + nSources
-              IDensityS(iLon,iLat,iAlt,:,iBlock)   =  IDensityS(iLon,iLat,iAlt,:,iBlock) + iSources 
+              IDensityS(iLon,iLat,iAlt,:,iBlock)   =  IDensityS(iLon,iLat,iAlt,:,iBlock) + iSources
 
               IDensityS(iLon,iLat,iAlt,nIons,iBlock) = 0.0
               do iIon = 1, nIons - 1
@@ -112,7 +115,7 @@ subroutine calc_chemistry(iBlock)
               enddo
 
               ! end if implicit --------------------------
-           else 
+           else
               !write(*,*) ialt,'Explicit'
 
               niters = 0
@@ -135,14 +138,12 @@ subroutine calc_chemistry(iBlock)
 
                  if (Ions(iIon) < 0.0) then
                     write(*,*) "Negative Ion Density : ", &
-                         iIon, iLon, iLat, iAlt, &
+                         iIon, iLon, iLat, iAlt, iProc, &
                          Ions(iIon), &
                          IonSources(iIon), IonLosses(iIon)
                  endif
               enddo
 
-              userdata1d(1,1,ialt,25) = 0
-              userdata1d(1,1,ialt,25) = (NeutralSources(1)-NeutralLosses(1)) * DtSub
               do iNeutral = 1, nSpeciesTotal
                  Neutrals(iNeutral) = &
                       Neutrals(iNeutral) + &
@@ -303,22 +304,15 @@ subroutine calc_chemistry(iBlock)
 
                  nIters = nIters + 1
 
-              enddo
-              !              write(*,*)"actual: ", niters
 
-              !               if (ialt .eq. 42 .and. istep .eq. 10000) then
-              !                  write(*,*) "expl:"
-              !                  do ineutral = 1, nspeciestotal
-              !                     write(*,*) ialt,"end chem: ",iNeutral,neutrals(ineutral),NDensityS(1,1,ialt,ineutral,1),&
-              !                          Neutrals(ineutral)-NDensityS(1,1,ialt,ineutral,1)
-              !                  enddo
-              !                  do iion = 1, nions - 1
-              !                     write(*,*) ialt,"end chem: ",iIon,Ions(iion),IDensityS(1,1,ialt,iion,1),&
-              !                          ions(iion)-IDensityS(1,1,ialt,iion,1)
-              ! 
-              !                  enddo
-              !                  stop
-              !               endif
+              enddo
+
+              totalsteps = totalsteps + niters
+              UserData3D(ilon,ilat,ialt,1,iblock) = reactionrate(24)
+              ! if (iproc == 6 .and. ilon == 16 .and. ilat == 1) then
+              !   write(*,*) ialt,totalsteps, IDensityS(ilon,ilat,ialt,1,1),altitude_GB(ilon,ilat,ialt,1),&
+              !    NDensityS(ilon,ilat,ialt,iCO2_,1)
+              ! endif
 
               IDensityS(iLon,iLat,iAlt,1:nIons,iBlock) = Ions
               NDensityS(iLon,iLat,iAlt,:,iBlock) = Neutrals
@@ -326,15 +320,22 @@ subroutine calc_chemistry(iBlock)
               Emissions(iLon, iLat, iAlt, :, iBlock) =  &
                    Emissions(iLon, iLat, iAlt, :, iBlock) + EmissionTotals
 
+
            endif
+           ! if (iproc == 6 .and. ilon == 16 .and. ilat == 15) then
+           !   write(*,*) ialt, nIters
+           ! endif
+
+
         enddo
      enddo
   enddo
-  !stop
+
   if (iDebugLevel > 2) &
        write(*,*) "===> calc_chemistry: Average Dt for this timestep : ", &
        (Dt*nLats*nLons*nAlts)/nIters
 
+       ! write(*,*) iproc, totalsteps, "begin"
 
 
   if (iDebugLevel > 3) then
@@ -349,7 +350,7 @@ subroutine calc_chemistry(iBlock)
 end subroutine calc_chemistry
 
 subroutine calc_dtsub(IonSources,IonLosses,NeutralSources,NeutralLosses,dtSub)
-  
+
   use ModChemistry, only: Ions,Neutrals
   use ModPlanet, only : nIons,nSpeciesTotal
 
@@ -365,13 +366,13 @@ subroutine calc_dtsub(IonSources,IonLosses,NeutralSources,NeutralLosses,dtSub)
 
   tli = DtSub * IonLosses
   tsi = DtSub * IonSources + 0.25*Ions
-  
+
   do while (minval(tsi-tli) < 0.0 .and. DtSub > 1.0e-16)
      DtSub = DtSub/2.0
      tli = DtSub * IonLosses
      tsi = DtSub * IonSources + 0.25*Ions
   enddo
-  
+
 !  tli = DtSub * IonLosses
 !  tsi = DtSub * IonSources + Ions
 !
@@ -398,4 +399,3 @@ subroutine calc_dtsub(IonSources,IonLosses,NeutralSources,NeutralLosses,dtSub)
   enddo
 
 end subroutine calc_dtsub
-

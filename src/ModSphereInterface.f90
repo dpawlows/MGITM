@@ -29,7 +29,7 @@ module ModSphereInterface
   type (AB_XFER) :: uam_xfer
 
   ! Sphere description
-  !! if there is comm. across poles  
+  !! if there is comm. across poles
   logical :: n_pole_connect
   logical :: s_pole_connect
 
@@ -70,7 +70,7 @@ module ModSphereInterface
   ! UAM type defines
   type UAM_ITER
      private
-     type (AB_ITER) :: iter     
+     type (AB_ITER) :: iter
   end type UAM_ITER
 
 
@@ -99,7 +99,7 @@ contains
   !  5/4/00 Robert Oehmke: created
   !
   ! NOTES:
-  !  
+  !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   subroutine UAM_module_setup(par_context, &
        icells_long, icells_lat, icells_alt, &
@@ -275,7 +275,7 @@ contains
 
     ! Ion Species
     if (UseIonAdvection) &
-         call AB_1blk4_gc_add_size(nLons,nLats,nAlts,nIons,2,size)
+         call AB_1blk4_gc_add_size(nLons,nLats,nAlts,nIonsAdvect,2,size)
 
   end subroutine size_vars_1blk
 
@@ -311,7 +311,7 @@ contains
          eTemperature(:,:,1:nAlts,index),dir,pole,p,out_array)
 
     if (UseIonAdvection) &
-         call AB_1blk4_gc_pack(nLons,nLats,nAlts,nIons,2, &
+         call AB_1blk4_gc_pack(nLons,nLats,nAlts,nIonsAdvect,2, &
          IDensityS(:,:,1:nAlts,:,index),dir,pole,p,out_array)
 
   end subroutine pack_vars_1blk
@@ -345,7 +345,7 @@ contains
          eTemperature(:,:,1:nAlts,index),dir,p,in_array)
 
     if (UseIonAdvection) &
-         call AB_1blk4_gc_unpack(nLons,nLats,nAlts,nIons,2, &
+         call AB_1blk4_gc_unpack(nLons,nLats,nAlts,nIonsAdvect,2, &
          IDensityS(:,:,1:nAlts,:,index),dir,p,in_array)
 
   end subroutine unpack_vars_1blk
@@ -369,7 +369,7 @@ contains
     call AB_array3_gc_add_size(nLons,nLats,nAlts,2,size)
 
     if (UseIonAdvection) &
-         call AB_array4_gc_add_size(nLons,nLats,nAlts,nIons,2,size)
+         call AB_array4_gc_add_size(nLons,nLats,nAlts,nIonsAdvect,2,size)
 
   end subroutine size_vars_nblk
 
@@ -378,7 +378,7 @@ contains
     logical, intent(in) :: pole
     real, dimension(:),intent(out) :: out_array
     integer :: p,i, iIon
-    real :: tmpI(-1:nLons+2, -1:nLats+2, 1:nAlts, 1:nIons)
+    real :: tmpI(-1:nLons+2, -1:nLats+2, 1:nAlts, 1:nIonsAdvect)
     real :: tmpN(-1:nLons+2, -1:nLats+2, 1:nAlts, 1:nSpecies)
 
     p=1 ! start packing at position 1 in out_array
@@ -407,10 +407,12 @@ contains
          eTemperature(:,:,1:nAlts,index),dir,pole,p,out_array)
 
     if (UseIonAdvection) then
-       do iIon = 1, nIons
-          tmpI(:,:,:,iIon) = IDensityS(:,:,1:nAlts,iIon,index)
-       enddo
-       call AB_array4_gc_pack(nLons,nLats,nAlts,nIons,2, &
+!       do iIon = 1, nIonsAdvect
+!          tmpI(:,:,:,iIon) = IDensityS(:,:,1:nAlts,iIon,index)
+!       enddo
+       tmpI = IDensityS(:,:,1:nAlts,1:nIonsAdvect,index)
+
+       call AB_array4_gc_pack(nLons,nLats,nAlts,nIonsAdvect,2, &
             tmpI,dir,pole,p,out_array)
     endif
   end subroutine pack_vars_nblk
@@ -420,20 +422,25 @@ contains
     integer, intent(in) :: index,dir
     real, dimension(:), intent(in) :: in_array
     integer :: p,i, iIon
-    real :: tmpI(-1:nLons+2, -1:nLats+2, 1:nAlts, 1:nIons)
+    real :: tmpI(-1:nLons+2, -1:nLats+2, 1:nAlts, 1:nIonsAdvect)
     real :: tmpN(-1:nLons+2, -1:nLats+2, 1:nAlts, 1:nSpecies)
 
     p=1 ! start unpacking at position 1 in in_array
 
     call AB_array3_gc_unpack(nLons,nLats,nAlts,2, &
          Rho(:,:,1:nAlts,index),dir,p,in_array)
-
+         ! write(*,*) size(idensitys,1),size(idensitys,2),size(idensitys,3),size(idensitys,4)
+         ! write(*,*) size(tmpI,1),size(tmpI,2),size(tmpI,3),size(tmpI,4)
+         ! write(*,*) nlons,nlats,nalts,nionsadvect
+         ! write(*,*) size(in_array)
+         !  stop
     call AB_array4_gc_unpack(nLons,nLats,nAlts,3,2, &
          Velocity(:,:,1:nAlts,:,index),dir,p,in_array)
 
     tmpN = VerticalVelocity(:,:,1:nAlts,1:nSpecies,index)
     call AB_array4_gc_unpack(nLons,nLats,nAlts,nSpecies,2, &
          tmpN,dir,p,in_array)
+
     VerticalVelocity(:,:,1:nAlts,1:nSpecies,index) = tmpN
 
     tmpN = NDensityS(:,:,1:nAlts,1:nSpecies,index)
@@ -451,16 +458,21 @@ contains
          eTemperature(:,:,1:nAlts,index),dir,p,in_array)
 
     if (UseIonAdvection) then
-!       call AB_array4_gc_unpack(nLons,nLats,nAlts,nIons,2, &
-!            IDensityS(:,:,1:nAlts,:,index),dir,p,in_array)
-       do iIon = 1, nIons
+       ! call AB_array4_gc_unpack(nLons,nLats,nAlts,nIonsAdvect,2, &
+       !      IDensityS(:,:,1:nAlts,:,index),dir,p,in_array)
+       do iIon = 1, nIonsAdvect
           tmpI(:,:,:,iIon) = IDensityS(:,:,1:nAlts,iIon,index)
        enddo
-       call AB_array4_gc_unpack(nLons,nLats,nAlts,nIons,2, &
+
+       call AB_array4_gc_unpack(nLons,nLats,nAlts,nIonsAdvect,2, &
             tmpI,dir,p,in_array)
-       do iIon = 1, nIons
+
+
+
+       do iIon = 1, nIonsAdvect
           IDensityS(:,:,1:nAlts,iIon,index) = tmpI(:,:,:,iIon)
        enddo
+
     endif
 
   end subroutine unpack_vars_nblk
@@ -487,8 +499,8 @@ contains
        do j=1,cpb_long
 
           ! get coords of to grid
-          p=loc_phi(j,i) 
-          t=loc_theta(j,i) 
+          p=loc_phi(j,i)
+          t=loc_theta(j,i)
 
           ! Convert coordinates to indices in to grid
           call find_in_list(p, num_ph, ph, ind_ph, fnd_ph)
@@ -496,7 +508,7 @@ contains
 
 
           ! if the coordinates are within range then map them
-          if (fnd_ph .and. fnd_th) then            
+          if (fnd_ph .and. fnd_th) then
              call interpol(ph(ind_ph),  &
                   th(ind_th), &
                   ph(ind_ph+1),&
@@ -515,7 +527,7 @@ contains
 
     ! Returns lower index of range containing the point.
     ! Replace this with a binary search when you have time.
-    ! Also, we're going through the input points in a 
+    ! Also, we're going through the input points in a
     ! specific order, take advantage of that.
     subroutine find_in_list(x, num_list,list, out_ind, fnd)
       real, intent(in) :: x
@@ -562,8 +574,8 @@ contains
        do j=1,cpb_long
 
           ! get coords of to grid
-          ph=loc_phi(j,i) 
-          th=loc_theta(j,i) 
+          ph=loc_phi(j,i)
+          th=loc_theta(j,i)
 
           ! Convert coordinates to indices in to grid
           ind_ph=int((ph-min_ph)/d_ph)+1
@@ -637,12 +649,12 @@ contains
 
   ! This is the function used to distribute the range of grid lines
   ! over the range of latitude values. The input value x will be
-  ! in the range [0,1] and y, the output value, should also fall 
-  ! within this range. Setting this function to y=x will 
+  ! in the range [0,1] and y, the output value, should also fall
+  ! within this range. Setting this function to y=x will
   ! distribute the grid lines evenly among the latitude range, less
-  ! linear distributions can be achived with other functions. 
+  ! linear distributions can be achived with other functions.
   ! 0 is the bottom of both the latitude and grid value ranges, similarly
-  ! 1 is the top of both. 
+  ! 1 is the top of both.
 
   subroutine lat_distr(x,y)
 
@@ -663,8 +675,8 @@ contains
   !
   ! PURPOSE: create an iterator structure for the current UAM sphere
   !
-  ! INPUTS: 
-  ! 
+  ! INPUTS:
+  !
   ! OUTPUTS: iter - the newly created iterator.
   !
   ! HISTORY:
@@ -687,7 +699,7 @@ contains
   ! INPUTS: r_iter - iteration structure to be operated upon.
   !
   ! OUTPUTS: index - start index
-  !          done  - true if there is nothing to be iterated through, 
+  !          done  - true if there is nothing to be iterated through,
   !                  false otherwise. If done=true then index is undefined.
   !
   ! HISTORY:
@@ -712,7 +724,7 @@ contains
   ! INPUTS: r_iter - iteration structure to be operated upon.
   !
   ! OUTPUTS: index - next index
-  !          done  - true if there is nothing left to iterate through 
+  !          done  - true if there is nothing left to iterate through
   !                  false otherwise. If done=true then index is undefined.
   !
   ! HISTORY:
@@ -732,8 +744,8 @@ contains
   !
   ! NAME: UAM_XFER_create
   !
-  ! PURPOSE: create a transfer structure. Allocate buffers, initialize 
-  !          data structs, etc. 
+  ! PURPOSE: create a transfer structure. Allocate buffers, initialize
+  !          data structs, etc.
   !
   ! OUTPUTS: ok - status (optional)
   !
@@ -767,9 +779,9 @@ contains
   ! NAME: UAM_XFER_start
   !
   ! PURPOSE: start the xfer of ghostcells. Used with UAM finish for
-  !          communication hiding.          
+  !          communication hiding.
   !
-  ! OUTPUTS: ok - status (optional) 
+  ! OUTPUTS: ok - status (optional)
   !
   ! HISTORY:
   !  5/4/00 Robert Oehmke: created
@@ -795,13 +807,13 @@ contains
   !
   ! NAME: UAM_XFER_finish
   !
-  ! PURPOSE: wait for a real transfer to finish and put the transfered data 
+  ! PURPOSE: wait for a real transfer to finish and put the transfered data
   !          back where the user wants it. Used with UAM start for
-  !          communication hiding.          
+  !          communication hiding.
   !
   ! INPUTS:
   !
-  ! OUTPUTS: ok - status (optional) 
+  ! OUTPUTS: ok - status (optional)
   !
   ! HISTORY:
   !  5/4/00 Robert Oehmke: created
@@ -810,16 +822,17 @@ contains
   subroutine UAM_XFER_finish(ok)
     logical, optional, intent(out) :: ok
     logical :: tmp_ok
+    call start_timing("xfer")
 
     if (blks_long==1) then
        call AB_XFER_finish(uam_xfer,unpack_vars_1blk,unpack_vars_1blk, &
-            tmp_ok)
+            tmp_ok,iproc)
     else
        call AB_XFER_finish(uam_xfer,unpack_vars_nblk,unpack_vars_nblk, &
-            tmp_ok)
+            tmp_ok,iproc)
     endif
-
-    if (present(ok)) ok=tmp_ok 
+    call end_timing("xfer")
+    if (present(ok)) ok=tmp_ok
 
   end subroutine UAM_XFER_finish
 
@@ -828,11 +841,11 @@ contains
   !
   ! NAME: UAM_XFER_at_once
   !
-  ! PURPOSE: Start and finish an UAM xfer. 
+  ! PURPOSE: Start and finish an UAM xfer.
   !
   ! INPUTS:
   !
-  ! OUTPUTS: ok - status (optional) 
+  ! OUTPUTS: ok - status (optional)
   !
   ! HISTORY:
   !  5/4/00 Robert Oehmke: created
@@ -859,10 +872,10 @@ contains
 
     if (blks_long==1) then
        call AB_XFER_finish(uam_xfer,unpack_vars_1blk,unpack_vars_1blk, &
-            tmp_ok)
+            tmp_ok,iproc)
     else
        call AB_XFER_finish(uam_xfer,unpack_vars_nblk,unpack_vars_nblk, &
-            tmp_ok)
+            tmp_ok,iproc)
     endif
 
     if (.not. tmp_ok) then
@@ -879,7 +892,7 @@ contains
   !
   ! PURPOSE: destroy a transfer structure.  Freeing buffers, etc.
   !
-  ! INPUTS: 
+  ! INPUTS:
   !
   ! OUTPUTS:
   !
@@ -907,9 +920,9 @@ contains
   ! INPUTS: min_ph,min_th - spherical coordinates of corner of grid data
   !         d_ph,d_th     - gap between each successive grid line
   !         num_ph,num_th - number of grid lines in each direction
-  !         grid(num_ph,num_th)  - grid to be mapped to UAM grid         
+  !         grid(num_ph,num_th)  - grid to be mapped to UAM grid
   !         alt           - altitude to map to
-  !         e             - energy level to map to 
+  !         e             - energy level to map to
   !
   ! OUTPUTS: ok - status
   !
@@ -963,11 +976,11 @@ contains
   !          the interpolated values over the ones already present
   !
   ! INPUTS: num_ph,num_th - number of grid lines in each direction
-  !         ph(num_ph)    - phi coordinates must be in 0,2*pi strictly going up 
+  !         ph(num_ph)    - phi coordinates must be in 0,2*pi strictly going up
   !         th(num_th)    - theta coordinates must be in -pi/2,pi/2 "   "    "
-  !         grid(num_ph,num_th)  - grid to be mapped to UAM grid         
+  !         grid(num_ph,num_th)  - grid to be mapped to UAM grid
   !         alt           - altitude to map to
-  !         e             - energy level to map to 
+  !         e             - energy level to map to
   !
   ! OUTPUTS: ok - status
   !
@@ -1037,14 +1050,14 @@ contains
   !
   ! NAME: UAM_module_takedown
   !
-  ! PURPOSE: get rid of the UAM module (deallocate storage, etc) Must be 
+  ! PURPOSE: get rid of the UAM module (deallocate storage, etc) Must be
   !          called after any UAM functions.
   !
   ! HISTORY:
   !  5/4/00 Robert Oehmke: created
   !
   ! NOTES:
-  !  
+  !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   subroutine UAM_module_takedown()
 
