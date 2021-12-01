@@ -40,6 +40,14 @@ subroutine add_sources
   endif
 endif
 
+  if (isMars .and. UseMHDField) then
+    if (floor((tSimulation-dt)/DtBMHD) /= &
+       floor((tsimulation)/DtBMHD)) then
+       !Update B field!!!!
+       call readMHDField
+    end if
+  end if
+
   do iBlock = 1, nBlocks
 
      ! All the physics is left out or added in in calc_GITM_sources.  If

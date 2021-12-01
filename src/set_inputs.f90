@@ -22,7 +22,7 @@ subroutine set_inputs
   integer :: iDebugProc=0, n
   character (len=iCharLen_) :: cLine
   integer :: iLine, iSpecies, iSat
-  integer :: i, iError, iOutputTypes
+  integer :: i, iError, iOutputTypes,iInput = 39
   integer, dimension(7) :: iTimeEnd
 
   character (len=iCharLen_)                 :: cTempLine
@@ -601,13 +601,13 @@ subroutine set_inputs
 
         case ("#MHDFIELD")
           call read_in_logical(UseMHDField,iError)
-          call read_in_string(cMHDFile,iError)
+          call read_in_string(cMHDFilelist,iError)
           call read_in_logical(crustalFieldOnly,iError)
           if (iError /= 0) then
              write(*,*) 'Incorrect format for #MHDFIELD:'
              write(*,*) '#MHDFIELD'
              write(*,*) 'UseMHDlField   (logical)'
-             write(*,*) 'cMHDFile   (string)'
+             write(*,*) 'cMHDDirectory   (string)'
              write(*,*) 'crustalField Only   (logical)'
           endif
 
@@ -615,7 +615,7 @@ subroutine set_inputs
             UseCrustalField = .false. !Don't use both
             write(*,*) "Setting UseCrustalField to false as both can't be used"
           endif
-
+        
         case ("#CHEMISTRY")
 
            call read_in_logical(UseIonChemistry, iError)

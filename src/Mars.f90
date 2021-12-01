@@ -9982,70 +9982,83 @@ subroutine ReadMHDField
 
 use ModGITM
 use ModInputs
+use ModTime, only : currentTime
 
 implicit None
 
 integer, parameter :: nMagLons=120, nMagLats=61, nMagAlts=21, Maxdim=3
 
 real, dimension(nMagAlts,nMagLons,nMagLats, Maxdim) :: MagField
+real, dimension(nMagAlts,nMagLons,nMagLats, Maxdim,2) :: inMagField
 
-integer ::  i,j,k
+integer ::  i,j,k, ifile
 integer :: iError, started
-real :: Blat, Blon,Balt, latfind,lonfind,Altfind,c00,c10,c01,c11,c0,c1,c
+real :: ctime
 real, dimension(nMagLons) :: MagFieldLon
 real, dimension(nMagLats) :: MagFieldLat
 real, dimension(nMagAlts) :: MagFieldAlt
+real ,dimension(2) :: realtime
 real :: lon,lat,alt, btotalup,btotalnorth,btotaleast,biup,bieast,binorth
-
-
-!-----------------------------------------------------------
-integer :: ialt, iblock, iialt, iilat,iilon,iilon2, ilat, ilon,jlat,jlon
-integer :: jalt, magdim
-logical :: isfound
-real :: test
-!-----------------------------------------------------------
+character (len=100) :: firstMHDfile, secondMHDfile
 
 real, dimension(9) :: temp
 character    (len=20)                           :: cline
 
+if (iDebugLevel > 2 ) write(*,*) "Reading MHD Field"
 
-write(*,*) "==> Now Reading Mars MHD Magnetic Field"
-open(unit=iInputUnit_, file=cMHDFile, action='read')
+! Since the field is time dependent, we need to get the B field at
+! 2 different times and interpolate to the current time
 
+call getMHDFiles(firstMHDfile,secondMHDfile,realtime(1),realtime(2))
 
-iError = 0
-started = 0
-do while (started == 0)
-      read(iInputUnit_,'(a)',iostat=iError) cLine
-      if (cline(1:1) .eq. '#') started = 1
-end do
+do ifile = 1, 2
+  if (ifile == 1) then
+    cMHDFile = firstMHDfile
+  else
+    cMHDFile = secondMHDfile
+  end if
 
+  open(unit=iInputUnit_, file=cMHDFile, action='read')
 
-do i = 1, nMagLons
-  do j = 1, nMagLats
-      do k = 1, nMagAlts
-        read(iInputUnit_,*,iostat=iError) lon,lat,alt,btotalup,btotalnorth,btotaleast,biup,binorth,bieast
-        if (j==1 .and. k==1) MagFieldLon(i) = lon*180/Pi
-        if (i == 1 .and. k ==1) MagFieldLat(j) = lat*180/Pi
-        if (i==1 .and. j==1) MagFieldAlt(k) = alt
-
-        if (crustalFieldOnly) then
-          MagField(k,i,j,1) = btotalnorth-binorth
-          MagField(k,i,j,2) = btotaleast-bieast
-          MagField(k,i,j,3) = btotalup-biup
-        else
-          MagField(k,i,j,1) = btotalnorth
-          MagField(k,i,j,2) = btotaleast
-          MagField(k,i,j,3) = btotalup
-        endif
-
-      enddo
-    end do
+  iError = 0
+  started = 0
+  do while (started == 0)
+        read(iInputUnit_,'(a)',iostat=iError) cLine
+        if (cline(1:1) .eq. '#') started = 1
   end do
 
 
+  do i = 1, nMagLons
+    do j = 1, nMagLats
+        do k = 1, nMagAlts
+          read(iInputUnit_,*,iostat=iError) lon,lat,alt,btotalup,btotalnorth,btotaleast,biup,binorth,bieast
+          if (j==1 .and. k==1) MagFieldLon(i) = lon*180/Pi
+          if (i == 1 .and. k ==1) MagFieldLat(j) = lat*180/Pi
+          if (i==1 .and. j==1) MagFieldAlt(k) = alt
 
-close(iInputUnit_)
+          if (crustalFieldOnly) then
+            inMagField(k,i,j,1,ifile) = btotalnorth-binorth
+            inMagField(k,i,j,2,ifile) = btotaleast-bieast
+            inMagField(k,i,j,3,ifile) = btotalup-biup
+          else
+            inMagField(k,i,j,1,ifile) = btotalnorth
+            inMagField(k,i,j,2,ifile) = btotaleast
+            inMagField(k,i,j,3,ifile) = btotalup
+          endif
+
+        enddo
+      end do
+    end do
+
+  close(iInputUnit_)
+
+end do
+
+!Interpolate the field between time 1 and time 2
+ctime = (currentTime - realtime(1))/(realtime(2)-realtime(1))
+Magfield = inMagfield(:,:,:,:,1)*(1-ctime)+inMagfield(:,:,:,:,2)*ctime
+
+
 call interpolateField(nMagLons,nMagLats,nMagAlts,MagFieldLon,MagFieldLat,MagFieldAlt,MagField)
 
 
@@ -10213,3 +10226,58 @@ subroutine interpolateEIM(altitude,Bz,Bmag,c)
 ! stop
 
 end subroutine interpolateEIM
+
+subroutine getMHDFiles(firstfile,secondfile,timereal1,timereal2)
+
+use ModInputs, only: nMHDFiles, MHDFiles, iCharLen_
+use ModTime, only: CurrentTime
+use ModGITM, only: iproc
+implicit None
+
+integer :: iFile, year, mon, day, hour, minu, sec, pos
+real, intent(out) :: timereal1, timereal2
+real :: tr1, tr2
+character (len=100), intent(out) :: firstfile,secondfile
+character (len=100) :: file1, file2
+
+firstfile = 'blank'
+secondfile = 'blank'
+do ifile = 1, nMHDFiles -1
+  file1 = MHDFiles(ifile)
+  pos = index(file1,'.dat') - 15
+
+  read(file1(pos:pos+3),*) year
+  read(file1(pos+4:pos+5),*) mon
+  read(file1(pos+6:pos+7),*) day
+  read(file1(pos+9:pos+10),*) hour
+  read(file1(pos+11:pos+12),*) minu
+  read(file1(pos+13:pos+14),*) sec
+  call time_int_to_real([year,mon,day,hour,minu,sec,0],tr1)
+
+  file2 = MHDFiles(ifile+1)
+  pos = index(file2,'.dat') - 15
+
+  read(file2(pos:pos+3),*) year
+  read(file2(pos+4:pos+5),*) mon
+  read(file2(pos+6:pos+7),*) day
+  read(file2(pos+9:pos+10),*) hour
+  read(file2(pos+11:pos+12),*) minu
+  read(file2(pos+13:pos+14),*) sec
+
+  call time_int_to_real([year,mon,day,hour,minu,sec,0],tr2)
+
+
+  if (tr1 <= CurrentTime .and. tr2 > CurrentTime) then
+    firstfile = file1
+    secondfile = file2
+    timereal1 = tr1
+    timereal2 = tr2
+  end if
+
+end do
+
+if (firstfile == "blank" .or. secondfile == "blank") then
+  call stop_gitm("Missing MHD file for this time period. Stopping in getMHDFiles.")
+endif
+
+end subroutine getMHDFiles
