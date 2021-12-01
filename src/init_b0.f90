@@ -11,7 +11,9 @@ subroutine init_b0
   real :: date, GeoLat, GeoLon, GeoAlt, ALat, ALon, LShell
   real :: xmag, ymag, zmag, r3, MagPot, bmag, MagneticPoleStrength, cD
   real, dimension(3) :: d1,d2,d3,e1,e2,e3
-  integer :: iLat, iLon, iBlock, iAlt
+  integer :: iLat, iLon, iBlock, iAlt, iError
+  character (len=iCharLen_) :: line
+  logical :: isThere
 
   ! We need to fill in the Ghost Cells for the NonChanging Variables, such
   ! as the Magnetic Field:
@@ -21,15 +23,30 @@ subroutine init_b0
 
   if (IsMars) then
     if (UseCrustalField) then
+
       Call ReadMagField
+
     elseif (UseMHDField) then
-      call ReadMHDField
+      write(*,*) 'Getting MHD Magnetic field file list'
+      
+     inquire(file=cMHDFileList,EXIST=IsThere)
+     if (.not.IsThere) &
+          call stop_gitm(cMHDFileList//" cannot be found by init_b0")
+
+      open(unit=iInputUnit_, file=cMHDFileList, action='read', status="old")
+      iError = 0
+      nMHDFiles = 0
+      do while (iError == 0)
+        nMHDFiles = nMHDFiles + 1
+        read(iInputUnit_,'(a)',iostat=iError) line
+        MHDFiles(nMHDFiles) = line
+      end do
     endif
 
     if (UseEmpiricalIonization) then
       call readLillisModel
     endif
-  
+
   else
 
     AltMinIono=(2*RadialDistance_GB(1,1,-1,1) - &

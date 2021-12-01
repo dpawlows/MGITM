@@ -234,13 +234,15 @@ module ModInputs
 
   character (len=100)                         :: sInputIonChemType
   character (len=100)                         :: sInputNeutralChemType
-  integer :: iInputIonChemType, iInputNeutralChemType
+  integer :: iInputIonChemType, iInputNeutralChemType,nMHDFiles
 
   real :: LogNS0(nSpecies)
 
   logical                   :: UseEUVData =.false.
   character (len=iCharLen_) :: cEUVFile
-  character (len=iCharLen_) :: cMHDFile
+  character (len=iCharLen_) :: cMHDFile,cMHDFilelist
+  character (len=100), dimension(1000) :: MHDFiles
+  real :: dtBMHD = 60*15 !15 minutes by default
 
   ! These are Mars Specific, but ignored by other codes:
   ! Some are modified in Planet.f90 (set_planet_defaults)
