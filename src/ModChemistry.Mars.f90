@@ -239,23 +239,23 @@ subroutine calc_chemical_sources(iLon,iLat,iAlt,iBlock,IonSources, &
               ! CO2 impact ionization
                 ! ! ----------------------------------------------------------
 
-                if (UseEmpiricalIonization) then
-
-                  Reaction = impactIonizationFrequency(iLon,iLat,iAlt,iImpactCO2_,iBlock)*Neutrals(iCO2_)
-                  IonSources(iCO2P_) = IonSources(iCO2P_) + Reaction
-                  NeutralLosses(iCO2_) = NeutralLosses(iCO2_) + Reaction
-                  reactionrate(24) = reaction
-
-
-                  ! if (iproc == 7 .and. ilon == 5 .and. ilat == 13 .and. ialt == 80 ) then
-                  !     write(*,*) "first:", neutrals(iCO2_),reactionr,neutrallosses(iCO2_), IonSources(iCO2P_),&
-                  !     impactIonizationFrequency(ilon,ilat,iAlt,iImpactCO2_,1),&
-                  !       Altitude_GB(iLon,iLat,iAlt,iBlock)
-                  !     ! stop
-                  !   endif
-
-
-                endif
+                ! if (UseEmpiricalIonization) then
+                !
+                !   Reaction = impactIonizationFrequency(iLon,iLat,iAlt,iImpactCO2_,iBlock)*Neutrals(iCO2_)
+                !   IonSources(iCO2P_) = IonSources(iCO2P_) + Reaction
+                !   NeutralLosses(iCO2_) = NeutralLosses(iCO2_) + Reaction
+                !   reactionrate(24) = reaction
+                !
+                !
+                !   ! if (iproc == 7 .and. ilon == 5 .and. ilat == 13 .and. ialt == 80 ) then
+                !   !     write(*,*) "first:", neutrals(iCO2_),reactionr,neutrallosses(iCO2_), IonSources(iCO2P_),&
+                !   !     impactIonizationFrequency(ilon,ilat,iAlt,iImpactCO2_,1),&
+                !   !       Altitude_GB(iLon,iLat,iAlt,iBlock)
+                !   !     ! stop
+                !   !   endif
+                !
+                !
+                ! endif
 
 
 !\
@@ -415,7 +415,7 @@ subroutine calc_chemical_sources(iLon,iLat,iAlt,iBlock,IonSources, &
   !                   Ions(iOP_)-reaction ,reaction
   !              if (ialt .eq. 41) write(*,*) "CO2 + O+: ",reaction, neutrals(ico2_)
 
-              endif   
+              endif
               ! -----------------------------------------------------------
               ! CO2 + N2+ ==> CO2+ + N2
               ! -----------------------------------------------------------
