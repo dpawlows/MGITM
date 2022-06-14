@@ -261,21 +261,21 @@ module ModPlanet
   real, dimension(1:nLons,1:nLats,1:nAlts) :: MarsOrbitalDistance
 
   !
-  integer, parameter :: nSpecies_EIM = 5
-  integer, parameter :: nSW_EIM = 21
-  integer, parameter :: nAlts_EIM = 28
-  integer, parameter :: nBmags_EIM = 60
-  integer, parameter :: nBelvs_EIM = 18
+  integer, parameter :: nSpecies_EIM = 3
+  integer, parameter :: nBTypes_EIM = 8
+  integer, parameter :: nSW_EIM = 9
+  integer, parameter :: nAlts_EIM = 5
+  integer, parameter :: nBmags_EIM = 59
+  integer, parameter :: nBelvs_EIM = 14
   integer :: minMagFieldAlt,maxMagFieldAlt
 
-  integer, parameter ::  iImpactCO2_ = 1
-  integer, parameter ::  iImpactO_ = 2
-  integer, parameter ::  iImpactN2_ = 3
-  integer, parameter ::  iImpactCO_ = 4
-  integer, parameter ::  iImpactAr_ = 5
+  integer, parameter ::  iImpactCO2_X2PI_G = 1
+  integer, parameter ::  iImpactCO2_B2Sig = 2
+  integer, parameter ::  iImpactCO2_A2PI_U = 3
 
   real :: EIMsolarwindpressure(nSW_EIM), EIMAltitude(nAlts_EIM)
   real :: EIMBMag(nBmags_EIM),EIMBElvs(nBelvs_EIM),solarWindPressure
+  real :: EIMType(nBTypes_EIM)
   character (len = 20) :: EIMSpecies(nSpecies_EIM)
   real, allocatable :: EIM_IonizationFrequency(:,:,:,:)
   real :: dtImpactIonization = 300

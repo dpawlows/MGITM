@@ -10073,33 +10073,61 @@ subroutine ReadLillisModel
   implicit None
 
   integer :: nsin,naltsin,nbmagsin,nbelvsin,nswin, iswplow, iswphigh
-  real :: EIM_IZ(nspecies_EIM,nSW_EIM,nAlts_EIM,nBmags_EIM,nBelvs_EIM)
+  integer :: i,j,k,l,m,n, iError
+  real :: EIM_IZ(nspecies_EIM,nSW_EIM,nAlts_EIM,nBmags_EIM,nBelvs_EIM,nBTypes_EIM)
   real :: tempswp(nSW_EIM),invSWdiff,SWPlow, SWPHigh
   real, dimension(nspecies_EIM,nAlts_EIM,nBmags_EIM,nBelvs_EIM) :: V1, V2
+  character(iCharLen_*10) :: cTempLarge
+  character(4)  :: species
+  character(30) :: process
+  integer       :: btype,altlow,altmid,althigh
+  real :: swlow, swmid,swhigh, bmaglow,bmagmid,bmaghigh,elvlow,elvmid,elvhigh
+
+
 
   EIM_IonizationFrequency = 0.0
 
-  EIMSpecies(iImpactCO2_) = 'CO2_'
-  EIMSpecies(iImpactO_) = 'O_'
-  EIMSpecies(iImpactN2_) = 'N2_'
-  EIMSpecies(iImpactCO_) = 'CO_'
-  EIMSpecies(iImpactAr_) = 'Ar_'
+  EIMSpecies(iImpactCO2_X2PI_G)  = 'iImpactCO2_X2PI_G'
+  EIMSpecies(iImpactCO2_B2Sig)   = 'iImpactCO2_B2Sig'
+  EIMSpecies(iImpactCO2_A2PI_U)  = 'iImpactCO2_A2PI_U'
 
-    write(*,*) "==> Now Reading Mars Empirical Ionization Model"
-  open(unit=42, file='DataIn/nemlillis.dat', action='read')
+  write(*,*) "==> Now Reading Mars Empirical Ionization Model"
+  open(unit=42, file='DataIn/nemlillis_v2.dat', action='read')
 
-    read(42,*) nsin, nswin,naltsin,nbmagsin,nbelvsin
+  !!! The impact ionization grid is currently fixed
+  !Read Header
+  read(42,*) ctempLarge
+  read(42,*) ctempLarge
 
-    if (nsin /= nSpecies_EIM .or. nSW_EIM /= nswin .or. nAlts_EIM /= naltsin &
-      .or. nbmagsin /= nBmags_EIM .or. nbelvsin /= nBelvs_EIM) then
-      call stop_GITM("Stopping in ReadLillisModel: Are the model dimensions different?")
-    end if
+  do i = 1, nspecies_EIM
+    do j = 1, nBTypes_EIM
+      do k = 1, nAlts_EIM
+        do l = 1, nSW_EIM
+          do m = 1, nBmags_EIM
+            do n = 1, nBelvs_EIM
+              read(42,*,IOSTAT=iError) species, process, btype, altlow,altmid,althigh, &
+                swlow,swmid,swhigh,bmaglow,bmagmid,bmaghigh,elvlow,elvmid, &
+                elvhigh,EIM_IZ(i,j,k,l,m,n)
 
-    read(42,*) EIMsolarwindpressure
-    read(42,*) EIMAltitude
-    read(42,*) EIMBmag
-    read(42,*) EIMBElvs
-    read(42,*) EIM_IZ
+                if (i == 1 .and. j == 1 .and. k == 1 .and. l == 1 .and. m == 1) &
+                  EIMBelvs(n) = elvmid
+
+                if (iError /= 0) then
+                    call stop_gitm("Error reading impact ionization data")
+                  endif
+
+              end do
+              if (i == 1 .and. j == 1 .and. k == 1 .and. l == 1 ) &
+                EIMBmag(m) = bmagmid
+            end do
+            if (i == 1 .and. j == 1 .and. k == 1) EIMSolarwindpressure(l) = swmid
+          end do
+          if (i == 1 .and. j == 1) EIMAltitude(k) = altmid
+        end do
+        if (i == 1) EIMType(j) = btype
+      end do
+      write(*,*) EIM_IZ(i,8,5,9,59,14)
+    end do
 
     EIMAltitude = EIMAltitude * 1000. !Convert to m
 
@@ -10127,11 +10155,11 @@ subroutine ReadLillisModel
   SWPhigh = EIMSolarwindpressure(iswphigh)
   invSWdiff = 1/(SWPhigh-SWPlow)
 
-  V1 = EIM_IZ(:,iswplow,:,:,:)
-  V2 = EIM_IZ(:,iswphigh,:,:,:)
+  ! V1 = EIM_IZ(:,iswplow,:,:,:)
+  ! V2 = EIM_IZ(:,iswphigh,:,:,:)
 
-  EIM_IonizationFrequency = V1 + (solarwindpressure-SWPlow)*invSWdiff* &
-    (V2 - V1)
+  ! EIM_IonizationFrequency = V1 + (solarwindpressure-SWPlow)*invSWdiff* &
+    ! (V2 - V1)
 
 
 
