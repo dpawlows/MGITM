@@ -10058,9 +10058,7 @@ end do
 ctime = (currentTime - realtime(1))/(realtime(2)-realtime(1))
 Magfield = inMagfield(:,:,:,:,1)*(1-ctime)+inMagfield(:,:,:,:,2)*ctime
 
-
 call interpolateField(nMagLons,nMagLats,nMagAlts,MagFieldLon,MagFieldLat,MagFieldAlt,MagField)
-
 
 end subroutine ReadMHDField
 
@@ -10074,9 +10072,9 @@ subroutine ReadLillisModel
 
   integer :: nsin,naltsin,nbmagsin,nbelvsin,nswin, iswplow, iswphigh
   integer :: i,j,k,l,m,n, iError
-  real :: EIM_IZ(nspecies_EIM,nSW_EIM,nAlts_EIM,nBmags_EIM,nBelvs_EIM,nBTypes_EIM)
+  real :: EIM_IZ(nspecies_EIM,nBTypes_EIM,nAlts_EIM,nSW_EIM,nBmags_EIM,nBelvs_EIM)
   real :: tempswp(nSW_EIM),invSWdiff,SWPlow, SWPHigh
-  real, dimension(nspecies_EIM,nAlts_EIM,nBmags_EIM,nBelvs_EIM) :: V1, V2
+  real, dimension(nspecies_EIM,nBTypes_EIM,nAlts_EIM,nBmags_EIM,nBelvs_EIM) :: V1, V2
   character(iCharLen_*10) :: cTempLarge
   character(4)  :: species
   character(30) :: process
@@ -10122,11 +10120,10 @@ subroutine ReadLillisModel
             end do
             if (i == 1 .and. j == 1 .and. k == 1) EIMSolarwindpressure(l) = swmid
           end do
-          if (i == 1 .and. j == 1) EIMAltitude(k) = altmid
+          if (i == 1 .and. j == 1) EIMAltitude(:,k) = (/altlow,althigh/)
         end do
-        if (i == 1) EIMType(j) = btype
+        if (i == 1) EIMType(j) = int(btype)
       end do
-      write(*,*) EIM_IZ(i,8,5,9,59,14)
     end do
 
     EIMAltitude = EIMAltitude * 1000. !Convert to m
@@ -10155,34 +10152,36 @@ subroutine ReadLillisModel
   SWPhigh = EIMSolarwindpressure(iswphigh)
   invSWdiff = 1/(SWPhigh-SWPlow)
 
-  ! V1 = EIM_IZ(:,iswplow,:,:,:)
-  ! V2 = EIM_IZ(:,iswphigh,:,:,:)
+   V1 = EIM_IZ(:,:,:,iswplow,:,:)
+   V2 = EIM_IZ(:,:,:,iswphigh,:,:)
 
-  ! EIM_IonizationFrequency = V1 + (solarwindpressure-SWPlow)*invSWdiff* &
-    ! (V2 - V1)
-
+   EIM_IonizationFrequency = V1 + (solarwindpressure-SWPlow)*invSWdiff* &
+     (V2 - V1)
 
 
 end subroutine ReadLillisModel
 
-subroutine interpolateEIM(altitude,Bz,Bmag,c)
+subroutine interpolateEIM(altitude,Bz,Bmag,MagFieldType,c)
 
   !Interpolate the Lillis Empirical Ionization Model to a point.
 
   use ModGITM, only: EIMAltitude,EIMBMag,EIMBElvs,EIM_IonizationFrequency, &
-    nSpecies_EIM,nBmags_EIM,nBelvs_EIM,nAlts_EIM, iproc
+    nSpecies_EIM,nBmags_EIM,nBelvs_EIM,nAlts_EIM, EIMType,iproc
   use ModConstants, only: Pi
 
 
   implicit none
 
   real, intent(in) :: Bz,Bmag,altitude
-  real :: BelevationAngle,VHigh,Vlow,invValDiff, altd, elvd, magd
+  integer, intent(in) :: MagFieldType
+  real :: BelevationAngle,vmlow,vmhigh,velow,vehigh,w1,w2,w3
+  real :: invelvdiff, invmagDiff, altd, elvd, magd,distances(nAlts_EIM)
   real, dimension(nSpecies_EIM) :: c000, c001, c011, c010, c100, c101, c110, c111
-  real, dimension(nSpecies_EIM) :: c00, c01, c10, c11, c0, c1
-  real :: tempBMag(nBmags_EIM),tempBElev(nBelvs_EIM), tempAlt(nAlts_EIM)
+  real, dimension(nSpecies_EIM,nAlts_EIM) :: c00, c01, c10, c11, c0, c1, R1, R2
+  real :: tempBMag(nBmags_EIM),tempBElev(nBelvs_EIM), tempAlt(2,nAlts_EIM),talt
   real,intent(out) :: c(nSpecies_EIM)
-  integer :: ialtlow,ialthigh,imaglow,imaghigh,ielvlow,ielvhigh
+  integer :: ialtlow,ialthigh,imaglow,imaghigh,ielvlow,ielvhigh,typeindex
+  integer :: ialt, naltbins
 
 
   !Only need Bz and Bmag to calculate elevation angle
@@ -10192,15 +10191,28 @@ subroutine interpolateEIM(altitude,Bz,Bmag,c)
   tempalt = EIMAltitude
   tempBmag = EIMBMag
   tempBElev = EIMBElvs
+  typeindex = findloc(EIMType,MagFieldType,1)
 
-  !!! Interpolate to altitude
-  where(altitude - tempalt .lt. -0.00001) tempalt = -1.0e9
-  ialtlow =  maxloc(tempalt,1)
-  if (ialtlow == nAlts_EIM) ialtlow = ialtlow - 1
-  ialthigh = ialtlow + 1
+
+  ! write(*,*) talt, ialtlow,ialthigh
+  ! stop
+
+  ! naltbins = 1+ (ialthigh - ialtlow)
+  ! do ialt = ialtlow, ialthigh
+  !   vlow =
+  ! end do
+
+    ! vlow = EIMAltitude(1,ialtlow) !!!!!
+    ! vhigh = EIMAltitude(1,ialthigh) !!!!!
+    ! invvaldiff = 1/(vhigh-vlow)
+    ! altd = (altitude-vlow)*invvalDiff
+  ! ialtlow =  maxloc(tempalt(1,:),1)
+  ! if (ialtlow == nAlts_EIM) ialtlow = ialtlow - 1
+  ! ialthigh = ialtlow + 1
 
   !!! Interpolate to BMagnitude
-  where(BMag - tempBMag .lt. -0.00001) tempBMag = -1.0e9
+
+  where(Bmag - tempBMag .lt. -0.00001) tempBMag = -1.0e9
   imaglow =  maxloc(tempBMag,1)
   if (imaglow == nBmags_EIM) imaglow = imaglow - 1
   imaghigh = imaglow + 1
@@ -10211,47 +10223,104 @@ subroutine interpolateEIM(altitude,Bz,Bmag,c)
   if (ielvlow == nBelvs_EIM) ielvlow = ielvlow - 1
   ielvhigh = ielvlow + 1
 
-  vlow = EIMAltitude(ialtlow)
-  vhigh = EIMAltitude(ialthigh)
-  invvaldiff = 1/(vhigh-vlow)
-  altd = (altitude-vlow)*invvalDiff
+  vmlow = EIMBmag(imaglow)
+  vmhigh = EIMBMag(imaghigh)
+  invmagdiff = 1/(Vmhigh-Vmlow)
+  ! magd = (BMag-vlow)*invvalDiff
 
-  vlow = EIMBmag(imaglow)
-  vhigh = EIMBMag(imaghigh)
-  invvaldiff = 1/(Vhigh-Vlow)
-  magd = (BMag-vlow)*invvalDiff
-
-  vlow = EIMBElvs(ielvlow)
-  vhigh = EIMBElvs(ielvhigh)
-  invvaldiff = 1/(Vhigh-Vlow)
-  elvd = (BelevationAngle-vlow)*invvalDiff
-
-  c000 = EIM_IonizationFrequency(:,ialtlow,imaglow,ielvlow)
-  c100 = EIM_IonizationFrequency(:,ialthigh,imaglow,ielvlow)
-  c010 = EIM_IonizationFrequency(:,ialtlow,imaghigh,ielvlow)
-  c110 = EIM_IonizationFrequency(:,ialthigh,imaghigh,ielvlow)
-  c001 = EIM_IonizationFrequency(:,ialtlow,imaglow,ielvhigh)
-  c101 = EIM_IonizationFrequency(:,ialthigh,imaglow,ielvhigh)
-  c011 = EIM_IonizationFrequency(:,ialtlow,imaghigh,ielvhigh)
-  c111 = EIM_IonizationFrequency(:,ialthigh,imaghigh,ielvhigh)
-
-  c00 = c000*(1-altd)+c100*altd
-  c01 = c001*(1-altd)+c101*altd
-  c10 = c010*(1-altd)+c110*altd
-  c11 = c011*(1-altd)+c111*altd
-
-  c0 = c00*(1-magd) + c10*magd
-  c1 = c01*(1-magd) + c11*magd
-
-  c = c0 * (1-elvd) + c1 * elvd
+  velow = EIMBElvs(ielvlow)
+  vehigh = EIMBElvs(ielvhigh)
+  invelvdiff = 1/(Vehigh-Velow)
+  ! elvd = (BelevationAngle-vlow)*invvalDiff
 
 
-!   !!! Check the interpolation
-!   if (iproc .eq. 0) then
-!     ! write(*,*) EIMBmag
-!      write(*,*)  c(1), c000(1), c001(1), c011(1), c010(1), c100(1), c101(1), c110(1), c111(1)
-!   endif
-! stop
+  c00 = EIM_IonizationFrequency(:,typeindex,:,imaglow,ielvlow)
+  c01 = EIM_IonizationFrequency(:,typeindex,:,imaglow,ielvhigh)
+  c10 = EIM_IonizationFrequency(:,typeindex,:,imaghigh,ielvlow)
+  c11 = EIM_IonizationFrequency(:,typeindex,:,imaghigh,ielvhigh)
+
+  !w.. = (x2-x)(y2 - y)/(x2-x1)(y2-y1)
+  R1 = c00*(vmhigh-Bmag)*invmagdiff+c10*(Bmag-vmlow)*invmagdiff
+  R2 = c01*(vmhigh-Bmag)*invmagdiff+c11*(Bmag-vmlow)*invmagdiff
+
+  c0 = R1 * (vehigh - BelevationAngle) * invelvdiff + &
+    R2 * (BelevationAngle - velow) * invelvdiff
+
+
+  !!! Interpolate to altitude
+  ! where(altitude - tempalt .lt. -0.00001) tempalt = -1.0e9
+  ialtlow = 1
+  ialthigh = 1
+  talt = 200000
+  do ialt = nAlts_EIM, 1, -1
+    if (EIMaltitude(1,ialt) <= talt .and. EIMAltitude(2,ialt) > talt) &
+     ialtlow = ialt
+  end do
+  do ialt = 1, nAlts_EIM
+    if (EIMaltitude(1,ialt) < talt .and. EIMAltitude(2,ialt) >= talt) &
+     ialthigh = ialt
+  end do
+
+  distances = 0.0
+  naltbins = 1+ (ialthigh - ialtlow)
+  distances(ialtlow:ialthigh) = &
+    (EIMAltitude(2,ialtlow:ialthigh)+EIMaltitude(1,ialtlow:ialthigh))/2.-talt
+    write(*,*) talt, distances(ialtlow:ialthigh)
+  if (naltbins == 3) then
+    w1 = abs(distances(ialtlow+1)*distances(ialtlow+2) / &
+    (distances(ialtlow)*distances(ialtlow+1) + distances(ialtlow)*distances(ialtlow+2) + &
+    distances(ialtlow+1)*distances(ialtlow+2)))
+    w2 = abs(distances(ialtlow)*distances(ialtlow+2) / &
+    (distances(ialtlow)*distances(ialtlow+1) + distances(ialtlow)*distances(ialtlow+2) + &
+    distances(ialtlow+1)*distances(ialtlow+2)))
+    w3 = abs(distances(ialtlow)*distances(ialtlow+1) / &
+    (distances(ialtlow)*distances(ialtlow+1) + distances(ialtlow)*distances(ialtlow+2) + &
+    distances(ialtlow+1)*distances(ialtlow+2)))
+
+    c = c0(:,ialtlow)*w1+c0(:,ialtlow+1)*w2+c0(:,ialtlow+2)*w3
+    write(*,*) w1,w2,w3
+    write(*,*) c0(1,ialtlow),c0(1,ialtlow+1),c0(1,ialtlow+2)
+    write(*,*) c
+    
+  endif
+  do ialt = ialtlow, ialthigh
+    write(*,*) ialt
+  end do
+
+  stop
+  write(*,*) c0(:,1), R1(1,1), R2(1,1)
+  write(*,*) c00(1,1),C01(1,1),C10(1,1),C11(1,1)
+  write(*,*) velow,BelevationAngle,vehigh,invelvdiff
+  write(*,*) vmlow,bmag,vmhigh,invmagDiff
+  stop
+
+
+  ! c000 = EIM_IonizationFrequency(:,typeindex,ialtlow,imaglow,ielvlow)
+  ! c100 = EIM_IonizationFrequency(:,typeindex,ialthigh,imaglow,ielvlow)
+  ! c010 = EIM_IonizationFrequency(:,typeindex,ialtlow,imaghigh,ielvlow)
+  ! c110 = EIM_IonizationFrequency(:,typeindex,ialthigh,imaghigh,ielvlow)
+  ! c001 = EIM_IonizationFrequency(:,typeindex,ialtlow,imaglow,ielvhigh)
+  ! c101 = EIM_IonizationFrequency(:,typeindex,ialthigh,imaglow,ielvhigh)
+  ! c011 = EIM_IonizationFrequency(:,typeindex,ialtlow,imaghigh,ielvhigh)
+  ! c111 = EIM_IonizationFrequency(:,typeindex,ialthigh,imaghigh,ielvhigh)
+  !
+  ! c00 = c000*(1-altd)+c100*altd
+  ! c01 = c001*(1-altd)+c101*altd
+  ! c10 = c010*(1-altd)+c110*altd
+  ! c11 = c011*(1-altd)+c111*altd
+  !
+  ! c0 = c00*(1-magd) + c10*magd
+  ! c1 = c01*(1-magd) + c11*magd
+  !
+  ! c = c0 * (1-elvd) + c1 * elvd
+  !
+
+  !!! Check the interpolation
+  if (iproc .eq. 0) then
+    ! write(*,*) EIMBmag
+     write(*,*)  c(1), c000(1), c001(1), c011(1), c010(1), c100(1), c101(1), c110(1), c111(1)
+  endif
+stop
 
 end subroutine interpolateEIM
 

@@ -272,12 +272,13 @@ module ModPlanet
   integer, parameter ::  iImpactCO2_X2PI_G = 1
   integer, parameter ::  iImpactCO2_B2Sig = 2
   integer, parameter ::  iImpactCO2_A2PI_U = 3
+  integer, allocatable :: FieldType(:,:,:,:)
 
-  real :: EIMsolarwindpressure(nSW_EIM), EIMAltitude(nAlts_EIM)
+  real :: EIMsolarwindpressure(nSW_EIM), EIMAltitude(2,nAlts_EIM)
   real :: EIMBMag(nBmags_EIM),EIMBElvs(nBelvs_EIM),solarWindPressure
-  real :: EIMType(nBTypes_EIM)
+  integer :: EIMType(nBTypes_EIM)
   character (len = 20) :: EIMSpecies(nSpecies_EIM)
-  real, allocatable :: EIM_IonizationFrequency(:,:,:,:)
+  real, allocatable :: EIM_IonizationFrequency(:,:,:,:,:)
   real :: dtImpactIonization = 300
 
 !################ Nelli, April 07 ##########################
