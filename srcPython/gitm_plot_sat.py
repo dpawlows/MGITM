@@ -85,7 +85,7 @@ for ifile in range(len(filestoplot)):
         ialt1 = closestidx(altitude,palt1) #use the function that is defined at the top
         ialt2 = closestidx(altitude,palt2)
 
-    plotdata[ifile,:] = data[15] #populate the main array
+    plotdata[ifile,:] = data[pvar] #populate the main array
 
 #Don't plot the ghost cells (the lowest and highest 2 cells)
 plotdata = plotdata[:,2:-2] #plotdata is a 2D array. Keep all elements in 1st dimension

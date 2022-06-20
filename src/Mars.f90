@@ -10251,7 +10251,7 @@ subroutine interpolateEIM(altitude,Bz,Bmag,MagFieldType,c)
   ! where(altitude - tempalt .lt. -0.00001) tempalt = -1.0e9
   ialtlow = 1
   ialthigh = 1
-  talt = 200000
+  talt = 215000
   do ialt = nAlts_EIM, 1, -1
     if (EIMaltitude(1,ialt) <= talt .and. EIMAltitude(2,ialt) > talt) &
      ialtlow = ialt
@@ -10259,30 +10259,45 @@ subroutine interpolateEIM(altitude,Bz,Bmag,MagFieldType,c)
   do ialt = 1, nAlts_EIM
     if (EIMaltitude(1,ialt) < talt .and. EIMAltitude(2,ialt) >= talt) &
      ialthigh = ialt
+     write(*,*) EIMAltitude(1,ialt),EIMaltitude(2,ialt)
   end do
 
   distances = 0.0
+  c = 0.0
   naltbins = 1+ (ialthigh - ialtlow)
   distances(ialtlow:ialthigh) = &
-    (EIMAltitude(2,ialtlow:ialthigh)+EIMaltitude(1,ialtlow:ialthigh))/2.-talt
+    abs((EIMAltitude(2,ialtlow:ialthigh)+EIMaltitude(1,ialtlow:ialthigh))/2.-talt)
     write(*,*) talt, distances(ialtlow:ialthigh)
-  if (naltbins == 3) then
-    w1 = abs(distances(ialtlow+1)*distances(ialtlow+2) / &
+
+  select case (naltbins)
+
+  case (3)
+    w1 = distances(ialtlow+1)*distances(ialtlow+2) / &
     (distances(ialtlow)*distances(ialtlow+1) + distances(ialtlow)*distances(ialtlow+2) + &
-    distances(ialtlow+1)*distances(ialtlow+2)))
-    w2 = abs(distances(ialtlow)*distances(ialtlow+2) / &
+    distances(ialtlow+1)*distances(ialtlow+2))
+    w2 = distances(ialtlow)*distances(ialtlow+2) / &
     (distances(ialtlow)*distances(ialtlow+1) + distances(ialtlow)*distances(ialtlow+2) + &
-    distances(ialtlow+1)*distances(ialtlow+2)))
-    w3 = abs(distances(ialtlow)*distances(ialtlow+1) / &
+    distances(ialtlow+1)*distances(ialtlow+2))
+    w3 = distances(ialtlow)*distances(ialtlow+1) / &
     (distances(ialtlow)*distances(ialtlow+1) + distances(ialtlow)*distances(ialtlow+2) + &
-    distances(ialtlow+1)*distances(ialtlow+2)))
+    distances(ialtlow+1)*distances(ialtlow+2))
 
     c = c0(:,ialtlow)*w1+c0(:,ialtlow+1)*w2+c0(:,ialtlow+2)*w3
-    write(*,*) w1,w2,w3
-    write(*,*) c0(1,ialtlow),c0(1,ialtlow+1),c0(1,ialtlow+2)
-    write(*,*) c
-    
-  endif
+
+  case (2)
+
+    w1 = distances(ialtlow+1)/(distances(ialtlow) + distances(ialtlow+1))
+    w2 = distances(ialtlow)/(distances(ialtlow) + distances(ialtlow+1))
+
+    c = c0(:,ialtlow)*w1+c0(:,ialtlow+1)*w2
+
+  case (1)
+    c = c0(:,ialtlow)
+
+end select
+write(*,*) c
+stop
+
   do ialt = ialtlow, ialthigh
     write(*,*) ialt
   end do
