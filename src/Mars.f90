@@ -9974,6 +9974,8 @@ subroutine ReadMagField
 
   call interpolateField(MagLons,MagLats,MagAlts,MagFieldLon,MagFieldLat,MagFieldAlt,MagField)
 
+  !Default value for
+  FieldType = DefaultFieldType
 
 end subroutine ReadMagField
 
@@ -10187,28 +10189,10 @@ subroutine interpolateEIM(altitude,Bz,Bmag,MagFieldType,c)
   !Only need Bz and Bmag to calculate elevation angle
   BelevationAngle = asin(abs(Bz)/Bmag)*180/pi
 
-
   tempalt = EIMAltitude
   tempBmag = EIMBMag
   tempBElev = EIMBElvs
   typeindex = findloc(EIMType,MagFieldType,1)
-
-
-  ! write(*,*) talt, ialtlow,ialthigh
-  ! stop
-
-  ! naltbins = 1+ (ialthigh - ialtlow)
-  ! do ialt = ialtlow, ialthigh
-  !   vlow =
-  ! end do
-
-    ! vlow = EIMAltitude(1,ialtlow) !!!!!
-    ! vhigh = EIMAltitude(1,ialthigh) !!!!!
-    ! invvaldiff = 1/(vhigh-vlow)
-    ! altd = (altitude-vlow)*invvalDiff
-  ! ialtlow =  maxloc(tempalt(1,:),1)
-  ! if (ialtlow == nAlts_EIM) ialtlow = ialtlow - 1
-  ! ialthigh = ialtlow + 1
 
   !!! Interpolate to BMagnitude
 
@@ -10247,27 +10231,29 @@ subroutine interpolateEIM(altitude,Bz,Bmag,MagFieldType,c)
     R2 * (BelevationAngle - velow) * invelvdiff
 
 
-  !!! Interpolate to altitude
-  ! where(altitude - tempalt .lt. -0.00001) tempalt = -1.0e9
+  !!! Interpolate to altitude- Bins are overlapping and it is possible
+  !!! that our altitude is located in as many as 3 bins. So we take a
+  !!! weighted average.
+
   ialtlow = 1
   ialthigh = 1
-  talt = 215000
+
   do ialt = nAlts_EIM, 1, -1
-    if (EIMaltitude(1,ialt) <= talt .and. EIMAltitude(2,ialt) > talt) &
+    if (EIMaltitude(1,ialt) <= altitude .and. EIMAltitude(2,ialt) > altitude) &
      ialtlow = ialt
   end do
   do ialt = 1, nAlts_EIM
-    if (EIMaltitude(1,ialt) < talt .and. EIMAltitude(2,ialt) >= talt) &
+    if (EIMaltitude(1,ialt) < altitude .and. EIMAltitude(2,ialt) >= altitude) &
      ialthigh = ialt
-     write(*,*) EIMAltitude(1,ialt),EIMaltitude(2,ialt)
   end do
+
 
   distances = 0.0
   c = 0.0
   naltbins = 1+ (ialthigh - ialtlow)
   distances(ialtlow:ialthigh) = &
-    abs((EIMAltitude(2,ialtlow:ialthigh)+EIMaltitude(1,ialtlow:ialthigh))/2.-talt)
-    write(*,*) talt, distances(ialtlow:ialthigh)
+    abs((EIMAltitude(2,ialtlow:ialthigh)+EIMaltitude(1,ialtlow:ialthigh))/2.-altitude)
+
 
   select case (naltbins)
 
@@ -10291,23 +10277,13 @@ subroutine interpolateEIM(altitude,Bz,Bmag,MagFieldType,c)
 
     c = c0(:,ialtlow)*w1+c0(:,ialtlow+1)*w2
 
-  case (1)
+  case DEFAULT
+    ! should only apply to naltbins = 1, but just in case
+
     c = c0(:,ialtlow)
 
 end select
-write(*,*) c
-stop
 
-  do ialt = ialtlow, ialthigh
-    write(*,*) ialt
-  end do
-
-  stop
-  write(*,*) c0(:,1), R1(1,1), R2(1,1)
-  write(*,*) c00(1,1),C01(1,1),C10(1,1),C11(1,1)
-  write(*,*) velow,BelevationAngle,vehigh,invelvdiff
-  write(*,*) vmlow,bmag,vmhigh,invmagDiff
-  stop
 
 
   ! c000 = EIM_IonizationFrequency(:,typeindex,ialtlow,imaglow,ielvlow)
@@ -10331,11 +10307,11 @@ stop
   !
 
   !!! Check the interpolation
-  if (iproc .eq. 0) then
-    ! write(*,*) EIMBmag
-     write(*,*)  c(1), c000(1), c001(1), c011(1), c010(1), c100(1), c101(1), c110(1), c111(1)
-  endif
-stop
+!   if (iproc .eq. 0) then
+!     ! write(*,*) EIMBmag
+!      write(*,*)  c(1), c000(1), c001(1), c011(1), c010(1), c100(1), c101(1), c110(1), c111(1)
+!   endif
+! stop
 
 end subroutine interpolateEIM
 

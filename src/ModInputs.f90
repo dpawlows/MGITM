@@ -184,6 +184,7 @@ module ModInputs
   Real :: BetaPointImpl         = 1.0
 
   logical :: UseEmpiricalIonization = .false.
+  integer :: DefaultFieldType       = 4
   logical :: UseDynamo              = .false.
   real    :: DynamoHighLatBoundary  = 65.0
   integer :: nItersMax              = 500
