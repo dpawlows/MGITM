@@ -34,7 +34,6 @@ subroutine set_inputs
 
   call report("set_inputs",1)
 
-
   iError = 0
   IsDone = .false.
   iLine  = 1
@@ -594,6 +593,7 @@ subroutine set_inputs
              write(*,*) '#CRUSTAL'
              write(*,*) 'UseCrustalField   (logical)'
           endif
+
           if (UseMHDField .and. UseCrustalField) then
             UseCrustalField = .false. !Don't use both
             write(*,*) "Setting UseCrustalField to false as both can't be used"
@@ -615,7 +615,7 @@ subroutine set_inputs
             UseCrustalField = .false. !Don't use both
             write(*,*) "Setting UseCrustalField to false as both can't be used"
           endif
-        
+
         case ("#CHEMISTRY")
 
            call read_in_logical(UseIonChemistry, iError)
@@ -662,12 +662,15 @@ subroutine set_inputs
       case ("#USELILLIS")
           call read_in_logical(UseEmpiricalIonization,iError)
           call read_in_real(solarWindPressure,iError)
+
           if (iError /= 0) then
              write(*,*) 'Incorrect format for #CRUSTAL:'
              write(*,*) '#USELILLIS'
              write(*,*) 'UseEmpiricalIonization   (logical)'
              write(*,*) 'solarWindPressure        (real)'
+             write(*,*) 'Field Type (optional, default = 4) (int)'
           endif
+          call read_in_int(DefaultFieldType,iError)
 
       case ("#DIPOLE")
 

@@ -239,23 +239,27 @@ subroutine calc_chemical_sources(iLon,iLat,iAlt,iBlock,IonSources, &
               ! CO2 impact ionization
                 ! ! ----------------------------------------------------------
 
-                ! if (UseEmpiricalIonization) then
-                !
-                !   Reaction = impactIonizationFrequency(iLon,iLat,iAlt,iImpactCO2_,iBlock)*Neutrals(iCO2_)
-                !   IonSources(iCO2P_) = IonSources(iCO2P_) + Reaction
-                !   NeutralLosses(iCO2_) = NeutralLosses(iCO2_) + Reaction
-                !   reactionrate(24) = reaction
-                !
-                !
-                !   ! if (iproc == 7 .and. ilon == 5 .and. ilat == 13 .and. ialt == 80 ) then
-                !   !     write(*,*) "first:", neutrals(iCO2_),reactionr,neutrallosses(iCO2_), IonSources(iCO2P_),&
-                !   !     impactIonizationFrequency(ilon,ilat,iAlt,iImpactCO2_,1),&
-                !   !       Altitude_GB(iLon,iLat,iAlt,iBlock)
-                !   !     ! stop
-                !   !   endif
-                !
-                !
-                ! endif
+                if (UseEmpiricalIonization) then
+
+                  Reaction = &
+                    (impactIonizationFrequency(iLon,iLat,iAlt,iImpactCO2_X2PI_G,iBlock) + &
+                    impactIonizationFrequency(iLon,iLat,iAlt,iImpactCO2_B2Sig,iBlock) + &
+                    impactIonizationFrequency(iLon,iLat,iAlt,iImpactCO2_A2PI_U,iBlock)) &
+                    *Neutrals(iCO2_)
+                  IonSources(iCO2P_) = IonSources(iCO2P_) + Reaction
+                  NeutralLosses(iCO2_) = NeutralLosses(iCO2_) + Reaction
+                  reactionrate(24) = reaction
+
+
+                  ! if (iproc == 7 .and. ilon == 5 .and. ilat == 13 .and. ialt == 80 ) then
+                  !     write(*,*) "first:", neutrals(iCO2_),reactionr,neutrallosses(iCO2_), IonSources(iCO2P_),&
+                  !     impactIonizationFrequency(ilon,ilat,iAlt,iImpactCO2_,1),&
+                  !       Altitude_GB(iLon,iLat,iAlt,iBlock)
+                  !     ! stop
+                  !   endif
+
+
+                endif
 
 
 !\
