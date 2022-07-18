@@ -121,7 +121,6 @@ def get_args(argv):
 args = get_args(sys.argv)
 
 header = read_gitm_header(args["filelist"])
-
 if (args["help"]):
 
     print('Usage : ')

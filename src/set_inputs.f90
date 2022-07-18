@@ -622,11 +622,6 @@ subroutine set_inputs
            call read_in_logical(UseIonAdvection, iError)
            call read_in_logical(UseNeutralChemistry, iError)
 
-           if (UseIonAdvection .and. .not.(UseCrustalField)) then
-             write(*,*) "!!! Warning: Ion advection is turned on but you are not "
-             write(*,*) "using crustal fields. This can result in huge ion velocities!!"
-           endif
-
 !           call read_in_string(sNeutralChemistry, iError)
 !           call read_in_string(sIonChemistry, iError)
 !
