@@ -44,6 +44,7 @@ endif
     if (floor((tSimulation-dt)/DtBMHD) /= &
        floor((tsimulation)/DtBMHD)) then
        !Update B field!!!!
+
        call readMHDField
     end if
   end if
