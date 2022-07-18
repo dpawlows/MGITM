@@ -10215,7 +10215,7 @@ subroutine interpolateEIM(altitude,Bz,Bmag,MagFieldType,c)
   real, dimension(nSpecies_EIM,nAlts_EIM) :: c00, c01, c10, c11, c0, c1, R1, R2
   real :: tempBMag(nBmags_EIM),tempBElev(nBelvs_EIM), tempAlt(2,nAlts_EIM),talt
   real,intent(out) :: c(nSpecies_EIM)
-  integer :: ialtlow,ialthigh,imaglow,imaghigh,ielvlow,ielvhigh,typeindex
+  integer :: ialtlow,ialthigh,imaglow,imaghigh,ielvlow,ielvhigh,typeindex,typeindex2
   integer :: ialt, naltbins
 
 
@@ -10225,7 +10225,13 @@ subroutine interpolateEIM(altitude,Bz,Bmag,MagFieldType,c)
   tempalt = EIMAltitude
   tempBmag = EIMBMag
   tempBElev = EIMBElvs
-  typeindex = findloc(EIMType,MagFieldType,1)
+  ! typeindex = findloc(EIMType,MagFieldType,1)
+  typeindex = maxloc(merge(1.,0.,EIMType == MagFieldType),dim=1)
+
+  ! if (typeindex /= typeindex2) then
+  !   write(*,*) "Doesn't work",typeindex,typeindex2
+  !   stop
+  ! endif
 
   !!! Interpolate to BMagnitude
 
