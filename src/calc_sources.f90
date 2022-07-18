@@ -497,10 +497,16 @@ subroutine calc_GITM_sources(iBlock)
 
         userdata3D(:,:,:,2,iblock) = 0.0
         userdata3D(:,:,:,3,iblock) = 0.0
+        userdata3D(:,:,:,4,iblock) = 0.0
+        userdata3D(1:nlons,1:nlats,1:nalts,2,iBlock) = (impactIonizationFrequency(:,:,:,iImpactCO2_X2PI_G,iBlock) + &
+        impactIonizationFrequency(:,:,:,iImpactCO2_B2Sig,iBlock) + &
+        impactIonizationFrequency(:,:,:,iImpactCO2_A2PI_U,iBlock))
+
         ! userdata3D(1:nlons,1:nlats,1:nalts,2,iBlock) = impactIonizationFrequency(:,:,:,iimpactCO2_,iBlock)
         userdata3D(1:nlons,1:nlats,1:nalts,3,iBlock) = blocal(1:nLons,1:nLats,1:nalts,iMag_)
+          userdata3D(1:nlons,1:nlats,1:nalts,4,iBlock) = FieldType(1:nLons,1:nLats,1:nalts,iBlock)
 
-     endif
+      endif
   endif
 
   call calc_chemistry(iBlock)

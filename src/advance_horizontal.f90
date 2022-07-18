@@ -126,6 +126,11 @@ stop
 
      if (UseIonAdvection) then
 
+                  if (UseIonAdvection .and. .not.(UseCrustalField) .and. .not.(UseMHDField)) then
+                    write(*,*) "!!! Warning: Ion advection is turned on but you are not "
+                    write(*,*) "using magnetic fields. This can result in huge ion velocities!!"
+                    write(*,*) UseIonAdvection, UseCrustalField,UseMHDField
+                  endif
         if (minval(NewINum_CV) < 1.0e2) then
 !           write(*,*) "Negative Ion Density after horizontal advection!!"
 !           write(*,*) "Correcting...."

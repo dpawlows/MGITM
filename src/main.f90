@@ -26,7 +26,6 @@ program GITM
   call initialize_gitm(CurrentTime)
   call write_output
   call report("Starting Main Time Loop",0)
-
   ! ------------------------------------------------------------------------
   ! Run for a few iterations
   ! ------------------------------------------------------------------------

@@ -89,62 +89,62 @@ endif
      ! S. W. BOUGHER defined:  11-10-27 UserData3D
      ! S. W. BOUGHER defined:  12-01-31 UserData3D
      !-----------------------------------------------------------------
-     UserData3D(:,:,:,1,iBlock) = 0.0
-     UserData3D(1:nLons, 1:nLats, 1:nAlts, 1, iBlock) =  86400. *  &
-               -RadCoolingRate(1:nLons, 1:nLats, 1:nAlts, iBlock)
-     UserData3D(:,:,:,2,iBlock) = 0.0
-     UserData3D(1:nLons, 1:nLats, 1:nAlts, 2, iBlock) = 86400. *  &
-                LowAtmosRadRate(1:nLons, 1:nLats, 1:nAlts, iBlock)
-     UserData3D(:,:,:,3,iBlock) = 0.0
-     UserData3D(1:nLons, 1:nLats, 1:nAlts, 3, iBlock) =  86400.* &
-               EuvHeating(1:nLons, 1:nLats, 1:nAlts, iBlock)*TempUnit(1:nLons,1:nLats,1:nAlts)
-     UserData3D(:,:,:,4,iBlock) = 0.0
-     UserData3D(1:nLons, 1:nLats, 1:nAlts, 4, iBlock) = 86400.*  &
-               QnirTOT(1:nLons, 1:nLats, 1:nAlts, iBlock)
-     UserData3D(:,:,:,5,iBlock) = 0.0
-     UserData3D(1:nLons, 1:nLats, 1:nAlts, 5, iBlock) = 86400.*  &
-               QnirLTE(1:nLons, 1:nLats, 1:nAlts, iBlock)
-!    UserData3D(1:nLons, 1:nLats, 1:nAlts, 5, iBlock) =  &
-!              QnirLTE(1:nLons, 1:nLats, 1:nAlts, iBlock)
-     UserData3D(:,:,:,6,iBlock) = 0.0
-     UserData3D(1:nLons, 1:nLats, 1:nAlts, 6, iBlock) = 86400.*  &
-               CirLTE(1:nLons, 1:nLats, 1:nAlts, iBlock)
-     UserData3D(:,:,:,7,iBlock) = 0.0
-!    UserData3D(1:nLons, 1:nLats, 1:nAlts, 7, iBlock) = 86400.* &
-!              Conduction(1:nLons, 1:nLats, 1:nAlts)
-     UserData3D(1:nLons, 1:nLats, 1:nAlts, 7, iBlock) = 86400.* &
-               Conduction(1:nLons, 1:nLats, 1:nAlts)*TempUnit(1:nLons,1:nLats,1:nAlts)
+!      UserData3D(:,:,:,1,iBlock) = 0.0
+!      UserData3D(1:nLons, 1:nLats, 1:nAlts, 1, iBlock) =  86400. *  &
+!                -RadCoolingRate(1:nLons, 1:nLats, 1:nAlts, iBlock)
+!      UserData3D(:,:,:,2,iBlock) = 0.0
+!      UserData3D(1:nLons, 1:nLats, 1:nAlts, 2, iBlock) = 86400. *  &
+!                 LowAtmosRadRate(1:nLons, 1:nLats, 1:nAlts, iBlock)
+!      UserData3D(:,:,:,3,iBlock) = 0.0
+!      UserData3D(1:nLons, 1:nLats, 1:nAlts, 3, iBlock) =  86400.* &
+!                EuvHeating(1:nLons, 1:nLats, 1:nAlts, iBlock)*TempUnit(1:nLons,1:nLats,1:nAlts)
+!      UserData3D(:,:,:,4,iBlock) = 0.0
+!      UserData3D(1:nLons, 1:nLats, 1:nAlts, 4, iBlock) = 86400.*  &
+!                QnirTOT(1:nLons, 1:nLats, 1:nAlts, iBlock)
+!      UserData3D(:,:,:,5,iBlock) = 0.0
+!      UserData3D(1:nLons, 1:nLats, 1:nAlts, 5, iBlock) = 86400.*  &
+!                QnirLTE(1:nLons, 1:nLats, 1:nAlts, iBlock)
+! !    UserData3D(1:nLons, 1:nLats, 1:nAlts, 5, iBlock) =  &
+! !              QnirLTE(1:nLons, 1:nLats, 1:nAlts, iBlock)
+!      UserData3D(:,:,:,6,iBlock) = 0.0
+!      UserData3D(1:nLons, 1:nLats, 1:nAlts, 6, iBlock) = 86400.*  &
+!                CirLTE(1:nLons, 1:nLats, 1:nAlts, iBlock)
+!      UserData3D(:,:,:,7,iBlock) = 0.0
+! !    UserData3D(1:nLons, 1:nLats, 1:nAlts, 7, iBlock) = 86400.* &
+! !              Conduction(1:nLons, 1:nLats, 1:nAlts)
+!      UserData3D(1:nLons, 1:nLats, 1:nAlts, 7, iBlock) = 86400.* &
+!                Conduction(1:nLons, 1:nLats, 1:nAlts)*TempUnit(1:nLons,1:nLats,1:nAlts)
      !-----------------------------------------------------------------
      ! S. W. BOUGHER defined:  11-10-25 UserData1D
      ! S. W. BOUGHER defined:  11-10-26 UserData1D
      ! S. W. BOUGHER defined:  11-10-27 UserData1D
      ! S. W. BOUGHER defined:  12-01-31 UserData1D
      !-----------------------------------------------------------------
-     UserData1D(1,1,:,1) = 0.0
-     UserData1D(1, 1, 1:nAlts, 1) =  86400. *  &
-               -RadCoolingRate(1, 1, 1:nAlts, iBlock)
-     UserData1D(1,1,:,2) = 0.0
-     UserData1D(1, 1, 1:nAlts, 2) =  86400. *  &
-                LowAtmosRadRate(1, 1, 1:nAlts, iBlock)
-     UserData1D(1,1,:,3) = 0.0
-     UserData1D(1, 1, 1:nAlts, 3) =  86400. *   &
-               EuvHeating(1, 1, 1:nAlts, iBlock)*TempUnit(1,1,1:nAlts)
-     UserData1D(1,1,:,4) = 0.0
-     UserData1D(1, 1, 1:nAlts, 4) =  86400. *   &
-               QnirTOT(1, 1, 1:nAlts, iBlock)
-     UserData1D(1,1,:,5) = 0.0
-     UserData1D(1, 1, 1:nAlts, 5) =  86400. *   &
-               QnirLTE(1, 1, 1:nAlts, iBlock)
-!    UserData1D(1, 1, 1:nAlts, 5) =   &
-!              QnirLTE(1, 1, 1:nAlts, iBlock)
-     UserData1D(1,1,:,6) = 0.0
-     UserData1D(1, 1, 1:nAlts, 6) =  86400. *   &
-               CirLTE(1, 1, 1:nAlts, iBlock)
-     UserData1D(1,1,:,7) = 0.0
-!    UserData1D(1, 1, 1:nAlts, 7) =  86400. *  &
-!              Conduction(1, 1, 1:nAlts)
-     UserData1D(1, 1, 1:nAlts, 7) =  86400. *  &
-               Conduction(1, 1, 1:nAlts)*TempUnit(1,1,1:nAlts)
+!      UserData1D(1,1,:,1) = 0.0
+!      UserData1D(1, 1, 1:nAlts, 1) =  86400. *  &
+!                -RadCoolingRate(1, 1, 1:nAlts, iBlock)
+!      UserData1D(1,1,:,2) = 0.0
+!      UserData1D(1, 1, 1:nAlts, 2) =  86400. *  &
+!                 LowAtmosRadRate(1, 1, 1:nAlts, iBlock)
+!      UserData1D(1,1,:,3) = 0.0
+!      UserData1D(1, 1, 1:nAlts, 3) =  86400. *   &
+!                EuvHeating(1, 1, 1:nAlts, iBlock)*TempUnit(1,1,1:nAlts)
+!      UserData1D(1,1,:,4) = 0.0
+!      UserData1D(1, 1, 1:nAlts, 4) =  86400. *   &
+!                QnirTOT(1, 1, 1:nAlts, iBlock)
+!      UserData1D(1,1,:,5) = 0.0
+!      UserData1D(1, 1, 1:nAlts, 5) =  86400. *   &
+!                QnirLTE(1, 1, 1:nAlts, iBlock)
+! !    UserData1D(1, 1, 1:nAlts, 5) =   &
+! !              QnirLTE(1, 1, 1:nAlts, iBlock)
+!      UserData1D(1,1,:,6) = 0.0
+!      UserData1D(1, 1, 1:nAlts, 6) =  86400. *   &
+!                CirLTE(1, 1, 1:nAlts, iBlock)
+!      UserData1D(1,1,:,7) = 0.0
+! !    UserData1D(1, 1, 1:nAlts, 7) =  86400. *  &
+! !              Conduction(1, 1, 1:nAlts)
+!      UserData1D(1, 1, 1:nAlts, 7) =  86400. *  &
+!                Conduction(1, 1, 1:nAlts)*TempUnit(1,1,1:nAlts)
      !-----------------------------------------------------------------
 
      do while (minval(temperature(1:nLons, 1:nLats, 1:nAlts, iBlock)) < 0.0)
