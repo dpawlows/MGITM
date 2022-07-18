@@ -28,7 +28,7 @@ subroutine init_b0
 
     elseif (UseMHDField) then
       write(*,*) 'Getting MHD Magnetic field file list'
-      
+
      inquire(file=cMHDFileList,EXIST=IsThere)
      if (.not.IsThere) &
           call stop_gitm(cMHDFileList//" cannot be found by init_b0")
@@ -44,6 +44,9 @@ subroutine init_b0
     endif
 
     if (UseEmpiricalIonization) then
+      if (.NOT.useMHDField .and. .NOT.UseCrustalField) then
+        call stop_gitm("B Field must be specified if using empirical ionization")
+      endif
       call readLillisModel
     endif
 

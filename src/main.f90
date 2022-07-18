@@ -30,7 +30,6 @@ program GITM
   ! ------------------------------------------------------------------------
   ! Run for a few iterations
   ! ------------------------------------------------------------------------
-
   do while (CurrentTime < EndTime)
 
      call calc_pressure
