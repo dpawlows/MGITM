@@ -40,9 +40,10 @@ subroutine add_sources
   endif
 endif
 
+
   if (isMars .and. UseMHDField) then
     if (floor((tSimulation-dt)/DtBMHD) /= &
-       floor((tsimulation)/DtBMHD)) then
+       floor((tsimulation)/DtBMHD) .or. IsFirstTime) then
        !Update B field!!!!
 
        call readMHDField
