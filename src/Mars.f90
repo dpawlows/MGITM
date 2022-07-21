@@ -10033,6 +10033,7 @@ character (len=100) :: firstMHDfile, secondMHDfile
 real, dimension(9) :: temp
 character    (len=20)                           :: cline
 
+
 if (iDebugLevel > 2 ) write(*,*) "Reading MHD Field"
 
 ! Since the field is time dependent, we need to get the B field at
