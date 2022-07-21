@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 
 from glob import glob
 from datetime import datetime
@@ -109,7 +110,8 @@ def get_args(argv):
             'alt':alt,
             'lat':lat,
             'lon':lon,
-            'IsLog':IsLog}
+            'IsLog':IsLog,
+            'IsContour':IsContour}
 
     return args
 
@@ -126,6 +128,7 @@ def get_args(argv):
 args = get_args(sys.argv)
 
 header = read_gitm_header(args["filelist"])
+
 if (args["help"]):
 
     print('Usage : ')
@@ -340,7 +343,7 @@ for time in AllTimes:
     outfile = file+'_'+sTime+'.png'
 
     ax = fig.add_subplot(gs1[1, :2])
-    if IsContour:
+    if args['IsContour']:
         cax = ax.contourf(xPos, yPos, d2d, vmin=mini, vmax=maxi, levels=30, cmap=cmap)
     else:
         cax = ax.pcolor(xPos, yPos, d2d, vmin=mini, vmax=maxi, shading='auto', cmap=cmap)
