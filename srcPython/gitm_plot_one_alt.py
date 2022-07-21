@@ -24,6 +24,7 @@ def get_args(argv):
 
     filelist = []
     IsLog = 0
+    IsContour = 0
     var = 15
     alt = 400.0
     lon = -100.0
@@ -81,6 +82,11 @@ def get_args(argv):
                 IsLog = 1
                 IsFound = 1
 
+            m = re.match(r'-contour',arg)
+            if m:
+                IsContour = 1
+                IsFound = 1
+
             m = re.match(r'-h',arg)
             if m:
                 help = 1
@@ -134,6 +140,7 @@ if (args["help"]):
     print('   -lat=latitude : latitude in degrees (closest)')
     print('   -lon=longitude: longitude in degrees (closest)')
     print('   -alog : plot the log of the variable')
+    print('   -contour: plot a contour instead of a pseudocolor')
     print('   -winds: overplot winds')
     print('   At end, list the files you want to plot')
 
@@ -334,7 +341,10 @@ for time in AllTimes:
     outfile = file+'_'+sTime+'.png'
 
     ax = fig.add_subplot(gs1[1, :2])
-    cax = ax.pcolor(xPos, yPos, d2d, vmin=mini, vmax=maxi, shading='auto', cmap=cmap)
+    if IsContour:
+        cax = ax.contourf(xPos, yPos, d2d, vmin=mini, vmax=maxi, levels=30, cmap=cmap)
+    else:
+        cax = ax.pcolor(xPos, yPos, d2d, vmin=mini, vmax=maxi, shading='auto', cmap=cmap)
 
     if (args["winds"]):
         ax.quiver(xPos,yPos,Ux2d,Uy2d)
