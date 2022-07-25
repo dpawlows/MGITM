@@ -177,6 +177,10 @@ if (args["winds"]):
     AllWindsY = []
 
 Var = header["vars"][args["var"]]
+Var = Var.replace('!U','^')
+Var = Var.replace('!D','_')
+Var = Var.replace('!N','')
+Var = '$'+Var+'$'
 AllData2D = []
 AllAlts = []
 AllTimes = []
@@ -272,6 +276,7 @@ if (args["winds"]):
 Negative = 0
 
 AllData2D = np.log10(AllData2D) if (args['IsLog']) else AllData2D
+logvar = "Log " if args['IsLog'] else ""
 
 maxi  = np.max(AllData2D[0,2:-2,2:-2])*1.05
 mini  = np.min(AllData2D[0,2:-2,2:-2])*0.95
@@ -289,6 +294,8 @@ if (cut == 'alt'):
     maskSouth = ((yPos<-45) & (yPos>-90.0))
     DoPlotNorth = np.max(maskNorth)
     DoPlotSouth = np.max(maskSouth)
+    DoPlotNorth = 0
+    DoPlotSouth = 0
     if (DoPlotNorth):
         maxiN = np.max(abs(AllData2D[:,2:-2,maskNorth]))*1.05
         if (Negative):
@@ -371,7 +378,7 @@ for time in AllTimes:
 
     ax.set_title(title)
     cbar = fig.colorbar(cax, ax=ax, shrink = 0.75, pad=0.02)
-    cbar.set_label(Var,rotation=90)
+    cbar.set_label(logvar + Var,rotation=90)
 
     if (cut == 'alt'):
 
