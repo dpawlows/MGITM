@@ -1,6 +1,7 @@
 
 subroutine add_sources
 
+
 !  Add Radiative Heating and Cooling Terms to UserData3D
 !  for Diagnaostics of Blending and Cross Over (7-variables)
 !  S. W. Bougher: 11-10-05, 11-10-26, 11-10-27, 11-10-28
@@ -23,6 +24,7 @@ subroutine add_sources
 
   implicit none
 
+  real :: EnergyTerm(nLons,nLats,nAlts)
   integer :: iBlock, iLon, iLat, iAlt, iSpecies
   logical :: IsFirstTime=.true.
 
@@ -64,7 +66,11 @@ endif
      !! To turn off GWIHeat, GWDHeat, turn UseGravityWave=.false. in UAM.in
      !! All Temperature equation source terms in <T>/s units
 
-
+     if (iproc == 0) then
+      EnergyTerm(5:7, 5:7, 72:74) = 0.5/TempUnit(5:7, 5:7, 72:74)
+      endif
+     write(*,*) EnergyTerm(:,:,72),EuvHeating(5,5,72,1)/TempUnit(5,5,72)
+     stop
      Temperature(1:nLons, 1:nLats, 1:nAlts, iBlock) = &
           Temperature(1:nLons, 1:nLats, 1:nAlts, iBlock) + Dt * ( &
           LowAtmosRadRate(1:nLons, 1:nLats, 1:nAlts, iBlock) &
@@ -76,7 +82,7 @@ endif
              /TempUnit(1:nLons,1:nLats,1:nAlts) &
            + GWDHeat(1:nLons,1:nLats,1:nAlts,iBlock) &
              /TempUnit(1:nLons,1:nLats,1:nAlts)) + &
-          Conduction + ChemicalHeatingRate
+          Conduction + ChemicalHeatingRate + EnergyTerm
 
      !-----------------------------------------------------------------
      ! This is an example of a user output:
