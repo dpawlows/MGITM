@@ -68,8 +68,8 @@ endif
 
      if (iproc == 0) then
       EnergyTerm(5:7, 5:7, 72:74) = 0.5/TempUnit(5:7, 5:7, 72:74)
-      endif
-     write(*,*) EnergyTerm(:,:,72),EuvHeating(5,5,72,1)/TempUnit(5,5,72)
+     endif
+     write(*,*) EnergyTerm(:,:,72),EuvHeating(5,5,72,1)*dt/TempUnit(5,5,72)
      stop
      Temperature(1:nLons, 1:nLats, 1:nAlts, iBlock) = &
           Temperature(1:nLons, 1:nLats, 1:nAlts, iBlock) + Dt * ( &
