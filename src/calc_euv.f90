@@ -2,7 +2,7 @@
 subroutine euv_ionization_heat(iBlock)
 
 !  Includes EUVData reads and interpolation (solar flare method) from DP : December 2017
-!  Includes secondary ionization rate (W-method) from DP : Spring 2018
+!  Includes secondary ionization rate (W-method only) from DP : Spring 2018 (activated 210615)
 !  Includes 1/R**2 fix when constant FISM-M intrinsic solar fluxes modified by heliocentric
 !           distance (only)
 
@@ -19,10 +19,10 @@ subroutine euv_ionization_heat(iBlock)
 
   integer, intent(in) :: iBlock
 
-! integer :: iAlt, iWave, iSpecies, iIon, iError, iLon,iLat,whichdim
-  integer :: iAlt, iWave, iSpecies, iIon, iError, iLon,iLat
+  integer :: iAlt, iWave, iSpecies, iIon, iError, iLon,iLat,whichdim
+! integer :: iAlt, iWave, iSpecies, iIon, iError, iLon,iLat
   real, dimension(nLons,nLats) :: Tau, Intensity
-! real, dimension(nLons,nLats,nalts) :: secondaryRate
+  real, dimension(nLons,nLats,nalts) :: secondaryRate
 
   logical :: IsFirstTime(nBlocksMax) = .true.
 
@@ -33,7 +33,7 @@ subroutine euv_ionization_heat(iBlock)
   real :: NeutralDensity(nLons, nLats, nSpecies)
   real :: ChapmanLittle(nLons, nLats, nSpecies)
   real :: EHeat(nLons, nLats)
-! real :: Photoelectronfactor(Num_Wavelengths_High)
+  real :: Photoelectronfactor(Num_Wavelengths_High)
 
   if (IsFirstTime(iBlock)) then
      IsFirstTime(iBlock) = .false.
@@ -42,29 +42,29 @@ subroutine euv_ionization_heat(iBlock)
           floor(tSimulation/dTAurora)) return
   endif
 
-! if (is1D) then
-!   whichdim = 2
-! else
-!   whichdim = 4
-! endif
+!  SIR code
+  if (is1D) then
+    whichdim = 2
+  else
+    whichdim = 4
+  endif
 
   call report("euv_ionization_heat",2)
   call start_timing("euv_ionization_heat")
 
 
   call chapman_integrals(iBlock)
-  ! Photoelectronfactor = 1.0
-  !if (UseWValue) then
-  !  photoelectronfactor = max(max(0.0,((PhotonEnergy/1.6e-19)-13.77)/WValue)-1,0.0)
-  !
-  ! endif
+    Photoelectronfactor = 1.0
+   if (UseWValue) then
+     photoelectronfactor = max(max(0.0,((PhotonEnergy/1.6e-19)-13.77)/WValue)-1,0.0)
+   endif
 
   EuvIonRate = 0.0
   EuvHeating(:,:,:,iBlock)= 0.0
   eEuvHeating(:,:,:,iBlock) = 0.0
   EuvIonRateS(:,:,:,:,iBlock) = 0.0
   EuvDissRateS(:,:,:,:,iBlock) = 0.0
-! SIR(:,:,:,:,iblock) = 0.0
+  SIR(:,:,:,:,iBlock) = 0.0
 
   photoion(1:Num_Wavelengths_High,1:nIons-1) = 0.0
   photoabs(1:Num_Wavelengths_High,1:nSpeciesTotal)= 0.0
@@ -91,17 +91,16 @@ subroutine euv_ionization_heat(iBlock)
 
         Intensity = Flux_of_EUV(iWave) * exp(-1.0*Tau)
 
+!  SIR code
         do iIon = 1, nIons-1
-!        if (iIon .eq. iCO2P_) then
-!
-!         if (UseWValue) then
-!          SIR(:,:,iAlt,iWave,iblock) = Intensity * photoelectronfactor(iwave) * &
-!             photoion(iWave,iIon)
-!
-!                       write(*,*)intensity,photoelectronfactor(iwave),photoion(iwave,iion),iwave
-!
-!        endif
-!      endif
+         if (iIon .eq. iCO2P_) then
+ 
+          if (UseWValue) then
+           SIR(:,:,iAlt,iWave,iBlock) = Intensity * photoelectronfactor(iwave) * &
+              photoion(iWave,iIon)
+!             write(*,*)intensity,photoelectronfactor(iwave),photoion(iwave,iion),iwave
+         endif
+       endif
 
            EuvIonRateS(:,:,iAlt,iIon,iBlock) = &
                 EuvIonRateS(:,:,iAlt,iIon,iBlock) + &
@@ -139,16 +138,20 @@ subroutine euv_ionization_heat(iBlock)
   !\
   ! Add Secondary Ionization if specified to use it.
   !/
-  !if (UseSecondaryIonization) then
-  !call UpdateSecondaryIonization(SecondaryRate)
-  !    EuvIonRateS(:,:,1:nAlts,iCO2_,iBlock) = &
-  !    EuvIonRates(:,:,1:nAlts,iCO2_,iBlock) + SecondaryRate(:,:,:)/NDensityS(:,:,1:nAlts,iCO2_,iBlock)
-  !else
-  ! if (UseWValue) then
-  !   EuvIonRates(:,:,1:nAlts,iCO2_,iBlock) = &
-  !   EuvIonRates(:,:,1:nAlts,iCO2_,iBlock) + sum(SIR(:,:,1:nAlts,:,iblock),whichdim)
-  ! endif
-  !endif
+!  if (UseSecondaryIonization) then
+!
+!      EuvIonRateS(:,:,1:nAlts,iCO2_,iBlock) = &
+!      EuvIonRates(:,:,1:nAlts,iCO2_,iBlock) + SecondaryRate(:,:,:)/NDensityS(:,:,1:nAlts,iCO2_,iBlock)
+!  else
+!  if (UseWValue) then
+!    EuvIonRates(:,:,1:nAlts,iCO2_,iBlock) = &
+!    EuvIonRates(:,:,1:nAlts,iCO2_,iBlock) + sum(SIR(:,:,1:nAlts,:,iblock),whichdim)
+!  endif
+!
+    if (UseWValue) then
+      EuvIonRates(:,:,1:nAlts,iCO2_,iBlock) = &
+      EuvIonRates(:,:,1:nAlts,iCO2_,iBlock) + sum(SIR(:,:,1:nAlts,:,iblock),whichdim)
+    endif
 
   !\
   ! Zero out EuvHeating if specified not to use it.
