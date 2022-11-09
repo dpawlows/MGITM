@@ -2,7 +2,7 @@ subroutine fill_photo(photoion, photoabs, photodis)
 
 ! CVS_new_code:  Dec. 19, 2011 (DP additions)
 ! -- Timing Fix, photoabs(58,iCO2_) = 0.0
-! -- E(EUV) = 0.18 (on) or 0.20 (off)
+! -- E(EUV) = 0.18 (off) or 0.20 (on)
 ! -- TOTAL(1) = 0.0; TOTAL(2) = 0.0
 ! -- populate 1-D and 3-D fields for diagnostics from RT code
 !    (RadCoolingRate,LowAtmosRadRate subroutines)
@@ -13,13 +13,11 @@ subroutine fill_photo(photoion, photoabs, photodis)
 ! -- KMAX = 1000., KMIN = 500.
 ! Adjustments:  November 2012  (standard)
 ! -- ALS = array from 2-D table (standard input for all cases)
-! Adjustment:  June 2017
+! Adjustment:  Late 2019  (DD2E, Stnd EUVM Cases)
 ! -- KMAX = 1500., KMIN = 500.
-! -- KMAX = 2000., KMIN = 500.
 ! Adjustment:  June-July 2017
 ! O-CO2 cooling coefficient enhancement
 ! -- k20xc = 3.e-12 * rfvto3p  (on)
-! -- k20xc = 4.e-12 * rfvto3p  (off)
 ! New nlte_tcool code from FGG and MLV: November 2017
 ! Modified by S. W. Bougher : November 2017
 ! -- nlte_setup routine (1)
@@ -28,8 +26,13 @@ subroutine fill_photo(photoion, photoabs, photodis)
 ! -- supporting parameters and inputs (1)
 ! -- supporting array declarations (real, integer) (1)
 ! Modified by K. J. Roeten :F2019 and W2020
-! Updated by S. W. Bougher :SS2020 V17c code
+! Updated by S. W. Bougher :SS2020 V17c code 
 ! -- calc_gw replaced by E. Yigit & A. Medvedev scheme for Mars
+! Updated by K. J. Roeten and S. W. Bougher :SS2020 V17c code 
+! Adjustment:  June 2021
+! -- KMAX = 1000., KMIN = 500.
+! Adjustment:  September 2021  (DD2E, Stnd EUVM Cases)
+! -- KMAX = 1500., KMIN = 500.
 
   use ModPlanet
   use ModEUV
@@ -98,8 +101,8 @@ subroutine init_heating_efficiency
 
   implicit none
 
-  HeatingEfficiency_CB  = 0.18
-! HeatingEfficiency_CB  = 0.20
+  HeatingEfficiency_CB  = 0.20
+! HeatingEfficiency_CB  = 0.18
 ! HeatingEfficiency_CB  = 0.22
   eHeatingEfficiency_CB = 0.0
 
@@ -801,17 +804,16 @@ end subroutine init_isochem
 !    KMin = 500.0
 
 ! KHigh
-!     KMax = 2000.0
+!     KMax = 2000.
 !     KMin = 500.0
 
 ! KModerate
-!     KMax = 1500.0
-      KMax = 2000.0
+      KMax = 1500.0
       KMin = 500.0
 
-! KLow
-!    KMax = 1200.0
-!    KMin = 500.0
+! KModerate2
+!     KMax = 1700.0
+!     KMin = 500.0
 
      ! \
      ! First, find the altitude level corresponding to the asymptotic
@@ -884,13 +886,12 @@ end subroutine init_isochem
 
 
    ! ----------------------------------------------------------------------
-
+   
    subroutine calc_gw(iBlock)
 
      use ModInputs
-     use ModSources, only : GWDrag,GWIHeat,GWDHeat, &
-	GW_net_heating,GW_flux_tot,GW_brunt,GW_flux, &
-	GW_drag,GW_var_tot
+     use ModSources, only : GWDrag, GWIHeat, GWDHeat, GW_net_heating, &
+	GW_beta_tot, GW_beta_non, GW_beta_ext
      use ModPlanet
      use ModGITM
      use ModConstants, only : PI
@@ -904,7 +905,7 @@ end subroutine init_isochem
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ! Original code of E. Yigit for Earth
 ! Modified for Mars by A. Medvedev and E. Yigit
-! Incorporated into MGITM by K. Roeten and S. Bougher (Summer 2018)
+! Incorporated into MGITM by K. Roeten and S. Bougher (Summer 2018-2020)
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
  implicit none
@@ -914,15 +915,14 @@ end subroutine init_isochem
   integer,intent(in):: iBlock
 
 !  -----------------------------------------------------------------
-! Input variables: Standard (drag only)
+! Input variables
 
 ! Args:
 !     INTEGER, PARAMETER  :: ht_dim = 120         !Number vertical levels (interfaces)
       INTEGER, PARAMETER  :: ht_dim = nAlts       !Number vertical levels (interfaces)
-!     INTEGER, PARAMETER  :: SLEV = 3             !Source level (top of conv. boundary layer ~8 km)
-      INTEGER, PARAMETER  :: SLEV = 4             !Source level (top of conv. boundary layer ~10 km)
-      INTEGER, PARAMETER  :: nh = 28              !Number of harmonics (Zalucha,2013)
-!     INTEGER, PARAMETER  :: nh = 30              !Number of harmonics (25-50 range)
+      INTEGER, PARAMETER  :: SLEV = 4             !Source level (top of conv. boundary layer ~8.75 km)
+!     INTEGER, PARAMETER  :: SLEV = 5             !Source level (top of conv. boundary layer ~11.25 km)
+      INTEGER, PARAMETER  :: nh = 30              !Number of harmonics (25-50 range)
 
 !  CONSTANTS:
 !     REAL, PARAMETER ::   PI =  3.14159265358979312
@@ -931,17 +931,12 @@ end subroutine init_isochem
 !     REAL, PARAMETER ::   GRAV = 373.*0.01               ! [cm/s^2] -> [m/s^2]
 
 ! Spectral parameters  (Mars)
-      REAL, PARAMETER   :: flux0    = 0.0025
-!     REAL, PARAMETER   :: flux0    = 0.00125
-!     REAL, PARAMETER   :: flux0    = 0.025
+      REAL, PARAMETER   :: flux0    = 0.0025  ! Standard flux0
+!     REAL, PARAMETER   :: flux0    = 0.0012  ! Reduced flux0 during PEDE
+!     REAL, PARAMETER   :: flux0    = 0.00025  ! Reduced flux0 during PEDE
       REAL, PARAMETER   :: cw       = 35.
-!     REAL, PARAMETER   :: cw       = 40.
       REAL, PARAMETER   :: max_cp_y = 80.0  !(m/s) (with nh=30)
-!     REAL, PARAMETER   :: max_cp_y = 100.0 !(m/s) (with nh=30)
       REAL, PARAMETER   :: kx       = 2.*pi/300.e3 !lambda_x= 100 to 300 km
-!     REAL, PARAMETER   :: kx       = 2.*pi/100.e3 !lambda_x= 100 to 300 km
-!     REAL, PARAMETER   :: max_ht = 200.e3 !No calc above this height (traditional avg exobase)
-!                          Also required for assuming pure CO2 atmosphere (below).
       REAL, PARAMETER   :: max_ht = 300.e3 !No calc above this height (model top)
 
 !----------------------------------------------------------------------
@@ -950,7 +945,7 @@ end subroutine init_isochem
      integer :: ilon,ilat,ialt
 ! Local Variables (for EGWD2 1-D code loops)
       INTEGER :: i, j, k, n, nd, m, il
-
+ 
   !  -----------------------------------------------------------------
   ! Input 3-D fields (8) recast from MarsGITM (4-D+ fields)
   ! Setup section:  from MGITM inputs  (all mks units!)
@@ -960,24 +955,24 @@ end subroutine init_isochem
        TN, UN, VN, PN, CPN, HTN, KMN, GRAVN
 
   real,dimension(1:nLons,1:nLats,1:nAlts) ::    &
-       mnd, vmro, vmrco, vmrn2, vmrco2, mmean
+       mnd, vmro, vmrco, vmrn2, vmrco2, mmean 
 
   !  -----------------------------------------------------------------
   ! Output 3-D fields (4) later recast from EGWD2 code into MarsGITM
   ! (4-D+ fields), (all mks units!)
   !  -----------------------------------------------------------------
 
-! Output args: for passing to duv.F
-      real,dimension(1:nLons,1:nLats,1:nAlts) :: udrag, vdrag
+! Output args: for passing to duv.F 
+      real,dimension(1:nLons,1:nLats,1:nAlts) :: udrag, vdrag  
      !  zonal and meridional momentum drag (m/s/s)
 
-! Output args: for passing to dt.F
+! Output args: for passing to dt.F 
       real,dimension(1:nLons,1:nLats,1:nAlts) :: gwheat_ir, gwheat_dif
      !  irreversible heating (K/s), differential heating/cooling (K/s)
 
 ! Output args: for testing of diagnostic intermediate variables
       real,dimension(1:nLons,1:nLats,1:nAlts) :: net_heating_t, &
-        flux_tot_t,brunt_t,flux_t,drag_t,var_tot_t
+	beta_tot_t, beta_non_t, beta_ext_t
 
 !  -----------------------------------------------------------------
 ! Internal Input variables to Yigit 1-D routine
@@ -1007,7 +1002,6 @@ end subroutine init_isochem
       REAL :: m_vis(ht_dim)              ! molecular kinematic viscosity (mixture)
       REAL :: var_tot(ht_dim)  = 0.
       REAL :: flux_tot(ht_dim) = 0.
-      REAL :: net_heating(ht_dim)=0.
 
 !-----------
 
@@ -1039,8 +1033,13 @@ end subroutine init_isochem
       REAL :: beta_cond(ht_dim,nh) = 0.
       REAL :: beta_eddy(ht_dim,nh) = 0.
       REAL :: beta_ion(ht_dim,nh)  = 0.
+      REAL :: beta_tot(ht_dim)     = 0.	  ! New
+      REAL :: beta_non_tot(ht_dim) = 0.   ! New
+      REAL :: beta_ext_tot(ht_dim) = 0.   ! New
 
-      REAL :: fac1, fac2  ! Factors to simplify the dissipation variable
+      REAL :: fac1(ht_dim, nh)	   = 0.
+      REAL :: fac2(ht_dim, nh)	   = 0.	! Factors to simplify the dissipation variable
+					! Modified to save (ht,nh)
 
       REAL :: alpha(ht_dim)        = 0. ! Newtonian cooling coefficient
       REAL :: vin(ht_dim)          = 0. ! ion-neutral collision frequency
@@ -1071,12 +1070,33 @@ end subroutine init_isochem
       REAL  :: gwhd(ht_dim)     = 0.
       REAL  :: xv, yv
 
+      REAL  :: net_heating(ht_dim) = 0.
+      REAL  :: cap(ht_dim)         = 0.
+
+
       tau(:,:)     = 1.;    gwd(:)       = 0.;   gwh(:)       = 0.
-      gwhd(:)      = 0.;    drag(:,:)    = 0.
+      gwhd(:)      = 0.;    drag(:,:)    = 0.;   u_source(:)  = 0.
       sigmaSq(:,:) = 0.;    beta(:,:)    = 0.;   flux_tot(:)  = 0.
       var_tot(:)   = 0.;    upSq(:,:)    = 0.;   up(:,:)      = 0.
-      flux(:,:)    = 0.;    beta_non(:,:)= 0.
-
+      flux(:,:)    = 0.;    beta_non(:,:)= 0.;   sgn(:)       = 0.
+      sigma(:,:)   = 0.;    alpha_ins(:,:)=0.;   fac1(:,:)    = 0.
+      fac2(:,:)	   = 0.;    xv           = 0.;   yv           = 0.
+      vy1d(:)	   = 0.;    vx1d(:)      = 0.;   temp1d(:)    = 0.
+      cp1d(:)      = 0.;    h(:)         = 0.;   pres(:)      = 0.
+      rho2(:)      = 0.;    rgass(:)     = 0.;   v_eddy(:)    = 0.
+      eden(:)      = 0.;    GRAV1d(:)    = 0.;   ut_gwd(:)    = 0.
+      vt_gwd(:)    = 0.;    gwh_ir(:)    = 0.;   gwh_dif(:)   = 0.
+      scht1d(:)    = 0.;    m_vis(:)     = 0.;   sign_c(:,:)  = 0.
+      temp1d_m(:)  = 0.;    u_source_m(:)= 0.;   c_int(:,:)   = 0.
+      pres_m(:)    = 0.;    rho_m(:)     = 0.;   h_m(:)       = 0.
+      eden_m(:)    = 0.;    scht1d_m(:)  = 0.;   phasespeed(:)= 0.
+      uw_mom(:)    = 0.;    brunt(:)     = 0.;   theta(:)     = 0.
+      thetap(:)    = 0.;    b_lev(:)     = 0.;   c_lev(:)     = 0.
+      dz(:)        = 0.;    rho_pr(:)    = 0.;   beta_dif(:,:)= 0.
+      beta_mol(:,:)= 0.;    beta_nc(:,:) = 0.;   beta_cond(:,:)=0.
+      beta_eddy(:,:)=0.;    beta_ion(:,:)= 0.;   alpha(:)     = 0.
+      beta_non_tot(:)=0.;   beta_ext_tot(:)=0.;  beta_tot(:)  = 0.    
+      vin(:)       = 0.;    net_heating(:)=0.;   cap(:)       = 0.
 
 
   !  -----------------------------------------------------------------
@@ -1091,7 +1111,7 @@ end subroutine init_isochem
        TempUnit(1:nLons,1:nLats,1:nAlts)
 
 
-  !  Mars GITM zonal/meridional velocities in m/sec (on its grid) ---
+  !  Mars GITM zonal/meridional velocities in m/sec (on its grid) ---  
 
   UN(1:nLons,1:nLats,1:nAlts) = &
            Velocity(1:nLons,1:nLats,1:nAlts,iEast_,iBlock)+1.0E-4
@@ -1110,7 +1130,7 @@ end subroutine init_isochem
   HTN(1:nLons,1:nLats,1:nAlts) = &
         Altitude_GB(1:nLons,1:nLats,1:nAlts,iBlock)
 
-
+ 
   !     Mars GITM cp in J/kg/K (on its grid) -------------------
   !     (same units as LMD-MGCM cooling code, and will vary with altitude)
   !     (cpco2 = 8.4e+06 erg/gm/K = 0.84 J/gm/K = 8.4e-04 J/kg/K)
@@ -1169,13 +1189,11 @@ end subroutine init_isochem
       vdrag(1:nLons,1:nLats,1:nAlts)      = 0.0
       gwheat_ir(1:nLons,1:nLats,1:nAlts)  = 0.0
       gwheat_dif(1:nLons,1:nLats,1:nAlts) = 0.0
-
+      
       net_heating_t(1:nLons,1:nLats,1:nAlts)= 0.0
-      flux_tot_t(1:nLons,1:nLats,1:nAlts)   = 0.0
-      brunt_t(1:nLons,1:nLats,1:nAlts)      = 0.0
-      flux_t(1:nLons,1:nLats,1:nAlts)       = 0.0
-      drag_t(1:nLons,1:nLats,1:nAlts)       = 0.0
-      var_tot_t(1:nLons,1:nLats,1:nAlts)    = 0.0
+      beta_ext_t(1:nLons,1:nLats,1:nAlts)   = 0.0
+      beta_tot_t(1:nLons,1:nLats,1:nAlts)   = 0.0
+      beta_non_t(1:nLons,1:nLats,1:nAlts)   = 0.0
 
 
 !---------------Start MGITM Longitude loop------------------
@@ -1190,7 +1208,7 @@ end subroutine init_isochem
 !-----------------------------------------------------
 !
 
-!  Initialize variables
+!  Initialize all variables 
 
      do k=1,ht_dim
 	 flux_tot(k)   = 0.
@@ -1206,6 +1224,62 @@ end subroutine init_isochem
 	 up(k,:)       = 0.
 	 flux(k,:)     = 0.
 	 beta_non(k,:) = 0.
+	 sigma(k,:)    = 0.
+	 alpha_ins(k,:)= 0.
+	 fac1(k,:)     = 0.
+         fac2(k,:)     = 0.
+	 vy1d(k)       = 0.
+	 vx1d(k)       = 0.
+         temp1d(k)     = 0.
+         cp1d(k)       = 0.
+         h(k)          = 0.
+         pres(k)       = 0.
+         rho2(k)       = 0.
+         rgass(k)      = 0.
+         v_eddy(k)     = 0.
+         eden(k)       = 0.
+         GRAV1d(k)     = 0.
+         ut_gwd(k)     = 0.
+         vt_gwd(k)     = 0.
+         gwh_ir(k)     = 0.
+         gwh_dif(k)    = 0.
+         scht1d(k)     = 0.
+         m_vis(k)      = 0.
+         temp1d_m(k)   = 0.
+         u_source_m(k) = 0.
+         pres_m(k)     = 0.
+         rho_m(k)      = 0.
+         h_m(k)        = 0.
+         eden_m(k)     = 0.
+	 scht1d_m(k)   = 0.
+	 phasespeed(:) = 0.
+	 uw_mom(:)     = 0.
+	 brunt(k)      = 0.
+         theta(k)      = 0.
+         thetap(k)     = 0.
+	 b_lev(:)      = 0.
+	 c_lev(:)      = 0.
+	 dz(k)         = 0.
+	 rho_pr(k)     = 0.
+	 beta_dif(k,:) = 0.
+	 beta_mol(k,:) = 0.
+         beta_nc(k,:)  = 0.
+	 beta_cond(k,:)= 0.
+	 beta_eddy(k,:)= 0.
+	 beta_ion(k,:) = 0.
+         beta_non_tot(k)= 0.
+	 beta_ext_tot(k)= 0.
+	 beta_tot(k)   = 0.
+	 alpha(k)      = 0.
+	 vin(k)        = 0.
+	 c_int(k,:)    = 0.
+	 sign_c(k,:)   = 0.
+	 sgn(:)        = 0.
+	 u_source(k)   = 0.
+	 xv	       = 0.
+	 yv	       = 0.
+	 net_heating(k)= 0.
+	 cap(k)        = 0.
      enddo
 
 !  Pull values from MGITM
@@ -1331,9 +1405,9 @@ end subroutine init_isochem
 
          var_tot(SLEV) = var_tot(SLEV) + upSq(SLEV,i)
 
-	sigmaSq(SLEV,i)=0.
+	sigmaSq(SLEV,i)=0. 
 	sigmaSq(SLEV+1,i)=0.
-
+	
 
       ENDDO SPECTRUM2
 
@@ -1358,12 +1432,12 @@ end subroutine init_isochem
                        flux(n,i)  = 0.
 
            ELSE IF (c_lev(i).LT.0) THEN
-             fac1      = 2.*brunt(n)*brunt(n)*brunt(n)  &
+             fac1(n,i)    = 2.*brunt(n)*brunt(n)*brunt(n)  & 	!Added (n,i) to facs
                         /(kx*c_int(n,i)**4)
-             fac2      = 2.*brunt(n)/(kx*c_int(n,i)*c_int(n,i))
-             beta(n,i) = fac1*(m_vis(n)+v_eddy(n))  &
-                        + fac2*(vin(n)+alpha(n))
-
+             fac2(n,i)    = 2.*brunt(n)/(kx*c_int(n,i)*c_int(n,i))
+             beta(n,i) = fac1(n,i)*(m_vis(n)+v_eddy(n))  &
+                        + fac2(n,i)*(vin(n)+alpha(n))
+		
              NON_LINEARITY : DO j = 1, nh
                 c_int(n,j) = phasespeed(j) - u_source_m(n)
                 IF (ABS(c_int(n,i)) .GE. ABS(c_int(n,j))) THEN
@@ -1382,7 +1456,10 @@ end subroutine init_isochem
                 ENDIF
              ENDIF
 
+	     beta_ext_tot(n) = beta_ext_tot(n) + beta(n,i)
              beta(n,i) = beta(n,i) + beta_non(n,i)
+	     beta_tot(n)=beta_tot(n) + beta(n,i)
+	     beta_non_tot(n)=beta_non_tot(n) + beta_non(n,i)
              tau(n,i)  = tau(n-1,i)  &
                           *EXP(-dz(n)*(beta(n,i)+beta(n-1,i))*0.5)
              flux(n,i) = uw_mom(i)*rho2(SLEV)/rho2(n)*tau(n,i)
@@ -1431,7 +1508,23 @@ end subroutine init_isochem
         net_heating(n) = gwhd(n) + gwh(n)          ! Newly Added
       ENDDO BACK_PROJECT
 
-!---Update/convert output---           (Test version 8/30/18)
+! Newly added to create cap for net heating term. Cap in K/s.
+!      DO n=SLEV, ht_dim
+!        IF (ABS(net_heating(n)) .ge. 300.0/88775.0) THEN
+!	  cap(n)=1.0
+!	  IF (net_heating(n) .ge. 0.) THEN
+!              net_heating(n)   = 300.0/88775.0
+!  	  ELSE
+!	      net_heating(n)   = -300.0/88775.0
+!	  ENDIF
+!	ELSE 
+!	  cap(n)=0.0
+!        ENDIF
+!      ENDDO
+
+
+
+!---Update/convert output---          
       do k = 1,ht_dim
         udrag(ilon,ilat,k) = ut_gwd(k)             ![m/s^2]
         vdrag(ilon,ilat,k) = vt_gwd(k)             ![m/s^2]
@@ -1440,12 +1533,10 @@ end subroutine init_isochem
 
 !       Additional variables to dianose
 
-	net_heating_t(ilon,ilat,k) = net_heating(k)
-	flux_tot_t(ilon,ilat,k)    = flux_tot(k)
-	brunt_t(ilon,ilat,k)	   = brunt(k)
-	flux_t(ilon,ilat,k)	   = flux(k,nh)
-	drag_t(ilon,ilat,k)	   = drag(k,nh)
-	var_tot_t(ilon,ilat,k)	   = var_tot(k)
+        net_heating_t(ilon,ilat,k) = net_heating(k)   ![K/s]
+	beta_tot_t(ilon,ilat,k)    = beta_tot(k)
+	beta_non_t(ilon,ilat,k)    = beta_non_tot(k)
+	beta_ext_t(ilon,ilat,k)    = beta_ext_tot(k)
 
 
       enddo ! K-loop
@@ -1455,42 +1546,39 @@ end subroutine init_isochem
     enddo ! LON-loop
 ! -----------------------------------------------------------------------
 ! Stuff 3-D internal arrays back into MGITM allocated arrays for usage
-  GWDrag(1:nLons,1:nLats,1:nAlts,iUp_,iBlock) = &
-      0.0
   GWDrag(1:nLons,1:nLats,1:nAlts,iEast_,iBlock) = &
         udrag(1:nLons,1:nLats,1:nAlts)             ![m/s^2]
   GWDrag(1:nLons,1:nLats,1:nAlts,iNorth_,iBlock) = &
         vdrag(1:nLons,1:nLats,1:nAlts)             ![m/s^2]
+  GWDrag(1:nLons,1:nLats,1:nAlts,iUp_,iBlock) = 0.0
+
   GWIHeat(1:nLons,1:nLats,1:nAlts,iBlock) = &
         gwheat_ir(1:nLons,1:nLats,1:nAlts)         ![K/s]
   GWDHeat(1:nLons,1:nLats,1:nAlts,iBlock) = &
         gwheat_dif(1:nLons,1:nLats,1:nAlts)        ![K/s]
 
   GW_net_heating(1:nLons,1:nLats,1:nAlts,iBlock) = &
-	net_heating_t(1:nLons,1:nLats,1:nAlts)
-  GW_flux_tot(1:nLons,1:nLats,1:nAlts,iBlock) = &
-	flux_tot_t(1:nLons,1:nLats,1:nAlts)
-  GW_brunt(1:nLons,1:nLats,1:nAlts,iBlock) = &
-	brunt_t(1:nLons,1:nLats,1:nAlts)
-  GW_flux(1:nLons,1:nLats,1:nAlts,iBlock) = &
-	flux_t(1:nLons,1:nLats,1:nAlts)
-  GW_drag(1:nLons,1:nLats,1:nAlts,iBlock) = &
-	drag_t(1:nLons,1:nLats,1:nAlts)
-  GW_var_tot(1:nLons,1:nLats,1:nAlts,iBlock) = &
-	var_tot_t(1:nLons,1:nLats,1:nAlts)
+        net_heating_t(1:nLons,1:nLats,1:nAlts)	   ![K/s]
+  GW_beta_tot(1:nLons,1:nLats,1:nAlts,iBlock) = &
+	beta_tot_t(1:nLons,1:nLats,1:nAlts)
+  GW_beta_non(1:nLons,1:nLats,1:nAlts,iBlock) = &
+	beta_non_t(1:nLons,1:nLats,1:nAlts)
+  GW_beta_ext(1:nLons,1:nLats,1:nAlts,iBlock) = &
+	beta_ext_t(1:nLons,1:nLats,1:nAlts)
+
 
 !---------------------------------------------------------+
 ! Set all EGWD2 values to zero. So there will be
 ! no effect upon the wind speeds or Ts, but all components
 ! of this subroutine will have been exercised
 !     GWDrag = 0.0
-      GWIHeat = 0.0
-      GWDHeat = 0.0
+!     GWIHeat = 0.0
+!     GWDHeat = 0.0
+!     GW_net_heating = 0.0
 !     write(*,*) GWDrag(1,1,:,1,1)
 !---------------------------------------------------------+
 
    END subroutine CALC_GW
-
 
   !---------------------------------------------------------+
   subroutine  calc_lowatmosrad(iblock,iLat,iLon,L_LAYERS,L_LEVELS,&
@@ -1582,7 +1670,6 @@ end subroutine init_isochem
     real :: COOLCORRECTION(LL_LAYERS) !zero's out longwave cooling where
     !radcool is working
     integer ngwi(L_NSPECTI)
-    real :: alt1d(nalts)
 
     ! Internal fields recast from MarsGITM
 
@@ -1600,16 +1687,15 @@ end subroutine init_isochem
     P(1:nAlts) = &
          Pressure(iLon,iLat,1:nAlts,iBlock)*0.01
 
-
     !C              RADIATIVE CALCULATIONS.
 
     !C  Fill the new radiation code variables.
     !C  PLEV and TLEV are the pressure and temperatures on a vertical grid
     !C  that the new radiation code uses.
-    alt1D = altitude_GB(iLon,iLat,1:nAlts,iBlock)
+
     CALL FILLPT(P,T,L_LEVELS,L_LAYERS,&
          SurfaceTemp(iLon,iLat,iBlock),altmin,&
-         alt1d,&
+         altitude_GB(iLon,iLat,1:nAlts,iBlock),&
          PLEV,TLEV,PMID,TMID,pressure(iLon,iLat,0,iBlock),&
          altitude_GB(iLon,iLat,0,iBlock))
     !

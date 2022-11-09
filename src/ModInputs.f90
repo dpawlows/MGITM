@@ -6,7 +6,7 @@ module ModInputs
 ! real, parameter :: PLONG = 4.0E-1 ! Pa  (also 4.0  ubar): 60 km (aphelion) (on)
 ! real, parameter :: RPTAU = 6.1 mbar (standard) (on)
 ! AltMinIono = 60.0 km !  revised for NOx chemsitry (170310: S. W. Bougher)
-! New Logicals for (OFF) Secondary Ionization and (ON) EUVData FISM fluxes
+! New Logicals for (ON) Secondary Ionization and (ON) EUVData FISM fluxes
 ! ------------------------------------------------------------------------------
 
   use ModConstants
@@ -277,8 +277,8 @@ Logical :: UseDustDistribution = .False.
 !  Mars Secondary Ionization Logicals
 ! logical :: UseSecondaryIonization = .false.
 ! character (len=iCharLen_) :: SecondaryIonFile
-! logical :: UseWValue = .false.
-! real :: WValue = 35.0
+  logical :: UseWValue = .false.
+  real :: WValue = 28.0
 
 !  Mars EUVdata Logicals
   logical :: UseFluxAtPlanet = .true.

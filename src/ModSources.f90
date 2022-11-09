@@ -5,6 +5,8 @@ module ModSources
 !  S. W. Bougher: 11-10-04
 !  Add EGWD2 momentum and energy terms
 !  S. W. Bougher: 18-05-24
+!  Add SIR terms
+!  S. W. Bougher: 21-06-15
 
   use ModSizeGitm
   use ModPlanet, only: nSpecies,nSpeciesTotal,nIons
@@ -45,14 +47,19 @@ module ModSources
   ! GWDHeat(1:nLons, 1:nLats, 1:nAlts, iBlock)= gwheat_dif
   real, allocatable :: GWDHeat(:,:,:,:)
 
-  ! Test intermediate variables (1:nLons, 1:nLats, 1:nAlts, iBlock)
+  ! Additional GW variables (1:nLons, 1:nLats, 1:nAlts, iBlock)
   real, allocatable :: GW_net_heating(:,:,:,:)
-  real, allocatable :: GW_flux_tot(:,:,:,:)
-  real, allocatable :: GW_brunt(:,:,:,:)
-  real, allocatable :: GW_flux(:,:,:,:)
-  real, allocatable :: GW_drag(:,:,:,:)
-  real, allocatable :: GW_var_tot(:,:,:,:)
+  real, allocatable :: GW_beta_tot(:,:,:,:)
+  real, allocatable :: GW_beta_non(:,:,:,:)
+  real, allocatable :: GW_beta_ext(:,:,:,:)
 
+
+  !\
+  ! Sources from DP 2017 for Secondary Ionization Scheme
+  !/
+
+  ! SIR(1:nLons, 1:nLats, 1:nAlts, iWave, iBlock):  Presently just ICO2
+    real, allocatable :: SIR(:,:,:,:,:)
 
   !\
   ! Reactions used in chemistry output
@@ -60,9 +67,9 @@ module ModSources
   !      ino_n  -->  no + n
   !/
 
-
+  
   integer, parameter :: nReactions = 26
- real :: ChemicalHeatingSpecies(nLons, nLats, nAlts,nReactions)
+  real :: ChemicalHeatingSpecies(nLons, nLats, nAlts,nReactions)
   real :: ChemicalHeatingS(nReactions)
   real :: NeutralSourcesTotal(nSpeciesTotal,nAlts)
   real :: NeutralLossesTotal(nSpeciesTotal,nAlts)
@@ -146,11 +153,10 @@ contains
     allocate(GWIHeat(nLons, nLats, nAlts, nBlocks))
     allocate(GWDHeat(nLons, nLats, nAlts, nBlocks))
     allocate(GW_net_heating(nLons, nLats, nAlts, nBlocks))
-    allocate(GW_flux_tot(nLons, nLats, nAlts, nBlocks))
-    allocate(GW_brunt(nLons, nLats, nAlts, nBlocks))
-    allocate(GW_flux(nLons, nLats, nAlts, nBlocks))
-    allocate(GW_drag(nLons, nLats, nAlts, nBlocks))
-    allocate(GW_var_tot(nLons, nLats, nAlts, nBlocks))
+    allocate(GW_beta_tot(nLons, nLats, nAlts, nBlocks))
+    allocate(GW_beta_non(nLons, nLats, nAlts, nBlocks))
+    allocate(GW_beta_ext(nLons, nLats, nAlts, nBlocks))
+    allocate(SIR(nLons, nLats, nAlts, 59, nBlocks))
 
   end subroutine init_mod_sources
   !=========================================================================
@@ -178,11 +184,10 @@ contains
     deallocate(GWIHeat)
     deallocate(GWDHeat)
     deallocate(GW_net_heating)
-    deallocate(GW_flux_tot)
-    deallocate(GW_brunt)
-    deallocate(GW_flux)
-    deallocate(GW_drag)
-    deallocate(GW_var_tot)
+    deallocate(GW_beta_tot)
+    deallocate(GW_beta_non)
+    deallocate(GW_beta_ext)
+    deallocate(SIR)
 
   end subroutine clean_mod_sources
   !=========================================================================
