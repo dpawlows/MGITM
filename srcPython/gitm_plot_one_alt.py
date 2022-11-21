@@ -150,16 +150,7 @@ filelist = args["filelist"]
 nFiles = len(filelist)
 
 cut = args["cut"]
-vars = [0,1,2]
-vars.append(args["var"])
-
-if (args["winds"]):
-    if (cut=='alt'):
-        iUx_ = 16
-        iUy_ = 17
-    if (cut=='lat'):
-        iUx_ = 16
-        iUy_ = 18
+vars = [0,1,2]rtod
     if (cut=='lon'):
         iUx_ = 17
         iUy_ = 18
@@ -267,7 +258,8 @@ AllData2D = np.log10(AllData2D) if (args['IsLog']) else AllData2D
 
 maxi  = np.max(AllData2D[0,2:-2,2:-2])*1.05
 mini  = np.min(AllData2D[0,2:-2,2:-2])*0.95
-
+#mini = 7.5
+#maxi = 11
 # if (mini < 0):
 #     Negative = 1
 
@@ -281,6 +273,8 @@ if (cut == 'alt'):
     maskSouth = ((yPos<-45) & (yPos>-90.0))
     DoPlotNorth = np.max(maskNorth)
     DoPlotSouth = np.max(maskSouth)
+    DoPlotNorth = False
+    DoPlotSouth = False
     if (DoPlotNorth):
         maxiN = np.max(abs(AllData2D[:,2:-2,maskNorth]))*1.05
         if (Negative):

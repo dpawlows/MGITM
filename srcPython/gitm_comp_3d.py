@@ -119,7 +119,6 @@ def get_args(argv):
 #-----------------------------------------------------------------------------
 
 args = get_args(sys.argv)
-
 header = read_gitm_header(args["filelist"])
 
 if (args["help"]):
@@ -269,6 +268,8 @@ AllData2D = np.log10(AllData2D) if (args['IsLog']) else AllData2D
 
 maxi  = np.max(AllData2D[0,2:-2,2:-2])*1.05
 mini  = np.min(AllData2D[0,2:-2,2:-2])*0.95
+#mini = 0
+#maxi=4
 if maxi == 0 and mini == 0:
     print("Error: There doesn't seem to be a difference between the data sets")
     print("are you sure the files are actually different?")
