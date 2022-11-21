@@ -13,11 +13,14 @@ from pylab import cm
 #-----------------------------------------------------------------------------
 #
 #-----------------------------------------------------------------------------
+def find_nearest_index(array, value):
+    array = np.asarray(array)
+    idx = (np.abs(array - value)).argmin()
+    return idx
 
 def read_gitm_header(file):
 
     if (len(file) == 0):
-
         filelist = glob('./3DALL*.bin')
 
         if (len(filelist) == 0):
@@ -29,9 +32,11 @@ def read_gitm_header(file):
             file = filelist[0]
 
     else:
+
         filelist = glob(file[0])
         file = filelist[0]
 
+    
     header = {}
     header["nFiles"] = len(filelist)
     header["version"] = 0
