@@ -21,6 +21,9 @@ def get_args(argv):
     alt = 400.0
     lon = -100.0
     lat = -100.0
+    cut = 'loc'
+    smin = -100.0
+    smax = -100.0
     help = 0
 
 
@@ -35,6 +38,11 @@ def get_args(argv):
                 var = int(m.group(1))
                 IsFound = 1
 
+            m = re.match(r'-cut=(.*)',arg)
+            if m:
+                cut = m.group(1)
+                IsFound = 1
+
 
             m = re.match(r'-lat=(.*)',arg)
             if m:
@@ -44,6 +52,16 @@ def get_args(argv):
             m = re.match(r'-lon=(.*)',arg)
             if m:
                 lon = int(m.group(1))
+                IsFound = 1
+
+            m = re.match(r'-smin=(.*)',arg)
+            if m:
+                smin = int(m.group(1))
+                IsFound = 1   
+
+            m = re.match(r'-smax=(.*)',arg)
+            if m:
+                smax = int(m.group(1))
                 IsFound = 1
 
 
@@ -65,15 +83,25 @@ def get_args(argv):
             'help':help,
             'lat':lat,
             'lon':lon,
-            'IsLog':IsLog}
+            'IsLog':IsLog,
+            'cut':cut,
+            'smin':smin,
+            'smax':smax,}
 
     return args
 
 args = get_args(sys.argv)
 header = read_gitm_header(args["filelist"])
 
-plon = args['lon']
-plat = args['lat']
+if args['cut'] == 'loc' and args['lon'] > -50:
+    plon = args['lon']
+    plat = args['lat']
+elif args['cut'] == 'sza' and args['smin'] > -50:
+    smin = args['smin']
+    smax = args['smax']
+else:
+    args["help"] = '-h'
+
 
 if (args["help"]):
 
@@ -82,8 +110,11 @@ if (args["help"]):
     print('                     -help [file]')
     print('   -help : print this message')
     print('   -var=number : number is variable to plot')
-    print('   -lat=latitude : latitude in degrees (closest)')
-    print('   -lon=longitude: longitude in degrees (closest)')
+    print('   -cut=loc,sza: Plot type ')
+    print('   -lat=latitude : latitude in degrees (closest) (cut=loc) ')
+    print('   -lon=longitude: longitude in degrees (closest) (cut=loc)')
+    print('   -smin=minsza: minimum solar zenith angle (cut=sza)')
+    print('   -smax=maxsza: maximum solar zenigh angle (cut=sza)')
     print('   -alog : plot the log of the variable')
     print('   Non-KW args: files.')
 
@@ -107,45 +138,64 @@ AllData2D = []
 AllAlts = []
 AllTimes = []
 AllSZA = []
+
 j = 0
 for file in filelist:
 
     data = read_gitm_one_file(file, vars)
-    if (j == 0):
+    if (j == 0):    
         [nLons, nLats, nAlts] = data[0].shape
-        Alts = data[2][0][0]/1000.0;
-        Lons = data[0][:,0,0]*rtod;
-        Lats = data[1][0,:,0]*rtod;
+        Alts = data[2][0][0]/1000.0
+        Lons = data[0][:,0,0]*rtod
+        Lats = data[1][0,:,0]*rtod
 
-    ilon = find_nearest_index(Lons,plon)
-    ilat = find_nearest_index(Lons,plat)
+        ialt1 = find_nearest_index(Alts,90)
+        ialt2 = find_nearest_index(Alts,300)
+
 
     AllTimes.append(data["time"])
-    AllData2D.append(data[args["var"]][ilon,ilat,:])
-    AllSZA.append(data[iSZA][:,:,0])
-    AllSZA = np.array(AllSZA)
-    pp.figure()
-    cb2 = pp.contourf(Lons,Lats,np.transpose(AllSZA[0][:,:]),levels=30)
-    imin1 = find_nearest_index(AllSZA[0], 0)
-    
-    pp.colorbar(cb2)
-    pp.savefig('sza.png')
-    breakpoint()
-AllData2D = np.array(AllData2D) 
-AllSZA = np.array(AllSZA)
-ialt1 = find_nearest_index(Alts,90)
-ialt2 = find_nearest_index(Alts,300)
+    if args['cut'] == 'loc':
+        ilon = find_nearest_index(Lons,plon)
+        ilat = find_nearest_index(Lons,plat)
+        AllData2D.append(data[args["var"]][ilon,ilat,:])
 
-Alts = np.array(Alts[ialt1:ialt2+1])
-AllData2D = AllData2D[:,ialt1:ialt2+1]
-fig, ax = plt.subplots()
-cont1 = pp.contourf(AllTimes,Alts,np.transpose(AllData2D),levels=30,cmap='turbo')
-cb1 = pp.colorbar(cont1,label="{}".format(Var))
+    if args['cut'] == 'sza':        
+        AllSZA.append(data[iSZA][:,:,0])
+        
+        values = []
+        for k in range(ialt1,nAlts):
+            temp = data[args["var"]][:,:,k]
+            values.append(temp[np.where((AllSZA[-1] > smin) & (AllSZA[-1] < smax))])
+        
+        AllData2D.append(np.array(np.sum(values,1))/len(values[0]))
+
+        j+=1
+
+AllData2D = np.array(AllData2D) 
+fig, ax = pp.subplots()
 myFmt = mdates.DateFormatter("%b %d %H:%M")
 ax.xaxis.set_major_formatter(myFmt)
+
+
+if args['cut']  == 'loc':
+    Alts = Alts[ialt1:ialt2+1]
+    AllData2D = AllData2D[:,ialt1:ialt2+1]
+    cont1 = pp.contourf(AllTimes,Alts,np.transpose(AllData2D),levels=30,cmap='turbo')
+    cb1 = pp.colorbar(cont1,label="{}".format(Var))
+
+
+if args['cut']  == 'sza':
+    AllSZA = np.array(AllSZA)
+    Alts = Alts[ialt1:]
+
+    cont1 = pp.contourf(AllTimes,Alts,np.transpose(AllData2D),levels=30,cmap='turbo')
+    cb1 = pp.colorbar(cont1,label="{}".format(Var))
+
 
 pp.xlabel('Time (UT)')
 pp.ylabel('Altitude')
 pp.ylim([90,300])
 fig.autofmt_xdate()
+
+
 pp.savefig('plot.png')
