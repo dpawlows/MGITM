@@ -35,7 +35,7 @@ def get_args(argv):
 
             m = re.match(r'-var=(.*)',arg)
             if m:
-                var = int(m.group(1))
+                var = m.group(1)
                 IsFound = 1
 
             m = re.match(r'-cut=(.*)',arg)
@@ -106,10 +106,10 @@ else:
 if (args["help"]):
 
     print('Usage : ')
-    print('gitm_plot_one_alt.py -var=N -lat=lat -lon=lon -alog')
+    print('gitm_plot_one_alt.py -var=N1[,N2,N3,...] -lat=lat -lon=lon -alog')
     print('                     -help [file]')
     print('   -help : print this message')
-    print('   -var=number : number is variable to plot')
+    print('   -var=number[,num2,num3,...] : number is variable to plot')
     print('   -cut=loc,sza: Plot type ')
     print('   -lat=latitude : latitude in degrees (closest) (cut=loc) ')
     print('   -lon=longitude: longitude in degrees (closest) (cut=loc)')
@@ -129,16 +129,21 @@ filelist = args["filelist"]
 nFiles = len(filelist)
 if nFiles < 2:
     print('Please enter multiple files')
+try:
+    iSZA = header["vars"].index('SolarZenithAngle')
+    vars = [0,1,2,iSZA]
+except: 
+    vars = [0,1,2]
 
-iSZA = 43
-vars = [0,1,2,iSZA]
-vars.append(args["var"])
-Var = header["vars"][args["var"]]
+vars.extend([int(v) for v in args["var"].split(',')])
+Var = [header['vars'][int(i)] for i in args['var'].split(',')]
+
+#We want to store data for multiple variables, so we use a dict where var indices are the keys
+AllData = {a for a in args['var'].split(',')}
 AllData2D = []
 AllAlts = []
 AllTimes = []
 AllSZA = []
-
 j = 0
 for file in filelist:
 
@@ -161,14 +166,13 @@ for file in filelist:
 
     if args['cut'] == 'sza':        
         AllSZA.append(data[iSZA][:,:,0])
-        
-        values = []
-        for k in range(ialt1,nAlts):
-            temp = data[args["var"]][:,:,k]
-            values.append(temp[np.where((AllSZA[-1] > smin) & (AllSZA[-1] < smax))])
-        
-        AllData2D.append(np.array(np.sum(values,1))/len(values[0]))
-
+        breakpoint()
+        for int(ivar) in args['var'].split(','):
+            temp = 
+        mask = (AllSZA[-1] >= smin) & (AllSZA[-1] <= smax ) 
+        temp = data[args["var"]][:,:,ialt1:]
+        AllData2D.append(temp[mask].mean(axis=0))
+     
         j+=1
 
 AllData2D = np.array(AllData2D) 
