@@ -137,9 +137,10 @@ except:
 
 vars.extend([int(v) for v in args["var"].split(',')])
 Var = [header['vars'][int(i)] for i in args['var'].split(',')]
+nvars = len(args['var'].split(','))
 
 #We want to store data for multiple variables, so we use a dict where var indices are the keys
-AllData = {a for a in args['var'].split(',')}
+AllData = {a:[] for a in args['var'].split(',')}
 AllData2D = []
 AllAlts = []
 AllTimes = []
@@ -162,44 +163,47 @@ for file in filelist:
     if args['cut'] == 'loc':
         ilon = find_nearest_index(Lons,plon)
         ilat = find_nearest_index(Lons,plat)
-        AllData2D.append(data[args["var"]][ilon,ilat,:])
+        for ivar in args['var'].split(','):
+            AllData[ivar].append(data[int(ivar)][ilon,ilat,ialt1:])
 
     if args['cut'] == 'sza':        
         AllSZA.append(data[iSZA][:,:,0])
-        breakpoint()
-        for int(ivar) in args['var'].split(','):
-            temp = 
         mask = (AllSZA[-1] >= smin) & (AllSZA[-1] <= smax ) 
-        temp = data[args["var"]][:,:,ialt1:]
-        AllData2D.append(temp[mask].mean(axis=0))
-     
+        for ivar in args['var'].split(','):
+            temp = data[int(ivar)][:,:,ialt1:]
+            AllData[ivar].append(temp[mask].mean(axis=0))
+            
         j+=1
 
-AllData2D = np.array(AllData2D) 
-fig, ax = pp.subplots()
-myFmt = mdates.DateFormatter("%b %d %H:%M")
-ax.xaxis.set_major_formatter(myFmt)
-
-
-if args['cut']  == 'loc':
-    Alts = Alts[ialt1:ialt2+1]
-    AllData2D = AllData2D[:,ialt1:ialt2+1]
-    cont1 = pp.contourf(AllTimes,Alts,np.transpose(AllData2D),levels=30,cmap='turbo')
-    cb1 = pp.colorbar(cont1,label="{}".format(Var))
-
+for ivar in args['var'].split(','):
+    AllData[ivar] = np.array(AllData[ivar])
 
 if args['cut']  == 'sza':
     AllSZA = np.array(AllSZA)
-    Alts = Alts[ialt1:]
 
-    cont1 = pp.contourf(AllTimes,Alts,np.transpose(AllData2D),levels=30,cmap='turbo')
-    cb1 = pp.colorbar(cont1,label="{}".format(Var))
+# fig, ax = pp.subplots()
+fig = pp.figure(figsize=(8.5,11))
+pp.ylim([90,300])
 
+Alts = Alts[ialt1:]
+
+i=0
+for ivar in args['var'].split(','):
+    ax = pp.subplot(6,1,i+1)
+    AllData2D = AllData[ivar]
+    if ivar == '3':
+        AllData2D = np.log10(AllData2D)
+        Var[i] = "Log "+ Var[i]
+    cont = ax.contourf(AllTimes,Alts,np.transpose(AllData2D),levels=30,cmap='turbo')    
+    pp.colorbar(cont,ax=ax,label=Var[i])
+    if i < len(Var)-1:
+        ax.get_xaxis().set_ticklabels([])
+    pp.ylabel('Alt (km)')
+    i+=1
 
 pp.xlabel('Time (UT)')
-pp.ylabel('Altitude')
-pp.ylim([90,300])
+myFmt = mdates.DateFormatter("%b %d %H:%M")
+ax.xaxis.set_major_formatter(myFmt)
 fig.autofmt_xdate()
-
 
 pp.savefig('plot.png')
