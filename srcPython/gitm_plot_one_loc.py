@@ -17,6 +17,7 @@ def get_args(argv):
 
     filelist = []
     IsLog = 0
+    diff = '0'
     var = 15
     alt = 400.0
     lon = -100.0
@@ -36,6 +37,11 @@ def get_args(argv):
             m = re.match(r'-var=(.*)',arg)
             if m:
                 var = m.group(1)
+                IsFound = 1
+
+            m = re.match(r'-diff=(.*)',arg)
+            if m:
+                diff = m.group(1)
                 IsFound = 1
 
             m = re.match(r'-cut=(.*)',arg)
@@ -75,6 +81,7 @@ def get_args(argv):
                 help = 1
                 IsFound = 1
 
+
             if IsFound==0 and not(arg==argv[0]):
                 filelist.append(arg)
 
@@ -86,7 +93,8 @@ def get_args(argv):
             'IsLog':IsLog,
             'cut':cut,
             'smin':smin,
-            'smax':smax,}
+            'smax':smax,
+            'diff':diff}
 
     return args
 
@@ -100,8 +108,7 @@ elif args['cut'] == 'sza' and args['smin'] > -50:
     smin = args['smin']
     smax = args['smax']
 else:
-    args["help"] = '-h'
-
+    args["help"] = '-h'    
 
 if (args["help"]):
 
@@ -115,7 +122,8 @@ if (args["help"]):
     print('   -lon=longitude: longitude in degrees (closest) (cut=loc)')
     print('   -smin=minsza: minimum solar zenith angle (cut=sza)')
     print('   -smax=maxsza: maximum solar zenigh angle (cut=sza)')
-    print('   -alog : plot the log of the variable')
+    print('   -alog: plot the log of the variable')
+    print('   -diff=backgroundFiles: plot the difference between 2 sets of files')
     print('   Non-KW args: files.')
 
     iVar = 0
@@ -129,11 +137,23 @@ filelist = args["filelist"]
 nFiles = len(filelist)
 if nFiles < 2:
     print('Please enter multiple files')
+    exit(1)
 try:
     iSZA = header["vars"].index('SolarZenithAngle')
     vars = [0,1,2,iSZA]
 except: 
     vars = [0,1,2]
+
+diff = False
+if args['diff'] != '0':
+    diff = True
+    backgroundFilelist = sorted(glob(args["diff"]))
+    nBackFiles = len(backgroundFilelist)
+    if nBackFiles != nFiles:
+        print('Difference between sizes of perturbation and background filelists:')
+        print('Lengths: {}   {}'.format(nFiles,nBackFiles))
+        exit(1)
+
 
 vars.extend([int(v) for v in args["var"].split(',')])
 Var = [header['vars'][int(i)] for i in args['var'].split(',')]
@@ -149,6 +169,7 @@ j = 0
 for file in filelist:
 
     data = read_gitm_one_file(file, vars)
+    
     if (j == 0):    
         [nLons, nLats, nAlts] = data[0].shape
         Alts = data[2][0][0]/1000.0
@@ -156,24 +177,54 @@ for file in filelist:
         Lats = data[1][0,:,0]*rtod
 
         ialt1 = find_nearest_index(Alts,90)
-        ialt2 = find_nearest_index(Alts,300)
-
+        ialt2 = find_nearest_index(Alts,250)
 
     AllTimes.append(data["time"])
+
+    if diff:
+        stime = str(AllTimes[-1].year)[2:]+str(AllTimes[-1].month).rjust(2,'0')+str(AllTimes[-1].day).rjust(2,'0')+\
+            '_'+str(AllTimes[-1].hour).rjust(2,'0')+str(AllTimes[-1].minute).rjust(2,'0')
+        bFile = [i for i in backgroundFilelist if stime in i][0]
+        if bFile == '':
+            #It is possible that we don't have an output file at the same time.
+            print('Missing background file corresponding to: {}'.format(file))
+            exit(1)
+        background = read_gitm_one_file(bFile,vars)
+        
     if args['cut'] == 'loc':
         ilon = find_nearest_index(Lons,plon)
         ilat = find_nearest_index(Lons,plat)
         for ivar in args['var'].split(','):
-            AllData[ivar].append(data[int(ivar)][ilon,ilat,ialt1:])
+            if diff:
+                temp = (data[int(ivar)][ilon,ilat,ialt1:ialt2+1]-background[int(ivar)][ilon,ilat,ialt1:ialt2+1])/ \
+                    background[int(ivar)][ilon,ilat,ialt1:ialt2+1]*100.0
+            else:
+                temp = data[int(ivar)][ilon,ilat,ialt1:ialt2+1]          
+
+            AllData[ivar].append(temp)
+
 
     if args['cut'] == 'sza':        
         AllSZA.append(data[iSZA][:,:,0])
         mask = (AllSZA[-1] >= smin) & (AllSZA[-1] <= smax ) 
         for ivar in args['var'].split(','):
-            temp = data[int(ivar)][:,:,ialt1:]
-            AllData[ivar].append(temp[mask].mean(axis=0))
+            if diff:
+                #Calculate the mean of both sets of data and then calculate the percent difference.
+                mean1 = data[int(ivar)][:,:,ialt1:ialt2+1][mask].mean(axis=0)
+                mean2 = background[int(ivar)][:,:,ialt1:ialt2+1][mask].mean(axis=0)
+                temp = (mean1-mean2)/mean2*100.
+
+            else:
+                temp = data[int(ivar)][:,:,ialt1:ialt2+1][mask].mean(axis=0)
+
+            AllData[ivar].append(temp)
+            # AllData[ivar].append(temp[mask].mean(axis=0))
             
-        j+=1
+    
+    
+    j+=1
+
+
 
 for ivar in args['var'].split(','):
     AllData[ivar] = np.array(AllData[ivar])
@@ -185,17 +236,24 @@ if args['cut']  == 'sza':
 fig = pp.figure(figsize=(8.5,11))
 pp.ylim([90,300])
 
-Alts = Alts[ialt1:]
+Alts = Alts[ialt1:ialt2+1]
 
+cmap = 'plasma'
 i=0
 for ivar in args['var'].split(','):
     ax = pp.subplot(6,1,i+1)
     AllData2D = AllData[ivar]
-    if ivar == '3':
+    if ivar == '3' and (not diff):
         AllData2D = np.log10(AllData2D)
         Var[i] = "Log "+ Var[i]
-    cont = ax.contourf(AllTimes,Alts,np.transpose(AllData2D),levels=30,cmap='turbo')    
-    pp.colorbar(cont,ax=ax,label=Var[i])
+
+    cont = ax.contourf(AllTimes,Alts,np.transpose(AllData2D),levels=30,cmap=cmap)    
+    if diff:
+        label = '{}\n% Diff'.format(Var[i])
+    else:
+        label = Var[i]
+
+    pp.colorbar(cont,ax=ax,label=label)
     if i < len(Var)-1:
         ax.get_xaxis().set_ticklabels([])
     pp.ylabel('Alt (km)')
