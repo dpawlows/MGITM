@@ -5,7 +5,11 @@ Module ModChemistry
 !  Corrections to rates for aligmnent with Brecht et al (2011) for NOx in the VTGCM
 !  -- S. W. Bougher (170208)
 !  Addition to permit NOVEM and NOINT to be calculated as VTGCM in Brecht et al (2011)
-!  -- S. W. Bougher (170421)
+!  Updates for: (1)  three VTGCM3 rates  & (2) Secondary ionozation of CO2 from  DP : 21-06-15
+!               rtO_O_CO2 = 3.22e-28*(1./tn)**2.0*1.e-12
+!               rtO_CO_CO2 = 1.6e-32*exp(-2184./Tn)*1.e-12
+!               rtO_O2_CO2 = 1.4e-33*exp(300./Tn)**2.5*1.e-12
+!  -- S. W. Bougher (210615)
 
   use ModSizeGitm
   use ModGITM
@@ -85,14 +89,25 @@ subroutine calc_reaction_rates(iLon,iLat,iAlt,iBlock)
 !\
 ! Reaction Rates with Neutral Temp, tn: cm^6/s -> m^6/s
 ! real :: rtO_O_CO2, rtO_CO_CO2, rtO_O2_CO2, rtO_N4S_CO2  ! Ter-molecular
+! rtO_O_CO2 = 3.22e-28*(1../tn)**2.0*1.e-12: after VTGCM3
+! rtO_CO_CO2 = 1.6e-32*exp(-2184./Tn)*1.e-12: after VTGCM3
+! rtO_O2_CO2 = 1.4e-33*exp(300./Tn)*1.e-12: after VTGCM3
 
+! -------------------------------------------------------
 !          rtO_O_CO2 = 2.75e-32*(200./tn)**3.3*1.e-12
-           rtO_O_CO2 = 2.75e-32*1.e-12
-           rtO_CO_CO2 = 6.5e-33*exp(-2180./tn)*1.e-12
+!          rtO_O_CO2 = 2.75e-32*1.e-12
+           rtO_O_CO2 = 3.22e-28*(1./tn)**2.0*1.e-12
+! -------------------------------------------------------
+!          rtO_CO_CO2 = 6.5e-33*exp(-2180./tn)*1.e-12
+           rtO_CO_CO2 = 1.6e-32*exp(-2184./tn)*1.e-12
+! -------------------------------------------------------
 !          rtO_O2_CO2 = 5.0e-28/tn**2.3*1.e-12
-           rtO_O2_CO2 = 1.35e-33*1.e-12
+!          rtO_O2_CO2 = 1.35e-33*1.e-12
+           rtO_O2_CO2 = 1.4e-33*(300./tn)**2.5*1.e-12
+! -------------------------------------------------------
 !          rtO_N4S_CO2 = 2.0e-32*rt300tn*1.e-12
            rtO_N4S_CO2 = 1.83e-32*rt300tn*1.e-12
+! -------------------------------------------------------
 !\
 ! Reactions and Rates taken from vtgcm  [May 2008] (T-independent)
 ! real :: rtCO2_OP, rtO_CO2P_tOP, rtO_CO2P_tO2P, rtN4S_O2P, rtN2D_CO2,  &
