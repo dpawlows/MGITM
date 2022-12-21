@@ -26,6 +26,7 @@ def get_args(argv):
     smin = -100.0
     smax = -100.0
     help = 0
+    hmf2 = 0
 
 
     for arg in argv:
@@ -70,7 +71,6 @@ def get_args(argv):
                 smax = int(m.group(1))
                 IsFound = 1
 
-
             m = re.match(r'-alog',arg)
             if m:
                 IsLog = 1
@@ -81,6 +81,10 @@ def get_args(argv):
                 help = 1
                 IsFound = 1
 
+            m = re.match(r'-epeak',arg)
+            if m:
+                hmf2 = 1
+                IsFound = 1
 
             if IsFound==0 and not(arg==argv[0]):
                 filelist.append(arg)
@@ -94,12 +98,19 @@ def get_args(argv):
             'cut':cut,
             'smin':smin,
             'smax':smax,
-            'diff':diff}
+            'diff':diff,
+            'hmf2':hmf2,
+            }
 
     return args
 
 args = get_args(sys.argv)
 header = read_gitm_header(args["filelist"])
+
+if args['hmf2']:
+    hmf2 = 1
+else:
+    hmf2 = 0
 
 if args['cut'] == 'loc' and args['lon'] > -50:
     plon = args['lon']
@@ -117,6 +128,7 @@ if (args["help"]):
     print('                     -help [file]')
     print('   -help : print this message')
     print('   -var=number[,num2,num3,...] : number is variable to plot')
+    print('   -epeak: plot hmf2 as a function of time (will overwrite any vars')
     print('   -cut=loc,sza: Plot type ')
     print('   -lat=latitude : latitude in degrees (closest) (cut=loc) ')
     print('   -lon=longitude: longitude in degrees (closest) (cut=loc)')
@@ -135,9 +147,9 @@ if (args["help"]):
 
 filelist = args["filelist"]
 nFiles = len(filelist)
+altprofile = False
 if nFiles < 2:
-    print('Please enter multiple files')
-    exit(1)
+    altprofile = True
 try:
     iSZA = header["vars"].index('SolarZenithAngle')
     vars = [0,1,2,iSZA]
@@ -155,17 +167,32 @@ if args['diff'] != '0':
         exit(1)
 
 
-vars.extend([int(v) for v in args["var"].split(',')])
-Var = [header['vars'][int(i)] for i in args['var'].split(',')]
-nvars = len(args['var'].split(','))
+if hmf2:
+    args['var'] = '32'
+    vars.append(int(args['var']))
+    nvars = 1
+    electron = {args['var']:[],'hmf2':[]}
+    Var = [header['vars'][int(args['var'])]]
+
+else:
+    vars.extend([int(v) for v in args["var"].split(',')])
+    Var = [header['vars'][int(i)] for i in args['var'].split(',')]
+    nvars = len(args['var'].split(','))
+
+AllData = {a:[] for a in args['var'].split(',')}
 
 #We want to store data for multiple variables, so we use a dict where var indices are the keys
-AllData = {a:[] for a in args['var'].split(',')}
+OCO2 = False
+if np.isin(4,vars) and np.isin(6,vars):
+    OCO2 = True
+    AllData['OCO2'] = []
+
 AllData2D = []
 AllAlts = []
 AllTimes = []
 AllSZA = []
 j = 0
+
 for file in filelist:
 
     data = read_gitm_one_file(file, vars)
@@ -203,28 +230,58 @@ for file in filelist:
 
             AllData[ivar].append(temp)
 
+        if OCO2:
+            if diff:
+                temp = ((data[6][ilon,ilat,ialt1:ialt2+1]/data[4][ilon,ilat,ialt1:ialt2+1]) -\
+                    (background[6][ilon,ilat,ialt1:ialt2+1]/background[4][ilon,ilat,ialt1:ialt2+1])) /\
+                    (background[6][ilon,ilat,ialt1:ialt2+1]/background[4][ilon,ilat,ialt1:ialt2+1])*100
+            else: 
+                temp = data[6][ilon,ilat,ialt1:ialt2+1]/data[4][ilon,ilat,ialt1:ialt2+1]
+
+            AllData['OCO2'].append(temp)
+
 
     if args['cut'] == 'sza':        
-        AllSZA.append(data[iSZA][:,:,0])
+        AllSZA.append(np.array(data[iSZA][2:-2,2:-2,0]))
+        
         mask = (AllSZA[-1] >= smin) & (AllSZA[-1] <= smax ) 
+     
         for ivar in args['var'].split(','):
             if diff:
                 #Calculate the mean of both sets of data and then calculate the percent difference.
-                mean1 = data[int(ivar)][:,:,ialt1:ialt2+1][mask].mean(axis=0)
-                mean2 = background[int(ivar)][:,:,ialt1:ialt2+1][mask].mean(axis=0)
+                mean1 = data[int(ivar)][2:-2,2:-2,ialt1:ialt2+1][mask].mean(axis=0)
+                mean2 = background[int(ivar)][2:-2,2:-2,ialt1:ialt2+1][mask].mean(axis=0)
                 temp = (mean1-mean2)/mean2*100.
+                if hmf2:
+                    perturb = np.amax(data[int(ivar)][2:-2,2:-2,ialt1:ialt2+1],axis=2)[mask].mean()
+                    perturbpeak = Alts[ialt1+np.argmax(data[int(ivar)][2:-2,2:-2,ialt1:ialt2+1],axis=2)][mask].mean()
+                    back = np.amax(background[int(ivar)][2:-2,2:-2,ialt1:ialt2+1],axis=2)[mask].mean()
+                    backpeak = Alts[ialt1+np.argmax(background[int(ivar)][2:-2,2:-2,ialt1:ialt2+1],axis=2)][mask].mean()
+
+                    electron[ivar].append((perturb-back)/back*100)
+                    electron['hmf2'].append(perturbpeak)
 
             else:
-                temp = data[int(ivar)][:,:,ialt1:ialt2+1][mask].mean(axis=0)
+                temp = data[int(ivar)][2:-2,2:-2,ialt1:ialt2+1][mask].mean(axis=0)
 
             AllData[ivar].append(temp)
-            # AllData[ivar].append(temp[mask].mean(axis=0))
-            
-    
-    
+
+        if OCO2:
+            if diff:
+                temp = ((data[6][2:-2,2:-2,ialt1:ialt2+1]/data[4][2:-2,2:-2,ialt1:ialt2+1])[mask].mean(axis=0) -\
+                    (background[6][2:-2,2:-2,ialt1:ialt2+1]/background[4][2:-2,2:-2,ialt1:ialt2+1])[mask].mean(axis=0)) /\
+                    (background[6][2:-2,2:-2,ialt1:ialt2+1]/background[4][2:-2,2:-2,ialt1:ialt2+1])[mask].mean(axis=0)*100
+            else: 
+                temp = data[6][2:-2,2:-2,ialt1:ialt2+1]/data[4][2:-2,2:-2,ialt1:ialt2+1]
+
+            AllData['OCO2'].append(temp)
+
     j+=1
 
 
+if OCO2:
+    args['var'] = args['var']+',OCO2'
+    Var.append('O/CO$_2$ ratio')
 
 for ivar in args['var'].split(','):
     AllData[ivar] = np.array(AllData[ivar])
@@ -232,36 +289,163 @@ for ivar in args['var'].split(','):
 if args['cut']  == 'sza':
     AllSZA = np.array(AllSZA)
 
-# fig, ax = pp.subplots()
-fig = pp.figure(figsize=(8.5,11))
-pp.ylim([90,300])
 
-Alts = Alts[ialt1:ialt2+1]
+if not altprofile:
+    fig = pp.figure(figsize=(8.5,11))
+    pp.ylim([90,300])
 
-cmap = 'plasma'
-i=0
-for ivar in args['var'].split(','):
-    ax = pp.subplot(6,1,i+1)
-    AllData2D = AllData[ivar]
-    if ivar == '3' and (not diff):
-        AllData2D = np.log10(AllData2D)
-        Var[i] = "Log "+ Var[i]
+    Alts = Alts[ialt1:ialt2+1]
+    cmap = 'plasma'
+    # cmap = 'YlOrRd'
+    # cmap = 'Spectral'
+    maxs = [7.5,39.5,83.2,24.6,55.7,283.5,0]
+    # mins = [-.7,-3,-,0,0,0]
 
-    cont = ax.contourf(AllTimes,Alts,np.transpose(AllData2D),levels=30,cmap=cmap)    
-    if diff:
-        label = '{}\n% Diff'.format(Var[i])
-    else:
-        label = Var[i]
+    i=0
 
-    pp.colorbar(cont,ax=ax,label=label)
-    if i < len(Var)-1:
-        ax.get_xaxis().set_ticklabels([])
+    for ivar in args['var'].split(','):
+        ax = pp.subplot(7,1,i+1)
+        AllData2D = AllData[ivar]
+        if ivar == '3' and (not diff):
+            AllData2D = np.log10(AllData2D)
+            Var[i] = "Log "+ Var[i]
+
+            
+        if ('maxs' not in locals()):
+            maxv = np.amax(AllData2D)
+        else:
+            maxv = maxs[i]        
+        minv = np.amin(AllData2D)
+
+        if ivar == 'OCO2':
+            cmap = 'bone'
+            minv = -38
+        levels = np.linspace(minv,maxv,30)
+
+        cont = ax.contourf(AllTimes,Alts,np.transpose(AllData2D),levels=levels,cmap=cmap)   
+        
+        if 'single' in filelist[0]:
+            line = [datetime(2017, 9, 10, 16, 10)]
+        
+        if 'doubleflare' in filelist[0]:
+            line = [datetime(2017, 9, 10, 16, 10),datetime(2017,9,10,18,45)]
+
+        if 'doubleshort' in filelist[0]:
+            line = [datetime(2017, 9, 10, 16, 10),datetime(2017,9,10,16,41)]
+
+        if 'triple' in filelist[0]:
+            line = [datetime(2017, 9, 10, 16, 10),datetime(2017,9,10,16,41),datetime(2017,9,10,17,11)]
+
+        line2 = datetime(2017, 9, 10, 23, 30)
+
+        if 'line' in locals():
+            for l in line:
+                ax.plot([l,l],[Alts[0],Alts[-1]],color='dimgrey',linestyle=(0,(10,3)))
+
+            ax.plot([line2,line2],[Alts[0],Alts[-1]],color='dimgrey',linestyle=(0,(5,10)))
+
+        if Var[i] in name_dict:
+            varname = name_dict[Var[i]]
+        else:
+            varname = Var[i]
+
+        label = varname
+        if diff:
+            label = label+'\n% Diff'
+
+        pp.colorbar(cont,ax=ax,label=label,format="%.1f")
+        if i < len(Var)-1:
+            ax.get_xaxis().set_ticklabels([])
+        pp.ylabel('Alt (km)')
+        i+=1
+
+    pp.xlabel('Time (UT)')
+    myFmt = mdates.DateFormatter("%b %d %H:%M")
+    ax.xaxis.set_major_formatter(myFmt)
+    fig.autofmt_xdate()
+    pp.savefig('plot.png')
+
+    if hmf2:
+        fig1 = pp.figure()
+        ax = pp.subplot(2,1,1)
+        # ax.get_xaxis().set_ticklabels([])
+
+        ax.plot(AllTimes,electron['32'])
+        ax.set_ylim([0,22])
+        pp.ylabel('Peak [e-] % Diff')
+
+        ax1 = pp.subplot(2,1,2)
+        ax1.plot(AllTimes,electron['hmf2'])
+        pp.ylabel('Alt of Peak [e-]')
+        pp.xlabel('Time (UT)')
+        myFmt = mdates.DateFormatter("%b %d %H:%M")
+        ax1.xaxis.set_major_formatter(myFmt)
+        fig1.autofmt_xdate()
+        pp.savefig('electron.png')
+
+else:
+    #Then we are only plotting a single file and it should be an altitude profile
+    fig = pp.figure(figsize=(8.5,11))
+    pp.ylim([90,300])
+
+    Alts = Alts[ialt1:ialt2+1]
+    i = 0
+    for ivar in args['var'].split(','):
+        ax = pp.subplot(2,6,i+1)
+        AllData2D = AllData[ivar]
+        if ivar == '3' and (not diff):
+            AllData2D = np.log10(AllData2D)
+            Var[i] = "Log "+ Var[i]
+
+            
+        if ('maxs' not in locals()):
+            maxv = np.amax(AllData2D)
+        else:
+            maxv = maxs[i]        
+        minv = np.amin(AllData2D)
+        ax.plot(AllData2D[0,:],Alts)
+        pp.xlim([0,325])
+        if Var[i] in name_dict:
+            varname = name_dict[Var[i]]
+        else:
+            varname = Var[i]
+
+        label = varname
+        if diff:
+            label = label+'\n% Diff'
+        pp.xlable = label
+        i+=1
+
+
     pp.ylabel('Alt (km)')
-    i+=1
 
-pp.xlabel('Time (UT)')
-myFmt = mdates.DateFormatter("%b %d %H:%M")
-ax.xaxis.set_major_formatter(myFmt)
-fig.autofmt_xdate()
+    pp.savefig('plot.png')
 
-pp.savefig('plot.png')
+
+### One time use plot a single altitude as a function of time (or output data)
+# fig1 = pp.figure()
+# lineplot = '3'
+# palt = 200
+# ialt = find_nearest_index(Alts, palt)
+# ax2 = pp.subplot(2,1,1)
+
+# if 'lineplot' in locals():
+#     ax2.plot(AllTimes,AllData[lineplot][:,ialt])
+
+# pp.ylim([0,33])
+# pp.xlabel('Time (UT)')
+# pp.ylabel('{}\n% Diff ({} km)'.format(name_dict[Var[vars.index(int(lineplot))-4]],int(Alts[ialt])))
+# myFmt = mdates.DateFormatter("%b %d %H:%M")
+# ax2.xaxis.set_major_formatter(myFmt)
+# fig1.autofmt_xdate()
+# pp.savefig('lineplot.png')
+
+filename = 'output.txt'
+f = open(filename,'a')
+o1 = [a.strftime("%d-%b-%y/%H:%M:%S") for a in AllTimes]
+output = o1  + list(electron['32'])
+for o in output:
+    f.write(str(o)+' ')
+f.write("\n")
+f.close()
+
