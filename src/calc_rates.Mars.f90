@@ -15,6 +15,7 @@ subroutine calc_rates(iBlock)
 ! Modified (13/04/18) : SWB :  Standard Km (eddy viscosity) for modest wind impact
 ! Modified (08/03/17) : SWB :  Rescaling of Eddy Viscosity for doubling of Kzz
 ! Modified (08/21/18) : SWB :  Molecular viscosity passed (only) via global allocation
+! Modified (07/31/21) : SWB :  Rescaling of Eddy Viscosity for halving of Kzz
 ! ----------------------------------------------------------------------------
   use ModGITM
   use ModRates
@@ -360,11 +361,21 @@ trouble = .false.
 !    ViscCoef(1:nLons,1:nLats,iAlt)  =  ViscCoef(1:nLons,1:nLats,iAlt)  + 250.0*&
 !                          Rho(1:nLons,1:nLats,iAlt,iBlock)*KappaEddyDiffusion(1:nLons,1:nLats,iAlt,iBlock)
 !  * Rescaled as KappaEddyDiffusion is Doubled plus new Testing : September 2017
-     ViscCoef(1:nLons,1:nLats,iAlt)  =  ViscCoef(1:nLons,1:nLats,iAlt)  + 200.0*&
+!    ViscCoef(1:nLons,1:nLats,iAlt)  =  ViscCoef(1:nLons,1:nLats,iAlt)  + 200.0*&
+!                          Rho(1:nLons,1:nLats,iAlt,iBlock)*KappaEddyDiffusion(1:nLons,1:nLats,iAlt,iBlock)
+!  * Rescaled for GW scheme: Feb 2020
+!    ViscCoef(1:nLons,1:nLats,iAlt)  =  ViscCoef(1:nLons,1:nLats,iAlt)  + 100.0*&
+!                          Rho(1:nLons,1:nLats,iAlt,iBlock)*KappaEddyDiffusion(1:nLons,1:nLats,iAlt,iBlock)
+! -----------------------------------------------------------------------------------------------------------
+!  * Rescaled as KappaEddyDiffusion is Halved plus new Testing : June 2021  (NOGW4 option)
+!    ViscCoef(1:nLons,1:nLats,iAlt)  =  ViscCoef(1:nLons,1:nLats,iAlt)  + 400.0*&
+!                          Rho(1:nLons,1:nLats,iAlt,iBlock)*KappaEddyDiffusion(1:nLons,1:nLats,iAlt,iBlock)
+!  * Rescaled as KappaEddyDiffusion is Halved plus new Testing plus GW drag (on) : September 2021 (YSGW4 option)
+     ViscCoef(1:nLons,1:nLats,iAlt)  =  ViscCoef(1:nLons,1:nLats,iAlt)  + 150.0*&
                            Rho(1:nLons,1:nLats,iAlt,iBlock)*KappaEddyDiffusion(1:nLons,1:nLats,iAlt,iBlock)
+! -----------------------------------------------------------------------------------------------------------
 
      Visc_3D(1:nLons,1:nLats,iAlt,iBlock) =  kmmix(1:nLons,1:nLats,iAlt)
-
 
 ! -------------------------------------------------------------------------------
   enddo
