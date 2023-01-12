@@ -84,10 +84,12 @@ F		if you want to run with msis and iri only (i.e. not GITM)
 F         UseCrustalFields
 
 #USELILLIS
+F       use empirical ionization
+0.42     Solar wind pressure (should be between 0.39 and 1.36)
 1       Default Field Topology (used if topology is not specified in MHDfile)
 
 #MHDFIELD
-T               use MHD output for nightside electron precipitation
+F               use MHD output for nightside electron precipitation
 mhdfilelist    file that includes the names of the mhd output files
 
 
