@@ -150,7 +150,16 @@ filelist = args["filelist"]
 nFiles = len(filelist)
 
 cut = args["cut"]
-vars = [0,1,2]rtod
+vars = [0,1,2]
+vars.append(args["var"])
+
+if (args["winds"]):
+    if (cut=='alt'):
+        iUx_ = 16
+        iUy_ = 17
+    if (cut=='lat'):
+        iUx_ = 16
+        iUy_ = 18
     if (cut=='lon'):
         iUx_ = 17
         iUy_ = 18
