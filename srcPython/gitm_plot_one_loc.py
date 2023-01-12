@@ -243,17 +243,6 @@ i=0
 for ivar in args['var'].split(','):
     ax = pp.subplot(6,1,i+1)
     AllData2D = AllData[ivar]
-<<<<<<< HEAD
-    
-    if ivar == '3':
-        AllData2D = np.log10(AllData2D)
-        Var[i] = "Log "+ Var[i]
-    
-    cont = ax.contourf(AllTimes,Alts,np.transpose(AllData2D),levels=30,cmap='turbo')    
-    pp.colorbar(cont,ax=ax,label=Var[i])
-    
-    #Only plot x axis for last plot
-=======
     if ivar == '3' and (not diff):
         AllData2D = np.log10(AllData2D)
         Var[i] = "Log "+ Var[i]
@@ -265,7 +254,6 @@ for ivar in args['var'].split(','):
         label = Var[i]
 
     pp.colorbar(cont,ax=ax,label=label)
->>>>>>> 4ce44be46dc1a1092ea4274419b523cc03c57810
     if i < len(Var)-1:
         ax.get_xaxis().set_ticklabels([])
     
