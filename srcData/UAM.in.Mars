@@ -83,9 +83,13 @@ F		if you want to run with msis and iri only (i.e. not GITM)
 #CRUSTAL
 F         UseCrustalFields
 
-#AMIEFILES
-none      northern hemisphere amie file
-none      southern hemisphere amie file
+#USELILLIS
+1       Default Field Topology (used if topology is not specified in MHDfile)
+
+#MHDFIELD
+T               use MHD output for nightside electron precipitation
+mhdfilelist    file that includes the names of the mhd output files
+
 
 # ----------------------------------------------------------------------
 #DAMPING
