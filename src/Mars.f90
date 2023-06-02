@@ -9939,8 +9939,7 @@ subroutine interpolateField(nMagLons,nMagLats,nMagAlts,MagFieldLon,MagFieldLat,M
                       iiLon2 = 1
 
                       BLon = 0
-                      !(LonFind-0)/&
-                      !     (MagFieldLon(iiLon2)-0)
+
                       else
                        do jLon = 1, nMagLons-1
 
@@ -9970,7 +9969,7 @@ subroutine interpolateField(nMagLons,nMagLats,nMagAlts,MagFieldLon,MagFieldLat,M
                              iiLat = jLat
                              BLat = (LatFind-MagFieldLat(jLat))/&
                                   (MagFieldLat(jlat+1)-MagFieldLat(jlat))
-                          ! Print*, Blat
+
                           endif
                         enddo
                       end if
@@ -10022,18 +10021,11 @@ subroutine interpolateField(nMagLons,nMagLats,nMagAlts,MagFieldLon,MagFieldLat,M
                  itypealt = iialt + 1
                end if
                FieldType(ilon,ilat,ialt,iBlock) = typeField(itypealt,itypelon,itypelat)
-!               if (iproc == 45 .and. ilon == 1 .and. ialt == 69) then
-!                  write(*,*) magfieldlon(itypelon),magfieldalt(itypealt),FieldType(ilon,ilat,ialt,iBlock),&
-!                  LonFind,Altfind
-!               endif
 
              endif
           enddo
        enddo
     enddo
-    ! write(*,*) magfieldlat
-    ! write(*,*) magfieldlon
-    ! write(*,*) magfieldalt
      
   B0(:,:,:,iMag_,iBlock) = sqrt(B0(:,:,:,1,iBlock)**2+B0(:,:,:,2,iBlock)**2+B0(:,:,:,3,iBlock)**2)
   userdata3D(:,:,:,3,iblock)=B0(:,:,:,iMag_,iBlock)
