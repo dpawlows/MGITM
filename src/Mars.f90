@@ -102,8 +102,6 @@ subroutine init_heating_efficiency
   implicit none
 
   HeatingEfficiency_CB  = 0.20
-! HeatingEfficiency_CB  = 0.18
-! HeatingEfficiency_CB  = 0.22
   eHeatingEfficiency_CB = 0.0
 
 !  call init_radcool
