@@ -9817,6 +9817,7 @@ subroutine ERRORS (ierr,varerr)
 subroutine interpolateField(nMagLons,nMagLats,nMagAlts,MagFieldLon,MagFieldLat,MagFieldAlt,MagField,typeField)
 
   use ModGITM
+  use ModUserGITM
 
   implicit None
 
@@ -9831,9 +9832,9 @@ subroutine interpolateField(nMagLons,nMagLats,nMagAlts,MagFieldLon,MagFieldLat,M
   real, intent(in) :: MagField(nMagAlts,nMagLons,nMagLats,MaxDim)
 
     do iBlock = 1, nBlocks
-       do iLon = -1, nLons+2
-          do iLat = -1, nLats+2
-            do ialt = -1, nAlts +2
+       do iLon = 1, nLons
+          do iLat = 1, nLats
+            do ialt = 1, nAlts 
 
                LonFind = Longitude(iLon,iBlock)*180/pi
                LatFind = latitude(iLat,iBlock)*180/pi
@@ -9935,7 +9936,10 @@ subroutine interpolateField(nMagLons,nMagLats,nMagAlts,MagFieldLon,MagFieldLat,M
                  itypealt = iialt + 1
                end if
                FieldType(ilon,ilat,ialt,iBlock) = typeField(itypealt,itypelon,itypelat)
-
+!               if (iproc == 45 .and. ilon == 1 .and. ialt == 69) then
+!                  write(*,*) magfieldlon(itypelon),magfieldalt(itypealt),FieldType(ilon,ilat,ialt,iBlock),&
+!                  LonFind,Altfind
+!               endif
 
              endif
           enddo
@@ -9944,10 +9948,11 @@ subroutine interpolateField(nMagLons,nMagLats,nMagAlts,MagFieldLon,MagFieldLat,M
     ! write(*,*) magfieldlat
     ! write(*,*) magfieldlon
     ! write(*,*) magfieldalt
-    ! stop
+     
   B0(:,:,:,iMag_,iBlock) = sqrt(B0(:,:,:,1,iBlock)**2+B0(:,:,:,2,iBlock)**2+B0(:,:,:,3,iBlock)**2)
-
-  enddo
+  userdata3D(:,:,:,3,iblock)=B0(:,:,:,iMag_,iBlock)
+  userdata3D(:,:,:,4,iblock)=FieldType(:,:,:,iBlock)
+enddo
 
 endsubroutine interpolateField
 
