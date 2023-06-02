@@ -34,7 +34,6 @@ subroutine set_inputs
 
   call report("set_inputs",1)
 
-
   iError = 0
   IsDone = .false.
   iLine  = 1
@@ -594,6 +593,7 @@ subroutine set_inputs
              write(*,*) '#CRUSTAL'
              write(*,*) 'UseCrustalField   (logical)'
           endif
+
           if (UseMHDField .and. UseCrustalField) then
             UseCrustalField = .false. !Don't use both
             write(*,*) "Setting UseCrustalField to false as both can't be used"
@@ -602,30 +602,25 @@ subroutine set_inputs
         case ("#MHDFIELD")
           call read_in_logical(UseMHDField,iError)
           call read_in_string(cMHDFilelist,iError)
-          call read_in_logical(crustalFieldOnly,iError)
+          ! call read_in_logical(crustalFieldOnly,iError)
           if (iError /= 0) then
              write(*,*) 'Incorrect format for #MHDFIELD:'
              write(*,*) '#MHDFIELD'
-             write(*,*) 'UseMHDlField   (logical)'
-             write(*,*) 'cMHDDirectory   (string)'
-             write(*,*) 'crustalField Only   (logical)'
+             write(*,*) 'UseMHDField   (logical)'
+             write(*,*) 'cMHDFileList   (string)'
+             ! write(*,*) 'crustalField Only   (logical)'
           endif
 
           if (UseMHDField .and. UseCrustalField) then
             UseCrustalField = .false. !Don't use both
             write(*,*) "Setting UseCrustalField to false as both can't be used"
           endif
-        
+
         case ("#CHEMISTRY")
 
            call read_in_logical(UseIonChemistry, iError)
            call read_in_logical(UseIonAdvection, iError)
            call read_in_logical(UseNeutralChemistry, iError)
-
-           if (UseIonAdvection .and. .not.(UseCrustalField)) then
-             write(*,*) "!!! Warning: Ion advection is turned on but you are not "
-             write(*,*) "using crustal fields. This can result in huge ion velocities!!"
-           endif
 
 !           call read_in_string(sNeutralChemistry, iError)
 !           call read_in_string(sIonChemistry, iError)
@@ -662,12 +657,15 @@ subroutine set_inputs
       case ("#USELILLIS")
           call read_in_logical(UseEmpiricalIonization,iError)
           call read_in_real(solarWindPressure,iError)
+
           if (iError /= 0) then
              write(*,*) 'Incorrect format for #CRUSTAL:'
              write(*,*) '#USELILLIS'
              write(*,*) 'UseEmpiricalIonization   (logical)'
              write(*,*) 'solarWindPressure        (real)'
+             write(*,*) 'Field Type (optional, default = 4) (int)'
           endif
+          call read_in_int(DefaultFieldType,iError)
 
       case ("#DIPOLE")
 

@@ -24,6 +24,7 @@ def get_args(argv):
 
     filelist = []
     IsLog = 0
+    IsContour = 0
     var = 15
     alt = 400.0
     lon = -100.0
@@ -81,6 +82,11 @@ def get_args(argv):
                 IsLog = 1
                 IsFound = 1
 
+            m = re.match(r'-contour',arg)
+            if m:
+                IsContour = 1
+                IsFound = 1
+
             m = re.match(r'-h',arg)
             if m:
                 help = 1
@@ -104,7 +110,8 @@ def get_args(argv):
             'alt':alt,
             'lat':lat,
             'lon':lon,
-            'IsLog':IsLog}
+            'IsLog':IsLog,
+            'IsContour':IsContour}
 
     return args
 
@@ -135,6 +142,7 @@ if (args["help"]):
     print('   -lat=latitude : latitude in degrees (closest)')
     print('   -lon=longitude: longitude in degrees (closest)')
     print('   -alog : plot the log of the variable')
+    print('   -contour: plot a contour instead of a pseudocolor')
     print('   -winds: overplot winds')
     print('   At end, list the files you want to plot')
 
@@ -169,6 +177,10 @@ if (args["winds"]):
     AllWindsY = []
 
 Var = header["vars"][args["var"]]
+Var = Var.replace('!U','^')
+Var = Var.replace('!D','_')
+Var = Var.replace('!N','')
+Var = '$'+Var+'$'
 AllData2D = []
 AllAlts = []
 AllTimes = []
@@ -264,6 +276,7 @@ if (args["winds"]):
 Negative = 0
 
 AllData2D = np.log10(AllData2D) if (args['IsLog']) else AllData2D
+logvar = "Log " if args['IsLog'] else ""
 
 maxi  = np.max(AllData2D[0,2:-2,2:-2])*1.05
 mini  = np.min(AllData2D[0,2:-2,2:-2])*0.95
@@ -282,8 +295,10 @@ if (cut == 'alt'):
     maskSouth = ((yPos<-45) & (yPos>-90.0))
     DoPlotNorth = np.max(maskNorth)
     DoPlotSouth = np.max(maskSouth)
+
     DoPlotNorth = False
     DoPlotSouth = False
+
     if (DoPlotNorth):
         maxiN = np.max(abs(AllData2D[:,2:-2,maskNorth]))*1.05
         if (Negative):
@@ -338,7 +353,10 @@ for time in AllTimes:
     outfile = file+'_'+sTime+'.png'
 
     ax = fig.add_subplot(gs1[1, :2])
-    cax = ax.pcolor(xPos, yPos, d2d, vmin=mini, vmax=maxi, shading='auto', cmap=cmap)
+    if args['IsContour']:
+        cax = ax.contourf(xPos, yPos, d2d, vmin=mini, vmax=maxi, levels=30, cmap=cmap)
+    else:
+        cax = ax.pcolor(xPos, yPos, d2d, vmin=mini, vmax=maxi, shading='auto', cmap=cmap)
 
     if (args["winds"]):
         ax.quiver(xPos,yPos,Ux2d,Uy2d)
@@ -363,7 +381,7 @@ for time in AllTimes:
 
     ax.set_title(title)
     cbar = fig.colorbar(cax, ax=ax, shrink = 0.75, pad=0.02)
-    cbar.set_label(Var,rotation=90)
+    cbar.set_label(logvar + Var,rotation=90)
 
     if (cut == 'alt'):
 

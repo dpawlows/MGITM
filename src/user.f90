@@ -37,7 +37,7 @@ subroutine set_nVarsUser3d
 
   ! Make sure to include Lat, Lon, and Alt
 
-  nVarsUser3d = 6
+  nVarsUser3d = 7
   !nVarsUser3d = 14
 
   if (nVarsUser3d-3 > nUserOutputs) &
@@ -101,7 +101,6 @@ subroutine output_header_user(cType, iOutputUnit_)
   ! ------------------------------------------
 
   if (cType(1:2) == '3D') then
-
      write(iOutputUnit_,*) "NUMERICAL VALUES"
      write(iOutputUnit_,"(I7,6A)") nVarsUser3d, " nvars"
      write(iOutputUnit_,"(I7,7A)") nAlts+4, " nAltitudes"
@@ -116,8 +115,8 @@ subroutine output_header_user(cType, iOutputUnit_)
      write(iOutputUnit_,"(I7,A1,a)")  3, " ", "Altitude"
      write(iOutputUnit_,"(I7,A1,a)")  4, " ", "ImpactIonizationRate"
      write(iOutputUnit_,"(I7,A1,a)")  5, " ", "CO2ImpactIonizationFrequency"
-     ! write(iOutputUnit_,"(I7,A1,a)")  6, " ", "EUVHeatingRate"
-     ! write(iOutputUnit_,"(I7,A1,a)")  7, " ", "QNIRTotalRate"
+     write(iOutputUnit_,"(I7,A1,a)")  6, " ", "|B|"
+     write(iOutputUnit_,"(I7,A1,a)")  7, " ", "Field Type"
      ! write(iOutputUnit_,"(I7,A1,a)")  8, " ", "QNIRLTERate"
      ! write(iOutputUnit_,"(I7,A1,a)")  9, " ", "CIRLTERate"
      ! write(iOutputUnit_,"(I7,A1,a)") 10, " ", "Conduction"
@@ -220,7 +219,8 @@ subroutine output_3dUser(iBlock, iOutputUnit_)
                 Altitude_GB(iLon, iLat, iAlt, iBlock),&
                 UserData3D(iLon,iLat,iAlt,1,iBlock),&
                 UserData3D(iLon,iLat,iAlt,2,iBlock),&
-                UserData3D(iLon,iLat,iAlt,3,iBlock)
+                UserData3D(iLon,iLat,iAlt,3,iBlock),&
+                UserData3D(iLon,iLat,iAlt,4,iBlock)
 
         enddo
      enddo
