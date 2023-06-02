@@ -485,7 +485,7 @@ subroutine calc_GITM_sources(iBlock)
                       .and. Altitude_GB(iLon,iLat,iAlt,iBlock) <= maxval(EIMAltitude)) then
 
                     call interpolateEIM(Altitude_GB(iLon,iLat,iAlt,iBlock),Blocal(iLon,iLat,iAlt,iUp_),&
-                         Blocal(iLon,iLat,iAlt,iMag_),EIMIZ)
+                         Blocal(iLon,iLat,iAlt,iMag_),FieldType(ilon,ilat,iAlt,iBlock),EIMIZ)
 
                     ! ! EIM is in units of log(#/s)
                     impactionizationFrequency(ilon,ilat,ialt,:,iBlock) = 10**EIMIZ
@@ -494,12 +494,6 @@ subroutine calc_GITM_sources(iBlock)
               enddo
            end do
         end do
-
-        userdata3D(:,:,:,2,iblock) = 0.0
-        userdata3D(:,:,:,3,iblock) = 0.0
-        userdata3D(1:nlons,1:nlats,1:nalts,2,iBlock) = impactIonizationFrequency(:,:,:,iimpactCO2_,iBlock)
-        userdata3D(1:nlons,1:nlats,1:nalts,3,iBlock) = blocal(1:nLons,1:nLats,1:nalts,iMag_)
-
      endif
   endif
 

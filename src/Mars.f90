@@ -9461,7 +9461,7 @@ subroutine ERRORS (ierr,varerr)
 
       real*8 :: a(n,n),b(n,n),c(n,n),d(n,n),e(n,n), sum
       integer :: n,i,j,k
-      do 1,i=2,n-1
+        do 1,i=2,n-1
          sum=0.0d0
          do 2,j=2,n-1
 	    sum=sum+ b(i,j) * d(j,j)/c(j,j)
@@ -9900,9 +9900,10 @@ subroutine ERRORS (ierr,varerr)
 
 !  **************************************************************
 
-subroutine interpolateField(nMagLons,nMagLats,nMagAlts,MagFieldLon,MagFieldLat,MagFieldAlt,MagField)
+subroutine interpolateField(nMagLons,nMagLats,nMagAlts,MagFieldLon,MagFieldLat,MagFieldAlt,MagField,typeField)
 
   use ModGITM
+  use ModUserGITM
 
   implicit None
 
@@ -9910,107 +9911,134 @@ subroutine interpolateField(nMagLons,nMagLats,nMagAlts,MagFieldLon,MagFieldLat,M
   real :: LonFind, LatFind, AltFind,BLon,Blat,BAlt
   real :: c00, c01, c10, c11, c0, c1, c, dLon, nlon, maxMagLon
   integer :: iLon,iLat,iAlt,iBlock, iiLon, iiLat,iialt,jLon, jLat, jalt
-  integer :: iilon2, iilat2, magdim
+  integer :: iilon2, iilat2, magdim, itypelon,itypelat,itypealt
 
-  integer,intent(in) :: nMagAlts,nMagLons,nMagLats
+  integer,intent(in) :: nMagAlts,nMagLons,nMagLats,TypeField(nMagAlts,nMagLons,nMagLats)
   real, intent(in) :: MagFieldLon(nMagLons),MagFieldLat(nMagLats),MagFieldAlt(nMagAlts)
   real, intent(in) :: MagField(nMagAlts,nMagLons,nMagLats,MaxDim)
 
     do iBlock = 1, nBlocks
-       do Magdim =1, Maxdim
-          do ialt = -1, nAlts +2
-             do iLon = -1, nLons+2
-                do iLat = -1, nLats+2
+       do iLon = 1, nLons
+          do iLat = 1, nLats
+            do ialt = 1, nAlts 
 
-                   LonFind = Longitude(iLon,iBlock)*180/pi
-                   LatFind = latitude(iLat,iBlock)*180/pi
-                   AltFind = Altitude_GB(ilon,ilat,ialt,iBlock)/1000
+               LonFind = Longitude(iLon,iBlock)*180/pi
+               LatFind = latitude(iLat,iBlock)*180/pi
+               AltFind = Altitude_GB(ilon,ilat,ialt,iBlock)/1000
 
-                   if (LonFind < MagFieldLon(1)) then
-                    !In between 0 deg and first lon
-                    iiLon = 1
-                    iiLon2 = 1
-
-                    BLon = 0
-                    !(LonFind-0)/&
-                    !     (MagFieldLon(iiLon2)-0)
-                    else
-                     do jLon = 1, nMagLons-1
+               if (altFind <= minval(MagFieldAlt) .or. altFind > maxval(MagFieldAlt)) then
+                 B0(iLon,iLat,iAlt,:,iBlock)=0
 
 
-                        if (MagFieldLon(jLon) <= LonFind .and. &
-                             MagFieldLon(jLon+1) > LonFind) then
-                           iiLon = jLon
-                           iiLon2 = iiLon + 1
-                           BLon = (LonFind-MagFieldLon(jLon))/&
-                                (MagFieldLon(iiLon2)-MagFieldLon(iiLon))
+               else
+                   do Magdim =1, Maxdim
 
-                        endif
+                     if (LonFind < MagFieldLon(1)) then
+                      !In between 0 deg and first lon
+                      iiLon = 1
+                      iiLon2 = 1
 
-                      enddo
-                    end if
-
-                    if (LatFind < MagFieldLat(1)) then
-                      !In between -90 and first lat, using 1st lat
-                      iiLat = 1
-                      BLat = 0
-
-                    else
-                     do jLat = 1, nMagLats-1
-
-                        if (MagFieldlat(jlat) <= LatFind .and. &
-                             MagFieldLat(jlat+1) > LatFind) then
-                           iiLat = jLat
-                           BLat = (LatFind-MagFieldLat(jLat))/&
-                                (MagFieldLat(jlat+1)-MagFieldLat(jlat))
-                        ! Print*, Blat
-                        endif
-                     enddo
-                   end if
+                      BLon = 0
+                      !(LonFind-0)/&
+                      !     (MagFieldLon(iiLon2)-0)
+                      else
+                       do jLon = 1, nMagLons-1
 
 
-                 if (altFind <= minval(MagFieldAlt) .or. altFind > maxval(MagFieldAlt)) then
-                   B0(iLon,iLat,iAlt,Magdim,iBlock)=0
+                          if (MagFieldLon(jLon) <= LonFind .and. &
+                               MagFieldLon(jLon+1) > LonFind) then
+                             iiLon = jLon
+                             iiLon2 = iiLon + 1
+                             BLon = (LonFind-MagFieldLon(jLon))/&
+                                  (MagFieldLon(iiLon2)-MagFieldLon(iiLon))
+
+                          endif
+
+                        enddo
+                      end if
+
+                      if (LatFind < MagFieldLat(1)) then
+                        !In between -90 and first lat, using 1st lat
+                        iiLat = 1
+                        BLat = 0
+
+                      else
+                       do jLat = 1, nMagLats-1
+
+                          if (MagFieldlat(jlat) <= LatFind .and. &
+                               MagFieldLat(jlat+1) > LatFind) then
+                             iiLat = jLat
+                             BLat = (LatFind-MagFieldLat(jLat))/&
+                                  (MagFieldLat(jlat+1)-MagFieldLat(jlat))
+                          ! Print*, Blat
+                          endif
+                        enddo
+                      end if
 
 
-                 else
-                  iialt = -1
-                  do jAlt=1, nMagAlts-1
+
+                    iialt = -1
+                    do jAlt=1, nMagAlts-1
 
 
-                  if (MagFieldAlt(jAlt)<= AltFind .and. &
-                       MagFieldAlt(jAlt+1) > AltFind) then
-                     iiAlt=jAlt
-                     BAlt =  (AltFind-MagFieldAlt(jAlt))/&
-                          (MagFieldAlt(jAlt+1)-MagFieldLat(jAlt))
+                    if (MagFieldAlt(jAlt)<= AltFind .and. &
+                         MagFieldAlt(jAlt+1) > AltFind) then
+                       iiAlt=jAlt
+                       BAlt =  (AltFind-MagFieldAlt(jAlt))/&
+                            (MagFieldAlt(jAlt+1)-MagFieldLat(jAlt))
 
 
-                        endif
+                          endif
 
-                  enddo
+                    enddo
 
-                  c00=MagField(iialt,iilon,iilat,Magdim)*(1-Blon) + &
-                        MagField(iialt,iilon2,iilat,Magdim)*Blon
-                   c10=MagField(iialt,iilon,iilat+1,Magdim)*(1-Blon)+ &
-                        MagField(iialt,iilon2,iilat+1,Magdim)*Blon
-                   c01=MagField(iialt+1,iilon,iilat,Magdim)*(1-Blon)+ &
-                        MagField(iialt+1,iilon2,iilat, Magdim)*Blon
-                  c11=MagField(iialt+1,iilon,iilat+1,Magdim)*(1-Blon)+ &
-                        Magfield(iialt+1,iilon2,iilat+1,Magdim)*Blon
-                   c0= c00*(1-Blat)+c10*Blat
-                   c1= c01*(1-Blat)+c11*Blat
-                   c= c0*(1-Balt)+c1*Balt
-                   B0(iLon,iLat,iAlt,Magdim,iBlock)=c
+                    c00=MagField(iialt,iilon,iilat,Magdim)*(1-Blon) + &
+                          MagField(iialt,iilon2,iilat,Magdim)*Blon
+                     c10=MagField(iialt,iilon,iilat+1,Magdim)*(1-Blon)+ &
+                          MagField(iialt,iilon2,iilat+1,Magdim)*Blon
+                     c01=MagField(iialt+1,iilon,iilat,Magdim)*(1-Blon)+ &
+                          MagField(iialt+1,iilon2,iilat, Magdim)*Blon
+                    c11=MagField(iialt+1,iilon,iilat+1,Magdim)*(1-Blon)+ &
+                          Magfield(iialt+1,iilon2,iilat+1,Magdim)*Blon
+                     c0= c00*(1-Blat)+c10*Blat
+                     c1= c01*(1-Blat)+c11*Blat
+                     c= c0*(1-Balt)+c1*Balt
+                     B0(iLon,iLat,iAlt,Magdim,iBlock)=c
 
+               enddo
+               if (abs(magfieldlon(iilon) - lonfind) < abs(magfieldlon(iilon+1))) then
+                 itypelon = iilon
+               else
+                 itypelon = iilon + 1
+               end if
+               if (abs(magfieldlat(iilat) - latfind) < abs(magfieldlat(iilat+1))) then
+                 itypelat = iilat
+               else
+                 itypelat = iilat + 1
+               end if
+               if (abs(magfieldalt(iialt) - altfind) < abs(magfieldalt(iialt+1))) then
+                 itypealt = iialt
+               else
+                 itypealt = iialt + 1
+               end if
+               FieldType(ilon,ilat,ialt,iBlock) = typeField(itypealt,itypelon,itypelat)
+!               if (iproc == 45 .and. ilon == 1 .and. ialt == 69) then
+!                  write(*,*) magfieldlon(itypelon),magfieldalt(itypealt),FieldType(ilon,ilat,ialt,iBlock),&
+!                  LonFind,Altfind
+!               endif
 
-                endif
-
-             enddo
+             endif
           enddo
        enddo
     enddo
+    ! write(*,*) magfieldlat
+    ! write(*,*) magfieldlon
+    ! write(*,*) magfieldalt
+     
   B0(:,:,:,iMag_,iBlock) = sqrt(B0(:,:,:,1,iBlock)**2+B0(:,:,:,2,iBlock)**2+B0(:,:,:,3,iBlock)**2)
-  enddo
+  userdata3D(:,:,:,3,iblock)=B0(:,:,:,iMag_,iBlock)
+  userdata3D(:,:,:,4,iblock)=FieldType(:,:,:,iBlock)
+enddo
 
 endsubroutine interpolateField
 
@@ -10032,6 +10060,7 @@ subroutine ReadMagField
   real, dimension(MagLons) :: MagFieldLon
   real, dimension(MagLats) :: MagFieldLat
   real, dimension(MagAlts) :: MagFieldAlt
+  integer, dimension(MagLons,Maglats,MagAlts) :: typeFieldDummy
 
 
   !!!! Longitude: [1:360], Latitude: [-89,90]
@@ -10058,8 +10087,11 @@ subroutine ReadMagField
   read(42) MagField
   close(42)
 
-  call interpolateField(MagLons,MagLats,MagAlts,MagFieldLon,MagFieldLat,MagFieldAlt,MagField)
+  typeFieldDummy = DefaultFieldType
+  call interpolateField(MagLons,MagLats,MagAlts,MagFieldLon,MagFieldLat,MagFieldAlt,MagField,typeFieldDummy)
 
+  !Default value for
+  FieldType = DefaultFieldType
 
 end subroutine ReadMagField
 
@@ -10076,19 +10108,22 @@ integer, parameter :: nMagLons=120, nMagLats=61, nMagAlts=21, Maxdim=3
 
 real, dimension(nMagAlts,nMagLons,nMagLats, Maxdim) :: MagField
 real, dimension(nMagAlts,nMagLons,nMagLats, Maxdim,2) :: inMagField
+integer, dimension(nMagAlts,nMagLons,nMagLats,2) :: inFieldType
+integer, dimension(nMagAlts,nMagLons,nMagLats) :: typeField
 
-integer ::  i,j,k, ifile
+integer ::  i,j,k, ifile,btype
 integer :: iError, started
 real :: ctime
 real, dimension(nMagLons) :: MagFieldLon
 real, dimension(nMagLats) :: MagFieldLat
 real, dimension(nMagAlts) :: MagFieldAlt
 real ,dimension(2) :: realtime
-real :: lon,lat,alt, btotalup,btotalnorth,btotaleast,biup,bieast,binorth
+real :: lon,lat,alt,btotalup,btotalnorth,btotaleast,biup,bieast,binorth
 character (len=100) :: firstMHDfile, secondMHDfile
 
 real, dimension(9) :: temp
 character    (len=20)                           :: cline
+
 
 if (iDebugLevel > 2 ) write(*,*) "Reading MHD Field"
 
@@ -10117,20 +10152,22 @@ do ifile = 1, 2
   do i = 1, nMagLons
     do j = 1, nMagLats
         do k = 1, nMagAlts
-          read(iInputUnit_,*,iostat=iError) lon,lat,alt,btotalup,btotalnorth,btotaleast,biup,binorth,bieast
+          read(iInputUnit_,*,iostat=iError) lon,lat,alt,btotalup,btotalnorth,btotaleast, btype
+          ! read(iInputUnit_,*,iostat=iError) lon,lat,alt,btotalup,btotalnorth,btotaleast,biup,binorth,bieast
           if (j==1 .and. k==1) MagFieldLon(i) = lon*180/Pi
           if (i == 1 .and. k ==1) MagFieldLat(j) = lat*180/Pi
           if (i==1 .and. j==1) MagFieldAlt(k) = alt
 
-          if (crustalFieldOnly) then
-            inMagField(k,i,j,1,ifile) = btotalnorth-binorth
-            inMagField(k,i,j,2,ifile) = btotaleast-bieast
-            inMagField(k,i,j,3,ifile) = btotalup-biup
-          else
-            inMagField(k,i,j,1,ifile) = btotalnorth
-            inMagField(k,i,j,2,ifile) = btotaleast
-            inMagField(k,i,j,3,ifile) = btotalup
-          endif
+          ! if (crustalFieldOnly) then
+          !   inMagField(k,i,j,1,ifile) = btotalnorth-binorth
+          !   inMagField(k,i,j,2,ifile) = btotaleast-bieast
+          !   inMagField(k,i,j,3,ifile) = btotalup-biup
+          ! else
+          inMagField(k,i,j,1,ifile) = btotalnorth
+          inMagField(k,i,j,2,ifile) = btotaleast
+          inMagField(k,i,j,3,ifile) = btotalup
+          inFieldType(k,i,j,ifile) = btype
+          ! endif
 
         enddo
       end do
@@ -10144,9 +10181,13 @@ end do
 ctime = (currentTime - realtime(1))/(realtime(2)-realtime(1))
 Magfield = inMagfield(:,:,:,:,1)*(1-ctime)+inMagfield(:,:,:,:,2)*ctime
 
+if (currentTime - realtime(1) < realtime(2) - currentTime) then
+  typeField = inFieldType(:,:,:,1)
+else
+  typeField = inFieldType(:,:,:,2)
+ENDIF
 
-call interpolateField(nMagLons,nMagLats,nMagAlts,MagFieldLon,MagFieldLat,MagFieldAlt,MagField)
-
+call interpolateField(nMagLons,nMagLats,nMagAlts,MagFieldLon,MagFieldLat,MagFieldAlt,MagField,TypeField)
 
 end subroutine ReadMHDField
 
@@ -10159,33 +10200,58 @@ subroutine ReadLillisModel
   implicit None
 
   integer :: nsin,naltsin,nbmagsin,nbelvsin,nswin, iswplow, iswphigh
-  real :: EIM_IZ(nspecies_EIM,nSW_EIM,nAlts_EIM,nBmags_EIM,nBelvs_EIM)
+  integer :: i,j,k,l,m,n, iError
+  real :: EIM_IZ(nspecies_EIM,nBTypes_EIM,nAlts_EIM,nSW_EIM,nBmags_EIM,nBelvs_EIM)
   real :: tempswp(nSW_EIM),invSWdiff,SWPlow, SWPHigh
-  real, dimension(nspecies_EIM,nAlts_EIM,nBmags_EIM,nBelvs_EIM) :: V1, V2
+  real, dimension(nspecies_EIM,nBTypes_EIM,nAlts_EIM,nBmags_EIM,nBelvs_EIM) :: V1, V2
+  character(iCharLen_*10) :: cTempLarge
+  character(4)  :: species
+  character(30) :: process
+  integer       :: btype,altlow,altmid,althigh
+  real :: swlow, swmid,swhigh, bmaglow,bmagmid,bmaghigh,elvlow,elvmid,elvhigh
 
   EIM_IonizationFrequency = 0.0
 
-  EIMSpecies(iImpactCO2_) = 'CO2_'
-  EIMSpecies(iImpactO_) = 'O_'
-  EIMSpecies(iImpactN2_) = 'N2_'
-  EIMSpecies(iImpactCO_) = 'CO_'
-  EIMSpecies(iImpactAr_) = 'Ar_'
+  EIMSpecies(iImpactCO2_X2PI_G)  = 'iImpactCO2_X2PI_G'
+  EIMSpecies(iImpactCO2_B2Sig)   = 'iImpactCO2_B2Sig'
+  EIMSpecies(iImpactCO2_A2PI_U)  = 'iImpactCO2_A2PI_U'
 
-    write(*,*) "==> Now Reading Mars Empirical Ionization Model"
-  open(unit=42, file='DataIn/nemlillis.dat', action='read')
+  write(*,*) "==> Now Reading Mars Empirical Ionization Model"
+  open(unit=42, file='DataIn/nemlillis_v2.dat', action='read')
 
-    read(42,*) nsin, nswin,naltsin,nbmagsin,nbelvsin
+  !!! The impact ionization grid is currently fixed
+  !Read Header
+  read(42,*) ctempLarge
+  read(42,*) ctempLarge
 
-    if (nsin /= nSpecies_EIM .or. nSW_EIM /= nswin .or. nAlts_EIM /= naltsin &
-      .or. nbmagsin /= nBmags_EIM .or. nbelvsin /= nBelvs_EIM) then
-      call stop_GITM("Stopping in ReadLillisModel: Are the model dimensions different?")
-    end if
+  do i = 1, nspecies_EIM
+    do j = 1, nBTypes_EIM
+      do k = 1, nAlts_EIM
+        do l = 1, nSW_EIM
+          do m = 1, nBmags_EIM
+            do n = 1, nBelvs_EIM
+              read(42,*,IOSTAT=iError) species, process, btype, altlow,altmid,althigh, &
+                swlow,swmid,swhigh,bmaglow,bmagmid,bmaghigh,elvlow,elvmid, &
+                elvhigh,EIM_IZ(i,j,k,l,m,n)
 
-    read(42,*) EIMsolarwindpressure
-    read(42,*) EIMAltitude
-    read(42,*) EIMBmag
-    read(42,*) EIMBElvs
-    read(42,*) EIM_IZ
+                if (i == 1 .and. j == 1 .and. k == 1 .and. l ==  1 .and. m == 1) &
+                  EIMBelvs(n) = elvmid
+
+                if (iError /= 0) then
+                    call stop_gitm("Error reading impact ionization data")
+                  endif
+
+              end do
+              if (i == 1 .and. j == 1 .and. k == 1 .and. l == 1 ) &
+                EIMBmag(m) = bmagmid
+            end do
+            if (i == 1 .and. j == 1 .and. k == 1) EIMSolarwindpressure(l) = swmid
+          end do
+          if (i == 1 .and. j == 1) EIMAltitude(:,k) = (/altlow,althigh/)
+        end do
+        if (i == 1) EIMType(j) = int(btype)
+      end do
+    end do
 
     EIMAltitude = EIMAltitude * 1000. !Convert to m
 
@@ -10213,52 +10279,55 @@ subroutine ReadLillisModel
   SWPhigh = EIMSolarwindpressure(iswphigh)
   invSWdiff = 1/(SWPhigh-SWPlow)
 
-  V1 = EIM_IZ(:,iswplow,:,:,:)
-  V2 = EIM_IZ(:,iswphigh,:,:,:)
+   V1 = EIM_IZ(:,:,:,iswplow,:,:)
+   V2 = EIM_IZ(:,:,:,iswphigh,:,:)
 
-  EIM_IonizationFrequency = V1 + (solarwindpressure-SWPlow)*invSWdiff* &
-    (V2 - V1)
-
+   EIM_IonizationFrequency = V1 + (solarwindpressure-SWPlow)*invSWdiff* &
+     (V2 - V1)
 
 
 end subroutine ReadLillisModel
 
-subroutine interpolateEIM(altitude,Bz,Bmag,c)
+subroutine interpolateEIM(altitude,Bz,Bmag,MagFieldType,c)
 
   !Interpolate the Lillis Empirical Ionization Model to a point.
 
   use ModGITM, only: EIMAltitude,EIMBMag,EIMBElvs,EIM_IonizationFrequency, &
-    nSpecies_EIM,nBmags_EIM,nBelvs_EIM,nAlts_EIM, iproc
+    nSpecies_EIM,nBmags_EIM,nBelvs_EIM,nAlts_EIM, EIMType,iproc
   use ModConstants, only: Pi
 
 
   implicit none
 
   real, intent(in) :: Bz,Bmag,altitude
-  real :: BelevationAngle,VHigh,Vlow,invValDiff, altd, elvd, magd
+  integer, intent(in) :: MagFieldType
+  real :: BelevationAngle,vmlow,vmhigh,velow,vehigh,w1,w2,w3
+  real :: invelvdiff, invmagDiff, altd, elvd, magd,distances(nAlts_EIM)
   real, dimension(nSpecies_EIM) :: c000, c001, c011, c010, c100, c101, c110, c111
-  real, dimension(nSpecies_EIM) :: c00, c01, c10, c11, c0, c1
-  real :: tempBMag(nBmags_EIM),tempBElev(nBelvs_EIM), tempAlt(nAlts_EIM)
+  real, dimension(nSpecies_EIM,nAlts_EIM) :: c00, c01, c10, c11, c0, c1, R1, R2
+  real :: tempBMag(nBmags_EIM),tempBElev(nBelvs_EIM), tempAlt(2,nAlts_EIM),talt
   real,intent(out) :: c(nSpecies_EIM)
-  integer :: ialtlow,ialthigh,imaglow,imaghigh,ielvlow,ielvhigh
+  integer :: ialtlow,ialthigh,imaglow,imaghigh,ielvlow,ielvhigh,typeindex,typeindex2
+  integer :: ialt, naltbins
 
 
   !Only need Bz and Bmag to calculate elevation angle
   BelevationAngle = asin(abs(Bz)/Bmag)*180/pi
 
-
   tempalt = EIMAltitude
   tempBmag = EIMBMag
   tempBElev = EIMBElvs
+  ! typeindex = findloc(EIMType,MagFieldType,1)
+  typeindex = maxloc(merge(1.,0.,EIMType == MagFieldType),dim=1)
 
-  !!! Interpolate to altitude
-  where(altitude - tempalt .lt. -0.00001) tempalt = -1.0e9
-  ialtlow =  maxloc(tempalt,1)
-  if (ialtlow == nAlts_EIM) ialtlow = ialtlow - 1
-  ialthigh = ialtlow + 1
+  ! if (typeindex /= typeindex2) then
+  !   write(*,*) "Doesn't work",typeindex,typeindex2
+  !   stop
+  ! endif
 
   !!! Interpolate to BMagnitude
-  where(BMag - tempBMag .lt. -0.00001) tempBMag = -1.0e9
+
+  where(Bmag - tempBMag .lt. -0.00001) tempBMag = -1.0e9
   imaglow =  maxloc(tempBMag,1)
   if (imaglow == nBmags_EIM) imaglow = imaglow - 1
   imaghigh = imaglow + 1
@@ -10269,42 +10338,106 @@ subroutine interpolateEIM(altitude,Bz,Bmag,c)
   if (ielvlow == nBelvs_EIM) ielvlow = ielvlow - 1
   ielvhigh = ielvlow + 1
 
-  vlow = EIMAltitude(ialtlow)
-  vhigh = EIMAltitude(ialthigh)
-  invvaldiff = 1/(vhigh-vlow)
-  altd = (altitude-vlow)*invvalDiff
+  vmlow = EIMBmag(imaglow)
+  vmhigh = EIMBMag(imaghigh)
+  invmagdiff = 1/(Vmhigh-Vmlow)
+  ! magd = (BMag-vlow)*invvalDiff
 
-  vlow = EIMBmag(imaglow)
-  vhigh = EIMBMag(imaghigh)
-  invvaldiff = 1/(Vhigh-Vlow)
-  magd = (BMag-vlow)*invvalDiff
-
-  vlow = EIMBElvs(ielvlow)
-  vhigh = EIMBElvs(ielvhigh)
-  invvaldiff = 1/(Vhigh-Vlow)
-  elvd = (BelevationAngle-vlow)*invvalDiff
-
-  c000 = EIM_IonizationFrequency(:,ialtlow,imaglow,ielvlow)
-  c100 = EIM_IonizationFrequency(:,ialthigh,imaglow,ielvlow)
-  c010 = EIM_IonizationFrequency(:,ialtlow,imaghigh,ielvlow)
-  c110 = EIM_IonizationFrequency(:,ialthigh,imaghigh,ielvlow)
-  c001 = EIM_IonizationFrequency(:,ialtlow,imaglow,ielvhigh)
-  c101 = EIM_IonizationFrequency(:,ialthigh,imaglow,ielvhigh)
-  c011 = EIM_IonizationFrequency(:,ialtlow,imaghigh,ielvhigh)
-  c111 = EIM_IonizationFrequency(:,ialthigh,imaghigh,ielvhigh)
-
-  c00 = c000*(1-altd)+c100*altd
-  c01 = c001*(1-altd)+c101*altd
-  c10 = c010*(1-altd)+c110*altd
-  c11 = c011*(1-altd)+c111*altd
-
-  c0 = c00*(1-magd) + c10*magd
-  c1 = c01*(1-magd) + c11*magd
-
-  c = c0 * (1-elvd) + c1 * elvd
+  velow = EIMBElvs(ielvlow)
+  vehigh = EIMBElvs(ielvhigh)
+  invelvdiff = 1/(Vehigh-Velow)
+  ! elvd = (BelevationAngle-vlow)*invvalDiff
 
 
-!   !!! Check the interpolation
+  c00 = EIM_IonizationFrequency(:,typeindex,:,imaglow,ielvlow)
+  c01 = EIM_IonizationFrequency(:,typeindex,:,imaglow,ielvhigh)
+  c10 = EIM_IonizationFrequency(:,typeindex,:,imaghigh,ielvlow)
+  c11 = EIM_IonizationFrequency(:,typeindex,:,imaghigh,ielvhigh)
+
+  !w.. = (x2-x)(y2 - y)/(x2-x1)(y2-y1)
+  R1 = c00*(vmhigh-Bmag)*invmagdiff+c10*(Bmag-vmlow)*invmagdiff
+  R2 = c01*(vmhigh-Bmag)*invmagdiff+c11*(Bmag-vmlow)*invmagdiff
+
+  c0 = R1 * (vehigh - BelevationAngle) * invelvdiff + &
+    R2 * (BelevationAngle - velow) * invelvdiff
+
+
+  !!! Interpolate to altitude- Bins are overlapping and it is possible
+  !!! that our altitude is located in as many as 3 bins. So we take a
+  !!! weighted average.
+
+  ialtlow = 1
+  ialthigh = 1
+
+  do ialt = nAlts_EIM, 1, -1
+    if (EIMaltitude(1,ialt) <= altitude .and. EIMAltitude(2,ialt) > altitude) &
+     ialtlow = ialt
+  end do
+  do ialt = 1, nAlts_EIM
+    if (EIMaltitude(1,ialt) < altitude .and. EIMAltitude(2,ialt) >= altitude) &
+     ialthigh = ialt
+  end do
+
+
+  distances = 0.0
+  c = 0.0
+  naltbins = 1+ (ialthigh - ialtlow)
+  distances(ialtlow:ialthigh) = &
+    abs((EIMAltitude(2,ialtlow:ialthigh)+EIMaltitude(1,ialtlow:ialthigh))/2.-altitude)
+
+
+  select case (naltbins)
+
+  case (3)
+    w1 = distances(ialtlow+1)*distances(ialtlow+2) / &
+    (distances(ialtlow)*distances(ialtlow+1) + distances(ialtlow)*distances(ialtlow+2) + &
+    distances(ialtlow+1)*distances(ialtlow+2))
+    w2 = distances(ialtlow)*distances(ialtlow+2) / &
+    (distances(ialtlow)*distances(ialtlow+1) + distances(ialtlow)*distances(ialtlow+2) + &
+    distances(ialtlow+1)*distances(ialtlow+2))
+    w3 = distances(ialtlow)*distances(ialtlow+1) / &
+    (distances(ialtlow)*distances(ialtlow+1) + distances(ialtlow)*distances(ialtlow+2) + &
+    distances(ialtlow+1)*distances(ialtlow+2))
+
+    c = c0(:,ialtlow)*w1+c0(:,ialtlow+1)*w2+c0(:,ialtlow+2)*w3
+
+  case (2)
+
+    w1 = distances(ialtlow+1)/(distances(ialtlow) + distances(ialtlow+1))
+    w2 = distances(ialtlow)/(distances(ialtlow) + distances(ialtlow+1))
+
+    c = c0(:,ialtlow)*w1+c0(:,ialtlow+1)*w2
+
+  case DEFAULT
+    ! should only apply to naltbins = 1, but just in case
+
+    c = c0(:,ialtlow)
+
+end select
+
+
+
+  ! c000 = EIM_IonizationFrequency(:,typeindex,ialtlow,imaglow,ielvlow)
+  ! c100 = EIM_IonizationFrequency(:,typeindex,ialthigh,imaglow,ielvlow)
+  ! c010 = EIM_IonizationFrequency(:,typeindex,ialtlow,imaghigh,ielvlow)
+  ! c110 = EIM_IonizationFrequency(:,typeindex,ialthigh,imaghigh,ielvlow)
+  ! c001 = EIM_IonizationFrequency(:,typeindex,ialtlow,imaglow,ielvhigh)
+  ! c101 = EIM_IonizationFrequency(:,typeindex,ialthigh,imaglow,ielvhigh)
+  ! c011 = EIM_IonizationFrequency(:,typeindex,ialtlow,imaghigh,ielvhigh)
+  ! c111 = EIM_IonizationFrequency(:,typeindex,ialthigh,imaghigh,ielvhigh)
+  !
+  ! c00 = c000*(1-altd)+c100*altd
+  ! c01 = c001*(1-altd)+c101*altd
+  ! c10 = c010*(1-altd)+c110*altd
+  ! c11 = c011*(1-altd)+c111*altd
+  !
+  ! c0 = c00*(1-magd) + c10*magd
+  ! c1 = c01*(1-magd) + c11*magd
+  !
+  ! c = c0 * (1-elvd) + c1 * elvd
+  !
+
+  !!! Check the interpolation
 !   if (iproc .eq. 0) then
 !     ! write(*,*) EIMBmag
 !      write(*,*)  c(1), c000(1), c001(1), c011(1), c010(1), c100(1), c101(1), c110(1), c111(1)
@@ -10326,8 +10459,10 @@ real :: tr1, tr2
 character (len=100), intent(out) :: firstfile,secondfile
 character (len=100) :: file1, file2
 
+
 firstfile = 'blank'
 secondfile = 'blank'
+
 do ifile = 1, nMHDFiles -1
   file1 = MHDFiles(ifile)
   pos = index(file1,'.dat') - 15
@@ -10342,7 +10477,6 @@ do ifile = 1, nMHDFiles -1
 
   file2 = MHDFiles(ifile+1)
   pos = index(file2,'.dat') - 15
-
   read(file2(pos:pos+3),*) year
   read(file2(pos+4:pos+5),*) mon
   read(file2(pos+6:pos+7),*) day
