@@ -1519,7 +1519,7 @@ end subroutine init_isochem
         gwheat_ir(1:nLons,1:nLats,1:nAlts)         ![K/s]
   GWDHeat(1:nLons,1:nLats,1:nAlts,iBlock) = &
         gwheat_dif(1:nLons,1:nLats,1:nAlts)        ![K/s]
-stop
+
   GW_net_heating(1:nLons,1:nLats,1:nAlts,iBlock) = &
         net_heating_t(1:nLons,1:nLats,1:nAlts)	   ![K/s]
   GW_beta_tot(1:nLons,1:nLats,1:nAlts,iBlock) = &

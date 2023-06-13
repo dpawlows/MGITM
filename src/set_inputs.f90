@@ -22,7 +22,7 @@ subroutine set_inputs
   integer :: iDebugProc=0, n
   character (len=iCharLen_) :: cLine
   integer :: iLine, iSpecies, iSat
-  integer :: i, iError, iOutputTypes,iInput = 39
+  integer :: i, iError, iErrorIgnore, iOutputTypes,iInput = 39
   integer, dimension(7) :: iTimeEnd
 
   character (len=iCharLen_)                 :: cTempLine
@@ -665,8 +665,8 @@ subroutine set_inputs
              write(*,*) 'solarWindPressure        (real)'
              write(*,*) 'Field Type (optional, default = 4) (int)'
           endif
-          call read_in_int(DefaultFieldType,iError)
-
+          call read_in_int(DefaultFieldType,iErrorIgnore)
+          
       case ("#DIPOLE")
 
          call read_in_real(MagneticPoleRotation, iError)
