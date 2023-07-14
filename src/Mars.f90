@@ -10280,7 +10280,8 @@ end subroutine ReadLillisModel
 
 subroutine interpolateEIM(altitude,Bz,Bmag,MagFieldType,c)
 
-  !Interpolate the Lillis Empirical Ionization Model to a point.
+  ! Interpolate the Lillis Empirical Ionization Model ionization frequencies
+  ! to a point.
 
   use ModGITM, only: EIMAltitude,EIMBMag,EIMBElvs,EIM_IonizationFrequency, &
     nSpecies_EIM,nBmags_EIM,nBelvs_EIM,nAlts_EIM, EIMType,iproc
@@ -10307,13 +10308,8 @@ subroutine interpolateEIM(altitude,Bz,Bmag,MagFieldType,c)
   tempalt = EIMAltitude
   tempBmag = EIMBMag
   tempBElev = EIMBElvs
-  ! typeindex = findloc(EIMType,MagFieldType,1)
-  typeindex = maxloc(merge(1.,0.,EIMType == MagFieldType),dim=1)
 
-  ! if (typeindex /= typeindex2) then
-  !   write(*,*) "Doesn't work",typeindex,typeindex2
-  !   stop
-  ! endif
+  typeindex = maxloc(merge(1.,0.,EIMType == MagFieldType),dim=1)
 
   !!! Interpolate to BMagnitude
 
@@ -10376,6 +10372,9 @@ subroutine interpolateEIM(altitude,Bz,Bmag,MagFieldType,c)
     abs((EIMAltitude(2,ialtlow:ialthigh)+EIMaltitude(1,ialtlow:ialthigh))/2.-altitude)
 
 
+  ! Perform the interpolation. c is the ionization frequency for each 
+  ! species.
+
   select case (naltbins)
 
   case (3)
@@ -10403,39 +10402,10 @@ subroutine interpolateEIM(altitude,Bz,Bmag,MagFieldType,c)
 
     c = c0(:,ialtlow)
 
+
 end select
 
-
-
-  ! c000 = EIM_IonizationFrequency(:,typeindex,ialtlow,imaglow,ielvlow)
-  ! c100 = EIM_IonizationFrequency(:,typeindex,ialthigh,imaglow,ielvlow)
-  ! c010 = EIM_IonizationFrequency(:,typeindex,ialtlow,imaghigh,ielvlow)
-  ! c110 = EIM_IonizationFrequency(:,typeindex,ialthigh,imaghigh,ielvlow)
-  ! c001 = EIM_IonizationFrequency(:,typeindex,ialtlow,imaglow,ielvhigh)
-  ! c101 = EIM_IonizationFrequency(:,typeindex,ialthigh,imaglow,ielvhigh)
-  ! c011 = EIM_IonizationFrequency(:,typeindex,ialtlow,imaghigh,ielvhigh)
-  ! c111 = EIM_IonizationFrequency(:,typeindex,ialthigh,imaghigh,ielvhigh)
-  !
-  ! c00 = c000*(1-altd)+c100*altd
-  ! c01 = c001*(1-altd)+c101*altd
-  ! c10 = c010*(1-altd)+c110*altd
-  ! c11 = c011*(1-altd)+c111*altd
-  !
-  ! c0 = c00*(1-magd) + c10*magd
-  ! c1 = c01*(1-magd) + c11*magd
-  !
-  ! c = c0 * (1-elvd) + c1 * elvd
-  !
-
-  !!! Check the interpolation
-!   if (iproc .eq. 0) then
-!     ! write(*,*) EIMBmag
-!      write(*,*)  c(1), c000(1), c001(1), c011(1), c010(1), c100(1), c101(1), c110(1), c111(1)
-!   endif
-! stop
-
 end subroutine interpolateEIM
-
 subroutine getMHDFiles(firstfile,secondfile,timereal1,timereal2)
 
 use ModInputs, only: nMHDFiles, MHDFiles, iCharLen_
