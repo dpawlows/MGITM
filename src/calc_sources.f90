@@ -475,8 +475,15 @@ subroutine calc_GITM_sources(iBlock)
      if (floor((tSimulation-dt)/dtImpactIonization) /= &
           floor((tsimulation)/dtImpactIonization) .or. IsFirstTime) then
         IsFirstTime = .false.
+
+        attenuationFactor = 0.0
         impactionizationFrequency = 0.0
+
         BLocal = B0(1:nLons,1:nLats,1:nAlts,1:4,iBlock)
+
+        ! A weighted number density is used to remove atmospheric absorption 
+        ! effects prior to calculating the ionization frequencies. We need 
+        ! back this out so that absorption is included. 
 
         do ilon = 1, nlons
            do ilat = 1, nlats
@@ -487,8 +494,23 @@ subroutine calc_GITM_sources(iBlock)
                     call interpolateEIM(Altitude_GB(iLon,iLat,iAlt,iBlock),Blocal(iLon,iLat,iAlt,iUp_),&
                          Blocal(iLon,iLat,iAlt,iMag_),FieldType(ilon,ilat,iAlt,iBlock),EIMIZ)
 
+                     ! Lastly, apply attenuation factor to re-apply effects of 
+                     ! atmospheric attenuation.
+                     
+                     weightedNDensityS = log10(sum(integratedCrossSectionS * nDensityS)/sum(integratedCrossSectionS))
+                     attenuationFactor = 10^(eimAttenFactor(:,1) + &
+                       eimAttenFactor(:,2) * weightedNDensityS^2 + &
+                       eimAttenFactor(:,3) * weightedNDensityS^3 + &
+                       eimAttenFactor(:,4) * weightedNDensityS^4 + &
+                       eimAttenFactor(:,5) * weightedNDensityS^5 )
+
                     ! ! EIM is in units of log(#/s)
-                    impactionizationFrequency(ilon,ilat,ialt,:,iBlock) = 10**EIMIZ
+                    ! There are several ionization frequencies for each neutral species due 
+                    ! to different reactions. They are kept separate here for ease of inspection.
+                    ! However, each species has only 1 attenuation factor.
+
+                    impactionizationFrequency(ilon,ilat,ialt,iImpactCO2_X2PI_G:iImpactCO2_A2PI_U,iBlock) = &
+                      (10**EIMIZ)*attenuationFactor(iCO2_)
 
                  endif
               enddo

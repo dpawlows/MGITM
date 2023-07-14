@@ -18,7 +18,7 @@ module ModPlanet
   integer, parameter :: iO2_     = 5
   integer, parameter :: iAr_     = 6
   integer, parameter :: iHe_     = 7
-  integer, parameter :: iN4S_  =  8
+  integer, parameter :: iN4S_    =  8
 
 ! Minors (6) : Ride on background of mean winds derived from majors
   integer, parameter :: iH_ =  9
@@ -261,12 +261,36 @@ module ModPlanet
   real, dimension(1:nLons,1:nLats,1:nAlts) :: MarsOrbitalDistance
 
   !
-  integer, parameter :: nSpecies_EIM = 3
+  integer, parameter :: nReactions_EIM = 3 #this is the number of reactions we currently include
   integer, parameter :: nBTypes_EIM = 8
   integer, parameter :: nSW_EIM = 9
   integer, parameter :: nAlts_EIM = 5
-  integer, parameter :: nBmags_EIM = 59
   integer, parameter :: nBelvs_EIM = 14
+
+  ! These species integrated cross sections and 
+  ! coefficients for attenuation 
+  ! calculation for electron impact ionization 
+
+  real :: weightedNDensityS
+  real, dimension(nSpecies) :: attenuationFactor
+  real, parameter, dimension(nSpecies) :: integratedCrossSectionS = &
+  (6.6092890e-14, 3.2531944e-14, 2.2676610e-14, 4.6901680e-14, 0.0, &
+  4.1007410e-14, 0.0, 0.0)
+
+   real, parameter, dimension(nSpecies, 6) :: eimAttenFactor = reshape( (/ &
+     !----------------------------------------------------------+
+     ! i=CS      C0      C1     C2     C3     C4     C5
+     !----------------------------------------------------------+
+       -159.38955, 117.09418, -33.727827, 4.7632843, -0.32989607, 0.0089481513 ,&  ! CO2
+       -160.31762, 117.75844, -33.916055, 4.7895919, -0.33169969, 0.0089962360 ,&  ! CO
+       -158.70169, 116.57188, -33.585414, 4.7458134, -0.32894302, 0.0089304336 ,&  ! O
+       -155.54048, 114.21954, -32.900335, 4.6481528, -0.32212230, 0.0087435908 ,&  ! N2
+       0,          0,         0,          0,          0,          0            ,&  ! O2
+       -164.18691, 120.62643, -34.751134, 4.9089497, -0.34007215,0.0092266903  ,&  ! Ar
+       0,          0,         0,          0,          0,          0            ,&  ! He
+       0,          0,         0,          0,          0,          0            /), & ! N4S
+       (/nSpecies,6/) )
+
   integer :: minMagFieldAlt,maxMagFieldAlt
 
   integer, parameter ::  iImpactCO2_X2PI_G = 1
@@ -277,7 +301,12 @@ module ModPlanet
   real :: EIMsolarwindpressure(nSW_EIM), EIMAltitude(2,nAlts_EIM)
   real :: EIMBMag(nBmags_EIM),EIMBElvs(nBelvs_EIM),solarWindPressure
   integer :: EIMType(nBTypes_EIM)
-  character (len = 20) :: EIMSpecies(nSpecies_EIM)
+  character (len = 20) :: EIMReactions(nReactions_EIM)
+
+  ! Specify which reactions are included
+  EIMReactions(iImpactCO2_X2PI_G)  = 'iImpactCO2_X2PI_G'
+  EIMReactions(iImpactCO2_B2Sig)   = 'iImpactCO2_B2Sig'
+  EIMReactions(iImpactCO2_A2PI_U)  = 'iImpactCO2_A2PI_U'
   real, allocatable :: EIM_IonizationFrequency(:,:,:,:,:)
   real :: dtImpactIonization = 300
 

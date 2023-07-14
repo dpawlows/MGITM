@@ -10191,9 +10191,9 @@ subroutine ReadLillisModel
 
   integer :: nsin,naltsin,nbmagsin,nbelvsin,nswin, iswplow, iswphigh
   integer :: i,j,k,l,m,n, iError
-  real :: EIM_IZ(nspecies_EIM,nBTypes_EIM,nAlts_EIM,nSW_EIM,nBmags_EIM,nBelvs_EIM)
+  real :: EIM_IZ(nReactions_EIM,nBTypes_EIM,nAlts_EIM,nSW_EIM,nBmags_EIM,nBelvs_EIM)
   real :: tempswp(nSW_EIM),invSWdiff,SWPlow, SWPHigh
-  real, dimension(nspecies_EIM,nBTypes_EIM,nAlts_EIM,nBmags_EIM,nBelvs_EIM) :: V1, V2
+  real, dimension(nReactions_EIM,nBTypes_EIM,nAlts_EIM,nBmags_EIM,nBelvs_EIM) :: V1, V2
   character(iCharLen_*10) :: cTempLarge
   character(4)  :: species
   character(30) :: process
@@ -10201,10 +10201,6 @@ subroutine ReadLillisModel
   real :: swlow, swmid,swhigh, bmaglow,bmagmid,bmaghigh,elvlow,elvmid,elvhigh
 
   EIM_IonizationFrequency = 0.0
-
-  EIMSpecies(iImpactCO2_X2PI_G)  = 'iImpactCO2_X2PI_G'
-  EIMSpecies(iImpactCO2_B2Sig)   = 'iImpactCO2_B2Sig'
-  EIMSpecies(iImpactCO2_A2PI_U)  = 'iImpactCO2_A2PI_U'
 
   write(*,*) "==> Now Reading Mars Empirical Ionization Model"
   open(unit=42, file='DataIn/nemlillis_v2.dat', action='read')
@@ -10214,7 +10210,7 @@ subroutine ReadLillisModel
   read(42,*) ctempLarge
   read(42,*) ctempLarge
 
-  do i = 1, nspecies_EIM
+  do i = 1, nReactions_EIM
     do j = 1, nBTypes_EIM
       do k = 1, nAlts_EIM
         do l = 1, nSW_EIM
@@ -10284,7 +10280,7 @@ subroutine interpolateEIM(altitude,Bz,Bmag,MagFieldType,c)
   ! to a point.
 
   use ModGITM, only: EIMAltitude,EIMBMag,EIMBElvs,EIM_IonizationFrequency, &
-    nSpecies_EIM,nBmags_EIM,nBelvs_EIM,nAlts_EIM, EIMType,iproc
+    nReactions_EIM,nBmags_EIM,nBelvs_EIM,nAlts_EIM, EIMType,iproc
   use ModConstants, only: Pi
 
 
@@ -10294,10 +10290,10 @@ subroutine interpolateEIM(altitude,Bz,Bmag,MagFieldType,c)
   integer, intent(in) :: MagFieldType
   real :: BelevationAngle,vmlow,vmhigh,velow,vehigh,w1,w2,w3
   real :: invelvdiff, invmagDiff, altd, elvd, magd,distances(nAlts_EIM)
-  real, dimension(nSpecies_EIM) :: c000, c001, c011, c010, c100, c101, c110, c111
-  real, dimension(nSpecies_EIM,nAlts_EIM) :: c00, c01, c10, c11, c0, c1, R1, R2
+  real, dimension(nReactions_EIM) :: c000, c001, c011, c010, c100, c101, c110, c111
+  real, dimension(nReactions_EIM,nAlts_EIM) :: c00, c01, c10, c11, c0, c1, R1, R2
   real :: tempBMag(nBmags_EIM),tempBElev(nBelvs_EIM), tempAlt(2,nAlts_EIM),talt
-  real,intent(out) :: c(nSpecies_EIM)
+  real,intent(out) :: c(nReactions_EIM)
   integer :: ialtlow,ialthigh,imaglow,imaghigh,ielvlow,ielvhigh,typeindex,typeindex2
   integer :: ialt, naltbins
 
