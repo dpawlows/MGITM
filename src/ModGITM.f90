@@ -229,8 +229,8 @@ contains
     allocate(PhotoEFluxU(nLons,nLats,nAlts,nPhotoBins,nBlocks))
     allocate(PhotoEFluxD(nLons,nLats,nAlts,nPhotoBins,nBlocks))
     allocate(PhotoEFluxTotal(nLons,nLats,nAlts,nBlocks,2))
-    allocate(EIM_IonizationFrequency(nspecies_EIM,nBTypes_EIM,nAlts_EIM,nBmags_EIM,nBelvs_EIM))
-    allocate(impactIonizationFrequency(nLons,nLats,nAlts,nSpecies_EIM,nBlocks))
+    allocate(EIM_IonizationFrequency(nReactions_EIM,nBTypes_EIM,nAlts_EIM,nBmags_EIM,nBelvs_EIM))
+    allocate(impactIonizationFrequency(nLons,nLats,nAlts,nReactions_EIM,nBlocks))
     allocate(FieldType(nLons,nLats,nAlts,nBlocks))
   end subroutine init_mod_gitm
   !=========================================================================

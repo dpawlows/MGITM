@@ -10202,6 +10202,11 @@ subroutine ReadLillisModel
 
   EIM_IonizationFrequency = 0.0
 
+  ! Specify which reactions are included
+  EIMReactions(iImpactCO2_X2PI_G)  = 'iImpactCO2_X2PI_G'
+  EIMReactions(iImpactCO2_B2Sig)   = 'iImpactCO2_B2Sig'
+  EIMReactions(iImpactCO2_A2PI_U)  = 'iImpactCO2_A2PI_U'
+
   write(*,*) "==> Now Reading Mars Empirical Ionization Model"
   open(unit=42, file='DataIn/nemlillis_v2.dat', action='read')
 

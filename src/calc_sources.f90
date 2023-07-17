@@ -28,9 +28,8 @@ subroutine calc_GITM_sources(iBlock)
   real :: NF_Gravity(1:nAlts)
   real :: NF_GradLogCon(1:nAlts,1:nSpecies)
   real :: Prandtl(nLons,nLats,0:nalts+1)
-  real :: EIMIZ(nSpecies_EIM)
+  real :: EIMIZ(nReactions_EIM)
   real, dimension(1:nLons, 1:nLats, 1:nAlts, 4) ::  BLocal
-
   logical :: IsFirstTime = .true.
 
 ! Potential Temperature
@@ -495,14 +494,21 @@ subroutine calc_GITM_sources(iBlock)
                          Blocal(iLon,iLat,iAlt,iMag_),FieldType(ilon,ilat,iAlt,iBlock),EIMIZ)
 
                      ! Lastly, apply attenuation factor to re-apply effects of 
-                     ! atmospheric attenuation.
+                     ! atmospheric attenuation. Note units should be in cm.
                      
-                     weightedNDensityS = log10(sum(integratedCrossSectionS * nDensityS)/sum(integratedCrossSectionS))
-                     attenuationFactor = 10^(eimAttenFactor(:,1) + &
-                       eimAttenFactor(:,2) * weightedNDensityS^2 + &
-                       eimAttenFactor(:,3) * weightedNDensityS^3 + &
-                       eimAttenFactor(:,4) * weightedNDensityS^4 + &
-                       eimAttenFactor(:,5) * weightedNDensityS^5 )
+                    weightedNDensity = log10(sum(integratedCrossSectionS * nDensityS(ilon,ilat,ialt,1:nSpecies,iblock)/1e6) / &
+                         sum(integratedCrossSectionS))
+
+                    !Limit the minimum weigthed density 
+                    weightedNDensity = max(5.55,weightedNDensity)
+
+                     attenuationFactor = 10**(eimAttenFactor(:,1) + &
+                       eimAttenFactor(:,2) * weightedNDensity**1 + &
+                       eimAttenFactor(:,3) * weightedNDensity**2 + &
+                       eimAttenFactor(:,4) * weightedNDensity**3 + &
+                       eimAttenFactor(:,5) * weightedNDensity**4 + &
+                       eimAttenFactor(:,6) * weightedNDensity**5)
+
 
                     ! ! EIM is in units of log(#/s)
                     ! There are several ionization frequencies for each neutral species due 
@@ -510,7 +516,7 @@ subroutine calc_GITM_sources(iBlock)
                     ! However, each species has only 1 attenuation factor.
 
                     impactionizationFrequency(ilon,ilat,ialt,iImpactCO2_X2PI_G:iImpactCO2_A2PI_U,iBlock) = &
-                      (10**EIMIZ)*attenuationFactor(iCO2_)
+                         (10**EIMIZ)*attenuationFactor(iCO2_)
 
                  endif
               enddo
