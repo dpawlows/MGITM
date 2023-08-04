@@ -42,7 +42,7 @@ module ModEUV
   integer, parameter :: Num_WaveLengths_High = 59
   integer, parameter :: nS2WaveLengths = 80
   integer, parameter :: nFlaresMax = 20
-  integer, parameter :: nSeeLinesMax = 10000
+  integer, parameter :: nSeeLinesMax = 20000
   integer, parameter :: FlareLength = 5
   integer :: iFlare = 1
   logical :: DuringFlare = .False.
