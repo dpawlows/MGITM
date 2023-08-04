@@ -10028,6 +10028,7 @@ subroutine interpolateField(nMagLons,nMagLats,nMagAlts,MagFieldLon,MagFieldLat,M
   B0(:,:,:,iMag_,iBlock) = sqrt(B0(:,:,:,1,iBlock)**2+B0(:,:,:,2,iBlock)**2+B0(:,:,:,3,iBlock)**2)
   userdata3D(:,:,:,3,iblock)=B0(:,:,:,iMag_,iBlock)
   userdata3D(:,:,:,4,iblock)=FieldType(:,:,:,iBlock)
+
 enddo
 
 endsubroutine interpolateField
@@ -10178,6 +10179,9 @@ else
 ENDIF
 
 call interpolateField(nMagLons,nMagLats,nMagAlts,MagFieldLon,MagFieldLat,MagFieldAlt,MagField,TypeField)
+maxMagFieldAlt = maxval(MagFieldAlt)
+minMagFieldAlt = minval(MagFieldAlt)
+
 
 end subroutine ReadMHDField
 
@@ -10220,7 +10224,8 @@ subroutine ReadLillisModel
       do k = 1, nAlts_EIM
         do l = 1, nSW_EIM
           do m = 1, nBmags_EIM
-            do n = 1, nBelvs_EIM
+             do n = 1, nBelvs_EIM
+               
               read(42,*,IOSTAT=iError) species, process, btype, altlow,altmid,althigh, &
                 swlow,swmid,swhigh,bmaglow,bmagmid,bmaghigh,elvlow,elvmid, &
                 elvhigh,EIM_IZ(i,j,k,l,m,n)
@@ -10235,7 +10240,8 @@ subroutine ReadLillisModel
               end do
               if (i == 1 .and. j == 1 .and. k == 1 .and. l == 1 ) &
                 EIMBmag(m) = bmagmid
-            end do
+           end do
+
             if (i == 1 .and. j == 1 .and. k == 1) EIMSolarwindpressure(l) = swmid
           end do
           if (i == 1 .and. j == 1) EIMAltitude(:,k) = (/altlow,althigh/)
