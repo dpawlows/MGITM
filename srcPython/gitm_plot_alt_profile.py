@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-#Plots a altitude and time for a single location
+#Plots alt profile for a single location 
+
 from glob import glob
 from datetime import datetime
 from datetime import timedelta
@@ -25,6 +26,9 @@ def get_args(argv):
     cut = 'loc'
     smin = -100.0
     smax = -100.0
+    minv = None
+    maxv = None
+
     help = 0
 
 
@@ -49,7 +53,6 @@ def get_args(argv):
                 cut = m.group(1)
                 IsFound = 1
 
-
             m = re.match(r'-lat=(.*)',arg)
             if m:
                 lat = int(m.group(1))
@@ -70,6 +73,15 @@ def get_args(argv):
                 smax = int(m.group(1))
                 IsFound = 1
 
+            m = re.match(r'-min=(.*)',arg)
+            if m:
+                minv = float(m.group(1))
+                IsFound = 1   
+
+            m = re.match(r'-max=(.*)',arg)
+            if m:
+                maxv = float(m.group(1))
+                IsFound = 1  
 
             m = re.match(r'-alog',arg)
             if m:
@@ -94,7 +106,9 @@ def get_args(argv):
             'cut':cut,
             'smin':smin,
             'smax':smax,
-            'diff':diff}
+            'diff':diff,
+            'minv':minv,
+            'maxv':maxv}
 
     return args
 
@@ -113,7 +127,7 @@ else:
 if (args["help"]):
 
     print('Usage : ')
-    print('gitm_plot_one_loc.py -var=N1[,N2,N3,...] -lat=lat -lon=lon -alog')
+    print('gitm_plot_alt_profile.py -var=N1[,N2,N3,...] -lat=lat -lon=lon -alog')
     print('                     -help [file]')
     print('   -help : print this message')
     print('   -var=number[,num2,num3,...] : number is variable to plot')
@@ -122,9 +136,11 @@ if (args["help"]):
     print('   -lon=longitude: longitude in degrees (closest) (cut=loc)')
     print('   -smin=minsza: minimum solar zenith angle (cut=sza)')
     print('   -smax=maxsza: maximum solar zenigh angle (cut=sza)')
+    print('   -min=min: minimum value to plot')
+    print('   -max=max: maximum value to plot')
     print('   -alog: plot the log of the variable')
     print('   -diff=backgroundFiles: plot the difference between 2 sets of files')
-    print('   Non-KW args: files.')
+    print('   Non-KW arg: files.')
 
     iVar = 0
     for var in header["vars"]:
@@ -133,11 +149,15 @@ if (args["help"]):
 
     exit()
 
+
 filelist = args["filelist"]
-nFiles = len(filelist)
-if nFiles < 2:
-    print('Please enter multiple files')
+
+if len(filelist) > 1:
+    print('Only 1 file should be specified')
     exit(1)
+
+file = filelist[0]
+
 try:
     iSZA = header["vars"].index('SolarZenithAngle')
     vars = [0,1,2,iSZA]
@@ -152,79 +172,67 @@ if args['diff'] != '0':
     if nBackFiles != nFiles:
         print('Difference between sizes of perturbation and background filelists:')
         print('Lengths: {}   {}'.format(nFiles,nBackFiles))
+        print('Only 1 file should be specified')
         exit(1)
-
+    bFile = backgroundFilelist[0]
 
 vars.extend([int(v) for v in args["var"].split(',')])
 Var = [header['vars'][int(i)] for i in args['var'].split(',')]
 nvars = len(args['var'].split(','))
 
-#We want to store data for multiple variables, so we use a dict where var indices are the keys
 AllData = {a:[] for a in args['var'].split(',')}
 AllData2D = []
 AllAlts = []
-AllTimes = []
 AllSZA = []
 j = 0
-for file in filelist:
 
-    data = read_gitm_one_file(file, vars)
+data = read_gitm_one_file(file, vars)
     
-    if (j == 0):    
-        [nLons, nLats, nAlts] = data[0].shape
-        Alts = data[2][0][0]/1000.0
-        Lons = data[0][:,0,0]*rtod
-        Lats = data[1][0,:,0]*rtod
+[nLons, nLats, nAlts] = data[0].shape
+Alts = data[2][0][0]/1000.0
+Lons = data[0][:,0,0]*rtod
+Lats = data[1][0,:,0]*rtod
 
-        ialt1 = find_nearest_index(Alts,90)
-        ialt2 = find_nearest_index(Alts,250)
+ialt1 = find_nearest_index(Alts,90)
+ialt2 = find_nearest_index(Alts,250)
 
-    AllTimes.append(data["time"])
+time = data["time"]
 
-    if diff:
-        stime = str(AllTimes[-1].year)[2:]+str(AllTimes[-1].month).rjust(2,'0')+str(AllTimes[-1].day).rjust(2,'0')+\
-            '_'+str(AllTimes[-1].hour).rjust(2,'0')+str(AllTimes[-1].minute).rjust(2,'0')
-        bFile = [i for i in backgroundFilelist if stime in i][0]
-        if bFile == '':
-            #It is possible that we don't have an output file at the same time.
-            print('Missing background file corresponding to: {}'.format(file))
-            exit(1)
-        background = read_gitm_one_file(bFile,vars)
-        
-    if args['cut'] == 'loc':
-        ilon = find_nearest_index(Lons,plon)
-        ilat = find_nearest_index(Lats,plat)
-        for ivar in args['var'].split(','):
-            if diff:
-                temp = (data[int(ivar)][ilon,ilat,ialt1:ialt2+1]-background[int(ivar)][ilon,ilat,ialt1:ialt2+1])/ \
-                    background[int(ivar)][ilon,ilat,ialt1:ialt2+1]*100.0
-            else:
-                temp = data[int(ivar)][ilon,ilat,ialt1:ialt2+1]          
-
-            AllData[ivar].append(temp)
-
-
-    if args['cut'] == 'sza':        
-        AllSZA.append(data[iSZA][:,:,0])
-        mask = (AllSZA[-1] >= smin) & (AllSZA[-1] <= smax ) 
-        for ivar in args['var'].split(','):
-            if diff:
-                #Calculate the mean of both sets of data and then calculate the percent difference.
-                mean1 = data[int(ivar)][:,:,ialt1:ialt2+1][mask].mean(axis=0)
-                mean2 = background[int(ivar)][:,:,ialt1:ialt2+1][mask].mean(axis=0)
-                temp = (mean1-mean2)/mean2*100.
-
-            else:
-                temp = data[int(ivar)][:,:,ialt1:ialt2+1][mask].mean(axis=0)
-
-            AllData[ivar].append(temp)
-            # AllData[ivar].append(temp[mask].mean(axis=0))
-            
+if diff:
+    if bFile == '':
+        #It is possible that we don't have an output file at the same time.
+        print('Missing background file corresponding to: {}'.format(file))
+        exit(1)
+    background = read_gitm_one_file(bFile,vars)
     
-    
-    j+=1
+if args['cut'] == 'loc':
+    ilon = find_nearest_index(Lons,plon)
+    ilat = find_nearest_index(Lats,plat)
+
+    for ivar in args['var'].split(','):
+        if diff:
+            temp = (data[int(ivar)][ilon,ilat,ialt1:ialt2+1]-background[int(ivar)][ilon,ilat,ialt1:ialt2+1])/ \
+                background[int(ivar)][ilon,ilat,ialt1:ialt2+1]*100.0
+        else:
+            temp = data[int(ivar)][ilon,ilat,ialt1:ialt2+1]          
+
+        AllData[ivar].append(temp)
 
 
+if args['cut'] == 'sza':        
+    AllSZA.append(data[iSZA][:,:,0])
+    mask = (AllSZA[-1] >= smin) & (AllSZA[-1] <= smax ) 
+    for ivar in args['var'].split(','):
+        if diff:
+            #Calculate the mean of both sets of data and then calculate the percent difference.
+            mean1 = data[int(ivar)][:,:,ialt1:ialt2+1][mask].mean(axis=0)
+            mean2 = background[int(ivar)][:,:,ialt1:ialt2+1][mask].mean(axis=0)
+            temp = (mean1-mean2)/mean2*100.
+
+        else:
+            temp = data[int(ivar)][:,:,ialt1:ialt2+1][mask].mean(axis=0)
+
+        AllData[ivar].append(temp)
 
 for ivar in args['var'].split(','):
     AllData[ivar] = np.array(AllData[ivar])
@@ -232,38 +240,51 @@ for ivar in args['var'].split(','):
 if args['cut']  == 'sza':
     AllSZA = np.array(AllSZA)
 
-# fig, ax = pp.subplots()
-fig = pp.figure(figsize=(8.5,11))
+fig = pp.figure()
 pp.ylim([90,300])
 
 Alts = Alts[ialt1:ialt2+1]
 
 cmap = 'plasma'
 i=0
-for ivar in args['var'].split(','):
-    ax = pp.subplot(6,1,i+1)
-    AllData2D = AllData[ivar]
-    if ivar == '3' and (not diff):
-        AllData2D = np.log10(AllData2D)
-        Var[i] = "Log "+ Var[i]
+ax = pp.subplot(121)
 
-    cont = ax.contourf(AllTimes,Alts,np.transpose(AllData2D),levels=30,cmap=cmap)    
+for ivar in args['var'].split(','):
+    AllData1D = AllData[ivar][0]
+    if (ivar == '3' and (not diff)) or args['IsLog']:
+        mask = (AllData1D != 0.0) 
+        AllData1D = np.log10(AllData1D[mask])
+        Alts = Alts[mask]
+        Var[i] = "Log "+ Var[i]
+        Var[i] = Var[i].replace('!U','^')
+        Var[i] = Var[i].replace('!D','_')
+        Var[i] = Var[i].replace('!N','')
+        Var[i] = '$'+Var[i]+'$'
+
+    plot = ax.plot(AllData1D,Alts,'+')  
     if diff:
         label = '{}\n% Diff'.format(Var[i])
     else:
         label = Var[i]
 
-    pp.colorbar(cont,ax=ax,label=label)
-    if i < len(Var)-1:
-        ax.get_xaxis().set_ticklabels([])
+    # if i < len(Var)-1:
+    #     ax.get_xaxis().set_ticklabels([])
     
     pp.ylabel('Alt (km)')
+    pp.xlabel(label)
 
+    if args['minv'] == None:
+        minv = min(AllData1D)
+    else:
+        minv = args['minv']
+    if args['maxv'] == None:
+        maxv = max(AllData1D)
+    else:
+        maxv = args['maxv']
+
+
+    pp.xlim([minv,maxv])
     i+=1
 
-pp.xlabel('Time (UT)')
-myFmt = mdates.DateFormatter("%b %d %H:%M")
-ax.xaxis.set_major_formatter(myFmt)
-fig.autofmt_xdate()
-
-pp.savefig('plot.png')
+outfile = 'altprofile_var{:02d}_{}.png'.format(int(args['var']),time.strftime('%y%m%d_%H%M%S'))
+pp.savefig(outfile)

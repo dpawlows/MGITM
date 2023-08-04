@@ -34,6 +34,8 @@ def get_args(argv):
     help = 0
     winds = 0
     diff = 0
+    minv = None
+    maxv = None
 
     for arg in argv:
 
@@ -92,6 +94,16 @@ def get_args(argv):
                 help = 1
                 IsFound = 1
 
+            m = re.match(r'-min=(.*)',arg)
+            if m:
+                minv = float(m.group(1))
+                IsFound = 1   
+
+            m = re.match(r'-max=(.*)',arg)
+            if m:
+                maxv = float(m.group(1))
+                IsFound = 1  
+
             m = re.match(r'-wind',arg)
             if m:
                 winds = 1
@@ -111,7 +123,9 @@ def get_args(argv):
             'lat':lat,
             'lon':lon,
             'IsLog':IsLog,
-            'IsContour':IsContour}
+            'IsContour':IsContour,
+            'minv':minv,
+            'maxv':maxv}
 
     return args
 
@@ -144,6 +158,8 @@ if (args["help"]):
     print('   -alog : plot the log of the variable')
     print('   -contour: plot a contour instead of a pseudocolor')
     print('   -winds: overplot winds')
+    print('   -min=min: minimum value to plot')
+    print('   -max=max: maximum value to plot')
     print('   At end, list the files you want to plot')
 
     iVar = 0
@@ -278,10 +294,19 @@ Negative = 0
 AllData2D = np.log10(AllData2D) if (args['IsLog']) else AllData2D
 logvar = "Log " if args['IsLog'] else ""
 
-maxi  = np.max(AllData2D[0,2:-2,2:-2])*1.05
-mini  = np.min(AllData2D[0,2:-2,2:-2])*0.95
-#mini = 7.5
-#maxi = 11
+if args['minv'] == None:
+    mini  = np.min(AllData2D[0,2:-2,2:-2])*0.95
+else:
+    mini = args['minv']
+
+if args['maxv'] == None:
+    maxi  = np.max(AllData2D[0,2:-2,2:-2])*1.05
+else:
+    maxi = args['maxv']
+
+breakpoint()
+# mini = 6
+# maxi = 10
 # if (mini < 0):
 #     Negative = 1
 
@@ -422,3 +447,4 @@ for time in AllTimes:
     plt.close()
 
     i=i+1
+
