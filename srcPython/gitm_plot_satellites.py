@@ -9,6 +9,7 @@ from matplotlib import pyplot as pp
 from gitm_routines import *
 import pandas as pd 
 import ngims 
+import rose
 
 def get_args(argv):
 
@@ -20,7 +21,7 @@ def get_args(argv):
     max = None 
     average = False
     stddev = False
-    sats = False
+    sats = None
 
     for arg in argv:
 
@@ -62,9 +63,9 @@ def get_args(argv):
                 stddev = True
                 IsFound = 1
 
-            m = re.match(r'-sats',arg)
+            m = re.match(r'-sats=(.*)',arg)
             if m:
-                sats = True
+                sats = m.group(1)
                 IsFound = 1
 
             if IsFound==0 and not(arg==argv[0]):
@@ -87,6 +88,11 @@ def get_args(argv):
 plotmaxden = False
 args = get_args(sys.argv)
 sats = args['sats']
+currentsats = ['ngims','rose']
+if sats and not sats in currentsats:
+    print('Only available sats are: '+",".join(currentsats))
+    args['help'] = True 
+
 if args['stddev'] and not args['average']:
     print('You must specify -average if you are using -stddev')
     args['help'] = True
@@ -108,6 +114,8 @@ if (args["help"]):
     print('   -max=max: maximum value to plot')
     print('   -average: plot orbit averages')
     print('   -stddev: if using average, also plot stddev')
+    print('   -sats=sats: overplot sat files. Current sat options')
+    print('      are: ngims/rose')
     print('   At end, list the files you want to plot')
 
     iVar = 0
@@ -154,6 +162,7 @@ if not args['average']:
 else: 
     meandata = df.mean()
     for pvar in args["var"].split(','):
+        breakpoint()
         pdata = meandata[int(pvar)][0,0]
         if args['alog']: 
             pdata = np.log10(pdata)
@@ -206,15 +215,13 @@ def testave():
     print('difference between averages is:')
     print(sum - meandata[29][0,0])
 
-if sats:
     vars = args["var"].split(',')
+
+if sats:
     satsdir = '/home/dpawlows/Docs/Research/MGITM-MAVENcomparison2023/DD2/NGIMS/'
-    sattype = 'ngims'
-    speciesColumn = 'ion_mass'
-    qualityFlag = ['SCP','SC0']
-    version = 'v08'
-    type = 'ion'
-    inboundonly = True 
+    start = alldata[0]['time'].strftime('%Y%m%d')
+    end = alldata[-1]['time'].strftime('%Y%m%d')
+
     averageAltBin = 3.5 #km
     minalt = 100
     maxalt = 302
@@ -223,92 +230,126 @@ if sats:
     totaldata = np.zeros(nbins-1)
     counts = np.zeros(nbins-1)
 
+    if sats=='ngims':   
+        speciesColumn = 'ion_mass'
+        qualityFlag = ['SCP','SC0']
+        version = 'v08'
+        type = 'ion'
+        inboundonly = True 
 
-    varlist = [varmap[v] for v in vars]
+        varlist = [varmap[v] for v in vars]
+        files = ngims.getfiles(start,end,type=type,version=version,dir=satsdir)
 
-    start = alldata[0]['time'].strftime('%Y%m%d')
-    end = alldata[-1]['time'].strftime('%Y%m%d')
-    files = ngims.getfiles(start,end,type=type,version=version,dir=satsdir)
-
-
-    if not args['average']:
-
-        for fi in files:
-            data = ngims.readNGIMS(fi)
-            data = data[(data["alt"] < 350)]
-            data = data[data["quality"].isin(qualityFlag)]
-
-            for pvar in varlist:
-                newdf = data[(data[speciesColumn] == int(pvar))]
-                if newdf.shape[0] == 0:
-                    print("Error in ngims_plot_profile: Empty data frame from {}".format(fi))
-                    
-                if inboundonly:
-                    minalt = newdf['alt'].idxmin()
-                    indices = list(newdf.index.values)
-                    imin = indices.index(minalt)+1
-                    newdf = newdf.loc[indices[0:imin]] #update the df with only inbound data
-                
-                if args['alog']:
-                    density = np.log10(newdf.loc[newdf["alt"] < maxalt,"abundance"]*1e6)
-                else:
-                    density = newdf.loc[newdf["alt"] < maxalt,"abundance"]*1e6
-
-                starred = ''
-                temp = newdf['quality'].isin(['SC0'])
-                if temp.values.sum() / newdf.shape[0] > .75:
-                    starred = '*'
-                
-                altitude = newdf.loc[newdf["alt"] < maxalt,'alt'].values
-                line, = pp.plot(density,altitude,'.',markersize = 5,color='dimgrey')
-                # if allions:
-                #     line.set_label(varmap[pvar])
-                # else:
-                #     line.set_label(str(data.orbit.values[0])+starred)
-        line.set_label('NGIMS')
-
-    else:
-        orbitavedensity = np.zeros((len(files),nbins-1))
-        for pvar in varlist:
-            ifile = 0 
+        if not args['average']:
 
             for fi in files:
-            
-            
                 data = ngims.readNGIMS(fi)
                 data = data[(data["alt"] < 350)]
                 data = data[data["quality"].isin(qualityFlag)]
-                newdf = data[(data[speciesColumn] == int(pvar))]
 
-                if inboundonly:
+                for pvar in varlist:
+                    newdf = data[(data[speciesColumn] == int(pvar))]
+                    if newdf.shape[0] == 0:
+                        print("Error in ngims_plot_profile: Empty data frame from {}".format(fi))
+                        
+                    if inboundonly:
                         minalt = newdf['alt'].idxmin()
                         indices = list(newdf.index.values)
                         imin = indices.index(minalt)+1
-                        newdf = newdf.loc[indices[0:imin]]
+                        newdf = newdf.loc[indices[0:imin]] #update the df with only inbound data
+                    
+                    if args['alog']:
+                        density = np.log10(newdf.loc[newdf["alt"] < maxalt,"abundance"]*1e6)
+                    else:
+                        density = newdf.loc[newdf["alt"] < maxalt,"abundance"]*1e6
+
+                    starred = ''
+                    temp = newdf['quality'].isin(['SC0'])
+                    if temp.values.sum() / newdf.shape[0] > .75:
+                        starred = '*'
+                    
+                    altitude = newdf.loc[newdf["alt"] < maxalt,'alt'].values
+                    line, = pp.plot(density,altitude,'.',markersize = 5,color='dimgrey')
+                    # if allions:
+                    #     line.set_label(varmap[pvar])
+                    # else:
+                    #     line.set_label(str(data.orbit.values[0])+starred)
+            line.set_label('NGIMS')
+
+        else:
+            orbitavedensity = np.zeros((len(files),nbins-1))
+            for pvar in varlist:
+                ifile = 0 
+
+                for fi in files:
+                
+                
+                    data = ngims.readNGIMS(fi)
+                    data = data[(data["alt"] < 350)]
+                    data = data[data["quality"].isin(qualityFlag)]
+                    newdf = data[(data[speciesColumn] == int(pvar))]
+
+                    if inboundonly:
+                            minalt = newdf['alt'].idxmin()
+                            indices = list(newdf.index.values)
+                            imin = indices.index(minalt)+1
+                            newdf = newdf.loc[indices[0:imin]]
+
+                    for ibin in range(len(altbins)-1):
+                        lower = altbins[ibin] 
+                        upper = altbins[ibin+1] 
+                        tempdata = newdf.loc[(newdf["alt"] <= upper) & \
+                            (newdf["alt"] > lower)]
+                        orbitavedensity[ifile,ibin] = np.nanmean(tempdata['abundance'].to_numpy())*1.e6
+                        count = tempdata['abundance'].count()
+
+                        if count > 0:
+                            counts[ibin] = counts[ibin] + count 
+                            totaldata[ibin] = totaldata[ibin] + tempdata['abundance'].sum()*1.e6
+                    
+                    ifile += 1
+
+
+                totaldata = totaldata/counts
+                density2 = np.nanmean(orbitavedensity,axis=0)
+                stddevdata = np.std(orbitavedensity,axis=0)
+                averagebins = (altbins[0:-1] + altbins[1:])/2.
+                
+                pp.plot(totaldata,averagebins,'k--',linewidth=1,label='NGIMS')
+                pp.fill_betweenx(averagebins,totaldata-stddevdata,totaldata+stddevdata,\
+                    color='lightgrey',alpha=.8)
+
+    if sats=='rose':
+        satsdir = '/home/dpawlows/Docs/Research/MGITM-MAVENcomparison2023/ROSE/'
+        files = rose.getRoseFiles(start,end,dir=satsdir)
+
+        if not args['average']:
+            for f in files:
+                data = rose.readRoseTab(f)
+                newdf = data[(data['altitude'] >= minalt) & (data['altitude'] <= maxalt)]
+                pp.plot(newdf['nelec'],newdf['altitude'],'.',markersize = 5,color='dimgrey')
+        
+        else:
+            orbitavedensity = np.zeros((len(files),nbins-1))
+            for fi in files:
+                data = rose.readRoseTab(f)
+                newdf = data[(data['altitude'] >= minalt) & (data['altitude'] <= maxalt)]
 
                 for ibin in range(len(altbins)-1):
                     lower = altbins[ibin] 
                     upper = altbins[ibin+1] 
-                    tempdata = newdf.loc[(newdf["alt"] <= upper) & \
-                        (newdf["alt"] > lower)]
-                    orbitavedensity[ifile,ibin] = np.nanmean(tempdata['abundance'].to_numpy())*1.e6
-                    count = tempdata['abundance'].count()
+                    tempdata = newdf.loc[(newdf["altitude"] <= upper) & \
+                        (newdf["altitude"] > lower)]
+                    orbitavedensity[ifile,ibin] = np.nanmean(tempdata['nelec'].to_numpy())
 
-                    if count > 0:
-                        counts[ibin] = counts[ibin] + count 
-                        totaldata[ibin] = totaldata[ibin] + tempdata['abundance'].sum()*1.e6
-                
-                ifile += 1
-
-
-            totaldata = totaldata/counts
             density2 = np.nanmean(orbitavedensity,axis=0)
             stddevdata = np.std(orbitavedensity,axis=0)
             averagebins = (altbins[0:-1] + altbins[1:])/2.
             
-            pp.plot(totaldata,averagebins,'k--',linewidth=1,label='NGIMS')
-            pp.fill_betweenx(averagebins,totaldata-stddevdata,totaldata+stddevdata,\
+            pp.plot(density2,averagebins,'k--',linewidth=1,label='NGIMS')
+            pp.fill_betweenx(averagebins,density2-stddevdata,density2+stddevdata,\
                 color='lightgrey',alpha=.8)
+
 
 pp.legend(loc='upper right',frameon=False)
 pp.xlabel(varcmap[args['var'].split()[0]]+' Density [m$^{-3}$]')
