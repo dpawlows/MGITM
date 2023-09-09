@@ -304,12 +304,6 @@ if args['maxv'] == None:
 else:
     maxi = args['maxv']
 
-breakpoint()
-# mini = 6
-# maxi = 10
-# if (mini < 0):
-#     Negative = 1
-
 if (Negative):
     maxi = np.max(abs(AllData2D))*1.05
     mini = -maxi
