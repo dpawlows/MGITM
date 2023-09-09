@@ -179,7 +179,6 @@ if args['diff'] != '0':
 vars.extend([int(v) for v in args["var"].split(',')])
 Var = [header['vars'][int(i)] for i in args['var'].split(',')]
 nvars = len(args['var'].split(','))
-
 AllData = {a:[] for a in args['var'].split(',')}
 AllData2D = []
 AllAlts = []
@@ -194,7 +193,7 @@ Lons = data[0][:,0,0]*rtod
 Lats = data[1][0,:,0]*rtod
 
 ialt1 = find_nearest_index(Alts,90)
-ialt2 = find_nearest_index(Alts,250)
+ialt2 = find_nearest_index(Alts,300)
 
 time = data["time"]
 
@@ -204,7 +203,7 @@ if diff:
         print('Missing background file corresponding to: {}'.format(file))
         exit(1)
     background = read_gitm_one_file(bFile,vars)
-    
+
 if args['cut'] == 'loc':
     ilon = find_nearest_index(Lons,plon)
     ilat = find_nearest_index(Lats,plat)
@@ -237,17 +236,21 @@ if args['cut'] == 'sza':
 for ivar in args['var'].split(','):
     AllData[ivar] = np.array(AllData[ivar])
 
+
 if args['cut']  == 'sza':
     AllSZA = np.array(AllSZA)
 
 fig = pp.figure()
-pp.ylim([90,300])
 
 Alts = Alts[ialt1:ialt2+1]
 
 cmap = 'plasma'
 i=0
 ax = pp.subplot(121)
+if len(Var) == 1:
+    marker = '+'
+else:
+    marker = '.'
 
 for ivar in args['var'].split(','):
     AllData1D = AllData[ivar][0]
@@ -255,36 +258,54 @@ for ivar in args['var'].split(','):
         mask = (AllData1D != 0.0) 
         AllData1D = np.log10(AllData1D[mask])
         Alts = Alts[mask]
-        Var[i] = "Log "+ Var[i]
         Var[i] = Var[i].replace('!U','^')
         Var[i] = Var[i].replace('!D','_')
         Var[i] = Var[i].replace('!N','')
         Var[i] = '$'+Var[i]+'$'
 
-    plot = ax.plot(AllData1D,Alts,'+')  
-    if diff:
-        label = '{}\n% Diff'.format(Var[i])
-    else:
-        label = Var[i]
-
-    # if i < len(Var)-1:
-    #     ax.get_xaxis().set_ticklabels([])
     
-    pp.ylabel('Alt (km)')
-    pp.xlabel(label)
-
-    if args['minv'] == None:
-        minv = min(AllData1D)
+    if len(Var) > 1: 
+        label = Var[i]
     else:
-        minv = args['minv']
-    if args['maxv'] == None:
-        maxv = max(AllData1D)
-    else:
-        maxv = args['maxv']
-
-
-    pp.xlim([minv,maxv])
+        label = None
+    plot = ax.plot(AllData1D,Alts,marker,label=label)  
     i+=1
 
-outfile = 'altprofile_var{:02d}_{}.png'.format(int(args['var']),time.strftime('%y%m%d_%H%M%S'))
+if len(Var) == 1:
+    svar = int(args['var'])
+    if diff:
+        xlabel = '{}\n% Diff'.format(Var[i])
+    else:
+        xlabel = Var[0]
+else:
+    xlabel = 'Density'
+    svar = 99
+    box = ax.get_position()
+    ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
+    ax.legend(loc='lower left', bbox_to_anchor=(1, 0.5),frameon=False)
+   
+# if i < len(Var)-1:
+#     ax.get_xaxis().set_ticklabels([])
+
+pp.ylabel('Alt (km)')
+if args['IsLog']:
+    xlabel = 'Log '+xlabel
+pp.xlabel(xlabel)
+
+if args['minv'] == None:
+    minv = min(AllData1D)
+else:
+    minv = args['minv']
+if args['maxv'] == None:
+    maxv = max(AllData1D)
+else:
+    maxv = args['maxv']
+
+pp.xlim([minv,maxv])
+pp.ylim([90,250])
+
+   
+
+outfile = 'altprofile_var{:02d}_{}.png'.format(svar,time.strftime('%y%m%d_%H%M%S'))
+print("Writing to file: {}".format(outfile))
 pp.savefig(outfile)
