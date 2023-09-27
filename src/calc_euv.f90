@@ -220,9 +220,11 @@ subroutine calc_euv
 
   do i = 1, Num_waveLengths_Low
 
-     FLXFAC=(1.0 + AFAC(I) * (0.5*(F107+F107A) - 80.0))
+     ! This has to be backwards, due to the way that the wavelengths are defined:
+     ii = Num_waveLengths_Low - i + 1
+     FLXFAC=(1.0 + AFAC(II) * (0.5*(F107+F107A) - 80.0))
      IF(FLXFAC.LT.0.8) FLXFAC=0.8
-     EUV_Flux(i) = F74113(I) * FLXFAC * 1.0E9 * 10000.
+     EUV_Flux(i) = F74113(II)* FLXFAC * 1.0E9 * 10000.
 
  enddo
 
