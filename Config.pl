@@ -1,17 +1,46 @@
-#!/usr/bin/perl -i
-#  Copyright (C) 2002 Regents of the University of Michigan, portions used with permission
+#!/usr/bin/perl
+#  Copyright (C) 2002 Regents of the University of Michigan, 
+#  portions used with permission 
 #  For more information, see http://csem.engin.umich.edu/tools/swmf
+
+# Allow in-place editing                                                        
+$^I = "";
+
+# Add local directory to search                                                 
+push @INC, ".";
+
 use strict;
-use warnings;
 
 our $Component       = 'UA';
-our $Code            = 'GITM2';
+our $Code            = 'MGITM';
 our $MakefileDefOrig = 'srcMake/Makefile.def';
 our @Arguments       = @ARGV;
 
 my $config     = "share/Scripts/Config.pl";
+
+# get util and share
+my $GITCLONE = "git clone"; 
+my $GITDIR = "git\@github.com:SWMFsoftware";
+
+if(not -f $config and not -f "../../$config"){
+    `$GITCLONE $GITDIR/share` unless -d "share";
+    `$GITCLONE $GITDIR/util`  unless -d "util";
+}
+
+#check or get SWMF_data git will use
+if (-d "srcData"){
+    print "srcData is installed in GITM\n";
+}elsif (-d $ENV{"HOME"}."/SWMF_data"){
+    print "SWMF_data is installed in the home directory";
+}else{
+    system("git clone $GITDIR/GITM_data");
+    system("rm -rf srcData; mv GITM_data/data/input srcData");
+    system("rm -rf GITM_data");
+}
+
+
+
 if(-f $config){
-    print "Config: $config";
     require $config;
 }else{
     require "../../$config";
@@ -51,6 +80,8 @@ my $NoFlush;
 $Planet = "Earth" if $Install; # Default planet
 $NoFlush = 0;
 
+#our $gitcmd;
+
 foreach (@Arguments){
     if(/^-LV-426$/i)          {$Planet="LV-426";               next};
     if(/^-Titan$/i)           {$Planet="Titan";                next};
@@ -58,9 +89,9 @@ foreach (@Arguments){
     if(/^-earth$/i)           {$Planet="Earth";                next};
     if(/^-noflush$/i)         {$NoFlush=1     ;                next};
     if(/^-s$/)                {$Show=1;                        next};
-
     warn "WARNING: Unknown flag $_\n" if $Remaining{$_};
 }
+
 
 &modify_utilities if $NoFlush;
 
@@ -70,13 +101,13 @@ foreach (@Arguments){
 
 &set_planet if $Planet and $Planet ne $PlanetOrig;
 
-&show_settings if $Show;
+&show_settings if $Show; 
 
 print "Config.pl -g=$GridSize\n" if $ShowGridSize and not $Show;
 
 exit 0;
 
-############################################################################
+
 sub modify_utilities{
 
     my $IsDone;
@@ -131,7 +162,7 @@ sub get_settings{
     die "$ERROR could not read nLon from $NameGridFile\n" unless length($nLon);
     die "$ERROR could not read nLat from $NameGridFile\n" unless length($nLat);
     die "$ERROR could not read nAlt from $NameGridFile\n" unless length($nAlt);
-    die "$ERROR could not read MaxBlock from $NameGridFile\n"
+    die "$ERROR could not read MaxBlock from $NameGridFile\n" 
 	unless length($MaxBlock);
 
     $GridSize = "$nLon,$nLat,$nAlt,$MaxBlock";
@@ -139,8 +170,8 @@ sub get_settings{
     # Get the current planet
     if(-l "src/$ModPlanet"){
         my $link = `ls -l src/$ModPlanet`;
-	$link =~ /Mod(\w+)\.f90$/ or
-	    warn "GITM2/config: Could not find planet in $link";
+	$link =~ /Mod(\w+)\.f90$/ or 
+	    warn "MGITM/config: Could not find planet in $link";
         $PlanetOrig = $1;
     }
 }
@@ -195,11 +226,12 @@ sub set_planet{
 
     chdir "src" or die "Could not change directory to src\n";
 
-    print "Configuring GITM for $Planet!!\n";
+    print "Configuring GITM for $Planet!!\n"; 
 
-    &shell_command("rm -f ModPlanet.f90 ModPlanet.o planet.f90");
+    &shell_command("rm -f ModPlanet.f90 ModPlanet.o planet.f90 user.f90");
     &shell_command("ln -s Mod$Planet.f90 ModPlanet.f90");
     &shell_command("ln -s $Planet.f90 planet.f90");
+    &shell_command("ln -s user$Planet.f90 user.f90");
 
     my $file;
     foreach $file (glob("*.$Planet.f90")) {
@@ -211,7 +243,9 @@ sub set_planet{
 
     chdir "..";
 
-    &shell_command("cd srcData ; cp UAM.in.$Planet UAM.in");
+    # No file should be put into srcData
+    #&shell_command("cd srcData ; cp UAM.in.$Planet UAM.in") 
+    #	if -e "srcData/UAM.in.$Planet";
 
     if($Planet eq 'Earth'){
           $nLon = 9;
@@ -228,7 +262,6 @@ sub set_planet{
           $nLat = 9;
           $nAlt = 120;
           $MaxBlock = 4;
-
     } elsif($Planet eq 'Titan'){
           $nLon = 2;
           $nLat = 2;
@@ -259,19 +292,19 @@ sub show_settings{
 ############################################################################
 
 sub print_help{
-    print "Additional options for GITM2/Config.pl:
+    print "Additional options for MGITM/Config.pl:
 
--Titan      Configure GITM2 for Titan. This flag is case insensitive.
+-Titan      Configure MGITM for Titan. This flag is case insensitive.
 
--Mars       Configure GITM2 for Mars. This flag is case insensitive.
+-Mars       Configure MGITM for Mars. This flag is case insensitive.
 
--LV-426     Configure GITM2 for Testing. This flag is case insensitive.
+-LV-426     Configure MGITM for Testing. This flag is case insensitive.
 
--Earth      Configure GITM2 for Earth. This flag is case insensitive.
+-Earth      Configure MGITM for Earth. This flag is case insensitive.
 
 -s          Show current planet.
 
-Additional examples for GITM2/Config.pl:
+Additional examples for MGITM/Config.pl:
 
 Install for Titan:
 
@@ -289,7 +322,7 @@ Set grid to nLon=36, nLat=36, nAlt=50 and the number of blocks to 16:
 
     Config.pl -g=36,36,50,16
 
-Show settings for UA/GITM2:
+Show settings for UA/MGITM:
 
     Config.pl -s
  ";
