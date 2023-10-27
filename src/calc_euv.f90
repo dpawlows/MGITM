@@ -194,7 +194,7 @@ subroutine calc_euv
 
   implicit none
 
-  integer :: i
+  integer :: i, ii
   real    :: flxfac, wavelength_ave
 
   !:::::::::::::::::::::::::::::::: EUVAC :::::::::::::::::::::::
