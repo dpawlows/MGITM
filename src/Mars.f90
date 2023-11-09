@@ -6980,7 +6980,7 @@ subroutine ERRORS (ierr,varerr)
 
 !***********************************************************************
 
-      subroutine MZTVC121
+      subroutine MZTVC121( ierr, varerr )
 
 !***********************************************************************
 !     *** Old MZTVC121_dlvr11.f ***
@@ -8110,9 +8110,9 @@ subroutine ERRORS (ierr,varerr)
       implicit none
 
 !     arguments
+      integer ::        nn        ! i
       real*8  :: 	taustar(nn) ! i,o
       integer ::        istyle    ! i
-      integer ::        nn        ! i
 
 !     local variables and constants
       integer  :: 	i, imaximum
@@ -9322,8 +9322,9 @@ subroutine ERRORS (ierr,varerr)
 !     store the unit value in the diagonal of a
 ! ***************************************************************************
       implicit none
+      integer :: n
       real*8 :: a(n,n)
-      integer :: n,i,j,k
+      integer :: i,j,k
       do 1,i=2,n-1
          do 2,j=2,n-1
 	    if(i.eq.j) then
@@ -9403,8 +9404,9 @@ subroutine ERRORS (ierr,varerr)
 
       implicit none
 
+      integer :: n
       real*8 :: a(n,n),m(n,n)
-      integer :: n,i,j,k
+      integer :: i,j,k
 
       do 1,i=2,n-1
          do 2,j=2,n-1
@@ -9457,8 +9459,9 @@ subroutine ERRORS (ierr,varerr)
 
       implicit none
 
+      integer :: n
       real*8 :: a(n,n),b(n,n),c(n,n),d(n,n),e(n,n), sum
-      integer :: n,i,j,k
+      integer :: i,j,k
         do 1,i=2,n-1
          sum=0.0d0
          do 2,j=2,n-1
@@ -9488,8 +9491,9 @@ subroutine ERRORS (ierr,varerr)
 
       implicit none
 
+      integer :: n
       real*8 :: v(n),b(n,n),c(n,n),u(n),w(n), sum
-      integer :: n,i,j
+      integer :: i,j
       do 1,i=2,n-1
          sum=0.0d0
          do 2,j=2,n-1
@@ -9512,8 +9516,9 @@ subroutine ERRORS (ierr,varerr)
 
       implicit none
 
+      integer :: n
       real*8 :: v(n),u(n),c(n,n),w(n)
-      integer :: n,i
+      integer :: i
       do 1,i=2,n-1
          v(i)= u(i) + c(i,i) * w(i)
  1    continue
@@ -9547,8 +9552,9 @@ subroutine ERRORS (ierr,varerr)
 !     ***********************************************************************
       implicit none
 
+      integer :: n
       real*8 :: a(n),b(n),c(n),d(n)
-      integer :: n,i
+      integer :: i
       do 1,i=2,n-1
          a(i)= b(i) + c(i) * d(i)
  1    continue
@@ -9564,8 +9570,9 @@ subroutine ERRORS (ierr,varerr)
 !     ***********************************************************************
       implicit none
 
-      real*8 :: a(n,n), b(n,n), c(n,n), d(n,n)
       integer :: n
+      real*8 :: a(n,n), b(n,n), c(n,n), d(n,n)
+
       a(1:n,1:n)=0.d0
       b(1:n,1:n)=0.d0
       c(1:n,1:n)=0.d0
@@ -9588,8 +9595,9 @@ subroutine ERRORS (ierr,varerr)
 !     **********************************************************************
       implicit none
 
-      real*8 :: a(n,n), b(n,n), c(n,n)
       integer :: n
+      real*8 :: a(n,n), b(n,n), c(n,n)
+
       a(1:n,1:n)=0.d0
       b(1:n,1:n)=0.d0
       c(1:n,1:n)=0.d0
@@ -9611,8 +9619,9 @@ subroutine ERRORS (ierr,varerr)
 !     ***********************************************************************
       implicit none
 
-      real*8 :: a(n,n), b(n,n)
       integer :: n
+      real*8 :: a(n,n), b(n,n)
+
       a(1:n,1:n)=0.d0
       b(1:n,1:n)=0.d0
 !      do 1,i=1,n
@@ -9631,8 +9640,9 @@ subroutine ERRORS (ierr,varerr)
 !     ***********************************************************************
       implicit none
 
-      real*8 :: a(n), b(n), c(n), d(n)
       integer :: n
+      real*8 :: a(n), b(n), c(n), d(n)
+
       a(1:n)=0.d0
       b(1:n)=0.d0
       c(1:n)=0.d0
@@ -9654,8 +9664,9 @@ subroutine ERRORS (ierr,varerr)
 !     ***********************************************************************
       implicit none
 
-      real*8 :: a(n), b(n), c(n)
       integer :: n
+      real*8 :: a(n), b(n), c(n)
+
       a(1:n)=0.d0
       b(1:n)=0.d0
       c(1:n)=0.d0
@@ -9674,8 +9685,9 @@ subroutine ERRORS (ierr,varerr)
 !     ***********************************************************************
       implicit none
 
-      real*8 :: a(n), b(n)
       integer :: n
+      real*8 :: a(n), b(n)
+
       a(1:n)=0.d0
       b(1:n)=0.d0
 !      do 1,i=1,n
@@ -9779,8 +9791,8 @@ subroutine ERRORS (ierr,varerr)
 !     ***********************************************************************
       implicit none
 
-      real*8 :: a(n,n), b(n,n), c(n,n)
       integer :: n
+      real*8 :: a(n,n), b(n,n), c(n,n)
 
       a=matmul(b,c)
       a(1,:)=0.d0
@@ -9796,8 +9808,9 @@ subroutine ERRORS (ierr,varerr)
 
 !     ***********************************************************************
       implicit none
-      real*8 :: a(n,n), b(n,n), c(n,n)
+
       integer :: n
+      real*8 :: a(n,n), b(n,n), c(n,n)
 
       a=b-c
       a(1,:)=0.d0
