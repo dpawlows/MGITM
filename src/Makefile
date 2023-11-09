@@ -46,7 +46,6 @@ OBJECTS = \
 	time_routines.o\
 	vertical_solver.o\
 	library.o\
-	check_for_nans.o\
 	stretch_grid.o\
 	init_mpi.o\
 	restart.o\
