@@ -10,7 +10,7 @@ help:
 	@echo "clean                   - remove object files etc"
 
 MODULE: ModFish.o
-	
+
 LIB: ModFish.o
 	${AR} ${LIBDIR}/libFISH.a ModFish.o
 
@@ -22,3 +22,7 @@ test: ModFish.o
 		${COMPILE.f90} -o test.exe t$$i.o ModFish.o; \
 		./test.exe; \
 	done
+
+clean: cleanfiles
+
+distclean: clean
