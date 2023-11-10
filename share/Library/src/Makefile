@@ -3,7 +3,7 @@
 
 include ../../../Makefile.def
 include ../../../Makefile.conf
-include Makefile.DEPEND
+-include Makefile.DEPEND
 include Makefile.RULES
 
 # These modules provide the "infrastructure" for SWMF and components.
@@ -68,6 +68,7 @@ ${MY_LIB}: ${MODULES}
 	rm -f ${MY_LIB}
 	${AR} ${MY_LIB} ${MODULES}
 
+clean: cleanfiles
 
 distclean: clean
 	rm -f Makefile.DEPEND ModHdf5Utils.f90 ModSpice.f90
