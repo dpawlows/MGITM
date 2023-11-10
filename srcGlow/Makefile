@@ -1,7 +1,5 @@
 include ../Makefile.def
 include ../Makefile.conf
-#include ./Makefile.DEPEND
-#include ./Makefile.RULES
 
 MODULES = Mod_GLOW.o\
 	ModCIMPIT.o\
@@ -66,5 +64,6 @@ glow: 	${OBJECTS} ${MODULES}
 #ModGITM.o:	
 #	cd ../src  ;make ModGITM.f90
 
+clean: cleanfiles
 
-
+distclean: clean
