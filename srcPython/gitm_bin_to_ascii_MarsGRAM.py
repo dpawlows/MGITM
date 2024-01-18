@@ -54,7 +54,12 @@ def get_args(argv):
 
 
 args = get_args(sys.argv)
-coordinates = args['coordinates']
+coordoptions = ['geographic','geodetic']
+coordinates = args['coordinates'].lower()
+if coordinates not in coordoptions:
+    print('{} is not a coordinate option'.format(coordinates))
+    args['help'] = True 
+
 filelist = args['filelist']
 vars = [0,1,2,15,4,5,6,7,8,9,14,16,17,18]
 minalt = args['minalt']
@@ -119,12 +124,12 @@ for file in filelist:
     f.write("#Units   Densities: #/m3, temperatures: K, wind speeds: m/s."+"\n")
     myvars = ["".join(data['vars'][i].decode().split()) for i in vars]  
     myvars2 = "   ".join(name_dict[i] for i in myvars)      
-    f.write(myvars2+'rho'+"\n")
+    f.write(myvars2+'   rho'+"\n")
     f.write("#START\n")
 
 
     #Begin 3D loop over data cube
-
+    rhovars = [4,5,6,7,8,9,14]
     for ialt in range(ialtstart,nAlts-2):
         for ilat in range(2,nLats-2):
             for ilon in range(2,nLons-2):
@@ -139,11 +144,9 @@ for file in filelist:
                 for var in vars[3:]:
                     thisdata.append(data[var][ilon,ilat,ialt])
                 rho = 0.0    
-                for i in range(10):
-                    irhovar = 4+1
-                    thisDensity = data[irhovar][ilon,ilat,ialt]
-                    rho += thisDensity
-                    breakpoint()
+                for i in rhovars:
+                    thisDensity = data[i][ilon,ilat,ialt]
+                    rho += thisDensity                    
                 thisdata.append(rho)
                 f.write("    ".join('{:g}'.format(ele) for ele in thisdata)+"\n")
 
