@@ -5,7 +5,7 @@ SHELL =/bin/sh
 
 include ../Makefile.def
 include ../Makefile.conf
-include Makefile.DEPEND
+-include Makefile.DEPEND
 
 # Configurable objects
 
@@ -36,7 +36,8 @@ ${MY_LIB}: ${GITM_LIB} ${OBJECTS}
 	cp -f ${GITM_LIB} ${MY_LIB}
 	${AR} ${MY_LIB} ${OBJECTS}
 
+clean: cleanfiles
+
 distclean: clean
-	rm -f Makefile.DEPEND
 
 # keep this line

@@ -15,16 +15,7 @@ PLANET=earth
 src/ModSize.f90:
 	cp src/ModSize.f90.orig src/ModSize.f90
 
-INSTALLFILES =  src/Makefile.DEPEND \
-		src/Makefile.RULES \
-		srcInterface/Makefile.DEPEND
-
 install: src/ModSize.f90
-	touch ${INSTALLFILES}
-#	cd src; make DYNAMIC
-#
-#       General Housekeeping
-#
 
 NOMPI:
 	@echo "will make NOMPI"
@@ -43,20 +34,19 @@ GITM:
 POST:
 	@cd $(MAINDIR);  make POST
 
-GITM2 = ${DIR}/UA/GITM2
+MGITM = ${DIR}/UA/MGITM
 
 LIB:
 	cd $(ABDIR)     ; make                                         LIB
-	cd $(GLDIR)     ; make LIBPREV=${GITM2}/${ABDIR}/libSphere.a   LIBADD
-	cd $(MAINDIR)   ; make LIBPREV=${GITM2}/${GLDIR}/libUPTOGL.a   libGITM.a
-	cd srcInterface ; make LIBPREV=${GITM2}/${MAINDIR}/libUA.a     LIB
+	cd $(GLDIR)     ; make LIBPREV=${MGITM}/${ABDIR}/libSphere.a   LIBADD
+	cd $(MAINDIR)   ; make LIBPREV=${MGITM}/${GLDIR}/libUPTOGL.a   libGITM.a
+	cd srcInterface ; make LIBPREV=${MGITM}/${MAINDIR}/libUA.a     LIB
 
 nompirun:
 	make GITM
 	cd ${RUNDIR}; ./GITM.exe
 
 clean:
-	@touch ${INSTALLFILES}
 	@cd $(ABDIR);    make clean
 	@cd $(MAINDIR);  make clean
 	@cd $(GLDIR);    make clean
@@ -68,7 +58,6 @@ distclean:
 	./Config.pl -uninstall
 
 allclean:
-	@touch ${INSTALLFILES}
 	@cd $(ABDIR);    make clean
 	@cd $(MAINDIR);  make distclean
 	@cd srcInterface;make distclean
@@ -103,7 +92,7 @@ TESTDIR = run_test
 MPIRUN = mpirun -np 2
 
 test:
-	echo "GITM2 is not tested nightly" > notest.diff
+	echo "MGITM is not tested nightly" > notest.diff
 
 test_ignored:
 	-@(make test_earth)

@@ -4,10 +4,10 @@ GLDIR   = ${UADIR}/srcGlow
 
 SEARCH_EXTRA = -I${ABDIR} -I${IODIR} -I${EMPIRICALUADIR} -I${EMPIRICALIEDIR}
 
-include ../srcMake/Makefile.conf
+-include ../srcMake/Makefile.conf
 
-include Makefile.DEPEND
-include Makefile.RULES
+-include Makefile.DEPEND
+-include Makefile.RULES
 
 MODULES = \
 	ModSize.o\
@@ -46,7 +46,6 @@ OBJECTS = \
 	time_routines.o\
 	vertical_solver.o\
 	library.o\
-	check_for_nans.o\
 	stretch_grid.o\
 	init_mpi.o\
 	restart.o\
@@ -141,10 +140,9 @@ ${MY_LIB}: ${LIBPREV} ${MF} ${MODULES} ${OBJECTS}
 	cp -f ${LIBPREV} ${MY_LIB}
 	${AR} ${MY_LIB} ${OBJECTS} ${MODULES}
 
-# clean:
-		# rm -f *~ core *.o *.mod fort.* a.out *.exe *.a *.so *.protex
+clean: cleanfiles
 
-distclean:
+distclean: clean
 	rm -f 	ModSize.f90 \
 		ModPlanet.f90 \
 		ModChemistry.f90 \
