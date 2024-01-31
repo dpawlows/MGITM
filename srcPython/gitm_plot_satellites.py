@@ -162,7 +162,6 @@ if not args['average']:
 else: 
     meandata = df.mean()
     for pvar in args["var"].split(','):
-        breakpoint()
         pdata = meandata[int(pvar)][0,0]
         if args['alog']: 
             pdata = np.log10(pdata)
@@ -331,7 +330,8 @@ if sats:
         
         else:
             orbitavedensity = np.zeros((len(files),nbins-1))
-            for fi in files:
+            ifile = 0
+            for f in files:
                 data = rose.readRoseTab(f)
                 newdf = data[(data['altitude'] >= minalt) & (data['altitude'] <= maxalt)]
 
@@ -342,17 +342,19 @@ if sats:
                         (newdf["altitude"] > lower)]
                     orbitavedensity[ifile,ibin] = np.nanmean(tempdata['nelec'].to_numpy())
 
+                ifile += 1
+
             density2 = np.nanmean(orbitavedensity,axis=0)
             stddevdata = np.std(orbitavedensity,axis=0)
             averagebins = (altbins[0:-1] + altbins[1:])/2.
             
-            pp.plot(density2,averagebins,'k--',linewidth=1,label='NGIMS')
+            pp.plot(density2,averagebins,'k--',linewidth=1,label='ROSE')
             pp.fill_betweenx(averagebins,density2-stddevdata,density2+stddevdata,\
                 color='lightgrey',alpha=.8)
 
 
 pp.legend(loc='upper right',frameon=False)
-pp.xlabel(varcmap[args['var'].split()[0]]+' Density [m$^{-3}$]')
-# pp.xlabel('Temperature (K)')
+# pp.xlabel(varcmap[args['var'].split()[0]]+' Density [m$^{-3}$]')
+pp.xlabel('[e-] [m$^{-3}$]')
 pp.ylabel('Altitude (km)')
 pp.savefig('plot.png')

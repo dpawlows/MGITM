@@ -1,11 +1,13 @@
-!  Copyright (C) 2002 Regents of the University of Michigan, 
-!  portions used with permission 
+!  Copyright (C) 2002 Regents of the University of Michigan,
+!  portions used with permission
 !  For more information, see http://csem.engin.umich.edu/tools/swmf
 
 module UA_wrapper
 
   ! Wrapper for GITM Upper Atmosphere (UA) component
 
+  use ModUtilities, ONLY: CON_set_do_test, CON_stop
+  
   implicit none
 
   private ! except
@@ -16,6 +18,18 @@ module UA_wrapper
   public:: UA_save_restart
   public:: UA_finalize
 
+  ! Point coupler interface
+  public:: UA_find_points
+  public:: UA_get_grid_info
+
+  ! UA-GM coupler
+  public:: UA_get_for_gm
+
+  ! IE Coupler (non-functional, for backward compatibility)
+  public :: UA_get_info_for_ie
+  public :: UA_get_for_ie
+  public :: UA_put_from_ie
+  
 contains
 
   !============================================================================
@@ -36,27 +50,20 @@ contains
     use CON_comp_info
     use ModUtilities, ONLY: check_dir
 
-    character (len=*), parameter :: NameSub='UA_set_param'
-
     ! Arguments
     type(CompInfoType), intent(inout):: CompInfo   ! Information for this comp.
-    character (len=*), intent(in)    :: TypeAction ! What to do
+    character(len=*), intent(in)     :: TypeAction ! What to do
 
-    integer :: iError
-
-    iError = 0
-
+    character(len=*), parameter :: NameSub = 'UA_set_param'
     !-------------------------------------------------------------------------
+    write(*,*) "-->Starting UA_set_param..."
     select case(TypeAction)
     case('VERSION')
-
        call put(CompInfo,&
             Use=.true.,                                      &
             NameVersion='Global Iono-Thermo Model (Ridley)', &
             Version=2.0)
-
     case('MPI')
-
        call get(CompInfo, iComm=iComm, iProc=iProc, nProc=nProc)
 
        iCommGITM = iComm
@@ -75,43 +82,22 @@ contains
        call set_defaults
 
     case('READ')
-
        call read_text(cInputText)
        cInputText(n_line_read()+1) = "#END"
        nInputLines=n_line_read()+1
 
        call set_inputs
 
-    case('CHECK')
-
-       iError = 0
-
-    case('STDOUT')
-
-       !     iUnitStdOut=STDOUT_
-       !     if(nProc==1)then
-       !        StringPrefix='UA:'
-       !     else
-       !        write(StringPrefix,'(a,i3.3,a)')'UA',iProc,':'
-       !     end if
-
     case('FILEOUT')
-
        call get(CompInfo,iUnitOut=iOutputUnit_)
-       !     StringPrefix=''
 
     case('GRID')
-
        call UA_set_grid
 
     case default
-
        call CON_stop(NameSub//' UA_ERROR: invalid TypeAction='//TypeAction)
 
     end select
-
-    if (iError /= 0) &
-         call CON_stop(NameSub//' UA_ERROR in TypeAction='//TypeAction)
 
   end subroutine UA_set_param
 
@@ -119,119 +105,56 @@ contains
 
   subroutine UA_set_grid
 
-    ! Set the grid descriptor for UA
-    ! Since UA has a static grid the descriptor has to be set once.
-    ! There can be many couplers that attempt to set the descriptor,
-    ! so we must check IsInitialized.
-    use ModProcUA
     use CON_Coupler
-    use CON_comp_info
-    use ModNumConst
-    use ModSizeGitm
-    use ModSphereInterface, only: iStartBLK
-    use ModInputs, only: nBlocksLat, nBlocksLon
+    use CON_comp_param, ONLY: UA_
+    use ModInputs,    ONLY: LatStart, LatEnd, LonStart, LonEnd, AltMin, AltMax
+    use ModSizeGitm,  ONLY: nLons, nLats, nAlts
+    use ModInputs,    ONLY: nBlocksLat, nBlocksLon
     use ModUtilities, ONLY: check_allocate
+    use ModGeometry,  ONLY: TypeGeometry
 
-    character (len=*), parameter :: NameSub='UA_set_grid'
-    logical :: IsInitialized=.false.
-    integer, allocatable :: iProc_A(:), iProcPE_A(:)
+    character(len=*), parameter :: NameSub='UA_set_grid'
+    !--------------------------------------------------------------------------
 
-    integer :: iError, iBlock, iBlockPE
-
-    real, allocatable :: CoLat_I(:), Lon_I(:), Alt_I(:)
-    real, allocatable :: LatPE_I(:), LonPE_I(:)
-
-    logical :: DoTest, DoTestMe, Done
-
-    !------------------------------------------------------
-    !    call CON_set_do_test(NameSub,DoTest, DoTestMe)
-    !    if(DoTest)write(*,*)NameSub,' IsInitialized=',IsInitialized
-    if(IsInitialized) return
-
-    IsInitialized=.true.
-
-    if(iProc>=0)then
-       allocate(CoLat_I(nBlocksLat*nLats), &
-            Lon_I(nBlocksLon*nLons), &
-            iProc_A(nBlocksLat*nBlocksLon), &
-            LatPE_I(nBlocksLat*nBlocksLon*nLats), &
-            LonPE_I(nBlocksLat*nBlocksLon*nLons), &
-            iProcPE_A(nBlocksLat*nBlocksLon),&
-            Alt_I(-1:nAlts+2),&
-            stat = iError)
-
-       if (iError /= 0) then
-          write(*,*) NameSub, " Error in allocating variables"
-          write(*,*) " Lat_I, Lon_I, iProc_A, LatPE_I, LonPE_I, iProcPE_A"
-          call CON_stop(NameSub//' UA_ERROR')
-       endif
-
-       LatPE_I   = -1.0e32
-       LonPE_I   = -1.0e32
-       iProcPE_A = -1
-
-       do iBlockPE = 1, nBlocks
-
-          iBlock = iStartBLK + iBlockPE
-
-          !        LatPE_I((iBlock-1)*nLats+1:iBlock*nLats) = &
-          !             Latitude(1:nLats,iBlockPE)
-          !        LonPE_I((iBlock-1)*nLons+1:iBlock*nLons) = &
-          !             Longitude(1:nLons,iBlockPE)
-          iProcPE_A(iBlock) = iProc
-
-       enddo
-
-       ! call MPI_allreduce( LatPE_I, CoLat_I, nBlocksLon*nBlocksLat*nLats, &
-       !          MPI_REAL, MPI_MAX, iComm, iError)
-       !     ! Save into colatitudes instead of latitude
-       !     CoLat_I = cHalfPi - CoLat_I
-       !
-       !     call MPI_allreduce( LonPE_I, Lon_I, nBlocksLon*nBlocksLat*nLons, &
-       !          MPI_REAL, MPI_MAX, iComm, iError)
-
-       call MPI_allreduce( iProcPE_A, iProc_A, nBlocksLon*nBlocksLat, &
-            MPI_INTEGER, MPI_MAX, iComm, iError)
-       !     Alt_I=Altitude(:)
-    else
-       allocate( CoLat_I(1), Lon_I(1),iProc_A(1),Alt_I(1),stat=iError)
-       call check_allocate(iError,NameSub)
-    end if
-
-    call set_grid_descriptor(                        &
-         UA_,                                        &! component index
-         nDim=3,                                     &! dimensionality
-         nRootBlock_D=(/nBlocksLat,nBlocksLon,1/),     &! blocks
-         nCell_D =(/nLats,nLons,nAlts/),             &! size of node based grid
-         XyzMin_D=(/cHalf,cHalf,cHalf/),                   &! generalize coord
-         XyzMax_D=(/nLats-cHalf,nLons-cHalf,nAlts-cHalf/), &! generalize coord
-         TypeCoord='GEO',                            &! magnetic coordinates
-         !Coord1_I= CoLat_I,                          &! colatitudes
-         !Coord2_I= Lon_I,                            &! longitudes
-         !Coord3_I= Alt_I,                            &! radial size in meters
-         iProc_A = iProc_A,                          &! processor assigment
-         IsPeriodic_D=(/.false.,.true.,.false./))     ! periodic in longitude
+    if(done_dd_init(UA_))RETURN
+    
+    ! The 5 coupled variables are
+    ! Temperature, N_CO2, N_O, EUVIonRate_O->O+, EUVIonRate_CO2->CO2+
+    call set_grid_descriptor( &
+         iComp  = UA_, &
+         nDim = 3, &
+         nRootBlock_D = (/ 1, nBlocksLon, nBlocksLat /), &
+         nCell_D = (/ nAlts, nLons, nLats /), &
+         XyzMin_D = (/ AltMin, LonStart, LatStart /), &
+         XyzMax_D = (/ AltMax, LonEnd, LatEnd /), &
+         TypeCoord = 'GEO', &
+         IsPeriodic_D = (/ .false., .true., .false. /), &
+         nVar = nVarCouple)
 
   end subroutine UA_set_grid
 
   !============================================================================
 
-  subroutine UA_init_session(iSession, SWMFTime)
+  subroutine UA_init_session(iSession, TimeSimulation)
 
     use CON_physics,    ONLY: get_time
     use ModTime, only : StartTime, iTimeArray, CurrentTime
 
-    real, intent(in)    :: SWMFTime
+    real, intent(in)    :: TimeSimulation
     integer, intent(in) :: iSession
 
-    logical :: IsFirstTime = .true.
+    logical :: IsUninitialized = .true.
+    logical :: DoTest, DoTestMe
 
-    if (IsFirstTime) then
+    character(len=*), parameter :: NameSub='UA_init_session'
+    !--------------------------------------------------------------------------
+    call CON_set_do_test(NameSub, DoTest, DoTestMe)
 
+    if(IsUninitialized)then
        ! Set time related variables for UA
        call get_time(tStartOut = StartTime)
 
-       CurrentTime = StartTime + SWMFTime
+       CurrentTime = StartTime + TimeSimulation
        call time_real_to_int(StartTime, iTimeArray)
 
        call fix_vernal_time
@@ -239,42 +162,38 @@ contains
        call initialize_gitm(CurrentTime)
        call write_output
 
-       IsFirstTime = .false.
-
+       IsUninitialized = .false.
     endif
 
+    if(DoTest)write(*,*)NameSub,' finished for session ',iSession
+    
   end subroutine UA_init_session
 
-  !==========================================================================
+  !============================================================================
 
-  subroutine UA_run(SWMFTime, SWMFTimeLimit)
+  subroutine UA_run(TimeSimulation, TimeSimulationLimit)
 
-    use ModGITM
-    use ModTime
-    use ModInputs, only: iDebugLevel, Is1D
+    use ModGITM,   ONLY: iProc, Dt
+    use ModTime,   ONLY: StartTime, CurrentTime, EndTime, iStep
+    use ModInputs, ONLY: Is1D
     use ModTimeConvert, ONLY: time_real_to_int, n_day_of_year
 
-    save
+    real, intent(in)    :: TimeSimulationLimit ! Upper limit of simulation time
+    real, intent(inout) :: TimeSimulation ! current time of component
 
-    real, intent(in)    :: SWMFTimeLimit
-    real, intent(inout) :: SWMFTime
+    logical :: DoTest, DoTestMe
+    
+    character(len=*), parameter :: NameSub='UA_run'
+    !--------------------------------------------------------------------------
+    call CON_set_do_test(NameSub, DoTest, DoTestMe)
 
-    integer :: index,lat,long,s,i,j,a, k, jj
-    logical :: done, status_ok
-    integer :: ierror, CLAWiter, n
-    real    :: maxi,tt
-    integer :: time_array(7)
+    if(DoTest)write(*,*)NameSub,' called with tSim, tSimLimit, iProc=',&
+         TimeSimulation, TimeSimulationLimit, iProc
 
-    logical :: exist, IsDone
+    CurrentTime = StartTime + TimeSimulation
+    EndTime     = StartTime + TimeSimulationLimit
 
-    CurrentTime = StartTime + SWMFTime
-    EndTime     = StartTime + SWMFTimeLimit
-
-    if (iDebugLevel > 1) then
-       call time_real_to_int(CurrentTime, time_array)
-       write(*,"(a,i5,5i3,i3)") "> Running UA from time : ",time_array(1:7)
-    endif
-
+    ! Why is calc_pressure here !!!
     call calc_pressure
 
     Dt = 1.e32
@@ -282,15 +201,14 @@ contains
     call calc_timestep_vertical
     if (.not. Is1D) call calc_timestep_horizontal
 
-    if (iDebugLevel > 1) write(*,"(a,f13.5)") "> UA_run Dt : ",Dt
-
+    ! we should advance till EndTime with updating Dt every step
     call advance
 
     iStep = iStep + 1
 
     call write_output
 
-    SWMFTime = CurrentTime - StartTime
+    TimeSimulation = CurrentTime - StartTime
 
   end subroutine UA_run
 
@@ -302,6 +220,8 @@ contains
 
     real, intent(in) :: TimeSimulation
 
+    character(len=*), parameter :: NameSub='UA_save_restart'
+    !--------------------------------------------------------------------------
     call write_restart("UA/restartOUT/")
 
   end subroutine UA_save_restart
@@ -312,8 +232,279 @@ contains
 
     real, intent(in) :: TimeSimulation
 
+    character(len=*), parameter :: NameSub='UA_finalize'
+    !--------------------------------------------------------------------------
     call finalize_gitm
 
   end subroutine UA_finalize
+
+  !============================================================================
+  subroutine UA_find_points(nDimIn, nPoint, Xyz_DI, iProc_I)
+
+    use ModPlanet, ONLY: rBody
+    use ModCoordTransform, ONLY: xyz_to_rlonlat
+
+    integer, intent(in) :: nDimIn                ! dimension of positions
+    integer, intent(in) :: nPoint                ! number of positions
+    real,    intent(in) :: Xyz_DI(nDimIn,nPoint) ! positions
+    integer, intent(out):: iProc_I(nPoint)       ! processor owning position
+
+    ! Find array of points and return processor indexes owning them
+    ! Could be generalized to return multiple processors...
+
+    integer:: iPoint
+    integer :: iiLat, iiLon, iiAlt, iiBlock, iAlt
+    real :: rLon, rLat, rAlt
+    real :: rLonLat_D(3), Alt
+
+    character(len=*), parameter:: NameSub = 'UA_find_points'
+    !--------------------------------------------------------------------------
+    do iPoint = 1, nPoint
+       call xyz_to_rlonlat(Xyz_DI(:,iPoint), rLonLat_D)
+       Alt = rLonLat_D(1) - rBody
+
+       call LocationProcIndex(rLonLat_D(2), rLonLat_D(3), Alt, &
+            iiBlock, iiLon, iiLat, iAlt, rLon, rLat, rAlt, iProc_I(iPoint))
+    end do
+
+  end subroutine UA_find_points
+  !============================================================================
+  subroutine UA_get_grid_info(nDimOut, iGridOut, iDecompOut)
+
+    use ModInputs, ONLY: Is1D,IsFullSphere
+
+    integer, intent(out):: nDimOut    ! grid dimensionality
+    integer, intent(out):: iGridOut   ! grid index
+    integer, intent(out):: iDecompOut ! decomposition index
+
+    character(len=*), parameter :: NameSub = 'UA_get_grid_info'
+
+    ! Return basic grid information useful for model coupling.
+    ! The decomposition index increases with load balance and AMR.
+    !--------------------------------------------------------------------------
+    if (Is1D) nDimOut = 1
+    if (IsFullSphere) nDimOut = 3
+
+    ! The GITM grid does not change
+    iGridOut   = 1
+    iDecompOut = 1
+
+  end subroutine UA_get_grid_info
+  !============================================================================
+  subroutine UA_get_for_gm(IsNew, NameVar, nVarIn, nDimIn, nPoint, Xyz_DI, &
+       Data_VI)
+
+    ! Interpolate Data_VI from UA at the list of positions Xyz_DI
+    ! required by GM
+
+    use ModInputs, ONLY: AltMin, AltMax
+    use ModGITM,  ONLY: iProc, Temperature, NDensityS
+    use ModSizeGitm, ONLY: nLons, nLats, nAlts
+    use ModEUV, ONLY: EuvIonRateS
+    use ModInterpolateScalar, ONLY: bilinear_scalar, trilinear_scalar
+    use ModCoordTransform, ONLY: xyz_to_rlonlat
+    use ModPlanet, ONLY: rBody, iCO2_, iO_, iCO2P_, iOP_
+    use ModConst, ONLY: cBoltzmann, cProtonMass
+    
+    logical,          intent(in) :: IsNew   ! true for new point array
+    character(len=*), intent(in) :: NameVar ! List of variables
+    integer,          intent(in) :: nVarIn  ! Number of variables in Data_VI
+    integer,          intent(in) :: nDimIn  ! Dimensionality of positions
+    integer,          intent(in) :: nPoint  ! Number of points in Xyz_DI
+
+    real, intent(in) :: Xyz_DI(nDimIn,nPoint)  ! Position vectors
+    real, intent(out):: Data_VI(nVarIn,nPoint) ! Data array
+
+    real:: Dist_D(3)
+    integer:: iCell_D(3)
+
+    integer, allocatable, save:: iBlockCell_DI(:,:)
+    real,    allocatable, save:: Dist_DI(:,:)
+
+    integer:: iPoint, iBlock, iProcFound
+    integer :: iiLat, iiLon, iAlt, iiBlock
+    real :: rAlt, rLon, rLat
+    real :: Alt, Lon, Lat
+    real :: rLonLat_D(3)
+
+    real :: grav, dH, Hscale, HCO2, HO, AltMaxDomain, Tnu
+    real, parameter :: NuMassCo2 = 44, NuMassO = 16
+    real, parameter :: Tiny = 1e-12
+    
+    logical:: DoTest, DoTestMe
+
+    character(len=*), parameter :: NameSub='UA_get_for_gm'
+    !--------------------------------------------------------------------------
+    call CON_set_do_test(NameSub, DoTest, DoTestMe)
+
+    if(IsNew)then
+       if(DoTest)write(*,*) NameSub,': iProc, nPoint=', iProc, nPoint
+
+       if(allocated(iBlockCell_DI)) deallocate(iBlockCell_DI, Dist_DI)
+       allocate(iBlockCell_DI(0:nDimIn,nPoint), Dist_DI(nDimIn,nPoint))
+
+       AltMaxDomain = AltMin + (nAlts-0.5)*(AltMax-AltMin)/nAlts
+       
+       ! grav=3.72/r_GB(i,j,k,iBlock)/r_GB(i,j,k,iBlock)         
+       grav = 3.72/(1.0+AltMaxDomain/3396.0)/(1.0+AltMaxDomain/3396.0)
+       
+       do iPoint = 1, nPoint
+          call xyz_to_rlonlat(Xyz_DI(:,iPoint), rLonLat_D)
+          Alt = rLonLat_D(1) - rBody
+          Lon = rLonLat_D(2)
+          Lat = rLonLat_D(3)
+
+          if(Alt > AltMaxDomain)then
+             call LocationIndex(Lon, Lat, iiBlock, iiLon, iiLat, rLon, rLat)
+             
+             ! Store block and cell indexes and distances for extrapolation
+             iBlockCell_DI(0,iPoint)      = iBlock
+             iBlockCell_DI(1:nDimIn,iPoint) = (/ iiLon, iiLat, nAlts /)
+             Dist_DI(:,iPoint)            = (/ 1.0-rLon, 1.0-rLat, 0.0 /)
+          else
+             call LocationProcIndex(Lon, Lat, Alt, &
+                  iiBlock, iiLon, iiLat, iAlt, rLon, rLat, rAlt, iProcFound)
+
+             if(iProcFound /= iProc)then
+                write(*,*) NameSub,' ERROR: Xyz_D, iProcFound=', &
+                     Xyz_DI(:,iPoint), iProcFound
+                call CON_stop(NameSub//' could not find position on this proc')
+             end if
+
+             ! Store block and cell indexes and distances for interpolation
+             iBlockCell_DI(0,iPoint)      = iBlock
+             iBlockCell_DI(1:nDimIn,iPoint) = (/ iiLon, iiLat, iAlt /)
+             Dist_DI(:,iPoint)            = (/ 1.0-rLon, 1.0-rLat, 1.0-rAlt /)
+          end if
+       end do
+    end if
+
+    do iPoint = 1, nPoint
+       ! Use stored block and cell indexes and distances
+       iBlock            = iBlockCell_DI(0,iPoint)
+       iCell_D(1:nDimIn) = iBlockCell_DI(1:nDimIn,iPoint)
+       Dist_D(1:nDimIn)  = Dist_DI(:,iPoint)
+
+       Alt  = sqrt(sum(Xyz_DI(:,iPoint)**2)) - rBody
+       
+       if(Alt > AltMaxDomain)then
+          ! Extrapolate using isothermal stratified atmosphere
+
+          ! Neutral temperature, does not depend on height
+          Tnu = bilinear_scalar(Temperature(:,:,nAlts,iBlock), &
+               -1, nLons+2, -1, nLats+2, &
+               DoExtrapolate=.false., iCell_D=iCell_D(:2), Dist_D=Dist_D(:2))
+
+          Data_VI(1,iPoint) = Tnu
+
+          dH = Alt - AltMaxDomain
+          
+          Hscale = cBoltzmann*Tnu/grav/cProtonMass ! in m unit
+
+          HCO2 = Hscale/NuMassCo2/1e3
+          HO   = Hscale/NuMassO/1e3
+
+          ! N_CO2
+          Data_VI(2,iPoint) = &
+               bilinear_scalar(NDensityS(:,:,nAlts,iCO2_,iBlock), &
+               -1, nLons+2, -1, nLats+2, &
+               DoExtrapolate=.false., iCell_D=iCell_D(:2), Dist_D=Dist_D(:2)) &
+               *exp(-dH/HCO2)
+
+          ! N_O
+          Data_VI(3,iPoint) = bilinear_scalar(NDensityS(:,:,nAlts,iO_,iBlock),&
+               -1, nLons+2, -1, nLats+2, &
+               DoExtrapolate=.false., iCell_D=iCell_D(:2), Dist_D=Dist_D(:2)) &
+               *exp(-dH/HO)
+
+          ! EUVIonRate_CO2->CO2+
+          Data_VI(4,iPoint) = &
+               max(bilinear_scalar(EuvIonRateS(:,:,nAlts,iCO2P_,iBlock),&
+               1, nLons, 1, nLats, &
+               DoExtrapolate=.true., iCell_D=iCell_D(:2), Dist_D=Dist_D(:2)), &
+               Tiny)
+
+          ! EUVIonRate_O->O+
+          Data_VI(5,iPoint) = &
+	       max(bilinear_scalar(EuvIonRateS(:,:,nAlts,iOP_,iBlock), &
+               1, nLons, 1, nLats, &
+	       DoExtrapolate=.true., iCell_D=iCell_D(:2), Dist_D=Dist_D(:2)), &
+               Tiny)
+       else
+          ! Neutral temperature
+          Data_VI(1,iPoint) = trilinear_scalar(Temperature(:,:,:,iBlock), &
+               -1, nLons+2, -1, nLats+2, -1, nAlts+2, &
+               DoExtrapolate=.false., iCell_D=iCell_D, Dist_D=Dist_D)
+
+          ! N_CO2
+          Data_VI(2,iPoint) = trilinear_scalar(NDensityS(:,:,:,iCO2_,iBlock), &
+               -1, nLons+2, -1, nLats+2, -1, nAlts+2, &
+               DoExtrapolate=.false., iCell_D=iCell_D, Dist_D=Dist_D)
+
+          ! N_O
+          Data_VI(3,iPoint) = trilinear_scalar(NDensityS(:,:,:,iO_,iBlock), &
+               -1, nLons+2, -1, nLats+2, -1, nAlts+2, &
+               DoExtrapolate=.false., iCell_D=iCell_D, Dist_D=Dist_D)
+
+          ! EUVIonRate_CO2->CO2+
+          Data_VI(4,iPoint) = &
+               trilinear_scalar(EuvIonRateS(:,:,:,iCO2P_,iBlock),&
+               1, nLons, 1, nLats, 1, nAlts, &
+               DoExtrapolate=.true., iCell_D=iCell_D, Dist_D=Dist_D)
+
+          ! EUVIonRate_O->O+
+          Data_VI(5,iPoint) = &
+               trilinear_scalar(EuvIonRateS(:,:,:,iOP_,iBlock), &
+               1, nLons, 1, nLats, 1, nAlts, &
+               DoExtrapolate=.true., iCell_D=iCell_D, Dist_D=Dist_D)
+       end if
+    end do
+
+  end subroutine UA_get_for_gm
+
+  !============================================================================
+  subroutine UA_get_info_for_ie(nVar, NameVar_V, nMagLat, nMagLon)
+
+    !OUTPUT ARGUMENTS:
+    integer, intent(out) :: nVar
+    integer, intent(out), optional :: nMagLat, nMagLon
+    character(len=*), intent(out), optional :: NameVar_V(:)
+
+    character(len=*), parameter :: NameSub='UA_get_info_for_ie'
+
+    call CON_stop(NameSub//': UA_ERROR: empty version cannot be used!')
+
+  end subroutine UA_get_info_for_ie
+
+  !============================================================================
+  subroutine UA_put_from_ie(Buffer_IIV, iSizeIn, jSizeIn, nVarIn, &
+       NameVarIn_V, iBlock)
+
+    !INPUT/OUTPUT ARGUMENTS:
+    integer, intent(in)           :: iSizeIn, jSizeIn, nVarIn, iBlock
+    real, intent(in)              :: Buffer_IIV(iSizeIn,jSizeIn,nVarIn)
+    character (len=*),intent(in)  :: NameVarIn_V(nVarIn)
+
+    character (len=*), parameter :: NameSub='UA_put_from_ie'
+
+    call CON_stop(NameSub//': UA_ERROR: empty version cannot be used!')
+
+  end subroutine UA_put_from_ie
+  !============================================================================
+  subroutine UA_get_for_ie(BufferOut_IIBV, nMltIn, nLatIn, nVarIn, NameVarIn_V)
+
+    ! INPUT ARGUMENTS:
+    integer,          intent(in) :: nMltIn, nLatIn, nVarIn
+    character(len=3), intent(in) :: NameVarIn_V(nVarIn)
+
+    ! OUTPUT ARGUMENTS:
+    real, intent(out) :: BufferOut_IIBV(nMltIn, nLatIn, 2, nVarIn)
+
+    character (len=*), parameter :: NameSub='UA_get_for_ie'
+
+    call CON_stop(NameSub//': UA_ERROR: empty version cannot be used!')
+
+  end subroutine UA_get_for_ie
+
 
 end module UA_wrapper
