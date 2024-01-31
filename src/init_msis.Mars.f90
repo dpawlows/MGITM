@@ -470,6 +470,7 @@ subroutine readDustHeader
      if (iError .ne. 0) then
         write(*,*) "Error reading Dust file"
         write(*,*) "Is the header missing?"
+        write(*,*) cLine
         call stop_GITM("In init_msis_Mars")
      endif
      if (cline(1:7) .eq. '#HEADER') notstarted = .False.
@@ -619,11 +620,12 @@ if (DustFileType .eq. "FullHorizontal") then
   HorizontalConrathProfile = 0.03
 
   else if (DustFileType .eq. "MCSVertical") then
-    !Read in data
+     !Read in data
+
      do iTime = 1, nDustTimes
         do iLat = 1, nDustLats
            do iAlt = 1, nDustAlts
-             read(iInputUnit_,*,iostat=iError) TimeArray(1:6), MCSTemp
+              read(iInputUnit_,*,iostat=iError) TimeArray(1:6), MCSTemp
              if (iError .ne. 0) then
                 write(*,*) "Error reading dustfile"
                 call stop_gitm('Stopping in init_msis.Mars')
@@ -688,7 +690,7 @@ if (DustFileType .eq. "FullHorizontal") then
 
     enddo
  endif
-
+ 
   close(iInputUnit_)
 
 

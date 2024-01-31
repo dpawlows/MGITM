@@ -1603,7 +1603,7 @@ end subroutine init_isochem
     REAL :: PTROP,ALS,ALBI
     REAL :: QH2O(LL_LEVELS)
 
-    integer :: nw, n, nx, k, L,L1,MALT
+    integer :: nw, n, nx, k, L,L1,MALT,itime(7)
 
     !C  VISUAL
 
@@ -1692,6 +1692,9 @@ end subroutine init_isochem
 
            if ((CurrentTime - DustTime(1)) .lt. 0 .or.  (DustTime(ndusttimes) - CurrentTime) .lt. 0) then
               write(*,*) currenttime- dusttime(ndusttimes),dusttime(1)-currenttime
+              call time_real_to_int(dusttime(ndusttimes),itime)
+              write(*,*) iTimeArray
+              write(*,*) itime
               write(*,*) 'Dust isnt specified at this time'
               call stop_gitm('Stopping in Mars.f90')
            endif
