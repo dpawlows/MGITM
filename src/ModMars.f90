@@ -873,6 +873,7 @@ contains
     cSpecies(iAr_)   = "Ar"
     cSpecies(iH_)    = "H"
     cSpecies(iHe_)   = "He"
+    cSpecies(iN2D_)   = "N(2D)"
 
     cIons(iO2P_)   = "O!D2!U+!N"
     cIons(iCO2P_)   = "CO!D2!U+!N"
