@@ -620,8 +620,9 @@ if (DustFileType .eq. "FullHorizontal") then
   HorizontalConrathProfile = 0.03
 
   else if (DustFileType .eq. "MCSVertical") then
-     !Read in data
-
+    !Read in data
+    !Files should be yyyy mm dd hh mm ss Latitude pressureLevel(not used) pressure(Pa) CumulativeTau  MixingRatio
+    !and organized by time, lat, alt to fill the dust grid
      do iTime = 1, nDustTimes
         do iLat = 1, nDustLats
            do iAlt = 1, nDustAlts
