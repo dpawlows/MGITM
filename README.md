@@ -6,11 +6,29 @@ at solving for the dynamics of the upper atmosphere.
 
 Installation
 ------------
+In order to run M-GITM, you should have the following packages installed:
+- openmpi-bin
+- openmpi-common
+- libopenmpi-dev
+- make
+- perl
+
+Additionally, you need a fortran compiler. On personal computers, it is common to run using 
+- gfortran-9
+While on NASA computers, 
+- ifort
+is typically used.
+
+ With these packages installed, M-GITM can be installed with:
 `Config.pl -install -mars [-compiler=compiler]`
 
     The configuration script is capable of detecting the appropriate
     compiler on some systems. However, you may opt to specify the
     appropriate compiler (e.g. -compiler=gfortran)
+
+> One common installation error can happen if perl isn't setup to search . for libraries.
+> If you see such an error, ensure that you have PERL5LIB=. set in your shell startup file.
+
 
 Compilation
 -----------
