@@ -110,7 +110,7 @@ GITM_general:
 	${LINK.f90} -o ${EXE} ${OBJECTS_EXE} \
 		-L${ABDIR} -lSphere \
 		-L${LIBDIR} -lEMPIRICALIE -lEMPIRICALUA -lINDICES -lSHARE \
-		-L${GLDIR} -lGLOW ${LBLAS} ${Lflag1}
+		-L${GLDIR} -lGLOW ${LBLAS} ${LflagMpi}
 
 GITM_for_Darwin:
 	rm -rf Tmp_; mkdir Tmp_
@@ -121,11 +121,11 @@ GITM_for_Darwin:
 		ar -x ${LIBDIR}/libINDICES.a; \
 		ar -x ${LIBDIR}/libSHARE.a; \
 		ar -x ${GLDIR}/libGLOW.a
-	${LINK.f90} -o ${EXE} ${OBJECTS_EXE} Tmp_/*.o ${LBLAS} ${Lflag1}
+	${LINK.f90} -o ${EXE} ${OBJECTS_EXE} Tmp_/*.o ${LBLAS} ${LflagMpi}
 	rm -rf Tmp_
 
 POST:	PostProcess.o
-	${LINK.f90} ${Lflag2} -o PostProcess.exe PostProcess.o
+	${LINK.f90} ${Lflag} -o PostProcess.exe PostProcess.o
 
 
 MY_LIB = libGITM.a
