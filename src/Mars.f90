@@ -7296,7 +7296,7 @@ subroutine ERRORS (ierr,varerr)
       use ModPlanet
 
 !     include	'nlte_paramdef.h'  !  Set MGITM path to all datafiles :
-!                                     /UA/DataIn/*.dat
+!                                     /UA/DataIn/ *.dat
 !     include	'nlte_commons.h'
 
       implicit none

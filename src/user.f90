@@ -1,1 +1,1 @@
-userEarth.f90
+userMars.f90
