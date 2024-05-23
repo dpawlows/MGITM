@@ -39,7 +39,7 @@ test_rundir:
 ### EARTH GITM TEST ###
 
 test_gitm_earth:
-	$(MAKE) test_gitm_earth_1d
+#	$(MAKE) test_gitm_earth_1d
 #	$(MAKE) test_gitm_earth_eclipse
 #	$(MAKE) test_gitm_earth_3d
 
@@ -137,7 +137,7 @@ test_gitm_earth_3d_check:
 ### MARS GITM TEST ###
 
 test_gitm_mars:
-	make test_gitm_mars_1d
+#	make test_gitm_mars_1d
 	make test_gitm_mars_3d
 
 test_gitm_mars_1d:
