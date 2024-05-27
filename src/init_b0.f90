@@ -146,7 +146,7 @@ end subroutine init_b0
 subroutine get_magfield(GeoLat,GeoLon,GeoAlt,xmag,ymag,zmag)
 
   use ModGITM
-  use ModPlanet
+  use GITM_planet
   use ModInputs, only: UseApex
   use ModConstants, only: Pi
 
@@ -185,7 +185,7 @@ subroutine get_magfield_all(GeoLat,GeoLon,GeoAlt,alat,alon,xmag,ymag,zmag, &
 
   use ModGITM
   use ModTime
-  use ModPlanet
+  use GITM_planet
   use ModInputs
   use ModConstants, only: Pi
 
@@ -474,7 +474,7 @@ end subroutine dipole_to_geo
 
 subroutine mydipole(GeoLat, GeoLon, GeoAlt, LShell, aLat, aLon, BEast, BNorth, BVertical)
 
-  use ModPlanet
+  use GITM_planet
   use ModInputs
   use ModConstants, only: Pi
 

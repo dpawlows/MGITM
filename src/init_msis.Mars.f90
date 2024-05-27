@@ -12,7 +12,7 @@ subroutine get_msis_temperature(lon, lat, alt, t, h)
 
   use ModTime
   use ModInputs
-  use ModPlanet
+  use GITM_planet
   use ModGITM
 
   implicit none
@@ -65,7 +65,7 @@ end subroutine get_msis_temperature
 
 subroutine init_msis
 
-  use ModPlanet
+  use GITM_planet
   use ModGITM
   use ModEUV
   use ModInputs
@@ -427,7 +427,7 @@ subroutine msis_bcs(iJulianDay,UTime,Alt,Lat,Lon,Lst, &
 end subroutine msis_bcs
 
 subroutine read_dust
-  use ModPlanet
+  use GITM_planet
   use ModInputs
   use ModGITM
 
@@ -455,7 +455,7 @@ end subroutine read_dust
 
 
 subroutine readDustHeader
-  use ModPlanet
+  use GITM_planet
   use ModInputs, only: cDustFile, iCharLen_,DustFileType
 
   character (len=iCharLen_) :: cLine
@@ -510,7 +510,7 @@ end subroutine readDustHeader
 subroutine setTau(iBlock)
 
   use ModInputs
-  use ModPlanet
+  use GITM_planet
   use ModGITM, only : Latitude,Longitude,iproc
 
   integer, intent(IN) :: iBlock
@@ -750,7 +750,7 @@ end subroutine setTau
 
 
 subroutine cleanDust
-use ModPlanet, only : DustLatitude,DustLongitude
+use GITM_planet, only : DustLatitude,DustLongitude
 
 if (allocated(DustLatitude)) then
    deallocate(DustLatitude)

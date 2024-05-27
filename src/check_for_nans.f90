@@ -2,7 +2,7 @@ subroutine check_for_nans_ivelocities(cMarker)
 
   use ModSizeGitm
   use ModGITM
-  use ModPlanet
+  use GITM_planet
 
   implicit none
 
@@ -33,7 +33,7 @@ subroutine check_for_nans_ions(cMarker)
 
   use ModSizeGitm
   use ModGITM
-  use ModPlanet
+  use GITM_planet
 
   implicit none
 
@@ -71,7 +71,7 @@ subroutine check_for_nans_neutrals(cMarker)
 
   use ModSizeGitm
   use ModGITM
-  use ModPlanet
+  use GITM_planet
 
   implicit none
 
@@ -109,7 +109,7 @@ subroutine check_for_nans_temps(cMarker)
 
   use ModSizeGitm
   use ModGITM
-  use ModPlanet
+  use GITM_planet
 
   implicit none
 

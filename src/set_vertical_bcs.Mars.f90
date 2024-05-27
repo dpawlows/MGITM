@@ -9,7 +9,7 @@ subroutine set_vertical_bcs(LogRho,LogNS,Vel_GD,Temp, LogINS, iVel, VertVel)
   ! Fill in ghost cells at the top and bottom
 
   use ModSizeGitm, only: nAlts
-  use ModPlanet, only: nSpecies, nIonsAdvect, Mass, nIons, &
+  use GITM_planet, only: nSpecies, nIonsAdvect, Mass, nIons, &
                        IsEarth, iN2_,iNO_, iN4S_, iO_
   use ModGITM, only: TempUnit, iEast_, iNorth_, iUp_
   use ModInputs

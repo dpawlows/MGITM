@@ -2,7 +2,7 @@ subroutine advance_horizontal(iBlock)
 
   use ModConstants, only : pi
   use ModSizeGitm
-  use ModPlanet, only : nSpecies, nIonsAdvect, OmegaBody
+  use GITM_planet, only : nSpecies, nIonsAdvect, OmegaBody
   use ModGITM
   use ModInputs
   use ModUserGITM

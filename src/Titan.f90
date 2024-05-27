@@ -1,7 +1,7 @@
 
 subroutine fill_photo(photoion, photoabs, photodis)
 
-  use ModPlanet
+  use GITM_planet
   use ModEUV
   use ModInputs
 
@@ -81,7 +81,7 @@ subroutine calc_planet_sources(iBlock)
   use ModSources
   use ModGITM
   use ModTime
-  use ModPlanet
+  use GITM_planet
   
   implicit none
 
@@ -113,7 +113,7 @@ subroutine planet_limited_fluxes(iBlock)
   use ModSources
   use ModGITM
   use ModTime
-  use ModPlanet
+  use GITM_planet
 
   implicit none
   
@@ -148,7 +148,7 @@ end subroutine planet_limited_fluxes
 
 subroutine init_heating_efficiency
 
-  use ModPlanet
+  use GITM_planet
   use ModGITM, only: nLons, nLats, nAlts, nBlocks, Altitude_GB
   use ModEUV, only: HeatingEfficiency_CB, eHeatingEfficiency_CB
   use ModIoUnit, only: UnitTmp_
@@ -228,7 +228,7 @@ end subroutine calc_eddy_diffusion_coefficient
 
 subroutine init_aerosol
 
-  use ModPlanet
+  use GITM_planet
   use ModConstants
   use ModIoUnit, only:  UnitTmp_
 
@@ -279,7 +279,7 @@ subroutine init_aerosol
   subroutine calc_aerosols(iBlock)
 
 
-  use ModPlanet
+  use GITM_planet
   use ModConstants
   use ModGITM
 
@@ -436,7 +436,7 @@ NHaze = 0.0
 
 subroutine init_isochem
 
-  use ModPlanet
+  use GITM_planet
   use ModGITM
   use ModInputs
   use ModIoUnit, only : UnitTmp_
@@ -471,7 +471,7 @@ end subroutine init_isochem
 
 subroutine init_magheat
 
-  use ModPlanet
+  use GITM_planet
   use ModGITM
   use ModEUV
   use ModIoUnit, only : UnitTmp_
@@ -582,7 +582,7 @@ end subroutine set_planet_defaults
 !                                                Update 
 !  -----------------------------------------------------------------
 
-      use ModPlanet
+      use GITM_planet
       use ModGITM
       use ModConstants, only:  Boltzmanns_Constant, Speed_Light, &
                                Planck_Constant

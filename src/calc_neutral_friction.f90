@@ -6,7 +6,7 @@ subroutine calc_neutral_friction(oVel, EddyCoef_1d, NDensity_1d, NDensityS_1d, &
 
   use ModGITM
   use ModSources
-  use ModPlanet, only: Diff0, DiffExp, IsEarth
+  use GITM_planet, only: Diff0, DiffExp, IsEarth
   use ModInputs, only: UseNeutralFriction, UseBoquehoAndBlelly, UseEddyCorrection
 
   implicit none

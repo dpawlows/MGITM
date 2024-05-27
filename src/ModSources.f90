@@ -9,7 +9,7 @@ module ModSources
 !  S. W. Bougher: 21-06-15
 
   use ModSizeGitm
-  use ModPlanet, only: nSpecies,nSpeciesTotal,nIons
+  use GITM_planet, only: nSpecies,nSpeciesTotal,nIons
 
   !\
   ! Sources for neutral temperature

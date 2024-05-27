@@ -14,7 +14,7 @@ subroutine calc_rates(iBlock)
   use ModGITM
   use ModRates
   use ModConstants
-  use ModPlanet
+  use GITM_planet
   use ModInputs
   use ModEUV, only : SunOrbitEccentricity
 
@@ -339,7 +339,7 @@ subroutine calc_collisions(iBlock)
   use ModGITM
   use ModRates
   use ModConstants
-  use ModPlanet
+  use GITM_planet
   use ModInputs
 
   implicit none

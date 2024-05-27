@@ -8,7 +8,7 @@ subroutine euv_ionization_heat(iBlock)
 
   use ModGITM
   use ModEUV
-  use ModPlanet
+  use GITM_planet
   use ModConstants
   use ModInputs
   use ModSources

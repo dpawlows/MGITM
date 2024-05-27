@@ -1,7 +1,7 @@
 subroutine advance_vertical(iLon,iLat,iBlock)
 
   use ModGITM
-  use ModPlanet, only: nSpecies, OmegaBody, nIonsAdvect
+  use GITM_planet, only: nSpecies, OmegaBody, nIonsAdvect
   use ModConstants, only: pi
   use ModSources, only: EUVHeating, KappaEddyDiffusion
   use ModInputs, only: UseIonAdvection, iDebugLevel

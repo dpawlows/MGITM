@@ -11,7 +11,7 @@ subroutine advance_vertical_1d
   use ModVertical
   use ModGITM, ONLY : Dt, iCommGITM, iProc, iEast_, iNorth_, iUp_
   use ModInputs, only: UseBarriers, iDebugLevel
-  use ModPlanet, only: iN2_
+  use GITM_planet, only: iN2_
   implicit none
   !-----------------------------------------------------------
 
@@ -393,7 +393,7 @@ subroutine advance_vertical_1stage( &
 
   use ModGITM, only: &
        Dt, iEast_, iNorth_, iUp_
-  use ModPlanet
+  use GITM_planet
   use ModSizeGitm
   use ModVertical, only : &
        Heating, EddyCoef_1d, ViscCoef_1d,Centrifugal, Coriolis, &

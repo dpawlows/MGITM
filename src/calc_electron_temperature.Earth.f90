@@ -3,7 +3,7 @@ subroutine calc_electron_temperature(iBlock)
 
   use ModSizeGitm
   use ModGITM
-  use ModPlanet
+  use GITM_planet
   use ModRates
   use ModEUV
   use ModSources, only: eEuvHeating,JouleHeating
@@ -522,7 +522,7 @@ subroutine calc_etemp_sources(Heating,Cooling,iBlock)
 
   use ModSizeGitm
   use ModGITM
-  use ModPlanet
+  use GITM_planet
   use ModRates
   use ModEUV
   use ModSources, only: eEuvHeating

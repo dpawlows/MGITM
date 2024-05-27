@@ -10,7 +10,7 @@ subroutine calc_chemistry(iBlock)
   use ModChemistry
   use ModGITMImplicit
   use ModTime, only : iStep
-  use ModPlanet, only : ialtminiono
+  use GITM_planet, only : ialtminiono
   use ModUserGITM
 
   implicit none
@@ -352,7 +352,7 @@ end subroutine calc_chemistry
 subroutine calc_dtsub(IonSources,IonLosses,NeutralSources,NeutralLosses,dtSub)
 
   use ModChemistry, only: Ions,Neutrals
-  use ModPlanet, only : nIons,nSpeciesTotal
+  use GITM_planet, only : nIons,nSpeciesTotal
 
   real, intent(inout) :: dtSub,IonLosses(nIons)
   real, intent(in) :: IonSources(nIons)

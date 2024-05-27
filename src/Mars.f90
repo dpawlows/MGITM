@@ -34,7 +34,7 @@ subroutine fill_photo(photoion, photoabs, photodis)
 ! Adjustment:  September 2021  (DD2E, Stnd EUVM Cases)
 ! -- KMAX = 1500., KMIN = 500.
 
-  use ModPlanet
+  use GITM_planet
   use ModEUV
 
   implicit none
@@ -119,7 +119,7 @@ subroutine calc_planet_sources(iBlock)
   use ModInputs
   use ModSources
   use ModGITM
-  use ModPlanet
+  use GITM_planet
   use ModEUV, only:SunOrbitEccentricity,AveCosSza
   use ModTime
   use ModUserGITM
@@ -446,7 +446,7 @@ subroutine nlte_tcool(iBlock)
 
   use ModInputs
   use ModSources, only: RadCoolingRate
-  use ModPlanet
+  use GITM_planet
   use ModGITM
   use ModUserGITM
   use ModConstants, only:  Boltzmanns_Constant, Speed_Light, &
@@ -455,7 +455,7 @@ subroutine nlte_tcool(iBlock)
 
   implicit none
 
-  ! Common Blocks (from LMD-MGCM) !   Added to ModPlanet.f90
+  ! Common Blocks (from LMD-MGCM) !   Added to GITM_planet.f90
   ! include 'nlte_paramdef.h'
   ! include 'nlte_commons.h'
 
@@ -711,7 +711,7 @@ end subroutine nlte_tcool
 !---------------------------------------------------------
 
 subroutine init_isochem
-  use ModPlanet, only: ialtminiono
+  use GITM_planet, only: ialtminiono
   use ModInputs, only: altminiono
   use ModGITM, only: Altitude_GB
   use ModSizeGITM
@@ -855,7 +855,7 @@ end subroutine init_isochem
      use ModInputs
      use ModSources, only : GWDrag, GWIHeat, GWDHeat, GW_net_heating, &
 	GW_beta_tot, GW_beta_non, GW_beta_ext
-     use ModPlanet
+     use GITM_planet
      use ModGITM
      use ModConstants, only : PI
      use ModIndicesInterfaces
@@ -1569,7 +1569,7 @@ end subroutine init_isochem
     !
     use ModInputs
     use ModSources, only: LowAtmosRadRate,QnirLTE,QnirTOT,CirLTE
-    use ModPlanet
+    use GITM_planet
     use ModGITM
     use ModEUV, only: AveCosSza
     use ModTime
@@ -1941,7 +1941,7 @@ end subroutine init_isochem
 
 !!!!!!Why is altmin and altbot different? !!!!!!!!!!!!!!!!!!!1
 
-    use ModPlanet
+    use GITM_planet
     use ModGITM, only: iproc
     implicit none
 
@@ -2096,7 +2096,7 @@ ALTBOUND(0) = altbot
     !C GCM2.0  Sept 2002
     !C Driver:  Jan 2003 - Modified from GCM 3-D to DRIVER 1-D
 
-    use ModPlanet
+    use GITM_planet
     use ModInputs
     use ModGITM, only : iproc
     implicit none
@@ -2324,7 +2324,7 @@ ALTBOUND(0) = altbot
 !!$C     CO2V(NT,NPS,NW,NG) - Visual CO2 k-coefficients
 !!$C
 !!$C----------------------------------------------------------------------C
-    use ModPlanet
+    use GITM_planet
     use ModGITM, only: iproc
     implicit none
 
@@ -2634,7 +2634,7 @@ ALTBOUND(0) = altbot
 !!$C
 !!$C----------------------------------------------------------------------C
 
-    use ModPlanet
+    use GITM_planet
 
     implicit none
 
@@ -2737,7 +2737,7 @@ ALTBOUND(0) = altbot
 
     !C  GCM2.0  Feb 2003
 
-    use ModPlanet
+    use GITM_planet
     use ModGITM, only: iproc
     implicit none
 
@@ -2934,7 +2934,7 @@ ALTBOUND(0) = altbot
 !!$C DIFFV         = downward diffuse solar flux at the surface
 !!$C
 
-       use ModPlanet
+       use GITM_planet
        use ModGITM, only: iProc
 
        implicit none
@@ -3393,7 +3393,7 @@ END DO
 !!$C
 !!$C----------------------------------------------------------------------C
 
-          use ModPlanet
+          use GITM_planet
 
           implicit none
 
@@ -3633,7 +3633,7 @@ END DO
 
           !C  GCM2.0  Feb 2003
 
-          use ModPlanet
+          use GITM_planet
 
           implicit none
 
@@ -3830,7 +3830,7 @@ END DO
 !!$C
 !!$C----------------------------------------------------------------------C
 
-             use ModPlanet
+             use GITM_planet
 
              implicit none
 
@@ -4036,7 +4036,7 @@ subroutine NLTEdlvr11_ZGRID (n_gcm, &
 
 !***********************************************************************
 
-      use ModPlanet
+      use GITM_planet
 !     use ModNLTE
 
 !     include 'nlte_paramdef.h'
@@ -4321,7 +4321,7 @@ subroutine NLTEdlvr11_CZALU(ierr,varerr)
 
 !***********************************************************************
 
-      use ModPlanet
+      use GITM_planet
 !     use ModNLTE
 
 !     include 'nlte_paramdef.h'
@@ -5103,7 +5103,7 @@ subroutine NLTEdlvr11_FB626CTS( hr110CTS, nl_cts_real )
 
 !***********************************************************************
 
-      use ModPlanet
+      use GITM_planet
 !     use ModNLTE
 
 !     include 'nlte_paramdef.h'
@@ -5496,7 +5496,7 @@ subroutine ERRORS (ierr,varerr)
 !     -MZTVC121sub_dlvr11_03.f
 !***********************************************************************
 
-      use ModPlanet
+      use GITM_planet
 !     use ModNLTE
 
 !     include 'nlte_paramdef.h'
@@ -5695,7 +5695,7 @@ subroutine ERRORS (ierr,varerr)
 !     *** Old MZTUD110_dlvr11_03.f
 !***********************************************************************
 
-      use ModPlanet
+      use GITM_planet
 !     use ModNLTE
 
 !     include 'nlte_paramdef.h'
@@ -6088,7 +6088,7 @@ subroutine ERRORS (ierr,varerr)
 !***********************************************************************
 
       use ModConstants, only : pi
-      use ModPlanet
+      use GITM_planet
 !     use ModNLTE
 
 !     include 'nlte_paramdef.h'
@@ -6184,7 +6184,7 @@ subroutine ERRORS (ierr,varerr)
 !     *** Old MZMC121_dlvr11_03.f ***
 !***********************************************************************
 
-      use ModPlanet
+      use GITM_planet
 !     use ModNLTE
 
 !     include 'nlte_paramdef.h'
@@ -6262,7 +6262,7 @@ subroutine ERRORS (ierr,varerr)
 !     *** Old MZTUD121_dlvr11_03.f ***
 !***********************************************************************
 
-      use ModPlanet
+      use GITM_planet
 !     use ModNLTE
 
 !     include 'nlte_paramdef.h'
@@ -6628,7 +6628,7 @@ subroutine ERRORS (ierr,varerr)
 !***********************************************************************
 
       use ModConstants, only : pi
-      use ModPlanet
+      use GITM_planet
 
 !     include 'nlte_paramdef.h'
 !     include 'nlte_commons.h'
@@ -6729,7 +6729,7 @@ subroutine ERRORS (ierr,varerr)
 !     *** Old MZESC121_dlvr11_03.f ***
 !***********************************************************************
 
-      use ModPlanet
+      use GITM_planet
 !     use ModNLTE
 
 !     include 'nlte_paramdef.h'
@@ -6784,7 +6784,7 @@ subroutine ERRORS (ierr,varerr)
 !     *** Old MZESC121sub_dlvr11_03.f ***
 !***********************************************************************
 
-      use ModPlanet
+      use GITM_planet
 !     use ModNLTE
 
 !     include 'nlte_paramdef.h'
@@ -6989,7 +6989,7 @@ subroutine ERRORS (ierr,varerr)
 !     *** Old MZTVC121_dlvr11.f ***
 !***********************************************************************
 
-      use ModPlanet
+      use GITM_planet
 !     use ModNLTE
 
 !     include 'nlte_paramdef.h'
@@ -7050,7 +7050,7 @@ subroutine ERRORS (ierr,varerr)
 !***********************************************************************
 
       use ModConstants, only : pi
-      use ModPlanet
+      use GITM_planet
 !     use ModNLTE
 
 !     include 'nlte_paramdef.h'
@@ -7293,7 +7293,7 @@ subroutine ERRORS (ierr,varerr)
 !     equil hidrostatico. smoothing en cr y sh
 !     jan 98	malv		first version
 !***********************************************************************
-      use ModPlanet
+      use GITM_planet
 
 !     include	'nlte_paramdef.h'  !  Set MGITM path to all datafiles :
 !                                     /UA/DataIn/ *.dat
@@ -7381,7 +7381,7 @@ subroutine ERRORS (ierr,varerr)
 !***********************************************************************
       subroutine LeeHISTOGRMS
 !***********************************************************************
-      use ModPlanet
+      use GITM_planet
 
 !     include	'nlte_paramdef.h'
 !     include	'nlte_commons.h'
@@ -7431,7 +7431,7 @@ subroutine ERRORS (ierr,varerr)
       subroutine GETK_dlvr11(tt)
 
 !***********************************************************************
-      use ModPlanet
+      use GITM_planet
 
 !     include	'nlte_paramdef.h'
 !     include	'nlte_commons.h'
@@ -7581,7 +7581,7 @@ subroutine ERRORS (ierr,varerr)
       function planckdp(tp,xnu)
 !***********************************************************************
 
-      use ModPlanet
+      use GITM_planet
 !     use ModNLTE
 
 !     include 'nlte_paramdef.h'
@@ -7605,7 +7605,7 @@ subroutine ERRORS (ierr,varerr)
 
 !***********************************************************************
 
-      use ModPlanet
+      use GITM_planet
 !     use ModNLTE
 
 !     include 'nlte_paramdef.h'
@@ -7644,7 +7644,7 @@ subroutine ERRORS (ierr,varerr)
 
 !     ****************************************************************
 
-      use ModPlanet
+      use GITM_planet
 !     use ModNLTE
 
 !     include 'nlte_paramdef.h'
@@ -7675,7 +7675,7 @@ subroutine ERRORS (ierr,varerr)
 
 !     **********************************************************************
 
-      use ModPlanet
+      use GITM_planet
 !     use ModNLTE
 
 !     include 'nlte_paramdef.h'
@@ -7734,7 +7734,7 @@ subroutine ERRORS (ierr,varerr)
 
 !     **********************************************************************
 
-      use ModPlanet
+      use GITM_planet
 !     use ModNLTE
 
 !     include 'nlte_paramdef.h'
@@ -7826,7 +7826,7 @@ subroutine ERRORS (ierr,varerr)
 !     que esto represente una aceleracion real.
 !     **********************************************************************
 
-      use ModPlanet
+      use GITM_planet
 !     use ModNLTE
 
 !     include 'nlte_paramdef.h'
@@ -7863,7 +7863,7 @@ subroutine ERRORS (ierr,varerr)
 !     que esto represente una aceleracion real.
 !     **********************************************************************
 
-      use ModPlanet
+      use GITM_planet
 !     use ModNLTE
 
 !     include 'nlte_paramdef.h'
@@ -7903,7 +7903,7 @@ subroutine ERRORS (ierr,varerr)
 
 !     **********************************************************************
 
-      use ModPlanet
+      use GITM_planet
       use ModConstants, only : pi
 !     use ModNLTE
 
@@ -7988,7 +7988,7 @@ subroutine ERRORS (ierr,varerr)
 
 !     ***********************************************************************
 
-      use ModPlanet
+      use GITM_planet
 !     use ModNLTE
 
 !     include 'nlte_paramdef.h'
@@ -8052,7 +8052,7 @@ subroutine ERRORS (ierr,varerr)
 
 !     ***********************************************************************
 
-      use ModPlanet
+      use GITM_planet
 !     use ModNLTE
 
 !     include 'nlte_paramdef.h'
@@ -8104,7 +8104,7 @@ subroutine ERRORS (ierr,varerr)
 
 !     ***********************************************************************
 
-      use ModPlanet
+      use GITM_planet
 !     use ModNLTE
 
 !     include 'nlte_paramdef.h'
@@ -8160,7 +8160,7 @@ subroutine ERRORS (ierr,varerr)
 
 !***********************************************************************
 
-      use ModPlanet
+      use GITM_planet
 !     use ModNLTE
 
 !     include 'nlte_paramdef.h'
@@ -9830,7 +9830,7 @@ subroutine ERRORS (ierr,varerr)
 
 !*******************************************************************
 
-      use ModPlanet
+      use GITM_planet
 !     use ModNLTE
 
 !     include 'nlte_paramdef.h'
@@ -9866,7 +9866,7 @@ subroutine ERRORS (ierr,varerr)
 
 !     *******************************************************************
 
-      use ModPlanet
+      use GITM_planet
 !     use ModNLTE
 
 !     include 'nlte_paramdef.h'

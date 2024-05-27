@@ -10,7 +10,7 @@ module ModInputs
 ! ------------------------------------------------------------------------------
 
   use ModConstants
-  use ModPlanet, only : nSpecies, Rotation_Period
+  use GITM_planet, only : nSpecies, Rotation_Period
   use ModIoUnit, only : UnitTmp_
   use ModKind, only:    Real8_
 

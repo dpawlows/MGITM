@@ -2,7 +2,7 @@ subroutine get_msis_temperature(lon, lat, alt, t, h)
 
   use ModTime
   use ModInputs
-  use ModPlanet
+  use GITM_planet
   use ModGITM
 
   implicit none
@@ -39,7 +39,7 @@ end subroutine get_msis_temperature
 
 subroutine init_msis
 
-  use ModPlanet
+  use GITM_planet
   use ModGITM
   use ModEUV
   use ModInputs, only: iDebugLevel, iInputUnit_
