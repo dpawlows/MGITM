@@ -5,7 +5,7 @@
 module ModVertical
 
   use ModSizeGitm, only: nAlts
-  use ModPlanet, only: nSpecies, nIonsAdvect, nSpeciesTotal
+  use GITM_planet, only: nSpecies, nIonsAdvect, nSpeciesTotal
 
   implicit none
 

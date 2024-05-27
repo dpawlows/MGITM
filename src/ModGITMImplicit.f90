@@ -80,7 +80,7 @@ contains
     use ModChemistry
     use ModGITM,  ONLY: iProc, dt,SpeciesDensity, SpeciesDensityOld
     use ModKind,    ONLY: nByteReal
-    use ModPlanet, ONLY: nSpeciesAll
+    use GITM_planet, ONLY: nSpeciesAll
     use ModTime, ONLY: istep
     use ModInputs, ONLY: CFL,BetaPointImpl, IsASymmetric
 

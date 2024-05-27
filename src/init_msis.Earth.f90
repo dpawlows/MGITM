@@ -3,7 +3,7 @@ subroutine get_msis_temperature(lon, lat, alt, t, h)
  use ModIndicesInterfaces
   use ModTime
   use ModInputs
-  use ModPlanet
+  use GITM_planet
   use ModGITM
 
   use EUA_ModMsis90, only: meter6, gtd6
@@ -75,7 +75,7 @@ subroutine init_msis
   use ModGITM
   use ModInputs
   use ModConstants
-  use ModPlanet
+  use GITM_planet
   use ModTime
 
   use EUA_ModMsis90, ONLY: meter6, gtd6, tselec
@@ -287,7 +287,7 @@ subroutine msis_bcs(iJulianDay,UTime,Alt,Lat,Lon,Lst, &
      F107A,F107,AP,LogNS, Temp, LogRho, v)
 
   use ModTime, only : iTimeArray
-  use ModPlanet
+  use GITM_planet
 
   use EUA_ModMsis90, ONLY: gtd6
 

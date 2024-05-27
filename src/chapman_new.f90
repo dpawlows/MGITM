@@ -4,7 +4,7 @@ subroutine chapman_integrals(iBlock)
 
   use ModGITM
   use ModEUV
-  use ModPlanet
+  use GITM_planet
   use ModConstants
   use ModInputs, only : iDebugLevel
   implicit none

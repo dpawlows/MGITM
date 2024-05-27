@@ -1,7 +1,7 @@
 subroutine get_temperature(lon, lat, alt, t, h)
 
   use ModInputs
-  use ModPlanet
+  use GITM_planet
 
   implicit none
 

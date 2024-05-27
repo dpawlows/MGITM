@@ -2,7 +2,7 @@
 module ModGITM
 
   use ModSizeGitm
-  use ModPlanet
+  use GITM_planet
 
   implicit none
 

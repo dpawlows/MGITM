@@ -3,7 +3,7 @@ subroutine calc_chemistry(iBlock)
 
   use ModSizeGitm
   use ModGITM
-  use ModPlanet
+  use GITM_planet
   use ModRates
   use ModEUV
   use ModSources

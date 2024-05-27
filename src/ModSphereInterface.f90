@@ -12,7 +12,7 @@ module ModSphereInterface
   use ModGITM
   use ModConstants
   use ModSizeGitm
-  use ModPlanet, only: nSpecies
+  use GITM_planet, only: nSpecies
   use ModInputs, only: UseIonAdvection
 
   implicit none

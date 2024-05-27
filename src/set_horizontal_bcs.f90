@@ -2,7 +2,7 @@
 subroutine set_horizontal_bcs(iBlock)
 
   use ModSizeGitm
-  use ModPlanet, only : nSpecies, nIons
+  use GITM_planet, only : nSpecies, nIons
   use ModInputs, only : LatStart, LatEnd
   use ModGITM
 

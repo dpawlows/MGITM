@@ -7,7 +7,7 @@ subroutine calc_physics(iBlock)
   use ModTime
   use ModConstants
   use ModEUV
-  use ModPlanet
+  use GITM_planet
   use ModInputs
   implicit none
 

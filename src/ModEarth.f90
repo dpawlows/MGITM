@@ -1,5 +1,5 @@
 
-module ModPlanet
+module GITM_planet
 
   use ModConstants
   use ModSizeGITM, only: nAlts
@@ -258,4 +258,4 @@ contains
 
 
 
-end module ModPlanet
+end module GITM_planet

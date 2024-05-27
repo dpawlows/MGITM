@@ -1,4 +1,4 @@
-module ModPlanet
+module GITM_planet
 
   use ModConstants
   use ModSizeGITM
@@ -435,4 +435,4 @@ contains
 
       end subroutine init_radcooling 
 
-end module ModPlanet
+end module GITM_planet

@@ -6,7 +6,7 @@ subroutine init_iri
   use ModGITM
   use ModInputs
   use ModConstants
-  use ModPlanet
+  use GITM_planet
   use ModTime
 
   implicit none

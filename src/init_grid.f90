@@ -4,7 +4,7 @@ subroutine init_grid
   use ModGITM
   use ModInputs
   use ModConstants
-  use ModPlanet
+  use GITM_planet
   use ModSphereInterface
   use ModTime
   use ModEUV,     only: init_mod_euv

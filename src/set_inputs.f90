@@ -5,7 +5,7 @@ subroutine set_inputs
   use ModSizeGitm
   use ModGITM, only: iProc
   use ModTime
-  use ModPlanet
+  use GITM_planet
   use ModSatellites
 
 ! EUVData logicals  (December 2017):  S. Bougher and D. Pawlowski
@@ -1144,7 +1144,7 @@ end subroutine set_inputs
 subroutine fix_vernal_time
 
   use ModTime
-  use ModPlanet
+  use GITM_planet
 
   implicit none
 

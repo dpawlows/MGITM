@@ -84,7 +84,7 @@ subroutine advance_vertical_1stage( &
 
   use ModGITM, only: &
        Dt, iEast_, iNorth_, iUp_
-  use ModPlanet
+  use GITM_planet
   use ModSizeGitm
   use ModVertical, only : &
        Heating, EddyCoef_1D, ViscCoef_1d,Centrifugal, Coriolis, &

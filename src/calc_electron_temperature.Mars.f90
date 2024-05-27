@@ -7,7 +7,7 @@ subroutine calc_electron_temperature(iBlock)
   !  -- Post-MAVEN  (dayside low SZA experiment for dayside orbit application)
 
   use ModGITM
-  use ModPlanet, only : ialtminiono
+  use GITM_planet, only : ialtminiono
 
   implicit none
 

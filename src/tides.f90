@@ -267,7 +267,7 @@ subroutine update_waccm_tides
 
   use ModSizeGITM
   use ModTime, only: uTime
-  use ModPlanet, only: Rotation_Period
+  use GITM_planet, only: Rotation_Period
   use ModTides
   use ModConstants, only: pi
 

@@ -1,7 +1,7 @@
 module ModEUV
 
   use ModGITM, only: nLats, nLons, nAlts,nBlocksMax,nBlocks
-  use ModPlanet
+  use GITM_planet
 
 ! Updated PhotoAbs_CO2, PhotoAbs_CO, PhotoIon_CO2 for 59-intervals
 ! S. W. Bougher (11-09-22)

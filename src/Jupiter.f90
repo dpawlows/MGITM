@@ -1,6 +1,6 @@
 subroutine fill_photo(photoion, photoabs)
 
-  use ModPlanet
+  use GITM_planet
   use ModEUV
 
   implicit none
@@ -103,7 +103,7 @@ subroutine calc_radcooling(iBlock)
 
   use ModInputs, only:  iDebugLevel
   use ModSources, only: RadCoolingRate
-  use ModPlanet
+  use GITM_planet
   use ModGITM
   use ModConstants, only:  Boltzmanns_Constant, Speed_Light, &
        Planck_Constant
@@ -375,7 +375,7 @@ subroutine init_radcool
 !    These are 1-D NLTE cooling code inputs from Miguel Lopez-Valverde
 ! ---------------------------------------------------------
 
-  use ModPlanet
+  use GITM_planet
   use ModGITM
 
 !\

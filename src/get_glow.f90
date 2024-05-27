@@ -1,6 +1,6 @@
 subroutine get_glow(iLon,iLat,iBlock)
 
-  use ModPlanet, only : nEmissionWavelengths,nPhotoBins
+  use GITM_planet, only : nEmissionWavelengths,nPhotoBins
   use ModTime
   use ModGITM
   use ModEUV, only    : WAVES,WAVEL,Num_WaveLengths_High,Flux_of_EUV

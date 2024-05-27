@@ -46,7 +46,7 @@ contains
     use ModIoUnit
     use ModProcUA
     use ModGITM, only: iCommGITM, nProcs, iProcGITM => iProc
-    use ModPlanet, only: init_planet
+    use GITM_planet, only: init_planet
     use CON_comp_info
     use ModUtilities, ONLY: check_dir
 
@@ -241,7 +241,7 @@ contains
   !============================================================================
   subroutine UA_find_points(nDimIn, nPoint, Xyz_DI, iProc_I)
 
-    use ModPlanet, ONLY: rBody
+    use GITM_planet, ONLY: rBody
     use ModCoordTransform, ONLY: xyz_to_rlonlat
 
     integer, intent(in) :: nDimIn                ! dimension of positions
@@ -303,7 +303,7 @@ contains
     use ModEUV, ONLY: EuvIonRateS
     use ModInterpolateScalar, ONLY: bilinear_scalar, trilinear_scalar
     use ModCoordTransform, ONLY: xyz_to_rlonlat
-    use ModPlanet, ONLY: rBody, iCO2_, iO_, iCO2P_, iOP_
+    use GITM_planet, ONLY: rBody, iCO2_, iO_, iCO2P_, iOP_
     use ModConst, ONLY: cBoltzmann, cProtonMass
     
     logical,          intent(in) :: IsNew   ! true for new point array

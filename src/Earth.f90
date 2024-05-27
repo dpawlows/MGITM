@@ -1,7 +1,7 @@
 
 subroutine fill_photo(photoion, photoabs, photodis)
 
-  use ModPlanet
+  use GITM_planet
   use ModEUV
 
   implicit none

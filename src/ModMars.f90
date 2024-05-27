@@ -1,5 +1,4 @@
-
-module ModPlanet
+module GITM_planet
 
   use ModConstants
   use ModSizeGITM
@@ -1750,6 +1749,4 @@ contains
   return
   end subroutine init_aerosol
 
-
-
-end module ModPlanet
+end module GITM_planet

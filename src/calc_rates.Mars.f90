@@ -20,7 +20,7 @@ subroutine calc_rates(iBlock)
   use ModGITM
   use ModRates
   use ModConstants
-  use ModPlanet
+  use GITM_planet
   use ModInputs
   use ModTime, only: tsimulation
 
@@ -394,7 +394,7 @@ subroutine calc_collisions(iBlock)
   use ModGITM
   use ModRates
   use ModConstants
-  use ModPlanet
+  use GITM_planet
   use ModInputs
   use ModSources, only : KappaEddyDiffusion
 

@@ -4,7 +4,7 @@ subroutine initialize_gitm(TimeIn)
   use ModGITM
   use ModInputs
   use ModConstants
-  use ModPlanet
+  use GITM_planet
   use ModRates
   use ModSphereInterface
   use ModTime

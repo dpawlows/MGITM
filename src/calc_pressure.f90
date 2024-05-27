@@ -2,7 +2,7 @@
 subroutine calc_pressure
 
   use ModGITM
-  use ModPlanet
+  use GITM_planet
   use ModConstants
   use ModInputs, ONLY: iDebugLevel
 
