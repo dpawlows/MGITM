@@ -79,7 +79,6 @@ rundir:
 	@(if [ "$(STANDALONE)" != "NO" ]; then \
 		cd ${RUNDIR} ; \
 		ln -s ${BINDIR}/GITM.exe . ; \
-		cp UA/DataIn/UAM.in . ; \
 		touch core ; chmod 444 core ; \
 		ln -s UA/* .; \
 	fi);
