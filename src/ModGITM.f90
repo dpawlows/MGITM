@@ -74,7 +74,7 @@ real, allocatable :: SpeciesDensityOld(:,:,:,:,:)
   real :: ViscCoef(0:nLons+1,0:nLats+1, 0:nAlts+1)
 
   real, dimension(-1:nLons+2, -1:nLats+2, -1:nAlts+2) :: &
-       MeanIonMass, MeanMajorMass
+       MeanIonMass = 0.0, MeanMajorMass = 0.0
 
   real, dimension(-1:nLons+2, -1:nLats+2, -1:nAlts+2) :: &
        e_gyro, i_gyro
@@ -179,8 +179,11 @@ contains
     allocate(Pressure(-1:nLons+2, -1:nLats+2, -1:nAlts+2, nBlocks))
     allocate(NDensity(-1:nLons+2, -1:nLats+2, -1:nAlts+2, nBlocks))
     allocate(eTemperature(-1:nLons+2, -1:nLats+2, -1:nAlts+2, nBlocks))
+    eTemperature = 1.0
     allocate(ITemperature(-1:nLons+2, -1:nLats+2, -1:nAlts+2, nBlocks))
+    ITemperature = 1.0
     allocate(IPressure(-1:nLons+2, -1:nLats+2, -1:nAlts+2, nBlocks))
+    IPressure = 1.0
     allocate(ePressure(-1:nLons+2, -1:nLats+2, -1:nAlts+2, nBlocks))
     allocate(SpeciesDensity(-1:nLons+2, -1:nLats+2, -1:nAlts+2, nSpeciesAll, nBlocks))
     allocate(SpeciesDensityOld(-1:nLons+2, -1:nLats+2, -1:nAlts+2, nSpeciesAll, nBlocks))
@@ -191,9 +194,11 @@ contains
     allocate(VerticalVelocity(-1:nLons+2, -1:nLats+2, -1:nAlts+2, &
        nSpecies, nBlocksMax))
     allocate(NDensityS(-1:nLons+2, -1:nLats+2, -1:nAlts+2, &
-       nSpeciesTotal, nBlocksMax))
+         nSpeciesTotal, nBlocksMax))
+    NDensityS = 1.0
     allocate(IDensityS(-1:nLons+2, -1:nLats+2, -1:nAlts+2, &
-       nIons, nBlocksMax))
+         nIons, nBlocksMax))
+    IDensityS = 1.0
     allocate(IRIDensity(-1:nLons+2, -1:nLats+2, -1:nAlts+2, &
        nIons, nBlocksMax))
     allocate(Gamma(-1:nLons+2,-1:nLats+2,-1:nAlts+2,nBlocks))
@@ -201,7 +206,9 @@ contains
     allocate(Ke(nLons, nLats, 0:nAlts+1, nBlocks))
     allocate(dKe(nLons, nLats, 0:nAlts+1, nBlocks))
     allocate(cp(nLons,nLats,0:nAlts+1,nBlocks))
+    cp = 1.0
     allocate(B0(-1:nLons+2,-1:nLats+2,-1:nAlts+2,4,nBlocks))
+    B0 = 0.0
     allocate(MLatitude(-1:nLons+2,-1:nLats+2,-1:nAlts+2,nBlocks))
     allocate(MLongitude(-1:nLons+2,-1:nLats+2,-1:nAlts+2,nBlocks))
     allocate(DipAngle(-1:nLons+2,-1:nLats+2,-1:nAlts+2,nBlocks))

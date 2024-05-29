@@ -457,7 +457,8 @@ subroutine calc_scaled_euv
 
     Timed_Flux = SeeFlux(:,iMin(1))
 
-    if (CurrentTime .ge. FlareTimes(iFlare) .and. CurrentTime-dt .le. FlareTimes(iFlare)) then
+    if (CurrentTime >= FlareTimes(iFlare) .and. &
+         CurrentTime-dt <= FlareTimes(iFlare)) then
 
        FlareStartIndex = iMin(1)+1
        FlareEndIndex = iMin(1) + FlareLength

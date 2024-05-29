@@ -40,10 +40,10 @@ module GITM_planet
   character (len=20) :: cSpecies(nSpeciesTotal)
   character (len=20) :: cIons(nIons)
 
-  real :: Mass(nSpeciesTotal), MassI(nIons)
+  real :: Mass(nSpeciesTotal) = 1.0, MassI(nIons) = 1.0
 
 
-  real :: Vibration(nSpeciesTotal)
+  real :: Vibration(nSpeciesTotal) = 1.0
 
   integer, parameter :: nEmissionWavelengths = 1
   integer, parameter :: nPhotoBins = 1
@@ -333,7 +333,7 @@ module GITM_planet
        real, parameter :: SBconstant = 5.67E-8
 
 !      Ls variable
-       real :: ell_s
+       real :: ell_s = 0.0
 !C======================================================================C
 !C
 !C     RADINC.H    RADiation INCludes
@@ -648,11 +648,19 @@ real*4 :: dummyalbedo(24,36), dummyti(24,36)
 ! *** Old bloque_dlvr11.f ***
 
 ! data
-        real :: nu(nisot,8)
-        data nu(1,1),nu(1,2) /667.3801, 1335.1317/
-        data nu(2,1)/662.3734/
-        data nu(3,1)/648.4784/
-        data nu(4,1)/664.7289/
+!        data nu(1,1),nu(1,2) /667.3801, 1335.1317/
+!        data nu(2,1)/662.3734/
+!        data nu(3,1)/648.4784/
+!        data nu(4,1)/664.7289/
+        real :: nu(nisot,8) = reshape( [ &
+             667.3801, 662.3734, 648.4784, 664.7289, &
+             1335.1317, 0., 0., 0., &
+             0., 0., 0., 0., &
+             0., 0., 0., 0., &
+             0., 0., 0., 0., &
+             0., 0., 0., 0., &
+             0., 0., 0., 0., &
+             0., 0., 0., 0. ], [nisot,8] )
 
         real,parameter ::  nu12_0200 = 1285.4087, nu12_1000 = 1388.1847
 

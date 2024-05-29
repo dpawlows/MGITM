@@ -72,8 +72,8 @@ module ModInputs
 
   real :: DtPlot(nMaxOutputTypes)
   real :: DtPlotSave(nMaxOutputTypes)
-  real :: PlotTimeChangeDt(nMaxOutputTypes)
-  real(Real8_) :: PlotTimeChangeStart, PlotTimeChangeEnd
+  real :: PlotTimeChangeDt(nMaxOutputTypes) = 1.0
+  real(Real8_) :: PlotTimeChangeStart = 0.0, PlotTimeChangeEnd = 0.0
 
   logical :: DoAppendFiles = .false.
 
