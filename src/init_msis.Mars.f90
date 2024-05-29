@@ -191,8 +191,7 @@ subroutine init_msis
 
            enddo
 
-           where(IDensityS(iLon,iLat,:,iE_,iBlock) .lt. 1.0) IDensityS(iLon,iLat,:,iE_,iBlock) = 1.0
-
+           where(IDensityS(iLon,iLat,:,iE_,iBlock) < 1) IDensityS(iLon,iLat,:,iE_,iBlock) = 1.0
 
            do iAlt = -1, nalts + 2
               alttemp = newalt

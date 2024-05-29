@@ -52,7 +52,7 @@ module ModEUV
   
   real, dimension(Num_WaveLengths_High,nSeeLinesMax) :: SeeFlux
   real, dimension(nSeeLinesMax) :: TimeSee
-  real, dimension(nFlaresMax) :: FlareTimes
+  real, dimension(nFlaresMax) :: FlareTimes = -1.0
 
   real, dimension(nS2WaveLengths) :: &
        S2WaveLengths, S2PhotonEnergy, S2SolarFlux, &
@@ -79,13 +79,13 @@ module ModEUV
        PhotoIon_OPlus2D, PhotoIon_OPLus2P,                          &
        WAVEL, WAVES, RFLUX, XFLUX, SCALE1, SCALE2,                  &
        TCHR0, TCHR1, TCHR2, TCOR0, TCOR1, TCOR2, WAR1, WAR2,        &
-       Solar_Flux, PhotonEnergy, &
-       PhotoAbs_CO2, PhotoAbs_CO2_295, PhotoAbs_CO2_195, &
-       PhotoAbs_CO, PhotoIon_CO2, PhotoIon_CO,        &
+       Solar_Flux, PhotonEnergy,                                    &
+       PhotoAbs_CO2, PhotoAbs_CO2_295, PhotoAbs_CO2_195,            &
+       PhotoAbs_CO, PhotoIon_CO2, PhotoIon_CO=0.0,                  &
        PhotoAbs_CH4, PhotoAbs_H2, PhotoAbs_HCN,                     &
        PhotoIon_CH4, PhotoIon_H2, PhotoIon_HCN,                     &
-       BranchingRatio_CO2_to_CO2Plus,BranchingRatio_CO2_to_OPlus,&
-       BranchingRatio_CO2_to_COPlus,BranchingRatio_N2_to_N2Plus,&
+       BranchingRatio_CO2_to_CO2Plus,BranchingRatio_CO2_to_OPlus,   &
+       BranchingRatio_CO2_to_COPlus,BranchingRatio_N2_to_N2Plus,    &
 !!
 !! NOTA BENE NOTA BENE:  JMB
 !! Please Note that these QuantunYields
