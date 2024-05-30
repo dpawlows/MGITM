@@ -43,7 +43,7 @@ module GITM_planet
   real :: Mass(nSpeciesTotal) = 1.0, MassI(nIons) = 1.0
 
 
-  real :: Vibration(nSpeciesTotal) = 1.0
+  real :: Vibration(nSpeciesTotal) = 0.0
 
   integer, parameter :: nEmissionWavelengths = 1
   integer, parameter :: nPhotoBins = 1
