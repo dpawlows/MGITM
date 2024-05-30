@@ -16,6 +16,24 @@ src/ModSize.f90:
 install: src/ModSize.f90
 	@(if [ ! -d srcData ]; then ln -s data/input srcData; fi)
 
+help:
+	@echo Makefile targets:
+	@echo "help                       - this help message"
+	@echo "install                    - used by Config.pl -install"
+	@echo "GITM                       - compile GITM.exe"
+	@echo "POST                       - compile PostProcess.exe"
+	@echo "LIB                        - compile UA library for SWMF"
+	@echo "test                       - should execute all tests, it does not"
+	@echo "test_gitm_mars_3d          - run 3D Mars test"
+	@echo "test_gitm_mars_3d_compile  - compile GITM.exe for 3D Mars test"
+	@echo "test_gitm_mars_3d_rundir   - create run directory or 3D Mars test"
+	@echo "test_gitm_mars_3d_run      - run 3D Mars test on 4 cores"
+	@echo "test_gitm_mars_3d_check    - check 3D Mars test results"
+	@echo "nompirun                   - run GITM.exe serially"
+	@echo "clean                      - clean object files etc."
+	@echo "allclean                   - used by Config.pl -uninstall"
+	@echo "distclean                  - run Config.pl -uninstall"	
+
 NOMPI:
 	@echo "will make NOMPI"
 	@echo ${NOMPIDIR}
