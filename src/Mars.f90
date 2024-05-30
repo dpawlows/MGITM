@@ -9159,13 +9159,12 @@ subroutine ERRORS (ierr,varerr)
       real*8 :: sum
       integer :: ii, ll, i, j
 
-      b = 0
       ii=0
       do 12 i=1,n
          ll=indx(i)
          sum=b(ll)
          b(ll)=b(i)
-         if (ii /= 0)then
+         if (ii.ne.0)then
             do 11 j=ii,i-1
                sum=sum-a(i,j)*b(j)
  11         continue
