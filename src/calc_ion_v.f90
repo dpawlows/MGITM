@@ -250,7 +250,13 @@ subroutine calc_ion_v(iBlock)
 
         !!!! If we are using the magnetic field, then don't move ions below the lowest altitude
         !!!! at which the magfield is specified!
-        where (altitude_GB(:,:,:,iblock)/1000.0 <= minMagFieldAlt .or. &
+
+         if (MaxMagFieldAlt < 1.0 .or. minMagFieldAlt < 1.0) then
+           write(*,*) "Must specify a minimum and maximum magnetic field altitude"
+           call stop_gitm('Stopping in calc_ion_v')
+         endif
+
+
              altitude_GB(:,:,:,iblock)/1000.0 >= maxMagFieldAlt) &
              Ivelocity(:,:,:,idir,iblock)  = 0.0
 

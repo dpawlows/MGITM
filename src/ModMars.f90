@@ -34,7 +34,7 @@ module GITM_planet
   integer, parameter  :: iNOP_  = 5
   integer, parameter  :: ie_    = 6
   integer, parameter  :: nIons  = ie_
-  integer, parameter  :: nIonsAdvect = 1
+  integer, parameter  :: nIonsAdvect = 3
   integer, parameter  :: nSpeciesAll = 16 !Ions plus neutrals
 
   character (len=20) :: cSpecies(nSpeciesTotal)
@@ -262,7 +262,7 @@ module GITM_planet
   !
   integer, parameter :: nReactions_EIM = 3 !this is the number of reactions we currently include
   integer, parameter :: nBTypes_EIM = 8
-  integer, parameter :: nSW_EIM = 9
+  integer, parameter :: nSW_EIM = 8
   integer, parameter :: nAlts_EIM = 5
   integer, parameter :: nBelvs_EIM = 14
   integer, parameter :: nBmags_EIM = 59
@@ -277,19 +277,20 @@ module GITM_planet
   (/ 6.6092890e-14, 3.2531944e-14, 2.2676610e-14, 4.6901680e-14, 0.0, &
   4.1007410e-14, 0.0, 0.0 /)
 
-   real, parameter, dimension(nSpecies, 6) :: eimAttenFactor = reshape( (/ &
-     !----------------------------------------------------------+
-     ! i=CS      C0      C1     C2     C3     C4     C5
-     !----------------------------------------------------------+
-       -159.38955, 117.09418, -33.727827, 4.7632843, -0.32989607, 0.0089481513 ,&  ! CO2
-       -160.31762, 117.75844, -33.916055, 4.7895919, -0.33169969, 0.0089962360 ,&  ! CO
-       -158.70169, 116.57188, -33.585414, 4.7458134, -0.32894302, 0.0089304336 ,&  ! O
-       -155.54048, 114.21954, -32.900335, 4.6481528, -0.32212230, 0.0087435908 ,&  ! N2
-       0.0,          0.0,         0.0,          0.0,          0.0,          0.0,&  ! O2
-       -164.18691, 120.62643, -34.751134, 4.9089497, -0.34007215,0.0092266903  ,&  ! Ar
-       0.0,          0.0,         0.0,          0.0,          0.0,          0.0,&  ! He
-       0.0,          0.0,         0.0,          0.0,          0.0,          0.0 /), & ! N4S
-       shape(eimAttenFactor),order=(/2,1/) ) 
+  real, parameter, dimension(nSpecies, 6) :: eimAttenFactor = reshape( (/ &
+     !----------------------------------------------------------+                                        
+     ! i=CS      C0      C1     C2     C3     C4     C5                                                  
+     !----------------------------------------------------------+                                        
+        -193.89664, 140.54578, -39.939533, 5.5677812, -0.38114739, 0.010236020, & !CO2                   
+        -196.60813, 142.51595, -40.500339, 5.6459650, -0.38648628, 0.010378626, & !CO                    
+	      -197.56426, 143.27663, -40.739811, 5.6832256, -0.38935008, 0.010465609, & !O                     
+      	-194.11932, 140.71999, -39.997168, 5.5776025, -0.38198639, 0.010264152, & !N2                    
+        0.0,          0.0,         0.0,          0.0,          0.0,        0.0, & !O2                    
+      	-201.19056, 145.89558, -41.478495, 5.7849232, -0.39618319, 0.010644507, & !AR                    
+        0.0,          0.0,         0.0,          0.0,          0.0,        0.0,&  !He                    
+      	0.0,          0.0,         0.0,          0.0,          0.0,        0.0 /), & !N4S                
+       shape(eimAttenFactor),order=(/2,1/) )
+
 
   integer :: minMagFieldAlt,maxMagFieldAlt
 
