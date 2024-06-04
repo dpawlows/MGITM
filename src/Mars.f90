@@ -10019,22 +10019,24 @@ subroutine interpolateField(nMagLons,nMagLats,nMagAlts,MagFieldLon,MagFieldLat,M
                      B0(iLon,iLat,iAlt,Magdim,iBlock)=c
 
                enddo
-               if (abs(magfieldlon(iilon) - lonfind) < abs(magfieldlon(iilon+1))) then
-                 itypelon = iilon
+
+               if (abs(magfieldlon(iilon) - lonfind) < abs(magfieldlon(iilon+1)-lonfind)) then
+                  itypelon = iilon
                else
-                 itypelon = iilon + 1
+                  itypelon = iilon + 1
                end if
-               if (abs(magfieldlat(iilat) - latfind) < abs(magfieldlat(iilat+1))) then
-                 itypelat = iilat
+               if (abs(magfieldlat(iilat) - latfind) < abs(magfieldlat(iilat+1))-latfind) then
+                  itypelat = iilat
                else
-                 itypelat = iilat + 1
+                  itypelat = iilat + 1
                end if
-               if (abs(magfieldalt(iialt) - altfind) < abs(magfieldalt(iialt+1))) then
-                 itypealt = iialt
+               if (abs(magfieldalt(iialt) - altfind) < abs(magfieldalt(iialt+1))-altfind) then
+                  itypealt = iialt
                else
-                 itypealt = iialt + 1
+                  itypealt = iialt + 1
                end if
                FieldType(ilon,ilat,ialt,iBlock) = typeField(itypealt,itypelon,itypelat)
+
 
              endif
           enddo
@@ -10228,7 +10230,7 @@ subroutine ReadLillisModel
   EIMReactions(iImpactCO2_A2PI_U)  = 'iImpactCO2_A2PI_U'
 
   write(*,*) "==> Now Reading Mars Empirical Ionization Model"
-  open(unit=42, file='DataIn/nemlillis_v2.dat', action='read')
+  open(unit=42, file='DataIn/nemlillis_v3.dat', action='read')
 
   !!! The impact ionization grid is currently fixed
   !Read Header

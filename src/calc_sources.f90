@@ -518,6 +518,9 @@ subroutine calc_GITM_sources(iBlock)
                     impactionizationFrequency(ilon,ilat,ialt,iImpactCO2_X2PI_G:iImpactCO2_A2PI_U,iBlock) = &
                          (10**EIMIZ)*attenuationFactor(iCO2_)
 
+                     !userdata3D(ilon,ilat,ialt,2,iblock)= &
+                     !   sum(impactionizationFrequency(ilon,ilat,ialt,iImpactCO2_X2PI_G:iImpactCO2_A2PI_U,iBlock))
+
                  endif
               enddo
            end do
