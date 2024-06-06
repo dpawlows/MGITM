@@ -1,4 +1,5 @@
-!  Copyright (C) 2002 Regents of the University of Michigan, portions used with permission
+!  Copyright (C) 2002 Regents of the University of Michigan,
+!  portions used with permission
 !  For more information, see http://csem.engin.umich.edu/tools/swmf
 
 subroutine calc_ion_v(iBlock)
@@ -256,7 +257,9 @@ subroutine calc_ion_v(iBlock)
            call stop_gitm('Stopping in calc_ion_v')
          endif
 
-
+         ! If we are using the magnetic field, then don't move ions below
+         ! the lowest altitude at which the magfield is specified!  
+         where (altitude_GB(:,:,:,iblock)/1000.0 <= minMagFieldAlt .or. &
              altitude_GB(:,:,:,iblock)/1000.0 >= maxMagFieldAlt) &
              Ivelocity(:,:,:,idir,iblock)  = 0.0
 
