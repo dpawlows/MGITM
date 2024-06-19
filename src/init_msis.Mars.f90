@@ -341,7 +341,7 @@ subroutine init_msis
      !\
      ! Initialize MeanMajorMass to 0.0
      !/
-     NDensityS = exp(nDensityS)
+     NDensityS(:,:,:,:,iBlock) = exp(nDensityS(:,:,:,:,iBlock))
      MeanMajorMass(-1:nLons+2,-1:nLats+2,-1:nAlts+2) = 0.0
      MeanIonMass(-1:nLons+2,-1:nLats+2,-1:nAlts+2) = 0.0
 
