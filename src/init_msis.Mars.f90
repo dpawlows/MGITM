@@ -93,7 +93,7 @@ subroutine init_msis
            klon = nint((longitude(ilon,iblock)*180.0/pi+5.0)/10.0)
            SurfaceAlbedo(ilon,ilat,iblock) = dummyalbedo(jlat,klon)
            tinertia(ilon,ilat,iblock) = dummyti(jlat,klon)
-      enddo
+        enddo
      enddo
   enddo
 
@@ -102,46 +102,47 @@ subroutine init_msis
 
   if (DoRestart) return
 
+  write(*,*) "init_msis"
+
+  dSurfaceTemp(:,:,:) = 0.0
+  dSubSurfaceTemp(:,:,:) = 0.0
+  SurfaceTemp(:,:,:) = 170.0
+  SubsurfaceTemp(:,:,:) = 180.0
+  !\
+  ! Initializes the Planet with the same Chemistry as Above
+  !/
+
+  initialEDensity = 0.0
+  initialAlt = 0.0
+
+  open(iInputUnit_,file='DataIn/MarsInitialIonosphere.txt')
+  do while (.not. Done)
+     read(iInputUnit_,*) cLine
+     if (cline .eq. '#START')  Done = .True.
+  enddo
+
+  Done = .False.
+  ialt = 1
+
+  do while(.not. Done)
+     read(iInputUnit_,*,iostat=iError) inDensities
+     if (iError .ne. 0) then
+        Done = .True.
+     else
+        initialAlt(ialt) = inDensities(1)
+        !Convert to m^-3
+        initialEDensity(ialt) = inDensities(9) * 1.0e6
+     endif
+
+     iAlt = iAlt + 1
+
+  enddo
+  close(iInputUnit_)
+
+  LogInitialDensity = log10(InitialEDensity)
+
   do iBlock = 1, nBlocks
-     write(*,*) "init_msis"
      write(*,*) '==> Now Initializing Mars Background Composition', iBlock
-
-     dSurfaceTemp(:,:,:) = 0.0
-     dSubSurfaceTemp(:,:,:) = 0.0
-     SurfaceTemp(:,:,:) = 170.0
-     SubsurfaceTemp(:,:,:) = 180.0
-     !\
-     ! Initializes the Planet with the same Chemistry as Above
-     !/
-
-     initialEDensity = 0.0
-     initialAlt = 0.0
-
-     open(iInputUnit_,file='DataIn/MarsInitialIonosphere.txt')
-     do while (.not. Done)
-        read(iInputUnit_,*) cLine
-        if (cline .eq. '#START')  Done = .True.
-     enddo
-
-     Done = .False.
-     ialt = 1
-
-     do while(.not. Done)
-        read(iInputUnit_,*,iostat=iError) inDensities
-        if (iError .ne. 0) then
-           Done = .True.
-        else
-           initialAlt(ialt) = inDensities(1)
-           !Convert to m^-3
-           initialEDensity(ialt) = inDensities(9) * 1.0e6
-        endif
-
-        iAlt = iAlt + 1
-
-     enddo
-     close(iInputUnit_)
-
-     LogInitialDensity = log10(InitialEDensity)
 
      do iLat = -1, nLats + 2
         iiLat = min(max(iLat,1),nLats)
@@ -251,16 +252,16 @@ subroutine init_msis
            !                   InNDensityS(-1:nAlts+2,iSpecies)!*(1.0e+06)
            !
            !           enddo ! end inner ispecies loop
-!           NDensityS(iLon,iLat,-1:nAlts+2,iN2_,iBlock) = &
-!                NDensityS(iLon,iLat,-1:nAlts+2,iN2_,iBlock) *0.1
-!           NDensityS(iLon,iLat,-1:nAlts+2,iO_,iBlock) = &
-!                NDensityS(iLon,iLat,-1:nAlts+2,iO_,iBlock) *0.1
-!           NDensityS(iLon,iLat,-1:nAlts+2,iAr_,iBlock) = &
-!                NDensityS(iLon,iLat,-1:nAlts+2,iAr_,iBlock) *0.1
-!           NDensityS(iLon,iLat,-1:nAlts+2,iO2_,iBlock) = &
-!                NDensityS(iLon,iLat,-1:nAlts+2,iO2_,iBlock) *0.1
-!           NDensityS(iLon,iLat,-1:nAlts+2,iNO_,iBlock) = &
-!                NDensityS(iLon,iLat,-1:nAlts+2,iNO_,iBlock) *0.1
+           !           NDensityS(iLon,iLat,-1:nAlts+2,iN2_,iBlock) = &
+           !                NDensityS(iLon,iLat,-1:nAlts+2,iN2_,iBlock) *0.1
+           !           NDensityS(iLon,iLat,-1:nAlts+2,iO_,iBlock) = &
+           !                NDensityS(iLon,iLat,-1:nAlts+2,iO_,iBlock) *0.1
+           !           NDensityS(iLon,iLat,-1:nAlts+2,iAr_,iBlock) = &
+           !                NDensityS(iLon,iLat,-1:nAlts+2,iAr_,iBlock) *0.1
+           !           NDensityS(iLon,iLat,-1:nAlts+2,iO2_,iBlock) = &
+           !                NDensityS(iLon,iLat,-1:nAlts+2,iO2_,iBlock) *0.1
+           !           NDensityS(iLon,iLat,-1:nAlts+2,iNO_,iBlock) = &
+           !                NDensityS(iLon,iLat,-1:nAlts+2,iNO_,iBlock) *0.1
 
            !\
            ! These first few are from the input file read in earlier
@@ -293,17 +294,17 @@ subroutine init_msis
         enddo! end iLon loop
      enddo ! end iLat loop
 
-!  Initialization of Major Ions for Ion Calculation
+     !  Initialization of Major Ions for Ion Calculation
      IDensityS(:,:,:,iO2P_,iBlock) = 0.9* IDensityS(:,:,:,iE_,iBlock)
      IDensityS(:,:,:,iCO2P_,iBlock) = 0.1* IDensityS(:,:,:,iE_,iBlock)
-!  LBC for all  Ions for Ion Calculation
-!    IDensityS(:,:,:,iO2P_,iBlock) = 1.0e0
-!    IDensityS(:,:,:,iCO2P_,iBlock) = 1.0e0
+     !  LBC for all  Ions for Ion Calculation
+     !    IDensityS(:,:,:,iO2P_,iBlock) = 1.0e0
+     !    IDensityS(:,:,:,iCO2P_,iBlock) = 1.0e0
      IDensityS(:,:,:,iOP_,iBlock) = 1.0e0
      IDensityS(:,:,:,iN2P_,iBlock) = 1.0e0
      IDensityS(:,:,:,iNOP_,iBlock) = 1.0e0
      write(*,*) '============> init_msis.Mars.f90 Major Diagnostics:  Begin'
-!     Temperature(:,:,:,iBlock) = 175.
+     !     Temperature(:,:,:,iBlock) = 175.
      !\
      ! Altitude Ghost Cells
 
@@ -333,7 +334,7 @@ subroutine init_msis
 
 
 
-    !\
+     !\
      ! Calculating MeanMajorMass -----------------------------
      !/
 
@@ -384,14 +385,14 @@ subroutine init_msis
           MeanMajorMass(-1:nLons+2,-1:nLats+2,-1:nAlts+2)/&
           Boltzmanns_Constant
 
-! More recent data
+     ! More recent data
 
      NDensityS(-1:nLons+2,-1:nLats+2,-1:nAlts+2,iHe_,iBlock) = &
-        (2.0e-06)*NDensity(-1:nLons+2,-1:nLats+2,-1:nAlts+2,iBlock)
+          (2.0e-06)*NDensity(-1:nLons+2,-1:nLats+2,-1:nAlts+2,iBlock)
 
-! Previous EUV He observations
-!     NDensityS(-1:nLons+2,-1:nLats+2,-1:nAlts+2,iHe_,iBlock) = &
-!        (0.7e-06)*NDensity(-1:nLons+2,-1:nLats+2,-1:nAlts+2,iBlock)
+     ! Previous EUV He observations
+     !     NDensityS(-1:nLons+2,-1:nLats+2,-1:nAlts+2,iHe_,iBlock) = &
+     !        (0.7e-06)*NDensity(-1:nLons+2,-1:nLats+2,-1:nAlts+2,iBlock)
      !\
      ! Initialize Rho to 0.0
      !/
