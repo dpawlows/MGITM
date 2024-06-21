@@ -9120,22 +9120,23 @@ subroutine lubksb_dp(a,n,np,indx,b)
   integer :: ii, ll, i, j
 
   ii=0
+  b = 0 ! to be checked if needs to be zero
   do i=1,n
      ll=indx(i)
      sum=b(ll)
      b(ll)=b(i)
-     if (ii.ne.0)then
+     if (ii /= 0)then
         do j=ii,i-1
            sum=sum-a(i,j)*b(j)
         end do
-     else if (sum.ne.0.0) then
+     else if (sum /= 0.0) then
         ii=i
      endif
      b(i)=sum
   end do
   do i=n,1,-1
      sum=b(i)
-     if(i.lt.n)then
+     if(i < n)then
         do j=i+1,n
            sum=sum-a(i,j)*b(j)
         end do
