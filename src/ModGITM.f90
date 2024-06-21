@@ -230,6 +230,7 @@ contains
     allocate(IVelocityPar(-1:nLons+2, -1:nLats+2, -1:nAlts+2, 3, nBlocks))
     allocate(IVelocityPerp(-1:nLons+2, -1:nLats+2, -1:nAlts+2, 3, nBlocks))
     allocate(Emissions(nLons,nLats,nAlts,nEmissions,nBlocks))
+    Emissions = 0.0
     allocate(vEmissionRate(nLons,nLats,nAlts,nEmissionWavelengths,nBlocks))
     allocate(PhotoElectronDensity(nLons,nLats,nAlts,nPhotoBins,nBlocks))
     allocate(PhotoElectronRate(nLons,nLats,nAlts,nPhotoBins,nBlocks))
