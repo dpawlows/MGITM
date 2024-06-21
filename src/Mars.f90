@@ -1,38 +1,38 @@
 subroutine fill_photo(photoion, photoabs, photodis)
 
-! CVS_new_code:  Dec. 19, 2011 (DP additions)
-! -- Timing Fix, photoabs(58,iCO2_) = 0.0
-! -- E(EUV) = 0.18 (off) or 0.20 (on)
-! -- TOTAL(1) = 0.0; TOTAL(2) = 0.0
-! -- populate 1-D and 3-D fields for diagnostics from RT code
-!    (RadCoolingRate,LowAtmosRadRate subroutines)
-! -- ALS = constant for Amanda Brech = 0.2 (for Comparison Studies Studes Only!)
-! CVS_new_code:  Dec. 20, 2011 (DP additions)
-! -- ALS = array from 2-D table (standard input for all cases)
-! Adjustment:  May 2012
-! -- KMAX = 1000., KMIN = 500.
-! Adjustments:  November 2012  (standard)
-! -- ALS = array from 2-D table (standard input for all cases)
-! Adjustment:  Late 2019  (DD2E, Stnd EUVM Cases)
-! -- KMAX = 1500., KMIN = 500.
-! Adjustment:  June-July 2017
-! O-CO2 cooling coefficient enhancement
-! -- k20xc = 3.e-12 * rfvto3p  (on)
-! New nlte_tcool code from FGG and MLV: November 2017
-! Modified by S. W. Bougher : November 2017
-! -- nlte_setup routine (1)
-! -- nlte_tcool.F (major code)
-! -- supporting subroutines (5)
-! -- supporting parameters and inputs (1)
-! -- supporting array declarations (real, integer) (1)
-! Modified by K. J. Roeten :F2019 and W2020
-! Updated by S. W. Bougher :SS2020 V17c code 
-! -- calc_gw replaced by E. Yigit & A. Medvedev scheme for Mars
-! Updated by K. J. Roeten and S. W. Bougher :SS2020 V17c code 
-! Adjustment:  June 2021
-! -- KMAX = 1000., KMIN = 500.
-! Adjustment:  September 2021  (DD2E, Stnd EUVM Cases)
-! -- KMAX = 1500., KMIN = 500.
+  ! CVS_new_code:  Dec. 19, 2011 (DP additions)
+  ! -- Timing Fix, photoabs(58,iCO2_) = 0.0
+  ! -- E(EUV) = 0.18 (off) or 0.20 (on)
+  ! -- TOTAL(1) = 0.0; TOTAL(2) = 0.0
+  ! -- populate 1-D and 3-D fields for diagnostics from RT code
+  !    (RadCoolingRate,LowAtmosRadRate subroutines)
+  ! -- ALS = constant for Amanda Brech = 0.2 (for Comparison Studies Studes Only!)
+  ! CVS_new_code:  Dec. 20, 2011 (DP additions)
+  ! -- ALS = array from 2-D table (standard input for all cases)
+  ! Adjustment:  May 2012
+  ! -- KMAX = 1000., KMIN = 500.
+  ! Adjustments:  November 2012  (standard)
+  ! -- ALS = array from 2-D table (standard input for all cases)
+  ! Adjustment:  Late 2019  (DD2E, Stnd EUVM Cases)
+  ! -- KMAX = 1500., KMIN = 500.
+  ! Adjustment:  June-July 2017
+  ! O-CO2 cooling coefficient enhancement
+  ! -- k20xc = 3.e-12 * rfvto3p  (on)
+  ! New nlte_tcool code from FGG and MLV: November 2017
+  ! Modified by S. W. Bougher : November 2017
+  ! -- nlte_setup routine (1)
+  ! -- nlte_tcool.F (major code)
+  ! -- supporting subroutines (5)
+  ! -- supporting parameters and inputs (1)
+  ! -- supporting array declarations (real, integer) (1)
+  ! Modified by K. J. Roeten :F2019 and W2020
+  ! Updated by S. W. Bougher :SS2020 V17c code 
+  ! -- calc_gw replaced by E. Yigit & A. Medvedev scheme for Mars
+  ! Updated by K. J. Roeten and S. W. Bougher :SS2020 V17c code 
+  ! Adjustment:  June 2021
+  ! -- KMAX = 1000., KMIN = 500.
+  ! Adjustment:  September 2021  (DD2E, Stnd EUVM Cases)
+  ! -- KMAX = 1500., KMIN = 500.
 
   use GITM_planet
   use ModEUV
@@ -65,7 +65,7 @@ subroutine fill_photo(photoion, photoabs, photodis)
   photoabs(:,iO2_)    = PhotoAbs_O2
   photoabs(58,iCO2_) = 0.0! timing fix (DP: Nov. 2011)
 
- ! ---------------------------------------------------------------------
+  ! ---------------------------------------------------------------------
   !  Specific Photoionization Cross Sections (nIons-1)
   !  Total Ionization Cross Sections * Specific Branching Ratios
   !  Need:  O+, O2+, CO2+, N2+ Productions
@@ -104,8 +104,8 @@ subroutine init_heating_efficiency
   HeatingEfficiency_CB  = 0.20
   eHeatingEfficiency_CB = 0.0
 
-!  call init_radcool
-   call init_nlte_setup
+  !  call init_radcool
+  call init_nlte_setup
 
 end subroutine init_heating_efficiency
 
@@ -200,16 +200,16 @@ subroutine calc_planet_sources(iBlock)
           TempUnit(1:nLons,1:nLats,1:nAlts)))
 
      ! In erg/cm3/s
-!  Factor of two applied:
-! ---------------------------------------------------------------------
+     !  Factor of two applied:
+     ! ---------------------------------------------------------------------
      OCooling = 0.5* (1.69e-18*tmp2 + 4.59e-20*tmp3) * &
           (NDensityS(1:nLons,1:nLats,1:nAlts,iO_,iBlock)/1.0e6) / &
           (1.0 + 0.6*tmp2 + 0.2*tmp3)
-!  Utilized without factor of two in Earth GITM:
-! ---------------------------------------------------------------------
-!    OCooling = (1.69e-18*tmp2 + 4.59e-20*tmp3) * &
-!         (NDensityS(1:nLons,1:nLats,1:nAlts,iO_,iBlock)/1.0e6) / &
-!         (1.0 + 0.6*tmp2 + 0.2*tmp3)
+     !  Utilized without factor of two in Earth GITM:
+     ! ---------------------------------------------------------------------
+     !    OCooling = (1.69e-18*tmp2 + 4.59e-20*tmp3) * &
+     !         (NDensityS(1:nLons,1:nLats,1:nAlts,iO_,iBlock)/1.0e6) / &
+     !         (1.0 + 0.6*tmp2 + 0.2*tmp3)
      ! In w/m3/3
      OCooling = OCooling/10.0
      ! In our special units:
@@ -223,7 +223,7 @@ subroutine calc_planet_sources(iBlock)
   endif
 
   RadCooling(1:nLons,1:nLats,1:nAlts,iBlock) = &
-         RadCooling(1:nLons,1:nLats,1:nAlts,iBlock) + OCooling
+       RadCooling(1:nLons,1:nLats,1:nAlts,iBlock) + OCooling
   !\
   ! ---------------------------------------------------------------
   ! This calls the lower atmosphere radiation code
@@ -283,7 +283,7 @@ subroutine calc_planet_sources(iBlock)
         ell_s = 360.0+360.0*(ell_s/360.0-ceiling(ell_s/360.0))
      endif
 
-!     	 print*, ell_s
+     !     	 print*, ell_s
 
      LowAtmosRadRate(1:nLons,1:nLats,1:nAlts,iBlock)=0.0
 
@@ -347,7 +347,7 @@ subroutine init_topography
 
   implicit None
 
-!  real, intent(out) :: altzero2(nLons,nLats,nBlocks)
+  !  real, intent(out) :: altzero2(nLons,nLats,nBlocks)
 
   integer, parameter :: nMOLALons = 1440 , nMOLALats = 720 !1/4 degree resolution
 
@@ -382,7 +382,7 @@ subroutine init_topography
               if (SurfaceAltitude(jLon,1,iEast_) <= LonFind .and. &
                    SurfaceAltitude(jLon+1,1,iEast_) >= LonFind) then
                  iiLon = jLon
-                rLon = 1.0 - (LonFind -  SurfaceAltitude(jLon,1,iEast_))/ &
+                 rLon = 1.0 - (LonFind -  SurfaceAltitude(jLon,1,iEast_))/ &
                       (SurfaceAltitude(jLon+1,1,iEast_)-SurfaceAltitude(jLon,1,iEast_))
 
               endif
@@ -432,13 +432,13 @@ subroutine nlte_tcool(iBlock)
   !  $     co2vmr_gcm, n2vmr_gcm, covmr_gcm, o3pvmr_gcm,
   !  $     q15umco2_gcm , ierr, varerr)
   !
-  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   ! Fast scheme for NLTE cooling rates at 15um by CO2 in a Martian GCM !
   !                 Version dlvr11_03. 2012.                           !
   ! Software written and provided by IAA/CSIC, Granada, Spain,         !
   ! under ESA contract "Mars Climate Database and Physical Models"     !
   ! Person of contact: Miguel Angel Lopez Valverde  valverde@iaa.es    !
-  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   !
   ! November 2017   Adapt to the MGITM model (3D version); S. Bougher
   !                                                        & F. G.Galindo
@@ -497,7 +497,7 @@ subroutine nlte_tcool(iBlock)
   ! Repository for MGITM fields into 1-D arrays
 
   real,dimension(n_gcm) :: p_ig,z_ig,t_ig, &
-      co2_ig,n2_ig,co_ig,o3p_ig,mmean_ig, cpnew_ig
+       co2_ig,n2_ig,co_ig,o3p_ig,mmean_ig, cpnew_ig
 
   !  -----------------------------------------------------------------
   ! Internal fields recast from MarsGITM
@@ -522,7 +522,7 @@ subroutine nlte_tcool(iBlock)
   !     Mars GITM heights in meters  (on its grid) -------------------
 
   zht(1:nLons,1:nLats,1:nAlts) = &
-        Altitude_GB(1:nLons,1:nLats,1:nAlts,iBlock)
+       Altitude_GB(1:nLons,1:nLats,1:nAlts,iBlock)
 
   !     Mars GITM cp in J/kg/K (on its grid) -------------------
   !     (same units as LMD-MGCM cooling code, and will vary with altitude)
@@ -548,16 +548,16 @@ subroutine nlte_tcool(iBlock)
        NdensityS(1:nLons,1:nLats,1:nAlts,iCO2_,iBlock)&
        /mnd(1:nLons,1:nLats,1:nAlts)
 
-!  mean molecular mass (gm/molecule) = mean molecular weight(gm/mole)/
-!                                      Avogardos number(molecules/mole)
+  !  mean molecular mass (gm/molecule) = mean molecular weight(gm/mole)/
+  !                                      Avogardos number(molecules/mole)
 
-!  (gm/molecule)
-! mmean(1:nLons,1:nLats,1:nAlts) = &
-!      (vmro(1:nLons,1:nLats,1:nAlts)*16.+ &
-!      (vmrco(1:nLons,1:nLats,1:nAlts)+vmrn2(1:nLons,1:nLats,1:nAlts))&
-!      *28. + vmrco2(1:nLons,1:nLats,1:nAlts)*44.)/  &
-!      Avogadros_Number
-!  (gm/mole) = mmwt
+  !  (gm/molecule)
+  ! mmean(1:nLons,1:nLats,1:nAlts) = &
+  !      (vmro(1:nLons,1:nLats,1:nAlts)*16.+ &
+  !      (vmrco(1:nLons,1:nLats,1:nAlts)+vmrn2(1:nLons,1:nLats,1:nAlts))&
+  !      *28. + vmrco2(1:nLons,1:nLats,1:nAlts)*44.)/  &
+  !      Avogadros_Number
+  !  (gm/mole) = mmwt
   mmean(1:nLons,1:nLats,1:nAlts) = &
        (vmro(1:nLons,1:nLats,1:nAlts)*16.+ &
        (vmrco(1:nLons,1:nLats,1:nAlts)+vmrn2(1:nLons,1:nLats,1:nAlts))&
@@ -575,131 +575,131 @@ subroutine nlte_tcool(iBlock)
 
   do iLat = 1, nlat
      do iLon = 1, nlon
-         ierr = 0
-         nl_cts_real = 0
-         nzy_cts_real = 0
-  ! *****  populate 1-D arrays(n_gcm) for calc_radcooling for MarsGITM
+        ierr = 0
+        nl_cts_real = 0
+        nzy_cts_real = 0
+        ! *****  populate 1-D arrays(n_gcm) for calc_radcooling for MarsGITM
         do  iAlt=1,n_gcm
-            p_ig(iALT)= P(iLon,iLat,iAlt)
-            t_ig(iALT)= TN2(iLon,iLat,iAlt)
-            co2_ig(iALT)=vmrco2(iLon,iLat,iAlt)
-            n2_ig(iALT)=vmrn2(iLon,iLat,iAlt)
-            o3p_ig(iALT)=vmro(iLon,iLat,iAlt)
-            co_ig(iALT)=vmrco(iLon,iLat,iAlt)
-            z_ig(iALT)=zht(iLon,iLat,iAlt)/1000.
-            mmean_ig(iALT)=mmean(iLon,iLat,iAlt)
-            cpnew_ig(iALT)=cpm(iLon,iLat,iAlt)
+           p_ig(iALT)= P(iLon,iLat,iAlt)
+           t_ig(iALT)= TN2(iLon,iLat,iAlt)
+           co2_ig(iALT)=vmrco2(iLon,iLat,iAlt)
+           n2_ig(iALT)=vmrn2(iLon,iLat,iAlt)
+           o3p_ig(iALT)=vmro(iLon,iLat,iAlt)
+           co_ig(iALT)=vmrco(iLon,iLat,iAlt)
+           z_ig(iALT)=zht(iLon,iLat,iAlt)/1000.
+           mmean_ig(iALT)=mmean(iLon,iLat,iAlt)
+           cpnew_ig(iALT)=cpm(iLon,iLat,iAlt)
         enddo
 
-  ! ****** From GCM's grid to NLTE's grid
+        ! ****** From GCM's grid to NLTE's grid
 
-         call NLTEdlvr11_ZGRID (n_gcm,  &
-              p_ig, t_ig, z_ig,         &
-              co2_ig, n2_ig, co_ig, o3p_ig, &
-              mmean_ig,cpnew_ig, &
-              nl_cts_real, nzy_cts_real )
+        call NLTEdlvr11_ZGRID (n_gcm,  &
+             p_ig, t_ig, z_ig,         &
+             co2_ig, n2_ig, co_ig, o3p_ig, &
+             mmean_ig,cpnew_ig, &
+             nl_cts_real, nzy_cts_real )
 
-  ! *****  Isotopic Tstar & VC at the NLTE grid
-         call interdp_ESCTVCISO
+        ! *****  Isotopic Tstar & VC at the NLTE grid
+        call interdp_ESCTVCISO
 
-  ! *****   Tstar para NLTE-CTS
-  !      call MZESC110 ( ig,nl_cts_real, nzy_cts_real,ierr,varerr )
-         call MZESC110 (nl_cts_real, nzy_cts_real,ierr,varerr )
-         if (ierr .gt. 0) call ERRORS (ierr,varerr)
+        ! *****   Tstar para NLTE-CTS
+        !      call MZESC110 ( ig,nl_cts_real, nzy_cts_real,ierr,varerr )
+        call MZESC110 (nl_cts_real, nzy_cts_real,ierr,varerr )
+        if (ierr .gt. 0) call ERRORS (ierr,varerr)
 
-         ! 626FB C.M.
-         call leetvt
-         c110(1:nl,1:nl)=0.d0
-!         call zerom (c110, nl)
-         call zero2v (vc110,taustar11, nl)
-         call MZTUD110 ( ierr, varerr )
-         if (ierr .gt. 0) call ERRORS (ierr,varerr)
+        ! 626FB C.M.
+        call leetvt
+        c110(1:nl,1:nl)=0.d0
+        !         call zerom (c110, nl)
+        call zero2v (vc110,taustar11, nl)
+        call MZTUD110 ( ierr, varerr )
+        if (ierr .gt. 0) call ERRORS (ierr,varerr)
 
-         input_cza = 0
-         call NLTEdlvr11_CZALU(ierr,varerr)
-         if (ierr .gt. 0) call ERRORS (ierr,varerr)
+        input_cza = 0
+        call NLTEdlvr11_CZALU(ierr,varerr)
+        if (ierr .gt. 0) call ERRORS (ierr,varerr)
 
-         input_cza = 1
-         call NLTEdlvr11_CZALU(ierr,varerr)
-         if (ierr .gt. 0) call ERRORS (ierr,varerr)
+        input_cza = 1
+        call NLTEdlvr11_CZALU(ierr,varerr)
+        if (ierr .gt. 0) call ERRORS (ierr,varerr)
 
-                                !  call NLTEdlvr11_FB626CTS
-                                ! Falta un merging del hr110CTS con el HR110
-
-
-                                ! NLTE-CTS
-         call NLTEdlvr11_FB626CTS ( hr110CTS , nl_cts_real )
+        !  call NLTEdlvr11_FB626CTS
+        ! Falta un merging del hr110CTS con el HR110
 
 
-
-                                ! total TCR
-         do i = 1, nl
-            q15umco2_nltot(i) =hr110(i) + hr210(i) + hr310(i) + hr410(i) &
-                 + hr121(i)
-         enddo
+        ! NLTE-CTS
+        call NLTEdlvr11_FB626CTS ( hr110CTS , nl_cts_real )
 
 
-                                ! Merging con / actualizacion del HR_total
-                                !   Eliminamos el ultimo pto de hrTotal, y en el penultimo
-                                !   (que coincide con i=1 en el grid nl_cts)
-                                !   hacemos la media entre hrTotal y hr110CTS :
-         i=nl-1
-         q15umco2_nltot(i) = 0.5d0*( q15umco2_nltot(i) + hr110CTS(1) )
-         do i=2,nl_cts_real
-            indice = (nl-2) + i
-            q15umco2_nltot(indice) = hr110CTS(i)
-         enddo
-         do i=nl_cts_real+1,nl_cts
-            indice = (nl-2) + i
-	    q15umco2_nltot(indice) = 0.0d0
-         enddo
 
-                                ! Interpol to original Pgrid
-                                !
-                                ! Primero, la parte conocida ([1,nl_cts_real])
-         do i=1,nl
-            zld(i) = - dble ( alog(pl(i)) )
-                                !write (*,*) i, zld(i), q15umco2_nltot(i)
-         enddo
-         do i=3,nl_cts_real
-            indice = (nl-2) + i
-            zld(indice) = - dble ( alog(pl_cts(i)) )
-                                !write (*,*) indice, zld(indice), q15umco2_nltot(indice)
-         enddo
-                                ! En caso que nl_cts_real < nl_cts , extrapolo el grid alegremente
-         factor = pl_cts(nl_cts_real)/pl_cts(nl_cts_real-1)
-         xx = pl_cts(nl_cts_real)
-         do i=nl_cts_real+1,nl_cts
-            indice = (nl-2) + i
-            xx = xx * factor
-            zld(indice) = - dble ( alog(xx) )
-         enddo
+        ! total TCR
+        do i = 1, nl
+           q15umco2_nltot(i) =hr110(i) + hr210(i) + hr310(i) + hr410(i) &
+                + hr121(i)
+        enddo
 
-         do i=1,n_gcm
-            auxgcmd(i) = - dble( alog(p_ig(i)))
-         enddo
-!         call zerov( aux2gcmd, n_gcm )
-         aux2gcmd(1:n_gcm)=0.d0
-         call interdp_limits (aux2gcmd, auxgcmd, n_gcm,  &
-               jlowerboundary,jtopCTS,  &
-              q15umco2_nltot, zld, nltot, 1,  nltot, 1)
 
-                                ! Smoothing
-         call suaviza ( aux2gcmd, n_gcm, 1, auxgcmd )
+        ! Merging con / actualizacion del HR_total
+        !   Eliminamos el ultimo pto de hrTotal, y en el penultimo
+        !   (que coincide con i=1 en el grid nl_cts)
+        !   hacemos la media entre hrTotal y hr110CTS :
+        i=nl-1
+        q15umco2_nltot(i) = 0.5d0*( q15umco2_nltot(i) + hr110CTS(1) )
+        do i=2,nl_cts_real
+           indice = (nl-2) + i
+           q15umco2_nltot(indice) = hr110CTS(i)
+        enddo
+        do i=nl_cts_real+1,nl_cts
+           indice = (nl-2) + i
+           q15umco2_nltot(indice) = 0.0d0
+        enddo
 
-         do i=1,n_gcm
-            q15umco2_gcm(iLon,iLat,i) = sngl( aux2gcmd(i) )
-         enddo
+        ! Interpol to original Pgrid
+        !
+        ! Primero, la parte conocida ([1,nl_cts_real])
+        do i=1,nl
+           zld(i) = - dble ( alog(pl(i)) )
+           !write (*,*) i, zld(i), q15umco2_nltot(i)
+        enddo
+        do i=3,nl_cts_real
+           indice = (nl-2) + i
+           zld(indice) = - dble ( alog(pl_cts(i)) )
+           !write (*,*) indice, zld(indice), q15umco2_nltot(indice)
+        enddo
+        ! En caso que nl_cts_real < nl_cts , extrapolo el grid alegremente
+        factor = pl_cts(nl_cts_real)/pl_cts(nl_cts_real-1)
+        xx = pl_cts(nl_cts_real)
+        do i=nl_cts_real+1,nl_cts
+           indice = (nl-2) + i
+           xx = xx * factor
+           zld(indice) = - dble ( alog(xx) )
+        enddo
+
+        do i=1,n_gcm
+           auxgcmd(i) = - dble( alog(p_ig(i)))
+        enddo
+        !         call zerov( aux2gcmd, n_gcm )
+        aux2gcmd(1:n_gcm)=0.d0
+        call interdp_limits (aux2gcmd, auxgcmd, n_gcm,  &
+             jlowerboundary,jtopCTS,  &
+             q15umco2_nltot, zld, nltot, 1,  nltot, 1)
+
+        ! Smoothing
+        call suaviza ( aux2gcmd, n_gcm, 1, auxgcmd )
+
+        do i=1,n_gcm
+           q15umco2_gcm(iLon,iLat,i) = sngl( aux2gcmd(i) )
+        enddo
 
      enddo  !-------- END OF MAIN LONGITUDE LOOP
   enddo  !-------- END OF MAIN LATITUDE LOOP
 
   !-------------------------------------------------------------
 
-! CO2 Cooling Rate  (K/Earth_day):  Use Positive sign from Loop above
-!    Retain dynamical and radiative heat balance terms in K/Earth_day
-!    Apply negative sign to q15umco2_gcm to make work inside MGITM
-!    Convert to K/sec for Internal Usage inside M-GITM code
+  ! CO2 Cooling Rate  (K/Earth_day):  Use Positive sign from Loop above
+  !    Retain dynamical and radiative heat balance terms in K/Earth_day
+  !    Apply negative sign to q15umco2_gcm to make work inside MGITM
+  !    Convert to K/sec for Internal Usage inside M-GITM code
   RadCoolingRate(1:nLons,1:nLats,1:nAlts,iBlock) = &
        -q15umco2_gcm(1:nLons,1:nLats,1:nAlts)/86400.
 
@@ -737,178 +737,178 @@ subroutine init_isochem
 
 end subroutine init_isochem
 
-   !---------------------------------------------------------------------
-   ! Calculate Eddy Diffusion Coefficient
-   !---------------------------------------------------------------------
+!---------------------------------------------------------------------
+! Calculate Eddy Diffusion Coefficient
+!---------------------------------------------------------------------
 
-   subroutine calc_eddy_diffusion_coefficient(iBlock)
+subroutine calc_eddy_diffusion_coefficient(iBlock)
 
-     use ModSizeGITM
-     use ModGITM, only: pressure, NDensity
-     use ModInputs, only: EddyDiffusionPressure0,EddyDiffusionPressure1, &
-          EddyDiffusionCoef
-     use ModSources, only: KappaEddyDiffusion
+  use ModSizeGITM
+  use ModGITM, only: pressure, NDensity
+  use ModInputs, only: EddyDiffusionPressure0,EddyDiffusionPressure1, &
+       EddyDiffusionCoef
+  use ModSources, only: KappaEddyDiffusion
 
-     implicit none
+  implicit none
 
-     integer, intent(in) :: iBlock
-     integer :: iAlt, iLat, iLon
-     integer :: First
-     real :: PEddyMax
-     real :: NEddyMax(nLons,nLats)
-     real :: EddyProfile(nLons,nLats,-1:nAlts+2)
+  integer, intent(in) :: iBlock
+  integer :: iAlt, iLat, iLon
+  integer :: First
+  real :: PEddyMax
+  real :: NEddyMax(nLons,nLats)
+  real :: EddyProfile(nLons,nLats,-1:nAlts+2)
 
-     real :: KMax
-     real :: KMin
+  real :: KMax
+  real :: KMin
 
-     KappaEddyDiffusion(:,:,:,iBlock) = 0.0
-! KStandard
-!    KMax = 1000.0
-!    KMin = 500.0
+  KappaEddyDiffusion(:,:,:,iBlock) = 0.0
+  ! KStandard
+  !    KMax = 1000.0
+  !    KMin = 500.0
 
-! KHigh
-!     KMax = 2000.
-!     KMin = 500.0
+  ! KHigh
+  !     KMax = 2000.
+  !     KMin = 500.0
 
-! KModerate
-      KMax = 1500.0
-      KMin = 500.0
+  ! KModerate
+  KMax = 1500.0
+  KMin = 500.0
 
-! KModerate2
-!     KMax = 1700.0
-!     KMin = 500.0
+  ! KModerate2
+  !     KMax = 1700.0
+  !     KMin = 500.0
 
-     ! \
-     ! First, find the altitude level corresponding to the asymptotic
-     ! upper bound for Eddy Diffusion.
-     ! Call this upper limit, NEddyMax
+  ! \
+  ! First, find the altitude level corresponding to the asymptotic
+  ! upper bound for Eddy Diffusion.
+  ! Call this upper limit, NEddyMax
 
-     ! This upper limit is set to 1.26e-09 bars
-     ! conversion to pascals -> 1 bar = 1e+05 pascals
-     ! Thus, PEddyMax -> 1.26e-04 pascals
+  ! This upper limit is set to 1.26e-09 bars
+  ! conversion to pascals -> 1 bar = 1e+05 pascals
+  ! Thus, PEddyMax -> 1.26e-04 pascals
 
 
-     PEddyMax = 1.26e-04  ! Pascals (SI Units)
+  PEddyMax = 1.26e-04  ! Pascals (SI Units)
 
+  do iLat = 1, nLats
+     do iLon = 1, nLons
+
+        First = 0
+
+        do iAlt = 1, nAlts
+
+           if (Pressure(iLon,iLat,iAlt,iBlock) > PEddyMax) then
+              cycle
+           else
+              if (First == 0) then
+                 NEddyMax(iLon,iLat) = NDensity(iLon,iLat,iAlt,iBlock)
+                 First = 1
+              endif
+           endif
+
+        enddo
+
+     enddo
+  enddo
+
+  ! Now we have all the trigger densities as a function of Longitude and Latitude
+
+  ! Next, extend the profile downward as 1/sqrt(N) and put a lower bound of 100 m^2/s
+
+  do iAlt = -1, nAlts+2
      do iLat = 1, nLats
         do iLon = 1, nLons
 
-           First = 0
+           ! Krasnopolsky et al. [2005] Helium modeling
+           !              KappaEddyDiffusion(iLon,iLat,iAlt,iBlock) =  &
+           !                   (1.0e-04)*(1.8e+13)/sqrt( (1.0e-06)*NDensity(iLon,iLat,iAlt,iBlock))
 
-           do iAlt = 1, nAlts
+           KappaEddyDiffusion(iLon,iLat,iAlt,iBlock) =  &
+                KMax* sqrt( NEddyMax(iLon,iLat) / NDensity(iLon,iLat,iAlt,iBlock))
+           !
+           !! \
+           !! This gives an upper bound of Kmax
+           KappaEddyDiffusion(iLon,iLat,iAlt,iBlock) = &
+                min(KMax, KappaEddyDiffusion(iLon,iLat,iAlt,iBlock) )
 
-              if (Pressure(iLon,iLat,iAlt,iBlock) > PEddyMax) then
-                 cycle
-              else
-                 if (First == 0) then
-                    NEddyMax(iLon,iLat) = NDensity(iLon,iLat,iAlt,iBlock)
-                    First = 1
-                 endif
-              endif
-
-           enddo
+           KappaEddyDiffusion(iLon,iLat,iAlt,iBlock) = &
+                max(KMin, KappaEddyDiffusion(iLon,iLat,iAlt,iBlock) )
+           !
+           !! This gives an lower bound of Kmin
+           !             KappaEddyDiffusion(iLon,iLat,iAlt,iBlock) = &
+           !                  max(100.0e+02, KappaEddyDiffusion(iLon,iLat,iAlt,iBlock) )
+           !
 
         enddo
      enddo
 
-     ! Now we have all the trigger densities as a function of Longitude and Latitude
-
-     ! Next, extend the profile downward as 1/sqrt(N) and put a lower bound of 100 m^2/s
-
-     do iAlt = -1, nAlts+2
-        do iLat = 1, nLats
-           do iLon = 1, nLons
-
-              ! Krasnopolsky et al. [2005] Helium modeling
-!              KappaEddyDiffusion(iLon,iLat,iAlt,iBlock) =  &
-!                   (1.0e-04)*(1.8e+13)/sqrt( (1.0e-06)*NDensity(iLon,iLat,iAlt,iBlock))
-
-              KappaEddyDiffusion(iLon,iLat,iAlt,iBlock) =  &
-                   KMax* sqrt( NEddyMax(iLon,iLat) / NDensity(iLon,iLat,iAlt,iBlock))
-              !
-              !! \
-              !! This gives an upper bound of Kmax
-              KappaEddyDiffusion(iLon,iLat,iAlt,iBlock) = &
-                   min(KMax, KappaEddyDiffusion(iLon,iLat,iAlt,iBlock) )
-
-             KappaEddyDiffusion(iLon,iLat,iAlt,iBlock) = &
-                  max(KMin, KappaEddyDiffusion(iLon,iLat,iAlt,iBlock) )
-              !
-              !! This gives an lower bound of Kmin
-!             KappaEddyDiffusion(iLon,iLat,iAlt,iBlock) = &
-!                  max(100.0e+02, KappaEddyDiffusion(iLon,iLat,iAlt,iBlock) )
-             !
-
-           enddo
-        enddo
-
-     enddo
+  enddo
 
 
-   end subroutine calc_eddy_diffusion_coefficient
+end subroutine calc_eddy_diffusion_coefficient
 
 
-   ! ----------------------------------------------------------------------
+! ----------------------------------------------------------------------
    
-   subroutine calc_gw(iBlock)
+subroutine calc_gw(iBlock)
 
-     use ModInputs
-     use ModSources, only : GWDrag, GWIHeat, GWDHeat, GW_net_heating, &
-	GW_beta_tot, GW_beta_non, GW_beta_ext
-     use GITM_planet
-     use ModGITM
-     use ModConstants, only : PI
-     use ModIndicesInterfaces
-     use ModTime
+  use ModInputs
+  use ModSources, only : GWDrag, GWIHeat, GWDHeat, GW_net_heating, &
+       GW_beta_tot, GW_beta_non, GW_beta_ext
+  use GITM_planet
+  use ModGITM
+  use ModConstants, only : PI
+  use ModIndicesInterfaces
+  use ModTime
 
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-!***EYGwave REQUIRES MKS UNITS***
-!   IN:  MGITM mks ---> EGWD MKS
-!   OUT: EGWD MKS --->  MGITM mks
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-! Original code of E. Yigit for Earth
-! Modified for Mars by A. Medvedev and E. Yigit
-! Incorporated into MGITM by K. Roeten and S. Bougher (Summer 2018-2020)
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  !***EYGwave REQUIRES MKS UNITS***
+  !   IN:  MGITM mks ---> EGWD MKS
+  !   OUT: EGWD MKS --->  MGITM mks
+  !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  ! Original code of E. Yigit for Earth
+  ! Modified for Mars by A. Medvedev and E. Yigit
+  ! Incorporated into MGITM by K. Roeten and S. Bougher (Summer 2018-2020)
+  !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
- implicit none
+  implicit none
 
   ! INPUTS:----------------------------------------------------------
 
   integer,intent(in):: iBlock
 
-!  -----------------------------------------------------------------
-! Input variables
+  !  -----------------------------------------------------------------
+  ! Input variables
 
-! Args:
-!     INTEGER, PARAMETER  :: ht_dim = 120         !Number vertical levels (interfaces)
-      INTEGER, PARAMETER  :: ht_dim = nAlts       !Number vertical levels (interfaces)
-      INTEGER, PARAMETER  :: SLEV = 4             !Source level (top of conv. boundary layer ~8.75 km)
-!     INTEGER, PARAMETER  :: SLEV = 5             !Source level (top of conv. boundary layer ~11.25 km)
-      INTEGER, PARAMETER  :: nh = 30              !Number of harmonics (25-50 range)
+  ! Args:
+  !     INTEGER, PARAMETER  :: ht_dim = 120         !Number vertical levels (interfaces)
+  INTEGER, PARAMETER  :: ht_dim = nAlts       !Number vertical levels (interfaces)
+  INTEGER, PARAMETER  :: SLEV = 4             !Source level (top of conv. boundary layer ~8.75 km)
+  !     INTEGER, PARAMETER  :: SLEV = 5             !Source level (top of conv. boundary layer ~11.25 km)
+  INTEGER, PARAMETER  :: nh = 30              !Number of harmonics (25-50 range)
 
-!  CONSTANTS:
-!     REAL, PARAMETER ::   PI =  3.14159265358979312
-!     REAL, PARAMETER ::   RGAS2 = gask/43.48*1.e-4       ! Pure CO2 [erg/K/gm] -> [J/K/kg]
-      REAL, PARAMETER ::   RGAS2 = 8.314E+07/43.48*1.e-4  ! Pure CO2 [erg/K/gm] -> [J/K/kg]
-!     REAL, PARAMETER ::   GRAV = 373.*0.01               ! [cm/s^2] -> [m/s^2]
+  !  CONSTANTS:
+  !     REAL, PARAMETER ::   PI =  3.14159265358979312
+  !     REAL, PARAMETER ::   RGAS2 = gask/43.48*1.e-4       ! Pure CO2 [erg/K/gm] -> [J/K/kg]
+  REAL, PARAMETER ::   RGAS2 = 8.314E+07/43.48*1.e-4  ! Pure CO2 [erg/K/gm] -> [J/K/kg]
+  !     REAL, PARAMETER ::   GRAV = 373.*0.01               ! [cm/s^2] -> [m/s^2]
 
-! Spectral parameters  (Mars)
-      REAL, PARAMETER   :: flux0    = 0.0025  ! Standard flux0
-!     REAL, PARAMETER   :: flux0    = 0.0012  ! Reduced flux0 during PEDE
-!     REAL, PARAMETER   :: flux0    = 0.00025  ! Reduced flux0 during PEDE
-      REAL, PARAMETER   :: cw       = 35.
-      REAL, PARAMETER   :: max_cp_y = 80.0  !(m/s) (with nh=30)
-      REAL, PARAMETER   :: kx       = 2.*pi/300.e3 !lambda_x= 100 to 300 km
-      REAL, PARAMETER   :: max_ht = 300.e3 !No calc above this height (model top)
+  ! Spectral parameters  (Mars)
+  REAL, PARAMETER   :: flux0    = 0.0025  ! Standard flux0
+  !     REAL, PARAMETER   :: flux0    = 0.0012  ! Reduced flux0 during PEDE
+  !     REAL, PARAMETER   :: flux0    = 0.00025  ! Reduced flux0 during PEDE
+  REAL, PARAMETER   :: cw       = 35.
+  REAL, PARAMETER   :: max_cp_y = 80.0  !(m/s) (with nh=30)
+  REAL, PARAMETER   :: kx       = 2.*pi/300.e3 !lambda_x= 100 to 300 km
+  REAL, PARAMETER   :: max_ht = 300.e3 !No calc above this height (model top)
 
-!----------------------------------------------------------------------
+  !----------------------------------------------------------------------
 
-! Local Variables (for MGITM loops)
-     integer :: ilon,ilat,ialt
-! Local Variables (for EGWD2 1-D code loops)
-      INTEGER :: i, j, k, n, nd, m, il
- 
+  ! Local Variables (for MGITM loops)
+  integer :: ilon,ilat,ialt
+  ! Local Variables (for EGWD2 1-D code loops)
+  INTEGER :: i, j, k, n, nd, m, il
+
   !  -----------------------------------------------------------------
   ! Input 3-D fields (8) recast from MarsGITM (4-D+ fields)
   ! Setup section:  from MGITM inputs  (all mks units!)
@@ -925,141 +925,141 @@ end subroutine init_isochem
   ! (4-D+ fields), (all mks units!)
   !  -----------------------------------------------------------------
 
-! Output args: for passing to duv.F 
-      real,dimension(1:nLons,1:nLats,1:nAlts) :: udrag, vdrag  
-     !  zonal and meridional momentum drag (m/s/s)
+  ! Output args: for passing to duv.F 
+  real,dimension(1:nLons,1:nLats,1:nAlts) :: udrag, vdrag  
+  !  zonal and meridional momentum drag (m/s/s)
 
-! Output args: for passing to dt.F 
-      real,dimension(1:nLons,1:nLats,1:nAlts) :: gwheat_ir, gwheat_dif
-     !  irreversible heating (K/s), differential heating/cooling (K/s)
+  ! Output args: for passing to dt.F 
+  real,dimension(1:nLons,1:nLats,1:nAlts) :: gwheat_ir, gwheat_dif
+  !  irreversible heating (K/s), differential heating/cooling (K/s)
 
-! Output args: for testing of diagnostic intermediate variables
-      real,dimension(1:nLons,1:nLats,1:nAlts) :: net_heating_t, &
-	beta_tot_t, beta_non_t, beta_ext_t
+  ! Output args: for testing of diagnostic intermediate variables
+  real,dimension(1:nLons,1:nLats,1:nAlts) :: net_heating_t, &
+       beta_tot_t, beta_non_t, beta_ext_t
 
-!  -----------------------------------------------------------------
-! Internal Input variables to Yigit 1-D routine
-!  -----------------------------------------------------------------
+  !  -----------------------------------------------------------------
+  ! Internal Input variables to Yigit 1-D routine
+  !  -----------------------------------------------------------------
 
-      REAL  :: vy1d(ht_dim)   !v-wind
-      REAL  :: vx1d(ht_dim)   !u-wind
-      REAL  :: temp1d(ht_dim) !temp
-      REAL  :: cp1d(ht_dim)   !Cp
-      REAL  :: h(ht_dim)      !geopotential height (in m)
-      REAL  :: pres(ht_dim)   !pressure (in Pa)
-      REAL  :: rho2(ht_dim)   !density (in Kg/m3)
-      REAL  :: rgass(ht_dim)  !rgas species mixture
-      REAL  :: v_eddy(ht_dim)=0.0  !eddy viscosity (=null)
-      REAL  :: eden(ht_dim)=0.0 ! electron density (=null)
-      REAL  :: GRAV1d(ht_dim) !variable gravity for 1d code
+  REAL  :: vy1d(ht_dim)   !v-wind
+  REAL  :: vx1d(ht_dim)   !u-wind
+  REAL  :: temp1d(ht_dim) !temp
+  REAL  :: cp1d(ht_dim)   !Cp
+  REAL  :: h(ht_dim)      !geopotential height (in m)
+  REAL  :: pres(ht_dim)   !pressure (in Pa)
+  REAL  :: rho2(ht_dim)   !density (in Kg/m3)
+  REAL  :: rgass(ht_dim)  !rgas species mixture
+  REAL  :: v_eddy(ht_dim)=0.0  !eddy viscosity (=null)
+  REAL  :: eden(ht_dim)=0.0 ! electron density (=null)
+  REAL  :: GRAV1d(ht_dim) !variable gravity for 1d code
 
-! Internal Output variables
-      REAL :: ut_gwd(ht_dim)
-      REAL :: vt_gwd(ht_dim)
+  ! Internal Output variables
+  REAL :: ut_gwd(ht_dim)
+  REAL :: vt_gwd(ht_dim)
 
-! GW heating terms
-      REAL :: gwh_ir(ht_dim) !irreversible heating (K/s)
-      REAL :: gwh_dif(ht_dim)!Differential heating/cooling (K/s)
-      REAL :: scht1d(ht_dim)             ! 1D scale height
+  ! GW heating terms
+  REAL :: gwh_ir(ht_dim) !irreversible heating (K/s)
+  REAL :: gwh_dif(ht_dim)!Differential heating/cooling (K/s)
+  REAL :: scht1d(ht_dim)             ! 1D scale height
 
-      REAL :: m_vis(ht_dim)              ! molecular kinematic viscosity (mixture)
-      REAL :: var_tot(ht_dim)  = 0.
-      REAL :: flux_tot(ht_dim) = 0.
+  REAL :: m_vis(ht_dim)              ! molecular kinematic viscosity (mixture)
+  REAL :: var_tot(ht_dim)  = 0.
+  REAL :: flux_tot(ht_dim) = 0.
 
-!-----------
+  !-----------
 
-! mid-point variables
-      REAL :: temp1d_m(ht_dim)
-      REAL :: u_source_m(ht_dim)
-      REAL :: pres_m(ht_dim)
-      REAL :: rho_m(ht_dim)
-      REAL :: h_m(ht_dim)
-      REAL :: eden_m(ht_dim)
-      REAL :: scht1d_m(ht_dim)
+  ! mid-point variables
+  REAL :: temp1d_m(ht_dim)
+  REAL :: u_source_m(ht_dim)
+  REAL :: pres_m(ht_dim)
+  REAL :: rho_m(ht_dim)
+  REAL :: h_m(ht_dim)
+  REAL :: eden_m(ht_dim)
+  REAL :: scht1d_m(ht_dim)
 
-      REAL :: drag(ht_dim,nh) = 0.
+  REAL :: drag(ht_dim,nh) = 0.
 
-      REAL :: phasespeed(nh)              ! Phase speed
-      REAL :: uw_mom(nh) = 0.
-      REAL :: brunt(ht_dim) = 0.02        ! Buoyancy frequency
-      REAL :: theta(ht_dim), thetap(ht_dim)
-      INTEGER :: b_lev(nh), c_lev(nh)
-      REAL :: dz(ht_dim), rho_pr(ht_dim)
+  REAL :: phasespeed(nh)              ! Phase speed
+  REAL :: uw_mom(nh) = 0.
+  REAL :: brunt(ht_dim) = 0.02        ! Buoyancy frequency
+  REAL :: theta(ht_dim), thetap(ht_dim)
+  INTEGER :: b_lev(nh), c_lev(nh)
+  REAL :: dz(ht_dim), rho_pr(ht_dim)
 
-! Dissipation variables
-      REAL :: tau(ht_dim, nh)      = 1.
-      REAL :: beta(ht_dim, nh)     = 0.
-      REAL :: beta_dif(ht_dim,nh)  = 0.
-      REAL :: beta_mol(ht_dim,nh)  = 0.
-      REAL :: beta_nc(ht_dim,nh)   = 0.
-      REAL :: beta_non(ht_dim,nh)  = 0.
-      REAL :: beta_cond(ht_dim,nh) = 0.
-      REAL :: beta_eddy(ht_dim,nh) = 0.
-      REAL :: beta_ion(ht_dim,nh)  = 0.
-      REAL :: beta_tot(ht_dim)     = 0.	  ! New
-      REAL :: beta_non_tot(ht_dim) = 0.   ! New
-      REAL :: beta_ext_tot(ht_dim) = 0.   ! New
+  ! Dissipation variables
+  REAL :: tau(ht_dim, nh)      = 1.
+  REAL :: beta(ht_dim, nh)     = 0.
+  REAL :: beta_dif(ht_dim,nh)  = 0.
+  REAL :: beta_mol(ht_dim,nh)  = 0.
+  REAL :: beta_nc(ht_dim,nh)   = 0.
+  REAL :: beta_non(ht_dim,nh)  = 0.
+  REAL :: beta_cond(ht_dim,nh) = 0.
+  REAL :: beta_eddy(ht_dim,nh) = 0.
+  REAL :: beta_ion(ht_dim,nh)  = 0.
+  REAL :: beta_tot(ht_dim)     = 0.	  ! New
+  REAL :: beta_non_tot(ht_dim) = 0.   ! New
+  REAL :: beta_ext_tot(ht_dim) = 0.   ! New
 
-      REAL :: fac1(ht_dim, nh)	   = 0.
-      REAL :: fac2(ht_dim, nh)	   = 0.	! Factors to simplify the dissipation variable
-					! Modified to save (ht,nh)
+  REAL :: fac1(ht_dim, nh)	   = 0.
+  REAL :: fac2(ht_dim, nh)	   = 0.	! Factors to simplify the dissipation variable
+  ! Modified to save (ht,nh)
 
-      REAL :: alpha(ht_dim)        = 0. ! Newtonian cooling coefficient
-      REAL :: vin(ht_dim)          = 0. ! ion-neutral collision frequency
+  REAL :: alpha(ht_dim)        = 0. ! Newtonian cooling coefficient
+  REAL :: vin(ht_dim)          = 0. ! ion-neutral collision frequency
 
-      REAL :: c_int(ht_dim,nh)
-      REAL :: sign_c(ht_dim,nh)
-      REAL :: flux(ht_dim,nh) = 0.
-      REAL :: up(ht_dim,nh)   = 0.
-      REAL :: upSq(ht_dim,nh) = 0.
+  REAL :: c_int(ht_dim,nh)
+  REAL :: sign_c(ht_dim,nh)
+  REAL :: flux(ht_dim,nh) = 0.
+  REAL :: up(ht_dim,nh)   = 0.
+  REAL :: upSq(ht_dim,nh) = 0.
 
-! Total horizontal wind variance at the source level
-      REAL :: sigmaSq_s=0., rms
+  ! Total horizontal wind variance at the source level
+  REAL :: sigmaSq_s=0., rms
 
-      INTEGER :: sgn(nh)
+  INTEGER :: sgn(nh)
 
-! Nonlinearity parameters
-      REAL :: sigma(ht_dim,nh)=0.
-      REAL :: sigmaSq(ht_dim,nh)=0.
-      REAL :: alpha_ins(ht_dim,nh)=0.
+  ! Nonlinearity parameters
+  REAL :: sigma(ht_dim,nh)=0.
+  REAL :: sigmaSq(ht_dim,nh)=0.
+  REAL :: alpha_ins(ht_dim,nh)=0.
 
-      REAL, PARAMETER   :: S2  = 1.4142136d0 ! (2.**0.5
-      REAL, PARAMETER   :: S2P = 2.5066283d0 ! (2.*pi)**0.5
+  REAL, PARAMETER   :: S2  = 1.4142136d0 ! (2.**0.5
+  REAL, PARAMETER   :: S2P = 2.5066283d0 ! (2.*pi)**0.5
 
-! Anisotropy variables
-      REAL  :: u_source(ht_dim)
-      REAL  :: gwd(ht_dim)      = 0.
-      REAL  :: gwh(ht_dim)      = 0.
-      REAL  :: gwhd(ht_dim)     = 0.
-      REAL  :: xv, yv
+  ! Anisotropy variables
+  REAL  :: u_source(ht_dim)
+  REAL  :: gwd(ht_dim)      = 0.
+  REAL  :: gwh(ht_dim)      = 0.
+  REAL  :: gwhd(ht_dim)     = 0.
+  REAL  :: xv, yv
 
-      REAL  :: net_heating(ht_dim) = 0.
-      REAL  :: cap(ht_dim)         = 0.
+  REAL  :: net_heating(ht_dim) = 0.
+  REAL  :: cap(ht_dim)         = 0.
 
 
-      tau(:,:)     = 1.;    gwd(:)       = 0.;   gwh(:)       = 0.
-      gwhd(:)      = 0.;    drag(:,:)    = 0.;   u_source(:)  = 0.
-      sigmaSq(:,:) = 0.;    beta(:,:)    = 0.;   flux_tot(:)  = 0.
-      var_tot(:)   = 0.;    upSq(:,:)    = 0.;   up(:,:)      = 0.
-      flux(:,:)    = 0.;    beta_non(:,:)= 0.;   sgn(:)       = 0.
-      sigma(:,:)   = 0.;    alpha_ins(:,:)=0.;   fac1(:,:)    = 0.
-      fac2(:,:)	   = 0.;    xv           = 0.;   yv           = 0.
-      vy1d(:)	   = 0.;    vx1d(:)      = 0.;   temp1d(:)    = 0.
-      cp1d(:)      = 0.;    h(:)         = 0.;   pres(:)      = 0.
-      rho2(:)      = 0.;    rgass(:)     = 0.;   v_eddy(:)    = 0.
-      eden(:)      = 0.;    GRAV1d(:)    = 0.;   ut_gwd(:)    = 0.
-      vt_gwd(:)    = 0.;    gwh_ir(:)    = 0.;   gwh_dif(:)   = 0.
-      scht1d(:)    = 0.;    m_vis(:)     = 0.;   sign_c(:,:)  = 0.
-      temp1d_m(:)  = 0.;    u_source_m(:)= 0.;   c_int(:,:)   = 0.
-      pres_m(:)    = 0.;    rho_m(:)     = 0.;   h_m(:)       = 0.
-      eden_m(:)    = 0.;    scht1d_m(:)  = 0.;   phasespeed(:)= 0.
-      uw_mom(:)    = 0.;    brunt(:)     = 0.;   theta(:)     = 0.
-      thetap(:)    = 0.;    b_lev(:)     = 0.;   c_lev(:)     = 0.
-      dz(:)        = 0.;    rho_pr(:)    = 0.;   beta_dif(:,:)= 0.
-      beta_mol(:,:)= 0.;    beta_nc(:,:) = 0.;   beta_cond(:,:)=0.
-      beta_eddy(:,:)=0.;    beta_ion(:,:)= 0.;   alpha(:)     = 0.
-      beta_non_tot(:)=0.;   beta_ext_tot(:)=0.;  beta_tot(:)  = 0.    
-      vin(:)       = 0.;    net_heating(:)=0.;   cap(:)       = 0.
+  tau(:,:)     = 1.;    gwd(:)       = 0.;   gwh(:)       = 0.
+  gwhd(:)      = 0.;    drag(:,:)    = 0.;   u_source(:)  = 0.
+  sigmaSq(:,:) = 0.;    beta(:,:)    = 0.;   flux_tot(:)  = 0.
+  var_tot(:)   = 0.;    upSq(:,:)    = 0.;   up(:,:)      = 0.
+  flux(:,:)    = 0.;    beta_non(:,:)= 0.;   sgn(:)       = 0.
+  sigma(:,:)   = 0.;    alpha_ins(:,:)=0.;   fac1(:,:)    = 0.
+  fac2(:,:)	   = 0.;    xv           = 0.;   yv           = 0.
+  vy1d(:)	   = 0.;    vx1d(:)      = 0.;   temp1d(:)    = 0.
+  cp1d(:)      = 0.;    h(:)         = 0.;   pres(:)      = 0.
+  rho2(:)      = 0.;    rgass(:)     = 0.;   v_eddy(:)    = 0.
+  eden(:)      = 0.;    GRAV1d(:)    = 0.;   ut_gwd(:)    = 0.
+  vt_gwd(:)    = 0.;    gwh_ir(:)    = 0.;   gwh_dif(:)   = 0.
+  scht1d(:)    = 0.;    m_vis(:)     = 0.;   sign_c(:,:)  = 0.
+  temp1d_m(:)  = 0.;    u_source_m(:)= 0.;   c_int(:,:)   = 0.
+  pres_m(:)    = 0.;    rho_m(:)     = 0.;   h_m(:)       = 0.
+  eden_m(:)    = 0.;    scht1d_m(:)  = 0.;   phasespeed(:)= 0.
+  uw_mom(:)    = 0.;    brunt(:)     = 0.;   theta(:)     = 0.
+  thetap(:)    = 0.;    b_lev(:)     = 0.;   c_lev(:)     = 0.
+  dz(:)        = 0.;    rho_pr(:)    = 0.;   beta_dif(:,:)= 0.
+  beta_mol(:,:)= 0.;    beta_nc(:,:) = 0.;   beta_cond(:,:)=0.
+  beta_eddy(:,:)=0.;    beta_ion(:,:)= 0.;   alpha(:)     = 0.
+  beta_non_tot(:)=0.;   beta_ext_tot(:)=0.;  beta_tot(:)  = 0.    
+  vin(:)       = 0.;    net_heating(:)=0.;   cap(:)       = 0.
 
 
   !  -----------------------------------------------------------------
@@ -1077,9 +1077,9 @@ end subroutine init_isochem
   !  Mars GITM zonal/meridional velocities in m/sec (on its grid) ---  
 
   UN(1:nLons,1:nLats,1:nAlts) = &
-           Velocity(1:nLons,1:nLats,1:nAlts,iEast_,iBlock)+1.0E-4
+       Velocity(1:nLons,1:nLats,1:nAlts,iEast_,iBlock)+1.0E-4
   VN(1:nLons,1:nLats,1:nAlts) = &
-           Velocity(1:nLons,1:nLats,1:nAlts,iNorth_,iBlock)+1.0E-4
+       Velocity(1:nLons,1:nLats,1:nAlts,iNorth_,iBlock)+1.0E-4
 
 
   !  Mars GITM pressure in pascals  (on its grid) -------------------
@@ -1091,9 +1091,9 @@ end subroutine init_isochem
   !     Mars GITM heights in meters  (on its grid) -------------------
 
   HTN(1:nLons,1:nLats,1:nAlts) = &
-        Altitude_GB(1:nLons,1:nLats,1:nAlts,iBlock)
+       Altitude_GB(1:nLons,1:nLats,1:nAlts,iBlock)
 
- 
+
   !     Mars GITM cp in J/kg/K (on its grid) -------------------
   !     (same units as LMD-MGCM cooling code, and will vary with altitude)
   !     (cpco2 = 8.4e+06 erg/gm/K = 0.84 J/gm/K = 8.4e-04 J/kg/K)
@@ -1104,7 +1104,7 @@ end subroutine init_isochem
   GRAVN(1:nLons,1:nLats,1:nAlts) = &
        Gravity_GB(1:nLons,1:nLats,1:nAlts,iBlock)
 
-!    Volume Mixing Ratio amd MWT Calculations
+  !    Volume Mixing Ratio amd MWT Calculations
 
   mnd(1:nLons,1:nLats,1:nAlts) = &
        NDensity(1:nLons,1:nLats,1:nAlts,iBlock)+1.0
@@ -1121,16 +1121,16 @@ end subroutine init_isochem
        NdensityS(1:nLons,1:nLats,1:nAlts,iCO2_,iBlock)&
        /mnd(1:nLons,1:nLats,1:nAlts)
 
-!  mean molecular mass (gm/molecule) = mean molecular weight(gm/mole)/
-!                                      Avogardos number(molecules/mole)
+  !  mean molecular mass (gm/molecule) = mean molecular weight(gm/mole)/
+  !                                      Avogardos number(molecules/mole)
 
-!  (gm/molecule)
-! mmean(1:nLons,1:nLats,1:nAlts) = &
-!      (vmro(1:nLons,1:nLats,1:nAlts)*16.+ &
-!      (vmrco(1:nLons,1:nLats,1:nAlts)+vmrn2(1:nLons,1:nLats,1:nAlts))&
-!      *28. + vmrco2(1:nLons,1:nLats,1:nAlts)*44.)/  &
-!      Avogadros_Number
-!  (gm/mole) = mmwt
+  !  (gm/molecule)
+  ! mmean(1:nLons,1:nLats,1:nAlts) = &
+  !      (vmro(1:nLons,1:nLats,1:nAlts)*16.+ &
+  !      (vmrco(1:nLons,1:nLats,1:nAlts)+vmrn2(1:nLons,1:nLats,1:nAlts))&
+  !      *28. + vmrco2(1:nLons,1:nLats,1:nAlts)*44.)/  &
+  !      Avogadros_Number
+  !  (gm/mole) = mmwt
   mmean(1:nLons,1:nLats,1:nAlts) = &
        (vmro(1:nLons,1:nLats,1:nAlts)*16.+ &
        (vmrco(1:nLons,1:nLats,1:nAlts)+vmrn2(1:nLons,1:nLats,1:nAlts))&
@@ -1142,631 +1142,631 @@ end subroutine init_isochem
        VISC_3D(1:nLons,1:nLats,1:nAlts,iBlock)
 
 
-!========================================================================
-! Internal 3-D fields recast from MarsGITM (4-D+ fields)
-! Stuffing section:  MGITM inputs into 1-D EYGwave variables, all in mks
-!========================================================================
+  !========================================================================
+  ! Internal 3-D fields recast from MarsGITM (4-D+ fields)
+  ! Stuffing section:  MGITM inputs into 1-D EYGwave variables, all in mks
+  !========================================================================
 
-!---initialize output---
-      udrag(1:nLons,1:nLats,1:nAlts)      = 0.0
-      vdrag(1:nLons,1:nLats,1:nAlts)      = 0.0
-      gwheat_ir(1:nLons,1:nLats,1:nAlts)  = 0.0
-      gwheat_dif(1:nLons,1:nLats,1:nAlts) = 0.0
-      
-      net_heating_t(1:nLons,1:nLats,1:nAlts)= 0.0
-      beta_ext_t(1:nLons,1:nLats,1:nAlts)   = 0.0
-      beta_tot_t(1:nLons,1:nLats,1:nAlts)   = 0.0
-      beta_non_t(1:nLons,1:nLats,1:nAlts)   = 0.0
+  !---initialize output---
+  udrag(1:nLons,1:nLats,1:nAlts)      = 0.0
+  vdrag(1:nLons,1:nLats,1:nAlts)      = 0.0
+  gwheat_ir(1:nLons,1:nLats,1:nAlts)  = 0.0
+  gwheat_dif(1:nLons,1:nLats,1:nAlts) = 0.0
 
-
-!---------------Start MGITM Longitude loop------------------
-      do ilon=1,nLons
-
-!---------------Start MGITM latitude loop------------------
-      do ilat=1,nLats
-
-!-----------------------------------------------------
-!    Setup 1-D arrays for application in Yigit 1-D code
-!    -- Assume that m_vis is for pure CO2 below 200 km
-!-----------------------------------------------------
-!
-
-!  Initialize all variables 
-
-     do k=1,ht_dim
-	 flux_tot(k)   = 0.
-	 var_tot(k)    = 0.
-	 sigmaSq(k,:)  = 0.
-	 beta(k,:)     = 0.
-	 tau(k,:)      = 1.
-	 gwd(k)	       = 0.
-	 gwh(k)        = 0.
-	 gwhd(k)       = 0.
-	 drag(k,:)     = 0.
- 	 upSq(k,:)     = 0.
-	 up(k,:)       = 0.
-	 flux(k,:)     = 0.
-	 beta_non(k,:) = 0.
-	 sigma(k,:)    = 0.
-	 alpha_ins(k,:)= 0.
-	 fac1(k,:)     = 0.
-         fac2(k,:)     = 0.
-	 vy1d(k)       = 0.
-	 vx1d(k)       = 0.
-         temp1d(k)     = 0.
-         cp1d(k)       = 0.
-         h(k)          = 0.
-         pres(k)       = 0.
-         rho2(k)       = 0.
-         rgass(k)      = 0.
-         v_eddy(k)     = 0.
-         eden(k)       = 0.
-         GRAV1d(k)     = 0.
-         ut_gwd(k)     = 0.
-         vt_gwd(k)     = 0.
-         gwh_ir(k)     = 0.
-         gwh_dif(k)    = 0.
-         scht1d(k)     = 0.
-         m_vis(k)      = 0.
-         temp1d_m(k)   = 0.
-         u_source_m(k) = 0.
-         pres_m(k)     = 0.
-         rho_m(k)      = 0.
-         h_m(k)        = 0.
-         eden_m(k)     = 0.
-	 scht1d_m(k)   = 0.
-	 phasespeed(:) = 0.
-	 uw_mom(:)     = 0.
-	 brunt(k)      = 0.
-         theta(k)      = 0.
-         thetap(k)     = 0.
-	 b_lev(:)      = 0.
-	 c_lev(:)      = 0.
-	 dz(k)         = 0.
-	 rho_pr(k)     = 0.
-	 beta_dif(k,:) = 0.
-	 beta_mol(k,:) = 0.
-         beta_nc(k,:)  = 0.
-	 beta_cond(k,:)= 0.
-	 beta_eddy(k,:)= 0.
-	 beta_ion(k,:) = 0.
-         beta_non_tot(k)= 0.
-	 beta_ext_tot(k)= 0.
-	 beta_tot(k)   = 0.
-	 alpha(k)      = 0.
-	 vin(k)        = 0.
-	 c_int(k,:)    = 0.
-	 sign_c(k,:)   = 0.
-	 sgn(:)        = 0.
-	 u_source(k)   = 0.
-	 xv	       = 0.
-	 yv	       = 0.
-	 net_heating(k)= 0.
-	 cap(k)        = 0.
-     enddo
-
-!  Pull values from MGITM
-
-      do k = 1,ht_dim
-         vx1D(k)   = UN(ilon,ilat,k)                    ! [m/s]
-         vy1D(k)   = VN(ilon,ilat,k)                    ! [m/s]
-         temp1D(k) = TN(ilon,ilat,k)                    ! [K]
-         cp1d(k)   = CPN(ilon,ilat,k)                   ! [J/K/kg]
-         m_vis(k)  = KMN(ilon,ilat,k)                   ! [kg/m/sec]
-         h(k)      = HTN(ilon,ilat,k)                   ! [m]
-         pres(k)   = PN(ilon,ilat,k)                    ! [Pa]
-	 RGASS(k)  = RGAS2*43.48/mmean(ilon,ilat,k)     ! [J/K/kg] (Mixture)
-	 GRAV1d(k) = -1.0*GRAVN(ilon,ilat,k)		! [m/s^2]
-      enddo ! K-loop
-
-!  Calculate rho
-
-      do k=1,ht_dim
-        rho2(k) = pres(k)/(RGASS(k)*temp1d(k))               ! kg/m3
-      enddo
+  net_heating_t(1:nLons,1:nLats,1:nAlts)= 0.0
+  beta_ext_t(1:nLons,1:nLats,1:nAlts)   = 0.0
+  beta_tot_t(1:nLons,1:nLats,1:nAlts)   = 0.0
+  beta_non_t(1:nLons,1:nLats,1:nAlts)   = 0.0
 
 
+  !---------------Start MGITM Longitude loop------------------
+  do ilon=1,nLons
 
-!========================================================================
-!--------- BEGIN GW CALC. ----------  NOT touched from E. Yigit
-!========================================================================
-! Project the upper level winds onto the source level winds
-      PROJECTION : DO n = SLEV, ht_dim
-       IF(n.eq.SLEV) THEN
-          u_source(n) = SQRT(vy1d(n)*vy1d(n) + vx1d(n)*vx1d(n))
-          IF(u_source(n).eq.0.) u_source(n) = 1.
-          yv = vy1d(n)/u_source(n)
-          xv = vx1d(n)/u_source(n)
-       ENDIF
-          u_source(n) = vy1d(n)*yv + vx1d(n)*xv
-      ENDDO PROJECTION
+     !---------------Start MGITM latitude loop------------------
+     do ilat=1,nLats
 
-!     theta(:) = temp1d(:)*(pres(1)/pres(:))**(RGAS2/cp1d(:))
-      theta(:) = temp1d(:)*(pres(1)/pres(:))**(RGASS(:)/cp1d(:))
-!     scht1d(:)= temp1d(:)*RGAS2/GRAV
-!     scht1d(:)= temp1d(:)*RGASS(:)/GRAV
-      scht1d(:)= temp1d(:)*RGASS(:)/GRAV1d(:)
+        !-----------------------------------------------------
+        !    Setup 1-D arrays for application in Yigit 1-D code
+        !    -- Assume that m_vis is for pure CO2 below 200 km
+        !-----------------------------------------------------
+        !
 
-! Mid-point values of model variables
-      MID_POINT : DO n = 1, ht_dim-1
-         temp1d_m(n)   = 0.5*(temp1d(n)   + temp1d(n+1))
-         u_source_m(n) = 0.5*(u_source(n) + u_source(n+1))
-         pres_m(n)     = 0.5*(pres(n)     + pres(n+1))
-         rho_m(n)      = 0.5*(rho2(n)     + rho2(n+1))
-         h_m(n)        = 0.5*(h(n)        + h(n+1))
-         eden_m(n)     = 0.5*(eden(n)     + eden(n+1))
-         scht1d_m(n)   = 0.5*(scht1d(n)   + scht1d(n+1))
-      ENDDO MID_POINT
+        !  Initialize all variables 
 
-! Brunt frequency and background parameters
-      BACKGROUND1: DO n = 1, ht_dim-1
-         dz(n)    = h(n+1) - h(n)                ! Midpoint value
-         rho_pr(n)= (rho2(n+1) - rho2(n))/dz(n)    ! Midpoint value
+        do k=1,ht_dim
+           flux_tot(k)   = 0.
+           var_tot(k)    = 0.
+           sigmaSq(k,:)  = 0.
+           beta(k,:)     = 0.
+           tau(k,:)      = 1.
+           gwd(k)	       = 0.
+           gwh(k)        = 0.
+           gwhd(k)       = 0.
+           drag(k,:)     = 0.
+           upSq(k,:)     = 0.
+           up(k,:)       = 0.
+           flux(k,:)     = 0.
+           beta_non(k,:) = 0.
+           sigma(k,:)    = 0.
+           alpha_ins(k,:)= 0.
+           fac1(k,:)     = 0.
+           fac2(k,:)     = 0.
+           vy1d(k)       = 0.
+           vx1d(k)       = 0.
+           temp1d(k)     = 0.
+           cp1d(k)       = 0.
+           h(k)          = 0.
+           pres(k)       = 0.
+           rho2(k)       = 0.
+           rgass(k)      = 0.
+           v_eddy(k)     = 0.
+           eden(k)       = 0.
+           GRAV1d(k)     = 0.
+           ut_gwd(k)     = 0.
+           vt_gwd(k)     = 0.
+           gwh_ir(k)     = 0.
+           gwh_dif(k)    = 0.
+           scht1d(k)     = 0.
+           m_vis(k)      = 0.
+           temp1d_m(k)   = 0.
+           u_source_m(k) = 0.
+           pres_m(k)     = 0.
+           rho_m(k)      = 0.
+           h_m(k)        = 0.
+           eden_m(k)     = 0.
+           scht1d_m(k)   = 0.
+           phasespeed(:) = 0.
+           uw_mom(:)     = 0.
+           brunt(k)      = 0.
+           theta(k)      = 0.
+           thetap(k)     = 0.
+           b_lev(:)      = 0.
+           c_lev(:)      = 0.
+           dz(k)         = 0.
+           rho_pr(k)     = 0.
+           beta_dif(k,:) = 0.
+           beta_mol(k,:) = 0.
+           beta_nc(k,:)  = 0.
+           beta_cond(k,:)= 0.
+           beta_eddy(k,:)= 0.
+           beta_ion(k,:) = 0.
+           beta_non_tot(k)= 0.
+           beta_ext_tot(k)= 0.
+           beta_tot(k)   = 0.
+           alpha(k)      = 0.
+           vin(k)        = 0.
+           c_int(k,:)    = 0.
+           sign_c(k,:)   = 0.
+           sgn(:)        = 0.
+           u_source(k)   = 0.
+           xv	       = 0.
+           yv	       = 0.
+           net_heating(k)= 0.
+           cap(k)        = 0.
+        enddo
 
-! For Mars and Venus (pure CO2 atmosphere) : OK below ~200 km.
-!        m_vis(n) = 3.128e-7*temp1d_m(n)**0.69/rho_m(n)+1.e-1
-! Use m.viscosity from M-GITM instead (species variation with altitude)
-         m_vis(n) = m_vis(n)/rho_m(n)+1.e-1
+        !  Pull values from MGITM
 
-! Ion friction (Currently zero for Venus)
-!        vin(n)  = 7.22e-17*temp1d_m(n)**0.37*eden_m(n)
-         vin(n)  = 0d0
-! Newtonian cooling (off for now)
-!        alpha(n) = 3.e-6*(1.2+TANH(-7.*LOG(pres_m(n)/100000.)-50.)*0.833)
-      ENDDO BACKGROUND1
+        do k = 1,ht_dim
+           vx1D(k)   = UN(ilon,ilat,k)                    ! [m/s]
+           vy1D(k)   = VN(ilon,ilat,k)                    ! [m/s]
+           temp1D(k) = TN(ilon,ilat,k)                    ! [K]
+           cp1d(k)   = CPN(ilon,ilat,k)                   ! [J/K/kg]
+           m_vis(k)  = KMN(ilon,ilat,k)                   ! [kg/m/sec]
+           h(k)      = HTN(ilon,ilat,k)                   ! [m]
+           pres(k)   = PN(ilon,ilat,k)                    ! [Pa]
+           RGASS(k)  = RGAS2*43.48/mmean(ilon,ilat,k)     ! [J/K/kg] (Mixture)
+           GRAV1d(k) = -1.0*GRAVN(ilon,ilat,k)		! [m/s^2]
+        enddo ! K-loop
 
-      BACKGROUND2: DO n=1, ht_dim-1
-         thetap(n)= (theta(n+1) - theta(n))/dz(n) ! gradient of theta
-!        brunt(n) = (ABS((2*GRAV/(theta(n)+theta(n+1)))*thetap(n)))
-         brunt(n) = (ABS((2*GRAV1d(n)/(theta(n)+theta(n+1)))*thetap(n)))
-         brunt(n) = sqrt(brunt(n))
-      ENDDO BACKGROUND2
+        !  Calculate rho
 
-!     WRITE(6,*) "EY Gravity Wave Spectrum"
-!     WRITE(6,*) " i      Phasespeed      Flux         U_prime       Sigma_sq_tot    Hwhm"
-!     WRITE(6,*) "          [ms-1]       [m2s-2]        [m/s]           [m2s-2]"
-!     WRITE(6,*)
-
-      SPECTRUM : DO i = 1, nh
-         IF(i.eq.1)  phasespeed(i) = -max_cp_y  !80.
-         IF(i.GE.2)  phasespeed(i) = phasespeed(i-1)  &
-                       *((max_cp_y/2)**(-1./((nh/2.)-1.)))
-
-         IF(i.eq.(nh/2+1))   phasespeed(i) = 2.
-         IF(i.GE.(nh/2+2)) phasespeed(i) = phasespeed(i-1)  &
-                            *((max_cp_y/2)**(1./((nh/2.)-1.)))
-      ENDDO SPECTRUM
-
-         flux_tot(SLEV)=0.
-         var_tot(SLEV)=0.
-
-      SPECTRUM2: DO i = 1, nh
-
-! --- Case B: Asymmetric/Shifted spectrum by local winds at source height---------------
-         sgn(i) = (phasespeed(i)-u_source_m(SLEV))  &
-                 /(ABS(phasespeed(i)-u_source_m(SLEV)))
-         uw_mom(i) = sgn(i)  &
-           *(flux0*EXP(-((phasespeed(i)-u_source_m(SLEV))/cw)**2))
-! ----------------------------------------------------------------------------
-
-! ---  Case A: Assumes no shift in spectrum by local winds at source height-------------
-! ---- Symmetric spectrum ---------------------------
-!        sgn(i)    = phasespeed(i)/ABS(phasespeed(i))
-!        uw_mom(i) = sgn(i)*(flux0*EXP(-(phasespeed(i)/cw)**2))
-!----------------------------------------------------
-
-         tau(SLEV,i)  = 1.
-         flux(SLEV,i) = uw_mom(i)
-         flux_tot(SLEV)=flux_tot(SLEV) + flux(SLEV,i)
-         c_int(SLEV,i)  = phasespeed(i) - u_source_m(SLEV)
-         IF(abs(c_int(SLEV,i)) .ge. brunt(SLEV)*100.) upSq(SLEV,i)  &
-                 = ABS(uw_mom(i))*brunt(SLEV)/(kx*ABS(c_int(SLEV,i)))
-         IF(ABS(upSq(SLEV,i)).GT.0.) up(SLEV,i) = SQRT(upSq(SLEV,i))
-         IF (c_int(SLEV,i).NE.0) sign_c(SLEV,i) =  &
-                               c_int(SLEV,i)/ABS(c_int(SLEV,i))
-         IF (c_int(SLEV,i).EQ.0) sign_c(SLEV,i) = 1.
-
-         var_tot(SLEV) = var_tot(SLEV) + upSq(SLEV,i)
-
-	sigmaSq(SLEV,i)=0. 
-	sigmaSq(SLEV+1,i)=0.
-	
-
-      ENDDO SPECTRUM2
-
-      c_lev(:) = -1
-      b_lev(:) = -1
-
-! Altitude loop starts
-      HT_LOOP : DO n = SLEV+1, ht_dim-1
-       ! phasespeed loop
-        PS_LOOP : DO i = 1, nh
-
-          IF(h(n) > max_ht) CYCLE
-
-          c_int(n,i)  = phasespeed(i) - u_source_m(n)
-          IF(c_int(n,i).NE.0) sign_c(n,i) = c_int(n,i)/ABS(c_int(n,i))
-          IF(c_int(n,i).EQ.0) sign_c(n,i) = 1.
-
-          CRITICAL : IF(c_lev(i).LT.0  &
-                       .AND. (sign_c(n,i).NE.sign_c(n-1,i)  &
-                       .AND. c_int(n,i).NE.0.)) THEN
-                       c_lev(i) = n
-                       flux(n,i)  = 0.
-
-           ELSE IF (c_lev(i).LT.0) THEN
-             fac1(n,i)    = 2.*brunt(n)*brunt(n)*brunt(n)  & 	!Added (n,i) to facs
-                        /(kx*c_int(n,i)**4)
-             fac2(n,i)    = 2.*brunt(n)/(kx*c_int(n,i)*c_int(n,i))
-             beta(n,i) = fac1(n,i)*(m_vis(n)+v_eddy(n))  &
-                        + fac2(n,i)*(vin(n)+alpha(n))
-		
-             NON_LINEARITY : DO j = 1, nh
-                c_int(n,j) = phasespeed(j) - u_source_m(n)
-                IF (ABS(c_int(n,i)) .GE. ABS(c_int(n,j))) THEN
-                   sigmaSq(n,i) = sigmaSq(n,i) + upSq(n-1,j)
-                ENDIF
-             ENDDO NON_LINEARITY
-
-             IF(sigmaSq(n,i).ge.1e-36) THEN
-                sigma(n,i)     = SQRT(sigmaSq(n,i))
-                alpha_ins(n,i) = ABS(c_int(n,i))/S2/sigma(n,i)
-                IF(alpha_ins(n,i).GE.1e10) THEN
-                   beta_non(n,i) = 0.
-                ELSE
-                   beta_non(n,i)  = S2P*brunt(n)/sigma(n,i)  &
-                                  *EXP(-alpha_ins(n,i)*alpha_ins(n,i))
-                ENDIF
-             ENDIF
-
-	     beta_ext_tot(n) = beta_ext_tot(n) + beta(n,i)
-             beta(n,i) = beta(n,i) + beta_non(n,i)
-	     beta_tot(n)=beta_tot(n) + beta(n,i)
-	     beta_non_tot(n)=beta_non_tot(n) + beta_non(n,i)
-             tau(n,i)  = tau(n-1,i)  &
-                          *EXP(-dz(n)*(beta(n,i)+beta(n-1,i))*0.5)
-             flux(n,i) = uw_mom(i)*rho2(SLEV)/rho2(n)*tau(n,i)
-             upSq(n,i) = ABS(flux(n,i))*brunt(n)/kx/ABS(c_int(n,i))
-             IF(ABS(upSq(n,i)).GT.0.) up(n,i) = SQRT(upSq(n,i))
-
-             drag(n,i) = beta(n,i)*flux(n,i)
-
-             IF(alpha_ins(n,i).LT.0.75) drag(n,i) = 0.
-
-             flux_tot(n) = flux_tot(n) + flux(n,i)
-             var_tot(n)  = var_tot(n)  + upSq(n,i)
-             gwd(n)    = gwd(n) + drag(n,i)
-             gwh(n)    = gwh(n) + drag(n,i)*c_int(n,i)/cp1d(n)
-!            gwhd(n)   = gwhd(n) + ((scht1d_m(n)/2./RGAS2/rho_m(n))*  &
-!                 ( rho_pr(n)*c_int(n,i)*drag(n,i)  +  &
-!                 rho_m(n)*((c_int(n,i)-c_int(n-1,i))/dz(n))*drag(n,i)+  &
-!                 rho_m(n)*c_int(n,i)*((drag(n,i)-drag(n-1,i))/dz(n))))
-             gwhd(n)   = gwhd(n) + ((scht1d_m(n)/2./RGASS(n)/rho_m(n))*  &
-                  ( rho_pr(n)*c_int(n,i)*drag(n,i)  +  &
-                  rho_m(n)*((c_int(n,i)-c_int(n-1,i))/dz(n))*drag(n,i)+  &
-                  rho_m(n)*c_int(n,i)*((drag(n,i)-drag(n-1,i))/dz(n))))
-          ENDIF CRITICAL
-        ENDDO PS_LOOP
-      ENDDO HT_LOOP
-
-! Back-interpolate the drag onto the model full-levels.
-      DO n=2, ht_dim-1
-         gwd(n) = 0.5*(gwd(n) + gwd(n-1))
-         gwh(n) = 0.5*(gwh(n) + gwh(n-1))
-      ENDDO
-
-      SMOOTH : DO n = 2, ht_dim-1
-        ! Do 2 delta smoothing of drag at full-levels
-        gwd(n)  = (gwd(n-1)  + 2.*gwd(n)  + gwd(n+1))*0.25
-        gwh(n)  = (gwh(n-1)  + 2.*gwh(n)  + gwh(n+1))*0.25
-        gwhd(n) = (gwhd(n-1) + 2.*gwhd(n) + gwhd(n+1))*0.25
-      ENDDO SMOOTH
-      gwd(ht_dim) = gwd(ht_dim-1)
-
-      BACK_PROJECT : DO n=SLEV, ht_dim
-        ut_gwd(n) = xv * gwd(n)
-        vt_gwd(n) = yv * gwd(n)
-        gwh_ir(n) = gwh(n)
-        gwh_dif(n)= gwhd(n)
-        net_heating(n) = gwhd(n) + gwh(n)          ! Newly Added
-      ENDDO BACK_PROJECT
-
-! Newly added to create cap for net heating term. Cap in K/s.
-!      DO n=SLEV, ht_dim
-!        IF (ABS(net_heating(n)) .ge. 300.0/88775.0) THEN
-!	  cap(n)=1.0
-!	  IF (net_heating(n) .ge. 0.) THEN
-!              net_heating(n)   = 300.0/88775.0
-!  	  ELSE
-!	      net_heating(n)   = -300.0/88775.0
-!	  ENDIF
-!	ELSE 
-!	  cap(n)=0.0
-!        ENDIF
-!      ENDDO
+        do k=1,ht_dim
+           rho2(k) = pres(k)/(RGASS(k)*temp1d(k))               ! kg/m3
+        enddo
 
 
 
-!---Update/convert output---          
-      do k = 1,ht_dim
-        udrag(ilon,ilat,k) = ut_gwd(k)             ![m/s^2]
-        vdrag(ilon,ilat,k) = vt_gwd(k)             ![m/s^2]
-        gwheat_ir(ilon,ilat,k)  = gwh(k)           ![K/s]
-        gwheat_dif(ilon,ilat,k) = gwhd(k)          ![K/s]
+        !========================================================================
+        !--------- BEGIN GW CALC. ----------  NOT touched from E. Yigit
+        !========================================================================
+        ! Project the upper level winds onto the source level winds
+        PROJECTION : DO n = SLEV, ht_dim
+           IF(n.eq.SLEV) THEN
+              u_source(n) = SQRT(vy1d(n)*vy1d(n) + vx1d(n)*vx1d(n))
+              IF(u_source(n).eq.0.) u_source(n) = 1.
+              yv = vy1d(n)/u_source(n)
+              xv = vx1d(n)/u_source(n)
+           ENDIF
+           u_source(n) = vy1d(n)*yv + vx1d(n)*xv
+        ENDDO PROJECTION
 
-!       Additional variables to dianose
+        !     theta(:) = temp1d(:)*(pres(1)/pres(:))**(RGAS2/cp1d(:))
+        theta(:) = temp1d(:)*(pres(1)/pres(:))**(RGASS(:)/cp1d(:))
+        !     scht1d(:)= temp1d(:)*RGAS2/GRAV
+        !     scht1d(:)= temp1d(:)*RGASS(:)/GRAV
+        scht1d(:)= temp1d(:)*RGASS(:)/GRAV1d(:)
 
-        net_heating_t(ilon,ilat,k) = net_heating(k)   ![K/s]
-	beta_tot_t(ilon,ilat,k)    = beta_tot(k)
-	beta_non_t(ilon,ilat,k)    = beta_non_tot(k)
-	beta_ext_t(ilon,ilat,k)    = beta_ext_tot(k)
+        ! Mid-point values of model variables
+        MID_POINT : DO n = 1, ht_dim-1
+           temp1d_m(n)   = 0.5*(temp1d(n)   + temp1d(n+1))
+           u_source_m(n) = 0.5*(u_source(n) + u_source(n+1))
+           pres_m(n)     = 0.5*(pres(n)     + pres(n+1))
+           rho_m(n)      = 0.5*(rho2(n)     + rho2(n+1))
+           h_m(n)        = 0.5*(h(n)        + h(n+1))
+           eden_m(n)     = 0.5*(eden(n)     + eden(n+1))
+           scht1d_m(n)   = 0.5*(scht1d(n)   + scht1d(n+1))
+        ENDDO MID_POINT
+
+        ! Brunt frequency and background parameters
+        BACKGROUND1: DO n = 1, ht_dim-1
+           dz(n)    = h(n+1) - h(n)                ! Midpoint value
+           rho_pr(n)= (rho2(n+1) - rho2(n))/dz(n)    ! Midpoint value
+
+           ! For Mars and Venus (pure CO2 atmosphere) : OK below ~200 km.
+           !        m_vis(n) = 3.128e-7*temp1d_m(n)**0.69/rho_m(n)+1.e-1
+           ! Use m.viscosity from M-GITM instead (species variation with altitude)
+           m_vis(n) = m_vis(n)/rho_m(n)+1.e-1
+
+           ! Ion friction (Currently zero for Venus)
+           !        vin(n)  = 7.22e-17*temp1d_m(n)**0.37*eden_m(n)
+           vin(n)  = 0d0
+           ! Newtonian cooling (off for now)
+           !        alpha(n) = 3.e-6*(1.2+TANH(-7.*LOG(pres_m(n)/100000.)-50.)*0.833)
+        ENDDO BACKGROUND1
+
+        BACKGROUND2: DO n=1, ht_dim-1
+           thetap(n)= (theta(n+1) - theta(n))/dz(n) ! gradient of theta
+           !        brunt(n) = (ABS((2*GRAV/(theta(n)+theta(n+1)))*thetap(n)))
+           brunt(n) = (ABS((2*GRAV1d(n)/(theta(n)+theta(n+1)))*thetap(n)))
+           brunt(n) = sqrt(brunt(n))
+        ENDDO BACKGROUND2
+
+        !     WRITE(6,*) "EY Gravity Wave Spectrum"
+        !     WRITE(6,*) " i      Phasespeed      Flux         U_prime       Sigma_sq_tot    Hwhm"
+        !     WRITE(6,*) "          [ms-1]       [m2s-2]        [m/s]           [m2s-2]"
+        !     WRITE(6,*)
+
+        SPECTRUM : DO i = 1, nh
+           IF(i.eq.1)  phasespeed(i) = -max_cp_y  !80.
+           IF(i.GE.2)  phasespeed(i) = phasespeed(i-1)  &
+                *((max_cp_y/2)**(-1./((nh/2.)-1.)))
+
+           IF(i.eq.(nh/2+1))   phasespeed(i) = 2.
+           IF(i.GE.(nh/2+2)) phasespeed(i) = phasespeed(i-1)  &
+                *((max_cp_y/2)**(1./((nh/2.)-1.)))
+        ENDDO SPECTRUM
+
+        flux_tot(SLEV)=0.
+        var_tot(SLEV)=0.
+
+        SPECTRUM2: DO i = 1, nh
+
+           ! --- Case B: Asymmetric/Shifted spectrum by local winds at source height---------------
+           sgn(i) = (phasespeed(i)-u_source_m(SLEV))  &
+                /(ABS(phasespeed(i)-u_source_m(SLEV)))
+           uw_mom(i) = sgn(i)  &
+                *(flux0*EXP(-((phasespeed(i)-u_source_m(SLEV))/cw)**2))
+           ! ----------------------------------------------------------------------------
+
+           ! ---  Case A: Assumes no shift in spectrum by local winds at source height-------------
+           ! ---- Symmetric spectrum ---------------------------
+           !        sgn(i)    = phasespeed(i)/ABS(phasespeed(i))
+           !        uw_mom(i) = sgn(i)*(flux0*EXP(-(phasespeed(i)/cw)**2))
+           !----------------------------------------------------
+
+           tau(SLEV,i)  = 1.
+           flux(SLEV,i) = uw_mom(i)
+           flux_tot(SLEV)=flux_tot(SLEV) + flux(SLEV,i)
+           c_int(SLEV,i)  = phasespeed(i) - u_source_m(SLEV)
+           IF(abs(c_int(SLEV,i)) .ge. brunt(SLEV)*100.) upSq(SLEV,i)  &
+                = ABS(uw_mom(i))*brunt(SLEV)/(kx*ABS(c_int(SLEV,i)))
+           IF(ABS(upSq(SLEV,i)).GT.0.) up(SLEV,i) = SQRT(upSq(SLEV,i))
+           IF (c_int(SLEV,i).NE.0) sign_c(SLEV,i) =  &
+                c_int(SLEV,i)/ABS(c_int(SLEV,i))
+           IF (c_int(SLEV,i).EQ.0) sign_c(SLEV,i) = 1.
+
+           var_tot(SLEV) = var_tot(SLEV) + upSq(SLEV,i)
+
+           sigmaSq(SLEV,i)=0. 
+           sigmaSq(SLEV+1,i)=0.
 
 
-      enddo ! K-loop
+        ENDDO SPECTRUM2
+
+        c_lev(:) = -1
+        b_lev(:) = -1
+
+        ! Altitude loop starts
+        HT_LOOP : DO n = SLEV+1, ht_dim-1
+           ! phasespeed loop
+           PS_LOOP : DO i = 1, nh
+
+              IF(h(n) > max_ht) CYCLE
+
+              c_int(n,i)  = phasespeed(i) - u_source_m(n)
+              IF(c_int(n,i).NE.0) sign_c(n,i) = c_int(n,i)/ABS(c_int(n,i))
+              IF(c_int(n,i).EQ.0) sign_c(n,i) = 1.
+
+              CRITICAL : IF(c_lev(i).LT.0  &
+                   .AND. (sign_c(n,i).NE.sign_c(n-1,i)  &
+                   .AND. c_int(n,i).NE.0.)) THEN
+                 c_lev(i) = n
+                 flux(n,i)  = 0.
+
+              ELSE IF (c_lev(i).LT.0) THEN
+                 fac1(n,i)    = 2.*brunt(n)*brunt(n)*brunt(n)  & 	!Added (n,i) to facs
+                      /(kx*c_int(n,i)**4)
+                 fac2(n,i)    = 2.*brunt(n)/(kx*c_int(n,i)*c_int(n,i))
+                 beta(n,i) = fac1(n,i)*(m_vis(n)+v_eddy(n))  &
+                      + fac2(n,i)*(vin(n)+alpha(n))
+
+                 NON_LINEARITY : DO j = 1, nh
+                    c_int(n,j) = phasespeed(j) - u_source_m(n)
+                    IF (ABS(c_int(n,i)) .GE. ABS(c_int(n,j))) THEN
+                       sigmaSq(n,i) = sigmaSq(n,i) + upSq(n-1,j)
+                    ENDIF
+                 ENDDO NON_LINEARITY
+
+                 IF(sigmaSq(n,i).ge.1e-36) THEN
+                    sigma(n,i)     = SQRT(sigmaSq(n,i))
+                    alpha_ins(n,i) = ABS(c_int(n,i))/S2/sigma(n,i)
+                    IF(alpha_ins(n,i).GE.1e10) THEN
+                       beta_non(n,i) = 0.
+                    ELSE
+                       beta_non(n,i)  = S2P*brunt(n)/sigma(n,i)  &
+                            *EXP(-alpha_ins(n,i)*alpha_ins(n,i))
+                    ENDIF
+                 ENDIF
+
+                 beta_ext_tot(n) = beta_ext_tot(n) + beta(n,i)
+                 beta(n,i) = beta(n,i) + beta_non(n,i)
+                 beta_tot(n)=beta_tot(n) + beta(n,i)
+                 beta_non_tot(n)=beta_non_tot(n) + beta_non(n,i)
+                 tau(n,i)  = tau(n-1,i)  &
+                      *EXP(-dz(n)*(beta(n,i)+beta(n-1,i))*0.5)
+                 flux(n,i) = uw_mom(i)*rho2(SLEV)/rho2(n)*tau(n,i)
+                 upSq(n,i) = ABS(flux(n,i))*brunt(n)/kx/ABS(c_int(n,i))
+                 IF(ABS(upSq(n,i)).GT.0.) up(n,i) = SQRT(upSq(n,i))
+
+                 drag(n,i) = beta(n,i)*flux(n,i)
+
+                 IF(alpha_ins(n,i).LT.0.75) drag(n,i) = 0.
+
+                 flux_tot(n) = flux_tot(n) + flux(n,i)
+                 var_tot(n)  = var_tot(n)  + upSq(n,i)
+                 gwd(n)    = gwd(n) + drag(n,i)
+                 gwh(n)    = gwh(n) + drag(n,i)*c_int(n,i)/cp1d(n)
+                 !            gwhd(n)   = gwhd(n) + ((scht1d_m(n)/2./RGAS2/rho_m(n))*  &
+                 !                 ( rho_pr(n)*c_int(n,i)*drag(n,i)  +  &
+                 !                 rho_m(n)*((c_int(n,i)-c_int(n-1,i))/dz(n))*drag(n,i)+  &
+                 !                 rho_m(n)*c_int(n,i)*((drag(n,i)-drag(n-1,i))/dz(n))))
+                 gwhd(n)   = gwhd(n) + ((scht1d_m(n)/2./RGASS(n)/rho_m(n))*  &
+                      ( rho_pr(n)*c_int(n,i)*drag(n,i)  +  &
+                      rho_m(n)*((c_int(n,i)-c_int(n-1,i))/dz(n))*drag(n,i)+  &
+                      rho_m(n)*c_int(n,i)*((drag(n,i)-drag(n-1,i))/dz(n))))
+              ENDIF CRITICAL
+           ENDDO PS_LOOP
+        ENDDO HT_LOOP
+
+        ! Back-interpolate the drag onto the model full-levels.
+        DO n=2, ht_dim-1
+           gwd(n) = 0.5*(gwd(n) + gwd(n-1))
+           gwh(n) = 0.5*(gwh(n) + gwh(n-1))
+        ENDDO
+
+        SMOOTH : DO n = 2, ht_dim-1
+           ! Do 2 delta smoothing of drag at full-levels
+           gwd(n)  = (gwd(n-1)  + 2.*gwd(n)  + gwd(n+1))*0.25
+           gwh(n)  = (gwh(n-1)  + 2.*gwh(n)  + gwh(n+1))*0.25
+           gwhd(n) = (gwhd(n-1) + 2.*gwhd(n) + gwhd(n+1))*0.25
+        ENDDO SMOOTH
+        gwd(ht_dim) = gwd(ht_dim-1)
+
+        BACK_PROJECT : DO n=SLEV, ht_dim
+           ut_gwd(n) = xv * gwd(n)
+           vt_gwd(n) = yv * gwd(n)
+           gwh_ir(n) = gwh(n)
+           gwh_dif(n)= gwhd(n)
+           net_heating(n) = gwhd(n) + gwh(n)          ! Newly Added
+        ENDDO BACK_PROJECT
+
+        ! Newly added to create cap for net heating term. Cap in K/s.
+        !      DO n=SLEV, ht_dim
+        !        IF (ABS(net_heating(n)) .ge. 300.0/88775.0) THEN
+        !	  cap(n)=1.0
+        !	  IF (net_heating(n) .ge. 0.) THEN
+        !              net_heating(n)   = 300.0/88775.0
+        !  	  ELSE
+        !	      net_heating(n)   = -300.0/88775.0
+        !	  ENDIF
+        !	ELSE 
+        !	  cap(n)=0.0
+        !        ENDIF
+        !      ENDDO
+
+
+
+        !---Update/convert output---          
+        do k = 1,ht_dim
+           udrag(ilon,ilat,k) = ut_gwd(k)             ![m/s^2]
+           vdrag(ilon,ilat,k) = vt_gwd(k)             ![m/s^2]
+           gwheat_ir(ilon,ilat,k)  = gwh(k)           ![K/s]
+           gwheat_dif(ilon,ilat,k) = gwhd(k)          ![K/s]
+
+           !       Additional variables to dianose
+
+           net_heating_t(ilon,ilat,k) = net_heating(k)   ![K/s]
+           beta_tot_t(ilon,ilat,k)    = beta_tot(k)
+           beta_non_t(ilon,ilat,k)    = beta_non_tot(k)
+           beta_ext_t(ilon,ilat,k)    = beta_ext_tot(k)
+
+
+        enddo ! K-loop
 
      enddo ! LAT-loop
-! -----------------------------------------------------------------------
-    enddo ! LON-loop
-! -----------------------------------------------------------------------
-! Stuff 3-D internal arrays back into MGITM allocated arrays for usage
+     ! -----------------------------------------------------------------------
+  enddo ! LON-loop
+  ! -----------------------------------------------------------------------
+  ! Stuff 3-D internal arrays back into MGITM allocated arrays for usage
   GWDrag(1:nLons,1:nLats,1:nAlts,iEast_,iBlock) = &
-        udrag(1:nLons,1:nLats,1:nAlts)             ![m/s^2]
+       udrag(1:nLons,1:nLats,1:nAlts)             ![m/s^2]
   GWDrag(1:nLons,1:nLats,1:nAlts,iNorth_,iBlock) = &
-        vdrag(1:nLons,1:nLats,1:nAlts)             ![m/s^2]
+       vdrag(1:nLons,1:nLats,1:nAlts)             ![m/s^2]
   GWDrag(1:nLons,1:nLats,1:nAlts,iUp_,iBlock) = 0.0
 
   GWIHeat(1:nLons,1:nLats,1:nAlts,iBlock) = &
-        gwheat_ir(1:nLons,1:nLats,1:nAlts)         ![K/s]
+       gwheat_ir(1:nLons,1:nLats,1:nAlts)         ![K/s]
   GWDHeat(1:nLons,1:nLats,1:nAlts,iBlock) = &
-        gwheat_dif(1:nLons,1:nLats,1:nAlts)        ![K/s]
+       gwheat_dif(1:nLons,1:nLats,1:nAlts)        ![K/s]
 
   GW_net_heating(1:nLons,1:nLats,1:nAlts,iBlock) = &
-        net_heating_t(1:nLons,1:nLats,1:nAlts)	   ![K/s]
+       net_heating_t(1:nLons,1:nLats,1:nAlts)	   ![K/s]
   GW_beta_tot(1:nLons,1:nLats,1:nAlts,iBlock) = &
-	beta_tot_t(1:nLons,1:nLats,1:nAlts)
+       beta_tot_t(1:nLons,1:nLats,1:nAlts)
   GW_beta_non(1:nLons,1:nLats,1:nAlts,iBlock) = &
-	beta_non_t(1:nLons,1:nLats,1:nAlts)
+       beta_non_t(1:nLons,1:nLats,1:nAlts)
   GW_beta_ext(1:nLons,1:nLats,1:nAlts,iBlock) = &
-	beta_ext_t(1:nLons,1:nLats,1:nAlts)
+       beta_ext_t(1:nLons,1:nLats,1:nAlts)
 
-
-!---------------------------------------------------------+
-! Set all EGWD2 values to zero. So there will be
-! no effect upon the wind speeds or Ts, but all components
-! of this subroutine will have been exercised
-!     GWDrag = 0.0
-!     GWIHeat = 0.0
-!     GWDHeat = 0.0
-!     GW_net_heating = 0.0
-!     write(*,*) GWDrag(1,1,:,1,1)
-!---------------------------------------------------------+
-
-   END subroutine CALC_GW
 
   !---------------------------------------------------------+
-  subroutine  calc_lowatmosrad(iblock,iLat,iLon,L_LAYERS,L_LEVELS,&
-       L_NLAYRAD,L_NLEVRAD)
+  ! Set all EGWD2 values to zero. So there will be
+  ! no effect upon the wind speeds or Ts, but all components
+  ! of this subroutine will have been exercised
+  !     GWDrag = 0.0
+  !     GWIHeat = 0.0
+  !     GWDHeat = 0.0
+  !     GW_net_heating = 0.0
+  !     write(*,*) GWDrag(1,1,:,1,1)
+  !---------------------------------------------------------+
 
-    !  ---------------------------------------------------------------------
-    !  Purpose: to calculate LTE CO2 15-micron heating/cooling in Mars
-    !  lower atmosphere(below 80 km, where LTE physics dominates)
-    !  Source: correlated k radiation code in Ames GCM v2.0
-    !  Coders: Bob Haberle and Jim Schaeffer (2001)
-    !          Converted to Mars GITM by S. M. Nelli (2007)
-    !  Inputs: from MarsGITM  (Pressure, Temperature)
-    !          all on MarsGITM grid (nLons,nLats,nAlts)
-    !  Output: LowAtmosRadRate(1:nLons,1:nLats,1:nAlts,iBlock)
-    !        **lowatmosradrate(iLon,iLat,L_NLAYRAD-L1,iBlock)=TOTAL(L1)
-    !        : qnirtot(1:nLons,1:nLats,1:nAlts,iBlock)
-    !        **qnirtot(iLon,iLat,L_NLAYRAD-L1,iBlock)= HEATING(L1)/XLTECORRECTION(L1)
-    !        : qnirlte(1:nLons,1:nLats,1:nAlts,iBlock)
-    !        **qnirlte(iLon,iLat,L_NLAYRAD-L1,iBlock)= HEATING(L1)
-    !        : cirlte(1:nLons,1:nLats,1:nAlts,iBlock)
-    !        **cirlte(iLon,iLat,L_NLAYRAD-L1,iBlock)= GREENHOUSE(L1)*COOLCORRECTION(L1)
-    !        : all K/sec
-    !        : Last Revised :  11-10-28 S. W. Bougher
-    !  =======================================================================
-    !
-    use ModInputs
-    use ModSources, only: LowAtmosRadRate,QnirLTE,QnirTOT,CirLTE
-    use GITM_planet
-    use ModGITM
-    use ModEUV, only: AveCosSza
-    use ModTime
+END subroutine CALC_GW
 
-    implicit none
-    ! ----------------------------------------------------------------------
+!---------------------------------------------------------+
+subroutine  calc_lowatmosrad(iblock,iLat,iLon,L_LAYERS,L_LEVELS,&
+     L_NLAYRAD,L_NLEVRAD)
 
-    integer,intent(in):: iBlock
+  !  ---------------------------------------------------------------------
+  !  Purpose: to calculate LTE CO2 15-micron heating/cooling in Mars
+  !  lower atmosphere(below 80 km, where LTE physics dominates)
+  !  Source: correlated k radiation code in Ames GCM v2.0
+  !  Coders: Bob Haberle and Jim Schaeffer (2001)
+  !          Converted to Mars GITM by S. M. Nelli (2007)
+  !  Inputs: from MarsGITM  (Pressure, Temperature)
+  !          all on MarsGITM grid (nLons,nLats,nAlts)
+  !  Output: LowAtmosRadRate(1:nLons,1:nLats,1:nAlts,iBlock)
+  !        **lowatmosradrate(iLon,iLat,L_NLAYRAD-L1,iBlock)=TOTAL(L1)
+  !        : qnirtot(1:nLons,1:nLats,1:nAlts,iBlock)
+  !        **qnirtot(iLon,iLat,L_NLAYRAD-L1,iBlock)= HEATING(L1)/XLTECORRECTION(L1)
+  !        : qnirlte(1:nLons,1:nLats,1:nAlts,iBlock)
+  !        **qnirlte(iLon,iLat,L_NLAYRAD-L1,iBlock)= HEATING(L1)
+  !        : cirlte(1:nLons,1:nLats,1:nAlts,iBlock)
+  !        **cirlte(iLon,iLat,L_NLAYRAD-L1,iBlock)= GREENHOUSE(L1)*COOLCORRECTION(L1)
+  !        : all K/sec
+  !        : Last Revised :  11-10-28 S. W. Bougher
+  !  =======================================================================
+  !
+  use ModInputs
+  use ModSources, only: LowAtmosRadRate,QnirLTE,QnirTOT,CirLTE
+  use GITM_planet
+  use ModGITM
+  use ModEUV, only: AveCosSza
+  use ModTime
 
-    !C     Number of lower atmosphere layers
-    integer,intent(in) :: L_LAYERS
+  implicit none
+  ! ----------------------------------------------------------------------
 
-    !C     Number of lower atmosphere levels:   2 * L_LAYERS + 3
-    integer,intent(in) :: L_LEVELS
+  integer,intent(in):: iBlock
 
-    !C     L_NLEVRAD corresponds to the surface - i.e., the GCM Level that
-    !C     is at the surface.  PLEV(L_NLEVRAD) = P(J,I)+PTROP,
-    !C     PLEV(2) = PTROP, PLEV(1) = ptop
+  !C     Number of lower atmosphere layers
+  integer,intent(in) :: L_LAYERS
 
-    !C     L_NLAYRAD is the number of radiation code layers
-    !C     L_NLEVRAD is the number of radiation code levels.  Level N is the
-    !C               top of layer N.
+  !C     Number of lower atmosphere levels:   2 * L_LAYERS + 3
+  integer,intent(in) :: L_LEVELS
 
-    integer, intent(in) :: L_NLAYRAD, L_NLEVRAD, ilat,ilon
+  !C     L_NLEVRAD corresponds to the surface - i.e., the GCM Level that
+  !C     is at the surface.  PLEV(L_NLEVRAD) = P(J,I)+PTROP,
+  !C     PLEV(2) = PTROP, PLEV(1) = ptop
 
-    LOGICAL :: isFirstDust(nBlocksMax) = .true.
-    real(Real8_) :: DustTime(nDustTimes),ConrathTime(nConrathTimes),invDDiff,ctDiff(nDustTimes)
-    REAL :: PLEV(LL_LEVELS+1), TLEV(LL_LEVELS)
-    REAL :: PMID(LL_LEVELS), TMID(LL_LEVELS)
-    REAL :: TAUREF(LL_LEVELS+1),TAUCUM(LL_LEVELS)
-    REAL :: PTROP,ALS,ALBI
-    REAL :: QH2O(LL_LEVELS)
+  !C     L_NLAYRAD is the number of radiation code layers
+  !C     L_NLEVRAD is the number of radiation code levels.  Level N is the
+  !C               top of layer N.
 
-    integer :: nw, n, nx, k, L,L1,MALT,itime(7)
+  integer, intent(in) :: L_NLAYRAD, L_NLEVRAD, ilat,ilon
 
-    !C  VISUAL
+  LOGICAL :: isFirstDust(nBlocksMax) = .true.
+  real(Real8_) :: DustTime(nDustTimes),ConrathTime(nConrathTimes),invDDiff,ctDiff(nDustTimes)
+  REAL :: PLEV(LL_LEVELS+1), TLEV(LL_LEVELS)
+  REAL :: PMID(LL_LEVELS), TMID(LL_LEVELS)
+  REAL :: TAUREF(LL_LEVELS+1),TAUCUM(LL_LEVELS)
+  REAL :: PTROP,ALS,ALBI
+  REAL :: QH2O(LL_LEVELS)
 
-    real :: DTAUV(LL_NLAYRAD,L_NSPECTV,L_NGAUSS)
-    real :: TAUV(LL_NLEVRAD,L_NSPECTV,L_NGAUSS)
-    real :: TAUCUMV(LL_LEVELS,L_NSPECTV,L_NGAUSS)
-    real :: COSBV(LL_NLAYRAD,L_NSPECTV,L_NGAUSS)
-    real :: WBARV(LL_NLAYRAD,L_NSPECTV,L_NGAUSS)
-    real :: FMNETV(LL_NLAYRAD), diffvt, tDiff(nDustTimes)
-    real :: conrnu(nDustAlts),tautot(nDustAlts)
-    real :: fluxupv(LL_NLAYRAD), fluxdnv(LL_NLAYRAD), NFLUXTOPV
+  integer :: nw, n, nx, k, L,L1,MALT,itime(7)
 
-    real :: fluxvd(LL_LAYERS),HEATING(LL_LAYERS),TOTAL(LL_LAYERS),rtime,conrathrtime
-    real :: fluxid(LL_LAYERS),GREENHOUSE(LL_LAYERS),XLTECORRECTION(LL_LAYERS)
-    real :: timefactor(nDustAlts)
+  !C  VISUAL
 
-    integer :: ngwv(L_NSPECTV),ialt,imin(1),cmin(1)
+  real :: DTAUV(LL_NLAYRAD,L_NSPECTV,L_NGAUSS)
+  real :: TAUV(LL_NLEVRAD,L_NSPECTV,L_NGAUSS)
+  real :: TAUCUMV(LL_LEVELS,L_NSPECTV,L_NGAUSS)
+  real :: COSBV(LL_NLAYRAD,L_NSPECTV,L_NGAUSS)
+  real :: WBARV(LL_NLAYRAD,L_NSPECTV,L_NGAUSS)
+  real :: FMNETV(LL_NLAYRAD), diffvt, tDiff(nDustTimes)
+  real :: conrnu(nDustAlts),tautot(nDustAlts)
+  real :: fluxupv(LL_NLAYRAD), fluxdnv(LL_NLAYRAD), NFLUXTOPV
 
-    !C  IR
+  real :: fluxvd(LL_LAYERS),HEATING(LL_LAYERS),TOTAL(LL_LAYERS),rtime,conrathrtime
+  real :: fluxid(LL_LAYERS),GREENHOUSE(LL_LAYERS),XLTECORRECTION(LL_LAYERS)
+  real :: timefactor(nDustAlts)
 
-    real :: DTAUI(LL_NLAYRAD,L_NSPECTI,L_NGAUSS)
-    real :: TAUCUMI(LL_LEVELS,L_NSPECTI,L_NGAUSS)
-    real :: COSBI(LL_NLAYRAD,L_NSPECTI,L_NGAUSS)
-    real :: WBARI(LL_NLAYRAD,L_NSPECTI,L_NGAUSS)
-    real :: FMNETI(LL_NLAYRAD)
-    real :: fluxupi(LL_NLAYRAD), fluxdni(LL_NLAYRAD), NFLUXTOPI
-    real :: COOLCORRECTION(LL_LAYERS) !zero's out longwave cooling where
-    !radcool is working
-    integer ngwi(L_NSPECTI)
+  integer :: ngwv(L_NSPECTV),ialt,imin(1),cmin(1)
 
-    ! Internal fields recast from MarsGITM
+  !C  IR
 
-    real,dimension(nAlts) ::    &
-         T, P
+  real :: DTAUI(LL_NLAYRAD,L_NSPECTI,L_NGAUSS)
+  real :: TAUCUMI(LL_LEVELS,L_NSPECTI,L_NGAUSS)
+  real :: COSBI(LL_NLAYRAD,L_NSPECTI,L_NGAUSS)
+  real :: WBARI(LL_NLAYRAD,L_NSPECTI,L_NGAUSS)
+  real :: FMNETI(LL_NLAYRAD)
+  real :: fluxupi(LL_NLAYRAD), fluxdni(LL_NLAYRAD), NFLUXTOPI
+  real :: COOLCORRECTION(LL_LAYERS) !zero's out longwave cooling where
+  !radcool is working
+  integer ngwi(L_NSPECTI)
 
-    !     Mars GITM real temperature (on its grid)  ----------------------
+  ! Internal fields recast from MarsGITM
 
-    T(1:nAlts) = &
-         Temperature(iLon,iLat,1:nAlts,iBlock)*  &
-         TempUnit(iLon,iLat,1:nAlts)
+  real,dimension(nAlts) ::    &
+       T, P
 
-    !     Mars GITM pressure in mbars  (on its grid) -------------------
+  !     Mars GITM real temperature (on its grid)  ----------------------
 
-    P(1:nAlts) = &
-         Pressure(iLon,iLat,1:nAlts,iBlock)*0.01
+  T(1:nAlts) = &
+       Temperature(iLon,iLat,1:nAlts,iBlock)*  &
+       TempUnit(iLon,iLat,1:nAlts)
 
-    !C              RADIATIVE CALCULATIONS.
+  !     Mars GITM pressure in mbars  (on its grid) -------------------
 
-    !C  Fill the new radiation code variables.
-    !C  PLEV and TLEV are the pressure and temperatures on a vertical grid
-    !C  that the new radiation code uses.
+  P(1:nAlts) = &
+       Pressure(iLon,iLat,1:nAlts,iBlock)*0.01
 
-    CALL FILLPT(P,T,L_LEVELS,L_LAYERS,&
-         SurfaceTemp(iLon,iLat,iBlock),altmin,&
-         altitude_GB(iLon,iLat,1:nAlts,iBlock),&
-         PLEV,TLEV,PMID,TMID,pressure(iLon,iLat,0,iBlock),&
-         altitude_GB(iLon,iLat,0,iBlock))
-    !
+  !C              RADIATIVE CALCULATIONS.
 
-    ! Determining the top of the lower atmosphere radiative zone
-    ptrop=plev(3)
+  !C  Fill the new radiation code variables.
+  !C  PLEV and TLEV are the pressure and temperatures on a vertical grid
+  !C  that the new radiation code uses.
 
+  CALL FILLPT(P,T,L_LEVELS,L_LAYERS,&
+       SurfaceTemp(iLon,iLat,iBlock),altmin,&
+       altitude_GB(iLon,iLat,1:nAlts,iBlock),&
+       PLEV,TLEV,PMID,TMID,pressure(iLon,iLat,0,iBlock),&
+       altitude_GB(iLon,iLat,0,iBlock))
+  !
 
-    !C     Fill cumulative dust optical depth arrays (cum. dust optical
-    !C     depth from the top of the lower atmosphere to the bottom of level K).
-
-!write(*,*) plev(l_levels),l_levels
-!stop
-
-     if (UseDustDistribution) then
-
-!        if (floor((tSimulation-dt)/DtDust) /= &
-!             floor((tsimulation)/DtDust) .or. IsFirstDust(iBlock)) then
-
-           if (iDebugLevel > 1) then
-            if (iproc .eq. 0) write(*,*) "==> Getting Dust Distribution"
-          endif
-           DustTime(:) = 0
-           ConrathTime(:) = 0
-
-           do N = 1, nDustTimes
-              DustTime(N) = TimeDust(N)
-
-           enddo
+  ! Determining the top of the lower atmosphere radiative zone
+  ptrop=plev(3)
 
 
-           if ((CurrentTime - DustTime(1)) .lt. 0 .or.  (DustTime(ndusttimes) - CurrentTime) .lt. 0) then
-              write(*,*) currenttime- dusttime(ndusttimes),dusttime(1)-currenttime
-              call time_real_to_int(dusttime(ndusttimes),itime)
-              write(*,*) iTimeArray
-              write(*,*) itime
-              write(*,*) 'Dust isnt specified at this time'
-              call stop_gitm('Stopping in Mars.f90')
-           endif
+  !C     Fill cumulative dust optical depth arrays (cum. dust optical
+  !C     depth from the top of the lower atmosphere to the bottom of level K).
 
-           tDiff = CurrentTime - DustTime
-           where(tDiff .lt. 0) tDiff = 1e20
-           iMin = minloc(tDiff)
+  !write(*,*) plev(l_levels),l_levels
+  !stop
 
-           if (DustFileType .eq. "FullHorizontal") then
-             do N = 1, nConrathTimes
-                ConrathTime(N) = TimeConrath(N)
-             enddo
+  if (UseDustDistribution) then
 
-             ctDiff = CurrentTime - ConrathTime
-             where(ctDiff .lt. 0) ctDiff = 1e20
-             cMin = minloc(ctDiff)
-             invDDiff = 1 / &
-                  (DustTime(iMin(1)+1)-DustTime(imin(1)))
-             rtime = (CurrentTime - Dusttime(imin(1)))*(HorizontalDustProfile(imin(1) + 1,iLat,iLon,iBlock) - &
-                  HorizontalDustProfile(imin(1),iLat,iLon,iBlock)) * invDDiff
+     !        if (floor((tSimulation-dt)/DtDust) /= &
+     !             floor((tsimulation)/DtDust) .or. IsFirstDust(iBlock)) then
 
-             invDDiff = 1 / &
-                  (ConrathTime(cMin(1)+1)-ConrathTime(cmin(1)))
-             conrathrtime = (CurrentTime - Conrathtime(cmin(1)))*&
-                  (HorizontalConrathProfile(cmin(1) + 1,iLat,iLon,iBlock) - &
-                  HorizontalConrathProfile(cmin(1),iLat,iLon,iBlock)) * invDDiff
+     if (iDebugLevel > 1) then
+        if (iproc .eq. 0) write(*,*) "==> Getting Dust Distribution"
+     endif
+     DustTime(:) = 0
+     ConrathTime(:) = 0
+
+     do N = 1, nDustTimes
+        DustTime(N) = TimeDust(N)
+
+     enddo
 
 
-             DustDistribution(iLon,iLat,iBlock) = HorizontalDustProfile(imin(1),iLat,iLon,iBlock) + rtime
-             ConrathDistribution(iLon,iLat,iBlock) = HorizontalConrathProfile(imin(1),iLat,iLon,iBlock) + conrathrtime
-
-             tautot(1) = DustDistribution(ilon,ilat,iblock)
-
-             conrnu = ConrathDistribution(ilon,ilat,iblock)
-
-             if (tautot(1) .ne. tautot(1)) then
-                write(*,*) 'Problem with the dust distribution!'
-                call stop_gitm('Stopping in mars.f90')
-             endif
-
-           else if (DustFileType .eq. "MCSVertical") then
-
-             invDDiff = 1 / &
-                  (DustTime(iMin(1)+1)-DustTime(imin(1)))
-             TimeFactor = (CurrentTime - Dusttime(imin(1)))*(CumulativeTauProfile(imin(1) + 1,iLat,1:nDustAlts,iBlock) - &
-                  CumulativeTauProfile(imin(1),iLat,1:nDustAlts,iBlock)) * invDDiff
-             tautot(1:nDustAlts) = CumulativeTauProfile(imin(1),ilat,1:nDustAlts,iBlock)+timefactor
-
-          endif
-        isFirstDust(iBlock) = .false.
-!     endif
-
-     else
-
-        tautot = tautot_temp
-        conrnu = conrnu_temp
+     if ((CurrentTime - DustTime(1)) .lt. 0 .or.  (DustTime(ndusttimes) - CurrentTime) .lt. 0) then
+        write(*,*) currenttime- dusttime(ndusttimes),dusttime(1)-currenttime
+        call time_real_to_int(dusttime(ndusttimes),itime)
+        write(*,*) iTimeArray
+        write(*,*) itime
+        write(*,*) 'Dust isnt specified at this time'
+        call stop_gitm('Stopping in Mars.f90')
      endif
 
+     tDiff = CurrentTime - DustTime
+     where(tDiff .lt. 0) tDiff = 1e20
+     iMin = minloc(tDiff)
 
-    CALL DUSTPROFILE(PLEV(L_LEVELS),PTROP,PLEV,TAUCUM,TAUREF,L_LEVELS,TauTot,ConrNU)
+     if (DustFileType .eq. "FullHorizontal") then
+        do N = 1, nConrathTimes
+           ConrathTime(N) = TimeConrath(N)
+        enddo
 
-      !C  Fill QPI with water information
+        ctDiff = CurrentTime - ConrathTime
+        where(ctDiff .lt. 0) ctDiff = 1e20
+        cMin = minloc(ctDiff)
+        invDDiff = 1 / &
+             (DustTime(iMin(1)+1)-DustTime(imin(1)))
+        rtime = (CurrentTime - Dusttime(imin(1)))*(HorizontalDustProfile(imin(1) + 1,iLat,iLon,iBlock) - &
+             HorizontalDustProfile(imin(1),iLat,iLon,iBlock)) * invDDiff
 
-    !C  QH2O is the mixing ratio.  The GCM computes it as mass mixing ratio.
-    !C  The radiation code wants number mixing ratio.  The TOTAL mass in each
-    !C  layer is just the mass of CO2, not CO2+H2O.  If we change the total
-    !C  mass, then the expresion for MWRATIO would change to read
-    !C  MWRATIO = (MWCO2+MWH2O)/MWH2O.
+        invDDiff = 1 / &
+             (ConrathTime(cMin(1)+1)-ConrathTime(cmin(1)))
+        conrathrtime = (CurrentTime - Conrathtime(cmin(1)))*&
+             (HorizontalConrathProfile(cmin(1) + 1,iLat,iLon,iBlock) - &
+             HorizontalConrathProfile(cmin(1),iLat,iLon,iBlock)) * invDDiff
 
-    !   THIS HOOK IS FOR FUTURE POSSIBILITIES CONCERNING WATER VAPOR
 
-    QH2O   = 1.0D-7
+        DustDistribution(iLon,iLat,iBlock) = HorizontalDustProfile(imin(1),iLat,iLon,iBlock) + rtime
+        ConrathDistribution(iLon,iLat,iBlock) = HorizontalConrathProfile(imin(1),iLat,iLon,iBlock) + conrathrtime
+
+        tautot(1) = DustDistribution(ilon,ilat,iblock)
+
+        conrnu = ConrathDistribution(ilon,ilat,iblock)
+
+        if (tautot(1) .ne. tautot(1)) then
+           write(*,*) 'Problem with the dust distribution!'
+           call stop_gitm('Stopping in mars.f90')
+        endif
+
+     else if (DustFileType .eq. "MCSVertical") then
+
+        invDDiff = 1 / &
+             (DustTime(iMin(1)+1)-DustTime(imin(1)))
+        TimeFactor = (CurrentTime - Dusttime(imin(1)))*(CumulativeTauProfile(imin(1) + 1,iLat,1:nDustAlts,iBlock) - &
+             CumulativeTauProfile(imin(1),iLat,1:nDustAlts,iBlock)) * invDDiff
+        tautot(1:nDustAlts) = CumulativeTauProfile(imin(1),ilat,1:nDustAlts,iBlock)+timefactor
+
+     endif
+     isFirstDust(iBlock) = .false.
+     !     endif
+
+  else
+
+     tautot = tautot_temp
+     conrnu = conrnu_temp
+  endif
+
+
+  CALL DUSTPROFILE(PLEV(L_LEVELS),PTROP,PLEV,TAUCUM,TAUREF,L_LEVELS,TauTot,ConrNU)
+
+  !C  Fill QPI with water information
+
+  !C  QH2O is the mixing ratio.  The GCM computes it as mass mixing ratio.
+  !C  The radiation code wants number mixing ratio.  The TOTAL mass in each
+  !C  layer is just the mass of CO2, not CO2+H2O.  If we change the total
+  !C  mass, then the expresion for MWRATIO would change to read
+  !C  MWRATIO = (MWCO2+MWH2O)/MWH2O.
+
+  !   THIS HOOK IS FOR FUTURE POSSIBILITIES CONCERNING WATER VAPOR
+
+  QH2O   = 1.0D-7
 
 !!$          DO  L = 1, L_LAYERS
 !!$            K = 2*L+2
@@ -1774,19 +1774,19 @@ end subroutine init_isochem
 !!$           QH2O(K+1) = QH2O(K)
 !!$          END DO
 
-    !C  Set up, and solve for, the solar (visual) fluxes, if the sun
-    !C  is up
+  !C  Set up, and solve for, the solar (visual) fluxes, if the sun
+  !C  is up
 
-    if(AveCosSza(iLon,iLat,iBlock).ge.1.0e-5) then
+  if(AveCosSza(iLon,iLat,iBlock).ge.1.0e-5) then
 
-       !C  Check for ground ice.  Change albedo if there is any ice.
+     !C  Check for ground ice.  Change albedo if there is any ice.
 
-!      Scalar albedo for 1-D Tests with Brecht
-!      ALS   = 0.24
-!      2-D Array albedo for Production Simulations
-       ALS   = SurfaceAlbedo(iLon,iLat,iBlock)
+     !      Scalar albedo for 1-D Tests with Brecht
+     !      ALS   = 0.24
+     !      2-D Array albedo for Production Simulations
+     ALS   = SurfaceAlbedo(iLon,iLat,iBlock)
 
-       ! FOR FUTURE CONSIDERATION OF CO2 GROUND ICE
+     ! FOR FUTURE CONSIDERATION OF CO2 GROUND ICE
 
 !!$             IF(SurfaceTemp(iLon,iLat,iBlock).LE.150.0) THEN
 !!$                IF(latitude(iLat,iBlock)*180.0/pi.LT.0.0) THEN
@@ -1796,33 +1796,33 @@ end subroutine init_isochem
 !!$                END IF
 !!$             ENDIF
 
-       !C  Get the optical depth (due to all sources) in the optical.
-!write(*,*) ilon,ilat
-       call optcv(DTAUV,TAUV,TAUCUMV,TLEV,PLEV,L_LAYERS,&
-            L_LEVELS,L_NLAYRAD,L_NLEVRAD,WBARV,COSBV,&
-            TAUREF,TMID,PMID,NGWV,QH2O)
+     !C  Get the optical depth (due to all sources) in the optical.
+     !write(*,*) ilon,ilat
+     call optcv(DTAUV,TAUV,TAUCUMV,TLEV,PLEV,L_LAYERS,&
+          L_LEVELS,L_NLAYRAD,L_NLEVRAD,WBARV,COSBV,&
+          TAUREF,TMID,PMID,NGWV,QH2O)
 
-       !C  Calculate the fluxes in the visual
+     !C  Calculate the fluxes in the visual
 
-       call sfluxv(DTAUV,TAUV,TAUCUMV,ALS,WBARV,COSBV,&
-            AVECOSSZA(iLon,iLat,iBlock),NFLUXTOPV,FMNETV,&
-            fluxupv,fluxdnv,diffvt,ngwv,&
-            L_LAYERS,L_LEVELS,L_NLAYRAD,L_NLEVRAD,ilon,ilat)
+     call sfluxv(DTAUV,TAUV,TAUCUMV,ALS,WBARV,COSBV,&
+          AVECOSSZA(iLon,iLat,iBlock),NFLUXTOPV,FMNETV,&
+          fluxupv,fluxdnv,diffvt,ngwv,&
+          L_LAYERS,L_LEVELS,L_NLAYRAD,L_NLEVRAD,ilon,ilat)
 
-       !C  If the sun is down, no solar flux, nor downward flux. . .
+     !C  If the sun is down, no solar flux, nor downward flux. . .
 
-    else
-       NFLUXTOPV = 0.0
-       FLUXUPV = 0.0
-       FLUXDNV = 0.0
-       FMNETV = 0.0
-    endif
+  else
+     NFLUXTOPV = 0.0
+     FLUXUPV = 0.0
+     FLUXDNV = 0.0
+     FMNETV = 0.0
+  endif
 
-    !C  Check for ground ice.  Change the IR albedo if there is any ice.
+  !C  Check for ground ice.  Change the IR albedo if there is any ice.
 
-    ALBI   = 0.04
+  ALBI   = 0.04
 
-    ! FOR FUTURE CONSIDERATION OF CO2 GROUND ICE
+  ! FOR FUTURE CONSIDERATION OF CO2 GROUND ICE
 
 !!$               IF(GT(JCMN,ICMN).LE.0.0) THEN
 !!$                 IF(JCMN.LT.JEQUATOR) THEN
@@ -1832,482 +1832,482 @@ end subroutine init_isochem
 !!$                 END IF
 !!$               ENDIF
 
-    !C  Get the optical depth (due to all sources) in the infrared.
+  !C  Get the optical depth (due to all sources) in the infrared.
 
-    call optci(DTAUI,TAUCUMI,TLEV,PLEV,L_LAYERS,&
-         L_LEVELS,L_NLAYRAD,L_NLEVRAD,QextREF,COSBI,WBARI,&
-         TAUREF,TMID,PMID,NGWI,QH2O)
-!if (ilon .eq. 9 .and. ilat .eq. 9) stop
-    !C  Calculate the fluxes in the IR.
+  call optci(DTAUI,TAUCUMI,TLEV,PLEV,L_LAYERS,&
+       L_LEVELS,L_NLAYRAD,L_NLEVRAD,QextREF,COSBI,WBARI,&
+       TAUREF,TMID,PMID,NGWI,QH2O)
+  !if (ilon .eq. 9 .and. ilat .eq. 9) stop
+  !C  Calculate the fluxes in the IR.
 
-    call sfluxi(PLEV,TLEV,DTAUI,TAUCUMI,ALBI,L_LAYERS,L_LEVELS,&
-         L_NLAYRAD,L_NLEVRAD,COSBI,WBARI,NFLUXTOPI,FMNETI,&
-         FLUXUPI,FLUXDNI,NGWI)
-!write(*,*) fmneti
-!stop
+  call sfluxi(PLEV,TLEV,DTAUI,TAUCUMI,ALBI,L_LAYERS,L_LEVELS,&
+       L_NLAYRAD,L_NLEVRAD,COSBI,WBARI,NFLUXTOPI,FMNETI,&
+       FLUXUPI,FLUXDNI,NGWI)
+  !write(*,*) fmneti
+  !stop
 
-    do L=2,l_nlayrad
-       L1=L-1
-       IF(P(L_NLAYRAD-L1).GT.PLONG*0.01) THEN
-          COOLCORRECTION(L1) = 1.0
-       ELSE
-          COOLCORRECTION(L1) = 0.0
-       ENDIF
-       IF(P(L_NLAYRAD-L1).GT.XLTEPRESSURE(1)) THEN
-          XLTECORRECTION(L1) = 1.0
-       ELSE
-          DO N = 1,L_NLTE-1
-             IF (P(L_NLAYRAD-L1).GT.XLTEPRESSURE(N)) THEN
-                GOTO 199
-             ELSE
-                MALT = N
-             ENDIF
-          ENDDO
+  do L=2,l_nlayrad
+     L1=L-1
+     IF(P(L_NLAYRAD-L1).GT.PLONG*0.01) THEN
+        COOLCORRECTION(L1) = 1.0
+     ELSE
+        COOLCORRECTION(L1) = 0.0
+     ENDIF
+     IF(P(L_NLAYRAD-L1).GT.XLTEPRESSURE(1)) THEN
+        XLTECORRECTION(L1) = 1.0
+     ELSE
+        DO N = 1,L_NLTE-1
+           IF (P(L_NLAYRAD-L1).GT.XLTEPRESSURE(N)) THEN
+              EXIT
+           ELSE
+              MALT = N
+           ENDIF
+        ENDDO
 
-199       CONTINUE
-          XLTECORRECTION(L1) = XLTEFACTOR(MALT) + &
-               (XLTEFACTOR(MALT+1)-XLTEFACTOR(MALT))*&
-               DLOG(P(L_NLAYRAD-L1)/XLTEPRESSURE(MALT))/&
-               DLOG(XLTEPRESSURE(MALT+1)/XLTEPRESSURE(MALT))
-       ENDIF
+        XLTECORRECTION(L1) = XLTEFACTOR(MALT) + &
+             (XLTEFACTOR(MALT+1)-XLTEFACTOR(MALT))*&
+             DLOG(P(L_NLAYRAD-L1)/XLTEPRESSURE(MALT))/&
+             DLOG(XLTEPRESSURE(MALT+1)/XLTEPRESSURE(MALT))
+     ENDIF
 
-       fluxid(L1)  = FMNETI(L)-FMNETI(L-1)
-       fluxvd(L1)  = FMNETV(L)-FMNETV(L-1)
-       HEATING(L1) = fluxvd(L-1)*(-gravity_GB(iLon,iLat,L_NLAYRAD-L1,iBlock))/&
-            (HeatCapacityCO2*100.0*(PLEV(2*L+1)-PLEV(2*L-1)))
-!if (iproc .eq. 21 .and. ilon .eq. 1 .and. ilat .eq. 4) then
-!   write(*,*)"LATM: ", fluxvd(l1),fmnetv(l)
-!endif
+     fluxid(L1)  = FMNETI(L)-FMNETI(L-1)
+     fluxvd(L1)  = FMNETV(L)-FMNETV(L-1)
+     HEATING(L1) = fluxvd(L-1)*(-gravity_GB(iLon,iLat,L_NLAYRAD-L1,iBlock))/&
+          (HeatCapacityCO2*100.0*(PLEV(2*L+1)-PLEV(2*L-1)))
+     !if (iproc .eq. 21 .and. ilon .eq. 1 .and. ilat .eq. 4) then
+     !   write(*,*)"LATM: ", fluxvd(l1),fmnetv(l)
+     !endif
 
-       GREENHOUSE(L1) = fluxid(L-1)*(-gravity_GB(iLon,iLat,L_NLAYRAD-L1,iBlock))/&
-            (HeatCapacityCO2*100.0*(PLEV(2*L+1)-PLEV(2*L-1)))
+     GREENHOUSE(L1) = fluxid(L-1)*(-gravity_GB(iLon,iLat,L_NLAYRAD-L1,iBlock))/&
+          (HeatCapacityCO2*100.0*(PLEV(2*L+1)-PLEV(2*L-1)))
 
-       TOTAL(L1)=(HEATING(L1)/XLTECORRECTION(L1))+&
-            GREENHOUSE(L1)*COOLCORRECTION(L1)
-
+     TOTAL(L1)=(HEATING(L1)/XLTECORRECTION(L1))+&
+          GREENHOUSE(L1)*COOLCORRECTION(L1)
 
 
-       !Buffer region, Lopez-Valverde found a buffer needed for appropriate cooling rates
-       !near the top of the atmosphere
-       TOTAL(1) = 0.0
-       TOTAL(2) = 0.0
-       GREENHOUSE(1) = 0.0
-       GREENHOUSE(2) = 0.0
-       !Buffer region, Bougher found a buffer needed for appropriate near-IR rates
-       !near the top of the atmosphere, since NLTE correction breaks down.
-       HEATING(1) = 0.0
-       HEATING(2) = 0.0
 
-       lowatmosradrate(iLon,iLat,L_NLAYRAD-L1,iBlock)=TOTAL(L1)
-!      qnirlte(iLon,iLat,L_NLAYRAD-L1,iBlock)= XLTECORRECTION(L1)
-       qnirlte(iLon,iLat,L_NLAYRAD-L1,iBlock)= HEATING(L1)
-       qnirtot(iLon,iLat,L_NLAYRAD-L1,iBlock)= HEATING(L1)/XLTECORRECTION(L1)
-       cirlte(iLon,iLat,L_NLAYRAD-L1,iBlock)= GREENHOUSE(L1)*COOLCORRECTION(L1)
+     !Buffer region, Lopez-Valverde found a buffer needed for appropriate cooling rates
+     !near the top of the atmosphere
+     TOTAL(1) = 0.0
+     TOTAL(2) = 0.0
+     GREENHOUSE(1) = 0.0
+     GREENHOUSE(2) = 0.0
+     !Buffer region, Bougher found a buffer needed for appropriate near-IR rates
+     !near the top of the atmosphere, since NLTE correction breaks down.
+     HEATING(1) = 0.0
+     HEATING(2) = 0.0
+
+     lowatmosradrate(iLon,iLat,L_NLAYRAD-L1,iBlock)=TOTAL(L1)
+     !      qnirlte(iLon,iLat,L_NLAYRAD-L1,iBlock)= XLTECORRECTION(L1)
+     qnirlte(iLon,iLat,L_NLAYRAD-L1,iBlock)= HEATING(L1)
+     qnirtot(iLon,iLat,L_NLAYRAD-L1,iBlock)= HEATING(L1)/XLTECORRECTION(L1)
+     cirlte(iLon,iLat,L_NLAYRAD-L1,iBlock)= GREENHOUSE(L1)*COOLCORRECTION(L1)
 
 
-       dSubsurfaceTemp(iLon,iLat,iBlock) = -2.0*PI/sqrt(Pa*Pd)*&
-            (SubsurfaceTemp(iLon,iLat,iBlock)-&
-            SurfaceTemp(iLon,iLat,iBlock))+2.0*PI/Pa*&
-            (CoreTemp-SubsurfaceTemp(iLon,iLat,iBlock))
+     dSubsurfaceTemp(iLon,iLat,iBlock) = -2.0*PI/sqrt(Pa*Pd)*&
+          (SubsurfaceTemp(iLon,iLat,iBlock)-&
+          SurfaceTemp(iLon,iLat,iBlock))+2.0*PI/Pa*&
+          (CoreTemp-SubsurfaceTemp(iLon,iLat,iBlock))
 
-       dSurfaceTemp(iLon,iLat,iBlock) = 1.0/(0.5*tinertia(iLon,iLat,iBlock)*&
-            sqrt(Pd/PI))*(fluxdnv(L_NLAYRAD)*(1.0-SurfaceAlbedo(iLon,iLat,iBlock))+&
-            fluxdni(L_NLAYRAD)-SBconstant*SurfaceTemp(iLon,iLat,iBlock)**4.0)+&
-            2.0*PI/Pd*(SubsurfaceTemp(iLon,iLat,iBlock)-SurfaceTemp(iLon,iLat,iBlock))
+     dSurfaceTemp(iLon,iLat,iBlock) = 1.0/(0.5*tinertia(iLon,iLat,iBlock)*&
+          sqrt(Pd/PI))*(fluxdnv(L_NLAYRAD)*(1.0-SurfaceAlbedo(iLon,iLat,iBlock))+&
+          fluxdni(L_NLAYRAD)-SBconstant*SurfaceTemp(iLon,iLat,iBlock)**4.0)+&
+          2.0*PI/Pd*(SubsurfaceTemp(iLon,iLat,iBlock)-SurfaceTemp(iLon,iLat,iBlock))
 
-    end do
-!stop
-    fir(iLon,iLat,iBlock) = fluxdni(L_NLAYRAD)
-    fvis(iLon,iLat,iBlock) = fluxdnv(L_NLAYRAD)
-    Tbot(iLon,iLat,iBlock) = T(1)
-    TopL(iLon,iLat,iBlock) = L_NLAYRAD
-    Psurf(iLon,iLat,iBlock)= PLEV(L_LEVELS)
-    P125(iLon,iLat,iBlock) = P(50)
+  end do
+  !stop
+  fir(iLon,iLat,iBlock) = fluxdni(L_NLAYRAD)
+  fvis(iLon,iLat,iBlock) = fluxdnv(L_NLAYRAD)
+  Tbot(iLon,iLat,iBlock) = T(1)
+  TopL(iLon,iLat,iBlock) = L_NLAYRAD
+  Psurf(iLon,iLat,iBlock)= PLEV(L_LEVELS)
+  P125(iLon,iLat,iBlock) = P(50)
 
-  end subroutine calc_lowatmosrad
-  ! ----------------------------------------------------------------------
+end subroutine calc_lowatmosrad
+! ----------------------------------------------------------------------
 
-  ! ----------------------------------------------------------------------
+! ----------------------------------------------------------------------
 
-  subroutine fillpt(p,t,L_LEVELS,L_LAYERS,tg,altmin,altmid,plev,tlev,&
-       pmid,tmid,pbot,altbot)
+subroutine fillpt(p,t,L_LEVELS,L_LAYERS,tg,altmin,altmid,plev,tlev,&
+     pmid,tmid,pbot,altbot)
 
-    !C  Put the T & P GCM arrays onto the NRC grid:  PLEV, PMID, TLEV, TMID
-    !C  Sept 2002
-    !C
-    !C  PMID and TMID are the pressure and temperature at the GCM layer
-    !C  mid-points.  PLEV and TLEV are the pressures and temperatures at
-    !C  the GCM layer boundaries, i.e. at GCM levels.
+  !C  Put the T & P GCM arrays onto the NRC grid:  PLEV, PMID, TLEV, TMID
+  !C  Sept 2002
+  !C
+  !C  PMID and TMID are the pressure and temperature at the GCM layer
+  !C  mid-points.  PLEV and TLEV are the pressures and temperatures at
+  !C  the GCM layer boundaries, i.e. at GCM levels.
 
 !!!!!!Why is altmin and altbot different? !!!!!!!!!!!!!!!!!!!1
 
-    use GITM_planet
-    use ModGITM, only: iproc
-    implicit none
+  use GITM_planet
+  use ModGITM, only: iproc
+  implicit none
 
-    integer :: K, L, NK,L_LEVELS,L_LAYERS
-    real :: PLEV(LL_LEVELS+1), PMID(LL_LEVELS)
-    real :: TLEV(LL_LEVELS), TMID(LL_LEVELS)
-    real :: TG, altmin,pbot,altbot
-    real,dimension(1:nAlts) :: T, P,altmid
-    real,dimension(0:ll_layers+1) :: altbound
-    real,dimension(0:ll_levels) :: altlevels
+  integer :: K, L, NK,L_LEVELS,L_LAYERS
+  real :: PLEV(LL_LEVELS+1), PMID(LL_LEVELS)
+  real :: TLEV(LL_LEVELS), TMID(LL_LEVELS)
+  real :: TG, altmin,pbot,altbot
+  real,dimension(1:nAlts) :: T, P,altmid
+  real,dimension(0:ll_layers+1) :: altbound
+  real,dimension(0:ll_levels) :: altlevels
 
-    !C======================================================================C
+  !C======================================================================C
 
-    PBOT = PBOT*0.01 !convert bottom pressure to mbars
-!altmin = 2429.59375
-    ! Calculate boundary altitudes
+  PBOT = PBOT*0.01 !convert bottom pressure to mbars
+  !altmin = 2429.59375
+  ! Calculate boundary altitudes
 
-!if (altmid(1) .gt. 0) then
-!     ALTBOUND(0)=(ALTMIN+altmid(1))/2.
-!  else
-!     ALTBound(0) = Altmid(1) - (altmid(2) - altmid(1))/2.
-!  endif
-ALTBOUND(0) = altbot
+  !if (altmid(1) .gt. 0) then
+  !     ALTBOUND(0)=(ALTMIN+altmid(1))/2.
+  !  else
+  !     ALTBound(0) = Altmid(1) - (altmid(2) - altmid(1))/2.
+  !  endif
+  ALTBOUND(0) = altbot
 
-!write(*,*) altbound(0)
-!   write(*,*) altmid(1)
-    do L = 1, L_Layers+1
-       altbound(L) = (altmid(l) + altmid(l+1)) /2.
-!       write(*,*) "alts: ",altbound(l), altmid(l),altmid(l+1)
-    enddo
-!    ALTBOUND(1)=ALTMID(1) + (ALTMID(1)-ALTMIN)
- !    DO L=2,L_LAYERS+1
-!       ALTBOUND(L)=ALTMID(L) + (ALTMID(L)-ALTBOUND(L-1))
-!       write(*,*) altbound(l),altmid(l), altbound(l-1)
-!    END DO
+  !write(*,*) altbound(0)
+  !   write(*,*) altmid(1)
+  do L = 1, L_Layers+1
+     altbound(L) = (altmid(l) + altmid(l+1)) /2.
+     !       write(*,*) "alts: ",altbound(l), altmid(l),altmid(l+1)
+  enddo
+  !    ALTBOUND(1)=ALTMID(1) + (ALTMID(1)-ALTMIN)
+  !    DO L=2,L_LAYERS+1
+  !       ALTBOUND(L)=ALTMID(L) + (ALTMID(L)-ALTBOUND(L-1))
+  !       write(*,*) altbound(l),altmid(l), altbound(l-1)
+  !    END DO
 
-    !C  Fill the new radiation code variables.
-    !C  PLEV and TLEV are the pressure and tempertures on a vertical grid
-    !C  that the new radiation code uses.
+  !C  Fill the new radiation code variables.
+  !C  PLEV and TLEV are the pressure and tempertures on a vertical grid
+  !C  that the new radiation code uses.
 
-    ALTLEVELS(0) = ALTMID(L_LAYERS+2)
-    ALTLEVELS(1) = ALTBOUND(L_LAYERS+1)
-    ALTLEVELS(2) = ALTMID(L_LAYERS+1)
-    ALTLEVELS(3) = ALTBOUND(L_LAYERS)
-    ALTLEVELS(L_LEVELS+1) = (ALTBOUND(0)+Altmin)/2.
+  ALTLEVELS(0) = ALTMID(L_LAYERS+2)
+  ALTLEVELS(1) = ALTBOUND(L_LAYERS+1)
+  ALTLEVELS(2) = ALTMID(L_LAYERS+1)
+  ALTLEVELS(3) = ALTBOUND(L_LAYERS)
+  ALTLEVELS(L_LEVELS+1) = (ALTBOUND(0)+Altmin)/2.
 
-    PLEV(1) = EXP(DLOG(P(L_LAYERS+1)) + (DLOG(P(L_LAYERS+2))-&
-         DLOG(P(L_LAYERS+1)))*&
-         (ALTLEVELS(1)-ALTLEVELS(2))/&
-         (ALTLEVELS(0)-ALTLEVELS(2)))
-    PLEV(2) = P(L_LAYERS+1)
-    PLEV(L_LEVELS) = pbot
-    PLEV(L_LEVELS+1) = pbot
-   DO K=4,L_LEVELS-1,2
-       NK=L_LAYERS -(K/2 - 2)
-       PLEV(K) = P(NK)
-       ALTLEVELS(K) = ALTMID(NK)
-       ALTLEVELS(K+1) = ALTBOUND(NK-1)
+  PLEV(1) = EXP(DLOG(P(L_LAYERS+1)) + (DLOG(P(L_LAYERS+2))-&
+       DLOG(P(L_LAYERS+1)))*&
+       (ALTLEVELS(1)-ALTLEVELS(2))/&
+       (ALTLEVELS(0)-ALTLEVELS(2)))
+  PLEV(2) = P(L_LAYERS+1)
+  PLEV(L_LEVELS) = pbot
+  PLEV(L_LEVELS+1) = pbot
+  DO K=4,L_LEVELS-1,2
+     NK=L_LAYERS -(K/2 - 2)
+     PLEV(K) = P(NK)
+     ALTLEVELS(K) = ALTMID(NK)
+     ALTLEVELS(K+1) = ALTBOUND(NK-1)
 
-!       write(*,*) k,nk,altbound(nk-1)
-!write(*,*) plev(k),k
-!write(*,*) altmid(nk),altbound(nk),altlevels(k)-altlevels(k+1)
-!if (iproc .eq. 21) write(*,*) k,nk,plev(k),P(nk),pbot
-!write(*,*)
-    END DO
+     !       write(*,*) k,nk,altbound(nk-1)
+     !write(*,*) plev(k),k
+     !write(*,*) altmid(nk),altbound(nk),altlevels(k)-altlevels(k+1)
+     !if (iproc .eq. 21) write(*,*) k,nk,plev(k),P(nk),pbot
+     !write(*,*)
+  END DO
 
-!write(*,*) l_levels,l_layers
-!if (iproc .eq. 21) stop
+  !write(*,*) l_levels,l_layers
+  !if (iproc .eq. 21) stop
 !!!!!!!!!!!!!!!!!! This is the issue (maybe) !!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!stop
-    DO K=3,L_LEVELS-2,2
-       PLEV(K) = EXP(DLOG(PLEV(K+1)) + (DLOG(PLEV(K-1))-DLOG(PLEV(K+1)))*&
-            (ALTLEVELS(K)-ALTLEVELS(K+1))/&
-            (ALTLEVELS(K-1)-ALTLEVELS(K+1)))
-!write(*,*) altlevels(k),k
-!write(*,*) plev(k),k
-    END DO
-
-!    if (altbot .gt. altmin) then
-       PLEV(L_LEVELS) = PBOT!EXP(DLOG(PBOT) - (DLOG(PLEV(L_LEVELS-1))-DLOG(PBOT))*&
-!            (ALTBOT-ALTMIN)/(altbot-ALTLEVELS(L_LEVELS-1)))
-!    else
-!       PLEV(L_LEVELS) = EXP(DLOG(PBOT) + (DLOG(PLEV(L_LEVELS-1))-DLOG(PBOT))*&
-!            (ALTBOT-ALTMIN)/(ALTLEVELS(L_LEVELS-1)-ALTBOT))
-!    endif
-    PLEV(L_LEVELS+1) = PLEV(L_LEVELS)
-
-
-!    if (plev(l_levels) .lt. plev(l_levels -1)) then
-!       write(*,*) "p: ",altbot,altmin,pbot,altbound(0),altmid(0),altmid(1)
-!       do l = 1,l_levels+1
-          !if (plev(l) .lt. plev(l-1)) then
-!          write(*,*) l,plev(l),pbot,altlevels(l),altbot
-!
-!       enddo
-!          stop
-!    endif
-
-
-!stop
-    TLEV(1) = T(L_LAYERS+1) + (T(L_LAYERS+2)-T(L_LAYERS+1))*&
-         DLOG(PLEV(1)/PLEV(2))/&
-         DLOG(P(L_LAYERS+2)/PLEV(2))
-    TLEV(2) = T(L_LAYERS+1)
-    DO K=4,L_LEVELS-1,2
-       NK=L_LAYERS -(K/2 - 2)
-       TLEV(K) = T(NK)
-    END DO
-
-    DO K=3,L_LEVELS-2,2
-       TLEV(K) = TLEV(K+1) + (TLEV(K-1)-TLEV(K+1))*&
-            DLOG(PLEV(K)/PLEV(K+1))/&
-            DLOG(PLEV(K-1)/PLEV(K+1))
-    END DO
-
-    !C  Temperature of the bottom level is the ground temperature.
-
-    TLEV(L_LEVELS) = TG
-
-    !C  Fill the PMID & TMID arrays used by OPTCI and OPTCV subroutines.
-    !C  TMID and PMID used to get the index for CO2 k-coefficient interpolation.
+  !stop
+  DO K=3,L_LEVELS-2,2
+     PLEV(K) = EXP(DLOG(PLEV(K+1)) + (DLOG(PLEV(K-1))-DLOG(PLEV(K+1)))*&
+          (ALTLEVELS(K)-ALTLEVELS(K+1))/&
+          (ALTLEVELS(K-1)-ALTLEVELS(K+1)))
+     !write(*,*) altlevels(k),k
+     !write(*,*) plev(k),k
+  END DO
+
+  !    if (altbot .gt. altmin) then
+  PLEV(L_LEVELS) = PBOT!EXP(DLOG(PBOT) - (DLOG(PLEV(L_LEVELS-1))-DLOG(PBOT))*&
+  !            (ALTBOT-ALTMIN)/(altbot-ALTLEVELS(L_LEVELS-1)))
+  !    else
+  !       PLEV(L_LEVELS) = EXP(DLOG(PBOT) + (DLOG(PLEV(L_LEVELS-1))-DLOG(PBOT))*&
+  !            (ALTBOT-ALTMIN)/(ALTLEVELS(L_LEVELS-1)-ALTBOT))
+  !    endif
+  PLEV(L_LEVELS+1) = PLEV(L_LEVELS)
+
+
+  !    if (plev(l_levels) .lt. plev(l_levels -1)) then
+  !       write(*,*) "p: ",altbot,altmin,pbot,altbound(0),altmid(0),altmid(1)
+  !       do l = 1,l_levels+1
+  !if (plev(l) .lt. plev(l-1)) then
+  !          write(*,*) l,plev(l),pbot,altlevels(l),altbot
+  !
+  !       enddo
+  !          stop
+  !    endif
+
+
+  !stop
+  TLEV(1) = T(L_LAYERS+1) + (T(L_LAYERS+2)-T(L_LAYERS+1))*&
+       DLOG(PLEV(1)/PLEV(2))/&
+       DLOG(P(L_LAYERS+2)/PLEV(2))
+  TLEV(2) = T(L_LAYERS+1)
+  DO K=4,L_LEVELS-1,2
+     NK=L_LAYERS -(K/2 - 2)
+     TLEV(K) = T(NK)
+  END DO
+
+  DO K=3,L_LEVELS-2,2
+     TLEV(K) = TLEV(K+1) + (TLEV(K-1)-TLEV(K+1))*&
+          DLOG(PLEV(K)/PLEV(K+1))/&
+          DLOG(PLEV(K-1)/PLEV(K+1))
+  END DO
+
+  !C  Temperature of the bottom level is the ground temperature.
+
+  TLEV(L_LEVELS) = TG
+
+  !C  Fill the PMID & TMID arrays used by OPTCI and OPTCV subroutines.
+  !C  TMID and PMID used to get the index for CO2 k-coefficient interpolation.
+
+  TMID(1) = TLEV(2)
+  TMID(2) = TLEV(2)
+  PMID(1) = PLEV(1)
+  PMID(2) = PLEV(2)
+
+  DO L=1,L_LAYERS
+     TMID(2*L+1) = TLEV(2*L+1)
+     TMID(2*L+2) = TLEV(2*L+1)
+     PMID(2*L+1) = PLEV(2*L+1)
+     PMID(2*L+2) = PLEV(2*L+1)
+  END DO
+
+  TMID(L_LEVELS) = TLEV(L_LEVELS)
+  PMID(L_LEVELS) = PLEV(L_LEVELS)
 
-    TMID(1) = TLEV(2)
-    TMID(2) = TLEV(2)
-    PMID(1) = PLEV(1)
-    PMID(2) = PLEV(2)
-
-    DO L=1,L_LAYERS
-       TMID(2*L+1) = TLEV(2*L+1)
-       TMID(2*L+2) = TLEV(2*L+1)
-       PMID(2*L+1) = PLEV(2*L+1)
-       PMID(2*L+2) = PLEV(2*L+1)
-    END DO
-
-    TMID(L_LEVELS) = TLEV(L_LEVELS)
-    PMID(L_LEVELS) = PLEV(L_LEVELS)
 
+END SUBROUTINE FILLPT
 
-  END SUBROUTINE FILLPT
+! ----------------------------------------------------------------------
 
-  ! ----------------------------------------------------------------------
 
+! ----------------------------------------------------------------------
 
-  ! ----------------------------------------------------------------------
+subroutine dustprofile(PSF,PTROP,PLEV,TAUCUM,TAUREF,L_LEVELS,TauTot,ConrNU)
 
-  subroutine dustprofile(PSF,PTROP,PLEV,TAUCUM,TAUREF,L_LEVELS,TauTot,ConrNU)
+  !C Bob's updates 9/17/99
+  !C Reference the dust optical depth to PSF (The surface pressure, mbar),
+  !C and modify the way the dust mixing ratio is calculated to more accurately
+  !C reflect the pressure-optical depth relationship.
+  !C GCM2.0  Sept 2002
+  !C Driver:  Jan 2003 - Modified from GCM 3-D to DRIVER 1-D
 
-    !C Bob's updates 9/17/99
-    !C Reference the dust optical depth to PSF (The surface pressure, mbar),
-    !C and modify the way the dust mixing ratio is calculated to more accurately
-    !C reflect the pressure-optical depth relationship.
-    !C GCM2.0  Sept 2002
-    !C Driver:  Jan 2003 - Modified from GCM 3-D to DRIVER 1-D
+  use GITM_planet
+  use ModInputs
+  use ModGITM, only : iproc
+  implicit none
 
-    use GITM_planet
-    use ModInputs
-    use ModGITM, only : iproc
-    implicit none
+  integer JSRCHGT
+  external JSRCHGT
 
-    integer JSRCHGT
-    external JSRCHGT
+  INTEGER, PARAMETER :: NPDST = 100
+  real, INTENT(in) :: tautot(nDustAlts),conrnu(nDustAlts)
+  integer, INTENT(in) :: L_LEVELS
+  integer :: n, k, nstar
+  REAL ::  QRDST(NPDST), PRDST(NPDST), TAUDST(NPDST)
+  real, INTENT(in) ::  PSF, PTROP
+  real ::  TAUCUM(LL_LEVELS),TAUREF(LL_LEVELS+1),PLEV(LL_LEVELS+1)
+  real ::  refpr, pave, sum, qrdst0, pstar, pstar1, pdif1, pdif2
+  real :: DustPressureLevelMB(nDustAlts)
 
-    INTEGER, PARAMETER :: NPDST = 100
-    real, INTENT(in) :: tautot(nDustAlts),conrnu(nDustAlts)
-    integer, INTENT(in) :: L_LEVELS
-    integer :: n, k, nstar
-    REAL ::  QRDST(NPDST), PRDST(NPDST), TAUDST(NPDST)
-    real, INTENT(in) ::  PSF, PTROP
-    real ::  TAUCUM(LL_LEVELS),TAUREF(LL_LEVELS+1),PLEV(LL_LEVELS+1)
-    real ::  refpr, pave, sum, qrdst0, pstar, pstar1, pdif1, pdif2
-    real :: DustPressureLevelMB(nDustAlts)
+  !C======================================================================C
 
-    !C======================================================================C
+  !C Calculate the Reference Pressure Grid (prdst)
+  DustPressureLevelMB = 0.0
 
-    !C Calculate the Reference Pressure Grid (prdst)
-    DustPressureLevelMB = 0.0
+  if (DustFileType .ne. "MCSVertical") then
+     refpr    = (5.0*psf/ptrop)**(1.0/(float(npdst)-1.0))
+     prdst(1) = ptrop
 
-     if (DustFileType .ne. "MCSVertical") then
-      refpr    = (5.0*psf/ptrop)**(1.0/(float(npdst)-1.0))
-      prdst(1) = ptrop
+     do n=2,npdst
+        prdst(n) = refpr*prdst(n-1)
+     end do
 
-      do n=2,npdst
-         prdst(n) = refpr*prdst(n-1)
-      end do
+     !C Calculate the Mixing Ratio at the Reference Pressure Level
 
-      !C Calculate the Mixing Ratio at the Reference Pressure Level
+     sum = 0.
+     do n = 2,npdst
+        if (prdst(n).lt.rptau) then
+           pave = 0.5*(prdst(n)+prdst(n-1))
+           sum  = sum + exp(conrnu(1)*(1.-(rptau/pave)))*&
+                (prdst(n)-prdst(n-1))
+        end if
+        if (prdst(n).ge.rptau) EXIT
+     end do
 
-      sum = 0.
-      do n = 2,npdst
-         if (prdst(n).lt.rptau) then
-            pave = 0.5*(prdst(n)+prdst(n-1))
-            sum  = sum + exp(conrnu(1)*(1.-(rptau/pave)))*&
-                 (prdst(n)-prdst(n-1))
-         end if
-         if (prdst(n).ge.rptau) go to 10
-      end do
+     pave = 0.5*(rptau+prdst(n-1))
+     sum  = sum + exp(conrnu(1)*(1.-(rptau/pave)))*(rptau-prdst(n-1))
 
-  10  continue
+     !C  GCM1.7  6/28/01   spatially varying dust
 
-      pave = 0.5*(rptau+prdst(n-1))
-      sum  = sum + exp(conrnu(1)*(1.-(rptau/pave)))*(rptau-prdst(n-1))
+     qrdst0 = tautot(1)/sum
 
-      !C  GCM1.7  6/28/01   spatially varying dust
+     !C Now calculate the mixing ratio at all other levels
 
-      qrdst0 = tautot(1)/sum
+     do n=1,npdst-1
 
-      !C Now calculate the mixing ratio at all other levels
+        !C Region 1: Mixing ratio changes continuously through the layer
 
-      do n=1,npdst-1
+        if (rptau.gt.prdst(n+1)) then
+           pave     = 0.5*(prdst(n+1)+prdst(n))
+           qrdst(n) = qrdst0*exp(conrnu(1)*(1.0-(rptau/pave)))
+        end if
 
-         !C Region 1: Mixing ratio changes continuously through the layer
+        !C Region 2: Reference pressure level within this layer.
 
-         if (rptau.gt.prdst(n+1)) then
-            pave     = 0.5*(prdst(n+1)+prdst(n))
-            qrdst(n) = qrdst0*exp(conrnu(1)*(1.0-(rptau/pave)))
-         end if
+        if (rptau.le.prdst(n+1).and.rptau.ge.prdst(n)) then
+           pave     = 0.5*(prdst(n)+rptau)
+           pdif1    = rptau-prdst(n)
+           pdif2    = prdst(n+1)-rptau
+           qrdst(n) = qrdst0*(&
+                exp(conrnu(1)*(1.0-(rptau/pave)))*pdif1+pdif2) / &
+                (prdst(n+1)-prdst(n))
+        end if
 
-         !C Region 2: Reference pressure level within this layer.
+        !C Region 3: Mixing ratio constant
 
-         if (rptau.le.prdst(n+1).and.rptau.ge.prdst(n)) then
-            pave     = 0.5*(prdst(n)+rptau)
-            pdif1    = rptau-prdst(n)
-            pdif2    = prdst(n+1)-rptau
-            qrdst(n) = qrdst0*(&
-                 exp(conrnu(1)*(1.0-(rptau/pave)))*pdif1+pdif2) / &
-                 (prdst(n+1)-prdst(n))
-         end if
+        if (rptau.lt.prdst(n)) then
+           qrdst(n) = qrdst0
+        end if
 
-         !C Region 3: Mixing ratio constant
+     end do
 
-         if (rptau.lt.prdst(n)) then
-            qrdst(n) = qrdst0
-         end if
+     !C Now compute the optical depths (taudst).
 
-      end do
+     taudst(1) = 0.0
 
-      !C Now compute the optical depths (taudst).
+     do n=2,npdst
+        taudst(n) = taudst(n-1) + qrdst(n-1)*(prdst(n)-prdst(n-1))
+     end do
 
-      taudst(1) = 0.0
+     !C  Dust optical depth at the bottom of each sub-layer.
 
-      do n=2,npdst
-         taudst(n) = taudst(n-1) + qrdst(n-1)*(prdst(n)-prdst(n-1))
-      end do
+     TAUCUM = 0.0
+     TAUREF = 0.0
 
-      !C  Dust optical depth at the bottom of each sub-layer.
+     DO K=4,L_LEVELS
+        PSTAR     = PLEV(K)
+        PSTAR1    = MAX(PSTAR,PRDST(1))
+        NSTAR     = MIN0(JSRCHGT(NPDST-1,PRDST,1,PSTAR1)-1,NPDST-1)
 
-      TAUCUM = 0.0
-      TAUREF = 0.0
+        TAUCUM(K) = TAUDST(NSTAR)+(PSTAR1-PRDST(NSTAR))*&
+             (TAUDST(NSTAR+1) - TAUDST(NSTAR))/&
+             (PRDST(NSTAR+1)-PRDST(NSTAR))
+        TAUREF(K) = TAUCUM(K) - TAUCUM(K-1)
 
-      DO K=4,L_LEVELS
-         PSTAR     = PLEV(K)
-         PSTAR1    = MAX(PSTAR,PRDST(1))
-         NSTAR     = MIN0(JSRCHGT(NPDST-1,PRDST,1,PSTAR1)-1,NPDST-1)
+     END DO
 
-         TAUCUM(K) = TAUDST(NSTAR)+(PSTAR1-PRDST(NSTAR))*&
-              (TAUDST(NSTAR+1) - TAUDST(NSTAR))/&
-              (PRDST(NSTAR+1)-PRDST(NSTAR))
-         TAUREF(K) = TAUCUM(K) - TAUCUM(K-1)
 
-      END DO
+     TAUREF(L_LEVELS+1) = 0.0D0
+  else
+     !Using MCS Longitudinally averaged vertical profiles
+     DustPressureLevelMB = DustPressureLevel(1:nDustAlts)*.01
+     TAUCUM = 0.0
+     TAUREF = 0.0
+     DO K=4,L_LEVELS
 
+        PSTAR     = PLEV(K)
+        PSTAR1    = MAX(PSTAR,DustPressureLevelMB(1))
+        NSTAR     = MIN0(JSRCHGT(NPDST-1,DustPressureLevelMB(1:nDustAlts),1,PSTAR1)-1,NPDST-1)
 
-      TAUREF(L_LEVELS+1) = 0.0D0
-    else
-      !Using MCS Longitudinally averaged vertical profiles
-      DustPressureLevelMB = DustPressureLevel(1:nDustAlts)*.01
-      TAUCUM = 0.0
-      TAUREF = 0.0
-      DO K=4,L_LEVELS
+        TAUCUM(K) = TauTot(NSTAR)+(PSTAR1-DustPressureLevelMB(NSTAR))*&
+             (TauTot(NSTAR+1) - TauTot(NSTAR))/&
+             (DustPressureLevelMB(NSTAR+1)-DustPressureLevelMB(NSTAR))
 
-         PSTAR     = PLEV(K)
-         PSTAR1    = MAX(PSTAR,DustPressureLevelMB(1))
-         NSTAR     = MIN0(JSRCHGT(NPDST-1,DustPressureLevelMB(1:nDustAlts),1,PSTAR1)-1,NPDST-1)
+        TAUREF(K) = TAUCUM(K) - TAUCUM(K-1)
 
-         TAUCUM(K) = TauTot(NSTAR)+(PSTAR1-DustPressureLevelMB(NSTAR))*&
-              (TauTot(NSTAR+1) - TauTot(NSTAR))/&
-              (DustPressureLevelMB(NSTAR+1)-DustPressureLevelMB(NSTAR))
+     END DO
 
-         TAUREF(K) = TAUCUM(K) - TAUCUM(K-1)
+     TAUREF(L_LEVELS+1) = 0.0D0
+  endif
 
-      END DO
 
-      TAUREF(L_LEVELS+1) = 0.0D0
-    endif
+END SUBROUTINE DUSTPROFILE
 
+! ----------------------------------------------------------------------
 
-  END SUBROUTINE DUSTPROFILE
 
-  ! ----------------------------------------------------------------------
+! ----------------------------------------------------------------------
+function jsrchgt(N,SX,INC,TARGET)
 
+  !C  March 2002   c-grid
+  !C  GCM2.0  Sept 2002
+  !C
+  !C      Find the first array element that is greater than the
+  !C      TARGET value.  If N < 1, then 0 is returned.  If no
+  !C      value is found, N+1 is returned.  Replaces Cray version
+  !C      on the workstation.
+  !C      Bisection search implemented 09/29/93 to improve speed.
+  !C
+  !C      Started: 08/23/93
+  !C
+  !C      Input:
+  !C        N      - Number of elements in array SX.
+  !C        SX     - Array of numbers to be searched.  Assumed to be an
+  !C                 ordered array.
+  !C        INC    - Increment between elements of searched array.  Kept
+  !C                 for compatibility with Cray call.
+  !C        TARGET - Value searched for in array SX.
+  !C
+  !C      Output:
+  !C        JSRCHGT - location in array SX where value of SX is first
+  !C                   greater than the TARGET value.
+  !C----------------------------------------------------------------------C
 
-  ! ----------------------------------------------------------------------
-  function jsrchgt(N,SX,INC,TARGET)
+  REAL :: SX(N), TARGET
 
-    !C  March 2002   c-grid
-    !C  GCM2.0  Sept 2002
-    !C
-    !C      Find the first array element that is greater than the
-    !C      TARGET value.  If N < 1, then 0 is returned.  If no
-    !C      value is found, N+1 is returned.  Replaces Cray version
-    !C      on the workstation.
-    !C      Bisection search implemented 09/29/93 to improve speed.
-    !C
-    !C      Started: 08/23/93
-    !C
-    !C      Input:
-    !C        N      - Number of elements in array SX.
-    !C        SX     - Array of numbers to be searched.  Assumed to be an
-    !C                 ordered array.
-    !C        INC    - Increment between elements of searched array.  Kept
-    !C                 for compatibility with Cray call.
-    !C        TARGET - Value searched for in array SX.
-    !C
-    !C      Output:
-    !C        JSRCHGT - location in array SX where value of SX is first
-    !C                   greater than the TARGET value.
-    !C----------------------------------------------------------------------C
+  !C======================================================================C
 
-    REAL :: SX(N), TARGET
+  if(N < 1) then
+     ians = 0
+  elseif(TARGET > SX(N)) then
+     ians = N+1
+  elseif(TARGET < SX(1)) then
+     ians = 1
+  else
 
-    !C======================================================================C
+     JL = 1
+     JH = N
 
-    if(N.lt.1) then
-       ians = 0
-    elseif(TARGET.gt.SX(N)) then
-       ians = N+1
-    elseif(TARGET.lt.SX(1)) then
-       ians = 1
-    else
+     do
+        if(JH-JL > 1) then
+           JM = (JL+JH)/2
 
-       JL = 1
-       JH = N
+           if(TARGET > SX(JM)) then
+              JL = JM
+              JM = (JL+JH)/2
+           else
+              JH = JM
+              JM = (JL+JH)/2
+           end if
 
-10     CONTINUE
-       if(JH-JL.gt.1) then
-          JM = (JL+JH)/2
+           CYCLE
+        end if
 
-          if(TARGET.GT.SX(JM)) then
-             JL = JM
-             JM = (JL+JH)/2
-          else
-             JH = JM
-             JM = (JL+JH)/2
-          end if
+        if(TARGET == SX(JH)) JH = JH+1
 
-          GOTO 10
-       end if
+        ians = JH
 
-       if(TARGET.EQ.SX(JH)) JH = JH+1
+        EXIT
+     end do
+  end if
 
-       ians = JH
-    end if
+  JSRCHGT = ians
 
-    JSRCHGT = ians
+END FUNCTION jsrchgt
 
-  END FUNCTION
 
+! ----------------------------------------------------------------------
 
-  ! ----------------------------------------------------------------------
 
+! ----------------------------------------------------------------------
 
-  ! ----------------------------------------------------------------------
-
-  SUBROUTINE OPTCV(DTAUV,TAUV,TAUCUMV,TLEV,PLEV,L_LAYERS,&
-       L_LEVELS,L_NLAYRAD,L_NLEVRAD,WBARV,COSBV,&
-       TAUREF,TMID,PMID,NGWV,QH2O)
+SUBROUTINE OPTCV(DTAUV,TAUV,TAUCUMV,TLEV,PLEV,L_LAYERS,&
+     L_LEVELS,L_NLAYRAD,L_NLEVRAD,WBARV,COSBV,&
+     TAUREF,TMID,PMID,NGWV,QH2O)
 
 !!$C  GCM2.0  Feb 2003
 !!$C
@@ -2324,249 +2324,248 @@ ALTBOUND(0) = altbot
 !!$C     CO2V(NT,NPS,NW,NG) - Visual CO2 k-coefficients
 !!$C
 !!$C----------------------------------------------------------------------C
-    use GITM_planet
-    use ModGITM, only: iproc
-    implicit none
+  use GITM_planet
+  use ModGITM, only: iproc
+  implicit none
 
-    integer :: L_LAYERS,L_LEVELS,L_NLAYRAD,L_NLEVRAD
+  integer :: L_LAYERS,L_LEVELS,L_NLAYRAD,L_NLEVRAD
 
-    real :: DTAUV(LL_NLAYRAD,L_NSPECTV,L_NGAUSS)
-    real :: DTAUKV(LL_LEVELS+1,L_NSPECTV,L_NGAUSS)
-    real :: TAUV(LL_NLEVRAD,L_NSPECTV,L_NGAUSS)
-    real :: TAUCUMV(LL_LEVELS,L_NSPECTV,L_NGAUSS)
-    real :: TLEV(LL_LEVELS), PLEV(LL_LEVELS+1)
-    real :: TMID(LL_LEVELS), PMID(LL_LEVELS)
-    real :: COSBV(LL_NLAYRAD,L_NSPECTV,L_NGAUSS)
-    real :: WBARV(LL_NLAYRAD,L_NSPECTV,L_NGAUSS)
-    real :: TAUREF(LL_LEVELS+1)
+  real :: DTAUV(LL_NLAYRAD,L_NSPECTV,L_NGAUSS)
+  real :: DTAUKV(LL_LEVELS+1,L_NSPECTV,L_NGAUSS)
+  real :: TAUV(LL_NLEVRAD,L_NSPECTV,L_NGAUSS)
+  real :: TAUCUMV(LL_LEVELS,L_NSPECTV,L_NGAUSS)
+  real :: TLEV(LL_LEVELS), PLEV(LL_LEVELS+1)
+  real :: TMID(LL_LEVELS), PMID(LL_LEVELS)
+  real :: COSBV(LL_NLAYRAD,L_NSPECTV,L_NGAUSS)
+  real :: WBARV(LL_NLAYRAD,L_NSPECTV,L_NGAUSS)
+  real :: TAUREF(LL_LEVELS+1)
 
-    integer :: L, NW, NG, K, NG1(L_NSPECTV), LK
-    integer :: MT(LL_LEVELS), MP(LL_LEVELS)
-    real ::  ANS, TAUREFL, TAUGAS
-    real ::  TRAY(LL_LEVELS,L_NSPECTV)
-    real ::  TAEROS(LL_LEVELS,L_NSPECTV)
-    real ::  DPR(LL_LEVELS), U(LL_LEVELS), TAUCLD
-    real ::  LCOEF(4), LKCOEF(LL_LEVELS,4)
+  integer :: L, NW, NG, K, NG1(L_NSPECTV), LK
+  integer :: MT(LL_LEVELS), MP(LL_LEVELS)
+  real ::  ANS, TAUREFL, TAUGAS
+  real ::  TRAY(LL_LEVELS,L_NSPECTV)
+  real ::  TAEROS(LL_LEVELS,L_NSPECTV)
+  real ::  DPR(LL_LEVELS), U(LL_LEVELS), TAUCLD
+  real ::  LCOEF(4), LKCOEF(LL_LEVELS,4)
 
-    real :: taugsurf(L_NSPECTV,L_NGAUSS-1), TRAYAER
+  real :: taugsurf(L_NSPECTV,L_NGAUSS-1), TRAYAER
 
-    !C  Tlimit:  If the CO2 optical depth (top to the surface) is less than
-    !C  this value, we place that Gauss-point into the "zeros" channel.
-    !C  Set in driver, passed via common
-
-
-    integer :: ngwv(L_NSPECTV)
-
-    !C  Reference wavelength is (now) bin #6 - put into qextref
-
-    !C  Water mixing ratio stuff
-
-    real :: QH2O(LL_LEVELS), WRATIO(LL_LEVELS)
-    real :: KCOEF(4)
-    integer :: nh2o(LL_LEVELS)
-
-    !C======================================================================C
-
-    QextREF = Qextv(L_NREFV)
-
-    !C  Determine the total gas opacity throughout the column, for each
-    !C  spectral interval, NW, and each Gauss point, NG.
-    !C  Calculate the continuum opacities, i.e., those that do not depend on
-    !C  NG, the Gauss index.
-
-    DO NG=1,L_NGAUSS-1
-       do NW=1,L_NSPECTV
-          TAUGSURF(NW,NG) = 0.0D0
-       end do
-    end do
-
-    do K=2,L_LEVELS
-       DPR(k) = PLEV(K)-PLEV(K-1)
-       U(k)   = Cmk*DPR(k)
-!       if (u(k) .lt. 0) then
-!          write(*,*) k,plev(k),plev(k-1)
-!          stop
-!       endif
-       call tpindex(PMID(K),TMID(K),QH2O(K),pfgasref,tgasref,&
-            LCOEF,MT(K),MP(K),NH2O(K),WRATIO(K))
-
-       do LK=1,4
-          LKCOEF(K,LK) = LCOEF(LK)
-       end do
-
-       DO NW=1,L_NSPECTV
-          TRAY(K,NW)   = TAURAY(NW)*DPR(K)
-          TAEROS(K,NW) = TAUREF(K)*Qextv(NW)/QextREF
-       END DO
-    end do
-
-    !C  TAUCLD = is cloud opacity, zero until further notice
-    !C  TRAYAER is Tau RAYleigh scattering, plus AERosol opacity
-
-    TAUCLD = 0.0D0
-    do NW=1,L_NSPECTV
-       ngwv(nw) = L_NGAUSS
-
-       !C  Now fill in the "clear" part of the spectrum (NG = L_NGAUSS)
-       !C  Which holds continuum opacity only
-
-       do K=2,L_LEVELS
-          DTAUKV(K,nw,L_NGAUSS) = TAEROS(K,NW)+TRAY(K,NW) + TAUCLD
-       end do
-
-       do ng=L_NGAUSS-1,1,-1
-          do K=2,L_LEVELS
-
-             !C           NOW COMPUTE TAUGAS
-
-             !C  Interpolate between water mixing ratios
-             !C  WRATIO = 0.0 if the requested water amount is equal to, or outside the
-             !C  the range of water amount data.
-
-             KCOEF(1) = CO2V(MT(K),MP(K),NH2O(K),NW,NG) + WRATIO(K)*&
-                  (CO2V(MT(K),MP(K),NH2O(K)+1,NW,NG) - &
-                  CO2V(MT(K),MP(K),NH2O(K),NW,NG))
-
-             KCOEF(2) = CO2V(MT(K),MP(K)+1,NH2O(K),NW,NG) + WRATIO(K)*&
-                  (CO2V(MT(K),MP(K)+1,NH2O(K)+1,NW,NG) - &
-                  CO2V(MT(K),MP(K)+1,NH2O(K),NW,NG))
-
-             KCOEF(3) = CO2V(MT(K)+1,MP(K)+1,NH2O(K),NW,NG) + WRATIO(K)*&
-                  (CO2V(MT(K)+1,MP(K)+1,NH2O(K)+1,NW,NG) - &
-                  CO2V(MT(K)+1,MP(K)+1,NH2O(K),NW,NG))
-
-             KCOEF(4) = CO2V(MT(K)+1,MP(K),NH2O(K),NW,NG) + WRATIO(K)*&
-                  (CO2V(MT(K)+1,MP(K),NH2O(K)+1,NW,NG) - &
-                  CO2V(MT(K)+1,MP(K),NH2O(K),NW,NG))
-
-             !C  Interpolate the CO2 k-coefficients to the requested T,P
+  !C  Tlimit:  If the CO2 optical depth (top to the surface) is less than
+  !C  this value, we place that Gauss-point into the "zeros" channel.
+  !C  Set in driver, passed via common
 
 
-             ANS = LKCOEF(K,1)*KCOEF(1) + LKCOEF(K,2)*KCOEF(2) +&
-                  LKCOEF(K,3)*KCOEF(3) + LKCOEF(K,4)*KCOEF(4)
+  integer :: ngwv(L_NSPECTV)
 
-             TAUGAS          = U(k)*ANS
-             TAUGSURF(NW,NG) = TAUGSURF(NW,NG) + TAUGAS
-             DTAUKV(K,nw,ng) = TAUGAS + TAUCLD + TRAY(K,NW) +&
-                  TAEROS(K,NW)
-!             if (u(k) .lt. 0) write(*,*) u(k),k,nw,ng
-!             if (dtaukv(k,nw,ng) .lt. -700000) then
-!                write(*,*) dtaukv(k,nw,ng),taugas,u(k),ans
-!                stop
-!endif
+  !C  Reference wavelength is (now) bin #6 - put into qextref
 
-          end do
-          if(TAUGSURF(NW,NG) .LT. TLIMIT) THEN
-             goto 10
-          else
-             NGWV(NW) = NG
-          end if
+  !C  Water mixing ratio stuff
 
-       end do
-10     continue
-    end do
+  real :: QH2O(LL_LEVELS), WRATIO(LL_LEVELS)
+  real :: KCOEF(4)
+  integer :: nh2o(LL_LEVELS)
 
-    !C  Now the full treatment for the layers, where besides the opacity
-    !C  we need to calculate the scattering albedo and asymmetry factors
-    !C  for each layer
+  !C======================================================================C
 
-    DO NW=1,L_NSPECTV
+  QextREF = Qextv(L_NREFV)
 
-       !C  First, the special "clear" channel
+  !C  Determine the total gas opacity throughout the column, for each
+  !C  spectral interval, NW, and each Gauss point, NG.
+  !C  Calculate the continuum opacities, i.e., those that do not depend on
+  !C  NG, the Gauss index.
 
-       NG = L_NGAUSS
-       DO L=1,L_LAYERS
-          K              = 2*L+1
-          TAUREFL        = (TAUREF(K)+TAUREF(K+1))/QextREF
-          DTAUV(L,nw,ng) = DTAUKV(K,NW,NG)+DTAUKV(K+1,NW,NG)
-          COSBV(L,NW,NG) = (GV(NW)*Qscatv(NW)*TAUREFL)/&
-               (TRAY(K,NW)+TRAY(K+1,NW) + &
-               QSCATV(NW)*TAUREFL)
-          WBARV(L,nw,ng) = (QSCATV(NW)*TAUREFL + &
-               (TRAY(K,NW)+TRAY(K+1,NW))*0.9999)/&
-               DTAUV(L,nw,ng)
-       END DO
+  DO NG=1,L_NGAUSS-1
+     do NW=1,L_NSPECTV
+        TAUGSURF(NW,NG) = 0.0D0
+     end do
+  end do
 
-       !C  Special bottom layer
+  do K=2,L_LEVELS
+     DPR(k) = PLEV(K)-PLEV(K-1)
+     U(k)   = Cmk*DPR(k)
+     !       if (u(k) .lt. 0) then
+     !          write(*,*) k,plev(k),plev(k-1)
+     !          stop
+     !       endif
+     call tpindex(PMID(K),TMID(K),QH2O(K),pfgasref,tgasref,&
+          LCOEF,MT(K),MP(K),NH2O(K),WRATIO(K))
 
-       L              = L_NLAYRAD
-       K              = 2*L+1
-       TAUREFL        = TAUREF(K)/QextREF
-       DTAUV(L,nw,ng) = DTAUKV(K,NW,NG)
-       COSBV(L,NW,NG) = (GV(NW)*Qscatv(NW)*TAUREFL)/&
-            (TRAY(K,NW) + QSCATV(NW)*TAUREFL)
-       WBARV(L,nw,ng) = (QSCATV(NW)*TAUREFL + TRAY(K,NW)*0.9999)/&
-            DTAUV(L,nw,ng)
+     do LK=1,4
+        LKCOEF(K,LK) = LCOEF(LK)
+     end do
 
-    END DO
+     DO NW=1,L_NSPECTV
+        TRAY(K,NW)   = TAURAY(NW)*DPR(K)
+        TAEROS(K,NW) = TAUREF(K)*Qextv(NW)/QextREF
+     END DO
+  end do
 
-    !C  . . .Now the other Gauss points, if needed.
+  !C  TAUCLD = is cloud opacity, zero until further notice
+  !C  TRAYAER is Tau RAYleigh scattering, plus AERosol opacity
 
-    do NW=1,L_NSPECTV
-       DO NG=L_NGAUSS-1,NGWV(NW),-1
-          DO L=1,L_LAYERS
-             K              = 2*L+1
-             TAUREFL        = (TAUREF(K)+TAUREF(K+1))/QextREF
-             DTAUV(L,nw,ng) = DTAUKV(K,NW,NG)+DTAUKV(K+1,NW,NG)
-             COSBV(L,NW,NG) = COSBV(L,NW,L_NGAUSS)
-             WBARV(L,nw,ng) = (QSCATV(NW)*TAUREFL + &
-                  (TRAY(K,NW)+TRAY(K+1,NW))*0.9999)/&
-                  DTAUV(L,nw,ng)
-          END DO
+  TAUCLD = 0.0D0
+  do NW=1,L_NSPECTV
+     ngwv(nw) = L_NGAUSS
 
-          !C  Special bottom layer
+     !C  Now fill in the "clear" part of the spectrum (NG = L_NGAUSS)
+     !C  Which holds continuum opacity only
 
-          L              = L_NLAYRAD
-          K              = 2*L+1
-          TAUREFL        = TAUREF(K)/QextREF
-          DTAUV(L,nw,ng) = DTAUKV(K,NW,NG)
-          COSBV(L,NW,NG) = (GV(NW)*Qscatv(NW)*TAUREFL)/&
-               (TRAY(K,NW) + QSCATV(NW)*TAUREFL)
-          WBARV(L,nw,ng) = (QSCATV(NW)*TAUREFL + TRAY(K,NW)*0.9999)/&
-               DTAUV(L,nw,ng)
-!          if (dtauv(l,nw,ng) .lt. -700000) then
-!             write(*,*) dtauv(l,nw,ng),dtaukv(k,nw,ng),l,nw,ng
-!             stop
-!             endif
-       END DO
+     do K=2,L_LEVELS
+        DTAUKV(K,nw,L_NGAUSS) = TAEROS(K,NW)+TRAY(K,NW) + TAUCLD
+     end do
 
-    END DO     ! NW spectral loop
+     do ng=L_NGAUSS-1,1,-1
+        do K=2,L_LEVELS
 
-    !C     TOTAL EXTINCTION OPTICAL DEPTHS
+           !C           NOW COMPUTE TAUGAS
 
-    DO NW=1,L_NSPECTV
-       NG = L_NGAUSS
-       TAUV(1,NW,NG) = 0.0D0
-       DO L=1,L_NLAYRAD
-          TAUV(L+1,NW,NG) = TAUV(L,NW,NG)+DTAUV(L,NW,NG)
-       END DO
+           !C  Interpolate between water mixing ratios
+           !C  WRATIO = 0.0 if the requested water amount is equal to, or outside the
+           !C  the range of water amount data.
 
-       TAUCUMV(1,NW,NG)=0.0D0
-       DO K=2,L_LEVELS
-          TAUCUMV(K,NW,NG)=TAUCUMV(K-1,NW,NG)+DTAUKV(K,NW,NG)
-       END DO
+           KCOEF(1) = CO2V(MT(K),MP(K),NH2O(K),NW,NG) + WRATIO(K)*&
+                (CO2V(MT(K),MP(K),NH2O(K)+1,NW,NG) - &
+                CO2V(MT(K),MP(K),NH2O(K),NW,NG))
 
-       DO NG=L_NGAUSS-1,NGWV(NW),-1
-          TAUV(1,NW,NG)=0.0D0
-          DO L=1,L_NLAYRAD
-             TAUV(L+1,NW,NG)=TAUV(L,NW,NG)+DTAUV(L,NW,NG)
-          END DO
+           KCOEF(2) = CO2V(MT(K),MP(K)+1,NH2O(K),NW,NG) + WRATIO(K)*&
+                (CO2V(MT(K),MP(K)+1,NH2O(K)+1,NW,NG) - &
+                CO2V(MT(K),MP(K)+1,NH2O(K),NW,NG))
 
-          TAUCUMV(1,NW,NG)=0.0D0
-          DO K=2,L_LEVELS
-             TAUCUMV(K,NW,NG)=TAUCUMV(K-1,NW,NG)+DTAUKV(K,NW,NG)
-          END DO
-       END DO
-    END DO
+           KCOEF(3) = CO2V(MT(K)+1,MP(K)+1,NH2O(K),NW,NG) + WRATIO(K)*&
+                (CO2V(MT(K)+1,MP(K)+1,NH2O(K)+1,NW,NG) - &
+                CO2V(MT(K)+1,MP(K)+1,NH2O(K),NW,NG))
+
+           KCOEF(4) = CO2V(MT(K)+1,MP(K),NH2O(K),NW,NG) + WRATIO(K)*&
+                (CO2V(MT(K)+1,MP(K),NH2O(K)+1,NW,NG) - &
+                CO2V(MT(K)+1,MP(K),NH2O(K),NW,NG))
+
+           !C  Interpolate the CO2 k-coefficients to the requested T,P
 
 
-  END SUBROUTINE OPTCV
-  ! ----------------------------------------------------------------------
+           ANS = LKCOEF(K,1)*KCOEF(1) + LKCOEF(K,2)*KCOEF(2) +&
+                LKCOEF(K,3)*KCOEF(3) + LKCOEF(K,4)*KCOEF(4)
 
-  ! ----------------------------------------------------------------------
+           TAUGAS          = U(k)*ANS
+           TAUGSURF(NW,NG) = TAUGSURF(NW,NG) + TAUGAS
+           DTAUKV(K,nw,ng) = TAUGAS + TAUCLD + TRAY(K,NW) +&
+                TAEROS(K,NW)
+           !             if (u(k) .lt. 0) write(*,*) u(k),k,nw,ng
+           !             if (dtaukv(k,nw,ng) .lt. -700000) then
+           !                write(*,*) dtaukv(k,nw,ng),taugas,u(k),ans
+           !                stop
+           !endif
 
-  subroutine tpindex(pw,tw,qh2o,pref,tref,LCOEF,MT,MP,&
-       NH2O,wratio)
+        end do
+        if(TAUGSURF(NW,NG) .LT. TLIMIT) THEN
+           EXIT
+        else
+           NGWV(NW) = NG
+        end if
+
+     end do
+  end do
+
+  !C  Now the full treatment for the layers, where besides the opacity
+  !C  we need to calculate the scattering albedo and asymmetry factors
+  !C  for each layer
+
+  DO NW=1,L_NSPECTV
+
+     !C  First, the special "clear" channel
+
+     NG = L_NGAUSS
+     DO L=1,L_LAYERS
+        K              = 2*L+1
+        TAUREFL        = (TAUREF(K)+TAUREF(K+1))/QextREF
+        DTAUV(L,nw,ng) = DTAUKV(K,NW,NG)+DTAUKV(K+1,NW,NG)
+        COSBV(L,NW,NG) = (GV(NW)*Qscatv(NW)*TAUREFL)/&
+             (TRAY(K,NW)+TRAY(K+1,NW) + &
+             QSCATV(NW)*TAUREFL)
+        WBARV(L,nw,ng) = (QSCATV(NW)*TAUREFL + &
+             (TRAY(K,NW)+TRAY(K+1,NW))*0.9999)/&
+             DTAUV(L,nw,ng)
+     END DO
+
+     !C  Special bottom layer
+
+     L              = L_NLAYRAD
+     K              = 2*L+1
+     TAUREFL        = TAUREF(K)/QextREF
+     DTAUV(L,nw,ng) = DTAUKV(K,NW,NG)
+     COSBV(L,NW,NG) = (GV(NW)*Qscatv(NW)*TAUREFL)/&
+          (TRAY(K,NW) + QSCATV(NW)*TAUREFL)
+     WBARV(L,nw,ng) = (QSCATV(NW)*TAUREFL + TRAY(K,NW)*0.9999)/&
+          DTAUV(L,nw,ng)
+
+  END DO
+
+  !C  . . .Now the other Gauss points, if needed.
+
+  do NW=1,L_NSPECTV
+     DO NG=L_NGAUSS-1,NGWV(NW),-1
+        DO L=1,L_LAYERS
+           K              = 2*L+1
+           TAUREFL        = (TAUREF(K)+TAUREF(K+1))/QextREF
+           DTAUV(L,nw,ng) = DTAUKV(K,NW,NG)+DTAUKV(K+1,NW,NG)
+           COSBV(L,NW,NG) = COSBV(L,NW,L_NGAUSS)
+           WBARV(L,nw,ng) = (QSCATV(NW)*TAUREFL + &
+                (TRAY(K,NW)+TRAY(K+1,NW))*0.9999)/&
+                DTAUV(L,nw,ng)
+        END DO
+
+        !C  Special bottom layer
+
+        L              = L_NLAYRAD
+        K              = 2*L+1
+        TAUREFL        = TAUREF(K)/QextREF
+        DTAUV(L,nw,ng) = DTAUKV(K,NW,NG)
+        COSBV(L,NW,NG) = (GV(NW)*Qscatv(NW)*TAUREFL)/&
+             (TRAY(K,NW) + QSCATV(NW)*TAUREFL)
+        WBARV(L,nw,ng) = (QSCATV(NW)*TAUREFL + TRAY(K,NW)*0.9999)/&
+             DTAUV(L,nw,ng)
+        !          if (dtauv(l,nw,ng) .lt. -700000) then
+        !             write(*,*) dtauv(l,nw,ng),dtaukv(k,nw,ng),l,nw,ng
+        !             stop
+        !             endif
+     END DO
+
+  END DO     ! NW spectral loop
+
+  !C     TOTAL EXTINCTION OPTICAL DEPTHS
+
+  DO NW=1,L_NSPECTV
+     NG = L_NGAUSS
+     TAUV(1,NW,NG) = 0.0D0
+     DO L=1,L_NLAYRAD
+        TAUV(L+1,NW,NG) = TAUV(L,NW,NG)+DTAUV(L,NW,NG)
+     END DO
+
+     TAUCUMV(1,NW,NG)=0.0D0
+     DO K=2,L_LEVELS
+        TAUCUMV(K,NW,NG)=TAUCUMV(K-1,NW,NG)+DTAUKV(K,NW,NG)
+     END DO
+
+     DO NG=L_NGAUSS-1,NGWV(NW),-1
+        TAUV(1,NW,NG)=0.0D0
+        DO L=1,L_NLAYRAD
+           TAUV(L+1,NW,NG)=TAUV(L,NW,NG)+DTAUV(L,NW,NG)
+        END DO
+
+        TAUCUMV(1,NW,NG)=0.0D0
+        DO K=2,L_LEVELS
+           TAUCUMV(K,NW,NG)=TAUCUMV(K-1,NW,NG)+DTAUKV(K,NW,NG)
+        END DO
+     END DO
+  END DO
+
+
+END SUBROUTINE OPTCV
+! ----------------------------------------------------------------------
+
+! ----------------------------------------------------------------------
+
+subroutine tpindex(pw,tw,qh2o,pref,tref,LCOEF,MT,MP,&
+     NH2O,wratio)
 
 !!$C  GCM2.0  Feb 2003
 !!$C
@@ -2634,267 +2633,261 @@ ALTBOUND(0) = altbot
 !!$C
 !!$C----------------------------------------------------------------------C
 
-    use GITM_planet
+  use GITM_planet
+
+  implicit none
+
+
+  real :: Tref(L_NTREF)
+  real :: pref(L_PINT)
+
+  integer :: MT, MP, N, M, NH2O
+  real ::  PW, TW, Qh2o, wratio
+  real ::  PWL, LCOEF(4), T, U
+
+  !C======================================================================C
+
+  !C     Get the upper and lower Temperature-grid indicies that bound the
+  !C     requested temperature.  If the requested temperature is outside
+  !C     the T-grid, set up to extrapolate from the appropriate end.
+
+  IF(TW.LE.TREF(1)) THEN
+     MT = 1
+     U  = 0.0D0
+  ELSE
+     MT = L_NTREF-1
+     U  = 1.0D0
 
-    implicit none
+     do n=1,L_NTREF-1
+        if(tw.gt.Tref(n) .and. TW.LE.TREF(N+1)) then
+           MT = n
+           U = (TW-TREF(MT))/(TREF(MT+1)-TREF(MT))
+           EXIT
+        end if
+     end do
+  END IF
 
 
-    real :: Tref(L_NTREF)
-    real :: pref(L_PINT)
+  !C     Get the upper and lower Pressure-grid indicies that bound the
+  !C     requested pressure.  If the requested pressure is outside
+  !C     the P-grid, set up to extrapolate from the appropiate end.
 
-    integer :: MT, MP, N, M, NH2O
-    real ::  PW, TW, Qh2o, wratio
-    real ::  PWL, LCOEF(4), T, U
+  pwl = log10(pw)
 
-    !C======================================================================C
+  if(pwl.le.Pref(1)) then
+     MP = 1
+     T  = 0.0D0
+  else
+     MP = L_PINT-1
+     T  = 1.0D0
 
-    !C     Get the upper and lower Temperature-grid indicies that bound the
-    !C     requested temperature.  If the requested temperature is outside
-    !C     the T-grid, set up to extrapolate from the appropriate end.
-
-    IF(TW.LE.TREF(1)) THEN
-       MT = 1
-       U  = 0.0D0
-    ELSE
-       do n=1,L_NTREF-1
-          if(tw.gt.Tref(n) .and. TW.LE.TREF(N+1)) then
-             MT = n
-             U = (TW-TREF(MT))/(TREF(MT+1)-TREF(MT))
-             goto 10
-          end if
-       end do
+     do n=2,L_PINT-1
+        if(pwl.le.Pref(n)) then
+           MP = n-1
+           T = (PWL-PREF(MP))/(PREF(MP+1)-PREF(MP))
+           EXIT
+        end if
+     end do
+  end if
 
-       MT = L_NTREF-1
-       U  = 1.0D0
+  !C  Fill the interpolation coeficients:
 
-10     continue
-    END IF
+  LCOEF(1) = (1.0-T)*(1.0-U)
+  LCOEF(2) = T*(1.0-U)
+  LCOEF(3) = T*U
+  LCOEF(4) = (1.0-T)*U
 
+  !C  Get the indicies for water abundance.  There are 10 sets of
+  !C  k-coefficients with differing amounts of water vs. CO2.
 
-    !C     Get the upper and lower Pressure-grid indicies that bound the
-    !C     requested pressure.  If the requested pressure is outside
-    !C     the P-grid, set up to extrapolate from the appropiate end.
+  IF(Qh2o.le.WREFH2O(1)) then
+     NH2O   = 1
+     WRATIO = 0.0D0
+  ELSEIF(Qh2o.ge.WREFH2O(L_REFH2O)) then
+     NH2O   = L_REFH2O - 1
+     WRATIO = 1.0D0
+  ELSE
+     DO N=2,L_REFH2O
+        IF(QH2O.GE.WREFH2O(N-1) .and. QH2O.lt.WREFH2O(N)) then
+           NH2O   = N-1
+           WRATIO = (QH2O - WREFH2O(N-1))/(WREFH2O(N) - WREFH2O(N-1))
+           EXIT
+        END IF
+     END DO
+  END IF
 
-    pwl = log10(pw)
+end subroutine tpindex
 
-    if(pwl.le.Pref(1)) then
-       MP = 1
-       T  = 0.0D0
-    else
-       do n=2,L_PINT-1
-          if(pwl.le.Pref(n)) then
-             MP = n-1
-             T = (PWL-PREF(MP))/(PREF(MP+1)-PREF(MP))
-             goto 20
-          end if
-       end do
+! ----------------------------------------------------------------------
 
-       MP = L_PINT-1
-       T  = 1.0D0
+! ----------------------------------------------------------------------
 
-20     continue
-    end if
+SUBROUTINE SFLUXV(DTAUV,TAUV,TAUCUMV,RSFV,WBARV,COSBV,&
+     UBAR0,NFLUXTOPV,FMNETV,&
+     FLUXUPV,FLUXDNV,DIFFVT,NGWV,&
+     L_LAYERS,L_LEVELS,L_NLAYRAD,L_NLEVRAD,ilon,ilat)
 
-    !C  Fill the interpolation coeficients:
+  !C  GCM2.0  Feb 2003
 
-    LCOEF(1) = (1.0-T)*(1.0-U)
-    LCOEF(2) = T*(1.0-U)
-    LCOEF(3) = T*U
-    LCOEF(4) = (1.0-T)*U
+  use GITM_planet
+  use ModGITM, only: iproc
+  implicit none
 
-    !C  Get the indicies for water abundance.  There are 10 sets of
-    !C  k-coefficients with differing amounts of water vs. CO2.
+  integer :: L_LAYERS,L_LEVELS,L_NLAYRAD,L_NLEVRAD,ilon,ilat
 
-    IF(Qh2o.le.WREFH2O(1)) then
-       NH2O   = 1
-       WRATIO = 0.0D0
-    ELSEIF(Qh2o.ge.WREFH2O(L_REFH2O)) then
-       NH2O   = L_REFH2O - 1
-       WRATIO = 1.0D0
-    ELSE
-       DO N=2,L_REFH2O
-          IF(QH2O.GE.WREFH2O(N-1) .and. QH2O.lt.WREFH2O(N)) then
-             NH2O   = N-1
-             WRATIO = (QH2O - WREFH2O(N-1))/(WREFH2O(N) - WREFH2O(N-1))
-             GOTO 30
-          END IF
-       END DO
-    END IF
+  real :: FMNETV(LL_NLAYRAD)
+  real :: TAUCUMV(LL_LEVELS,L_NSPECTV,L_NGAUSS)
+  real :: TAUV(LL_NLEVRAD,L_NSPECTV,L_NGAUSS)
+  real :: DTAUV(LL_NLAYRAD,L_NSPECTV,L_NGAUSS)
+  real :: FMUPV(LL_NLAYRAD), FMDV(LL_NLAYRAD)
+  real :: COSBV(LL_NLAYRAD,L_NSPECTV,L_NGAUSS)
+  real :: WBARV(LL_NLAYRAD,L_NSPECTV,L_NGAUSS)
+  real :: FLUXUPV(LL_NLAYRAD), FLUXDNV(LL_NLAYRAD)
+  real :: NFLUXTOPV, FLUXUP, FLUXDN
 
-30  CONTINUE
+  integer :: L, NG, NW, NG1
+  real ::  rsfv, ubar0, f0pi, btop, bsurf, taumax, eterm
 
+  real :: DIFFV, DIFFVT
 
-  end subroutine tpindex
+  integer :: ngwv(L_NSPECTV)
 
-  ! ----------------------------------------------------------------------
+  real :: fzero
 
-  ! ----------------------------------------------------------------------
+  !C======================================================================C
 
-  SUBROUTINE SFLUXV(DTAUV,TAUV,TAUCUMV,RSFV,WBARV,COSBV,&
-       UBAR0,NFLUXTOPV,FMNETV,&
-       FLUXUPV,FLUXDNV,DIFFVT,NGWV,&
-       L_LAYERS,L_LEVELS,L_NLAYRAD,L_NLEVRAD,ilon,ilat)
+  TAUMAX = L_TAUMAX
 
-    !C  GCM2.0  Feb 2003
+  !C     ZERO THE NET FLUXES
 
-    use GITM_planet
-    use ModGITM, only: iproc
-    implicit none
+  NFLUXTOPV = 0.0
 
-    integer :: L_LAYERS,L_LEVELS,L_NLAYRAD,L_NLEVRAD,ilon,ilat
+  DO L=1,L_NLAYRAD
+     FMNETV(L)  = 0.0
+     FLUXUPV(L) = 0.0
+     FLUXDNV(L) = 0.0
+  END DO
 
-    real :: FMNETV(LL_NLAYRAD)
-    real :: TAUCUMV(LL_LEVELS,L_NSPECTV,L_NGAUSS)
-    real :: TAUV(LL_NLEVRAD,L_NSPECTV,L_NGAUSS)
-    real :: DTAUV(LL_NLAYRAD,L_NSPECTV,L_NGAUSS)
-    real :: FMUPV(LL_NLAYRAD), FMDV(LL_NLAYRAD)
-    real :: COSBV(LL_NLAYRAD,L_NSPECTV,L_NGAUSS)
-    real :: WBARV(LL_NLAYRAD,L_NSPECTV,L_NGAUSS)
-    real :: FLUXUPV(LL_NLAYRAD), FLUXDNV(LL_NLAYRAD)
-    real :: NFLUXTOPV, FLUXUP, FLUXDN
+  DIFFVT = 0.0
 
-    integer :: L, NG, NW, NG1
-    real ::  rsfv, ubar0, f0pi, btop, bsurf, taumax, eterm
+  !C     WE NOW ENTER A MAJOR LOOP OVER SPECTRAL INTERVALS IN THE VISIBLE
+  !C     TO CALCULATE THE NET FLUX IN EACH SPECTRAL INTERVAL
 
-    real :: DIFFV, DIFFVT
+  DO NW=1,L_NSPECTV
 
-    integer :: ngwv(L_NSPECTV)
+     F0PI = SOL(NW)
 
-    real :: fzero
+     FZERO = FZEROV(NW)
 
-    !C======================================================================C
+     if(FZERO < 0.99)then
 
-    TAUMAX = L_TAUMAX
+        !C  Skip over the gauss points with minimal (opacity < TLIMIT) total
+        !C  gas opacity
 
-    !C     ZERO THE NET FLUXES
+        DO NG=1,NGWV(NW)-1
+           fzero = fzero + (1.0-FZEROV(NW))*GWEIGHT(NG)
+        END DO
 
-    NFLUXTOPV = 0.0
+        !C  This loop includes only those Gauss points with sufficient gas opacity
 
-    DO L=1,L_NLAYRAD
-       FMNETV(L)  = 0.0
-       FLUXUPV(L) = 0.0
-       FLUXDNV(L) = 0.0
-    END DO
+        DO NG=NGWV(NW),L_NGAUSS-1
 
-    DIFFVT = 0.0
+           !C         SET UP THE UPPER AND LOWER BOUNDARY CONDITIONS ON THE VISIBLE
 
-    !C     WE NOW ENTER A MAJOR LOOP OVER SPECTRAL INTERVALS IN THE VISIBLE
-    !C     TO CALCULATE THE NET FLUX IN EACH SPECTRAL INTERVAL
+           BTOP = 0.0
 
-    DO 500 NW=1,L_NSPECTV
+           !C         LOOP OVER THE NTERMS BEGINNING HERE
 
-       F0PI = SOL(NW)
+           ETERM = MIN(TAUV(L_NLEVRAD,NW,NG),TAUMAX)
+           BSURF = RSFV*UBAR0*SOL(NW)*EXP(-ETERM/UBAR0)
 
-       FZERO = FZEROV(NW)
-       IF(FZERO.ge.0.99) goto 40
+           !C         WE CAN NOW SOLVE FOR THE COEFFICIENTS OF THE TWO STREAM
+           !C         CALL A SUBROUTINE THAT SOLVES  FOR THE FLUX TERMS
+           !C         WITHIN EACH INTERVAL AT THE MIDPOINT WAVENUMBER
+           !C
+           !C         FUW AND FDW ARE WORKING FLUX ARRAYS THAT WILL BE USED TO
+           !C         RETURN FLUXES FOR A GIVEN NT
 
-       !C  Skip over the gauss points with minimal (opacity < TLIMIT) total
-       !C  gas opacity
+           CALL GFLUXV(DTAUV(1,NW,NG),TAUV(1,NW,NG),TAUCUMV(1,NW,NG),&
+                WBARV(1,NW,NG),COSBV(1,NW,NG),UBAR0,F0PI,RSFV,&
+                BTOP,BSURF,FMUPV,FMDV,DIFFV,FLUXUP,FLUXDN,&
+                L_LAYERS,L_LEVELS,L_NLAYRAD,L_NLEVRAD)
 
-       DO NG=1,NGWV(NW)-1
-          fzero = fzero + (1.0-FZEROV(NW))*GWEIGHT(NG)
-       END DO
+           !C         NOW CALCULATE THE CUMULATIVE VISIBLE NET FLUX
 
-       !C  This loop includes only those Gauss points with sufficient gas opacity
+           NFLUXTOPV = NFLUXTOPV+(FLUXUP-FLUXDN)*GWEIGHT(NG)*&
+                (1.0-FZEROV(NW))
+           DO L=1,L_NLAYRAD
+              FMNETV(L)=FMNETV(L)+( FMUPV(L)-FMDV(L) )*&
+                   GWEIGHT(NG)*(1.0-FZEROV(NW))
+              FLUXUPV(L) = FLUXUPV(L) + FMUPV(L)*GWEIGHT(NG)*&
+                   (1.0-FZEROV(NW))
+              FLUXDNV(L) = FLUXDNV(L) + FMDV(L)*GWEIGHT(NG)*&
+                   (1.0-FZEROV(NW))
 
-       DO NG=NGWV(NW),L_NGAUSS-1
+           END DO
 
-          !C         SET UP THE UPPER AND LOWER BOUNDARY CONDITIONS ON THE VISIBLE
+           !C         THE DIFFUSE COMPONENT OF THE DOWNWARD SOLAR FLUX
 
-          BTOP = 0.0
+           DIFFVT = DIFFVT + DIFFV*GWEIGHT(NG)*(1.0-FZEROV(NW))
 
-          !C         LOOP OVER THE NTERMS BEGINNING HERE
+        END DO   ! the Gauss loop
 
-          ETERM = MIN(TAUV(L_NLEVRAD,NW,NG),TAUMAX)
-          BSURF = RSFV*UBAR0*SOL(NW)*EXP(-ETERM/UBAR0)
+     end if
 
-          !C         WE CAN NOW SOLVE FOR THE COEFFICIENTS OF THE TWO STREAM
-          !C         CALL A SUBROUTINE THAT SOLVES  FOR THE FLUX TERMS
-          !C         WITHIN EACH INTERVAL AT THE MIDPOINT WAVENUMBER
-          !C
-          !C         FUW AND FDW ARE WORKING FLUX ARRAYS THAT WILL BE USED TO
-          !C         RETURN FLUXES FOR A GIVEN NT
+     !C       Special 17th Gauss point
 
-          CALL GFLUXV(DTAUV(1,NW,NG),TAUV(1,NW,NG),TAUCUMV(1,NW,NG),&
-               WBARV(1,NW,NG),COSBV(1,NW,NG),UBAR0,F0PI,RSFV,&
-               BTOP,BSURF,FMUPV,FMDV,DIFFV,FLUXUP,FLUXDN,&
-               L_LAYERS,L_LEVELS,L_NLAYRAD,L_NLEVRAD)
+     NG = L_NGAUSS
 
-          !C         NOW CALCULATE THE CUMULATIVE VISIBLE NET FLUX
+     !C       SET UP THE UPPER AND LOWER BOUNDARY CONDITIONS ON THE VISIBLE
 
-          NFLUXTOPV = NFLUXTOPV+(FLUXUP-FLUXDN)*GWEIGHT(NG)*&
-               (1.0-FZEROV(NW))
-          DO L=1,L_NLAYRAD
-             FMNETV(L)=FMNETV(L)+( FMUPV(L)-FMDV(L) )*&
-                  GWEIGHT(NG)*(1.0-FZEROV(NW))
-             FLUXUPV(L) = FLUXUPV(L) + FMUPV(L)*GWEIGHT(NG)*&
-                  (1.0-FZEROV(NW))
-             FLUXDNV(L) = FLUXDNV(L) + FMDV(L)*GWEIGHT(NG)*&
-                  (1.0-FZEROV(NW))
+     BTOP = 0.0
 
-          END DO
+     !C       LOOP OVER THE NTERMS BEGINNING HERE
 
-          !C         THE DIFFUSE COMPONENT OF THE DOWNWARD SOLAR FLUX
+     ETERM = MIN(TAUV(L_NLEVRAD,NW,NG),TAUMAX)
+     BSURF = RSFV*UBAR0*SOL(NW)*EXP(-ETERM/UBAR0)
 
-          DIFFVT = DIFFVT + DIFFV*GWEIGHT(NG)*(1.0-FZEROV(NW))
+     !C       WE CAN NOW SOLVE FOR THE COEFFICIENTS OF THE TWO STREAM
+     !C       CALL A SUBROUTINE THAT SOLVES  FOR THE FLUX TERMS
+     !C       WITHIN EACH INTERVAL AT THE MIDPOINT WAVENUMBER
+     !C
+     !C       FUW AND FDW ARE WORKING FLUX ARRAYS THAT WILL BE USED TO
+     !C       RETURN FLUXES FOR A GIVEN NT
 
-       END DO   ! the Gauss loop
-
-40     continue
-
-       !C       Special 17th Gauss point
-
-       NG = L_NGAUSS
-
-       !C       SET UP THE UPPER AND LOWER BOUNDARY CONDITIONS ON THE VISIBLE
-
-       BTOP = 0.0
-
-       !C       LOOP OVER THE NTERMS BEGINNING HERE
-
-       ETERM = MIN(TAUV(L_NLEVRAD,NW,NG),TAUMAX)
-       BSURF = RSFV*UBAR0*SOL(NW)*EXP(-ETERM/UBAR0)
-
-       !C       WE CAN NOW SOLVE FOR THE COEFFICIENTS OF THE TWO STREAM
-       !C       CALL A SUBROUTINE THAT SOLVES  FOR THE FLUX TERMS
-       !C       WITHIN EACH INTERVAL AT THE MIDPOINT WAVENUMBER
-       !C
-       !C       FUW AND FDW ARE WORKING FLUX ARRAYS THAT WILL BE USED TO
-       !C       RETURN FLUXES FOR A GIVEN NT
-
-       CALL GFLUXV(DTAUV(1,NW,NG),TAUV(1,NW,NG),TAUCUMV(1,NW,NG),&
-            WBARV(1,NW,NG),COSBV(1,NW,NG),UBAR0,F0PI,RSFV,&
-            BTOP,BSURF,FMUPV,FMDV,DIFFV,FLUXUP,FLUXDN,&
-            L_LAYERS,L_LEVELS,L_NLAYRAD,L_NLEVRAD)
-
-       !C       NOW CALCULATE THE CUMULATIVE VISIBLE NET FLUX
-
-       NFLUXTOPV = NFLUXTOPV+(FLUXUP-FLUXDN)*FZERO
-       DO L=1,L_NLAYRAD
-          FMNETV(L)=FMNETV(L)+( FMUPV(L)-FMDV(L) )*FZERO
-          FLUXUPV(L) = FLUXUPV(L) + FMUPV(L)*FZERO
-          FLUXDNV(L) = FLUXDNV(L) + FMDV(L)*FZERO
-
-
-       END DO
-       !C       THE DIFFUSE COMPONENT OF THE DOWNWARD SOLAR FLUX
-
-       DIFFVT = DIFFVT + DIFFV*FZERO
-
-500    CONTINUE
-
-       !C     *** END OF MAJOR SPECTRAL INTERVAL LOOP IN THE VISIBLE*****
-
-
-     END SUBROUTINE SFLUXV
-
-     ! ----------------------------------------------------------------------
-
-     ! ----------------------------------------------------------------------
-
-     SUBROUTINE GFLUXV(DTDEL,TDEL,TAUCUM,WDEL,CDEL,UBAR0,F0PI,RSF,&
-          BTOP,BSURF,FMIDP,FMIDM,DIFFV,FLUXUP,FLUXDN,&
+     CALL GFLUXV(DTAUV(1,NW,NG),TAUV(1,NW,NG),TAUCUMV(1,NW,NG),&
+          WBARV(1,NW,NG),COSBV(1,NW,NG),UBAR0,F0PI,RSFV,&
+          BTOP,BSURF,FMUPV,FMDV,DIFFV,FLUXUP,FLUXDN,&
           L_LAYERS,L_LEVELS,L_NLAYRAD,L_NLEVRAD)
+
+     !C       NOW CALCULATE THE CUMULATIVE VISIBLE NET FLUX
+
+     NFLUXTOPV = NFLUXTOPV+(FLUXUP-FLUXDN)*FZERO
+     DO L=1,L_NLAYRAD
+        FMNETV(L)=FMNETV(L)+( FMUPV(L)-FMDV(L) )*FZERO
+        FLUXUPV(L) = FLUXUPV(L) + FMUPV(L)*FZERO
+        FLUXDNV(L) = FLUXDNV(L) + FMDV(L)*FZERO
+
+
+     END DO
+     !C       THE DIFFUSE COMPONENT OF THE DOWNWARD SOLAR FLUX
+
+     DIFFVT = DIFFVT + DIFFV*FZERO
+
+  end do
+
+  !C     *** END OF MAJOR SPECTRAL INTERVAL LOOP IN THE VISIBLE*****
+
+
+END SUBROUTINE SFLUXV
+
+! ----------------------------------------------------------------------
+
+! ----------------------------------------------------------------------
+
+SUBROUTINE GFLUXV(DTDEL,TDEL,TAUCUM,WDEL,CDEL,UBAR0,F0PI,RSF,&
+     BTOP,BSURF,FMIDP,FMIDM,DIFFV,FLUXUP,FLUXDN,&
+     L_LAYERS,L_LEVELS,L_NLAYRAD,L_NLEVRAD)
 
 !!$C  GCM2.0  Feb 2003
 !!$C
@@ -2934,34 +2927,34 @@ ALTBOUND(0) = altbot
 !!$C DIFFV         = downward diffuse solar flux at the surface
 !!$C
 
-       use GITM_planet
-       use ModGITM, only: iProc
+  use GITM_planet
+  use ModGITM, only: iProc
 
-       implicit none
-       integer :: L_LAYERS,L_LEVELS,L_NLAYRAD,L_NLEVRAD
-!      integer,PARAMETER :: NL=101  ! MUST BE LARGER THAN NLL
-       integer,PARAMETER :: NL3=101  ! MUST BE LARGER THAN NLL
+  implicit none
+  integer :: L_LAYERS,L_LEVELS,L_NLAYRAD,L_NLEVRAD
+  !      integer,PARAMETER :: NL=101  ! MUST BE LARGER THAN NLL
+  integer,PARAMETER :: NL3=101  ! MUST BE LARGER THAN NLL
 
-       REAL :: EM, EP
-       REAL :: W0(LL_NLAYRAD), COSBAR(LL_NLAYRAD), DTAU(LL_NLAYRAD)
-       REAL :: TAU(LL_NLEVRAD), WDEL(LL_NLAYRAD), CDEL(LL_NLAYRAD)
-       REAL :: DTDEL(LL_NLAYRAD), TDEL(LL_NLEVRAD)
-       REAL :: FMIDP(LL_NLAYRAD), FMIDM(LL_NLAYRAD)
-       REAL :: LAMDA(NL3), ALPHA(NL3),XK1(NL3),XK2(NL3)
-       REAL :: G1(NL3), G2(NL3), G3(NL3), GAMA(NL3), CP(NL3), CM(NL3), CPM1(NL3)
-       REAL :: CMM1(NL3), E1(NL3), E2(NL3), E3(NL3), E4(NL3), EXPTRM(NL3)
-       REAL :: FLUXUP, FLUXDN
-       REAL :: TAUCUM(LL_LEVELS), taucump(LL_LEVELS+2)
+  REAL :: EM, EP
+  REAL :: W0(LL_NLAYRAD), COSBAR(LL_NLAYRAD), DTAU(LL_NLAYRAD)
+  REAL :: TAU(LL_NLEVRAD), WDEL(LL_NLAYRAD), CDEL(LL_NLAYRAD)
+  REAL :: DTDEL(LL_NLAYRAD), TDEL(LL_NLEVRAD)
+  REAL :: FMIDP(LL_NLAYRAD), FMIDM(LL_NLAYRAD)
+  REAL :: LAMDA(NL3), ALPHA(NL3),XK1(NL3),XK2(NL3)
+  REAL :: G1(NL3), G2(NL3), G3(NL3), GAMA(NL3), CP(NL3), CM(NL3), CPM1(NL3)
+  REAL :: CMM1(NL3), E1(NL3), E2(NL3), E3(NL3), E4(NL3), EXPTRM(NL3)
+  REAL :: FLUXUP, FLUXDN
+  REAL :: TAUCUM(LL_LEVELS), taucump(LL_LEVELS+2)
 
-       integer :: NAYER, L, K
-       real ::  ubar0, f0pi, rsf, btop, bsurf, g4, denom, am, ap
-       real ::  taumax, taumid, cpmid, cmmid
-       real ::  diffv
+  integer :: NAYER, L, K
+  real ::  ubar0, f0pi, rsf, btop, bsurf, g4, denom, am, ap
+  real ::  taumax, taumid, cpmid, cmmid
+  real ::  diffv
 
-       !C======================================================================C
+  !C======================================================================C
 
-       NAYER  = L_NLAYRAD
-       TAUMAX = L_TAUMAX    !Default is 35.0
+  NAYER  = L_NLAYRAD
+  TAUMAX = L_TAUMAX    !Default is 35.0
 
 !!$C  Delta function updates.  Use scaled values, calculated below.
 !!$c     DO L=1,L_NLAYRAD
@@ -2974,250 +2967,250 @@ ALTBOUND(0) = altbot
 !!$
 !!$C  Scaled (Delta function) values
 
-       TAU(1)=TDEL(1)*(1.-WDEL(1)*CDEL(1)**2)
-       TAUCUMP(1) = 0.0
-       TAUCUMP(2) = TAUCUM(2)*(1.-WDEL(1)*CDEL(1)**2)
-       TAUCUMP(3) = TAUCUM(2)+ (TAUCUM(3)-TAUCUM(2))*&
-            (1.-WDEL(1)*CDEL(1)**2)
-       DO L=1,L_NLAYRAD-1
-          W0(L)        = WDEL(L)*(1.-CDEL(L)**2)/&
-               (1.-WDEL(L)*CDEL(L)**2)
-          COSBAR(L)    = CDEL(L)/(1.+CDEL(L))
-          DTAU(L)      = DTDEL(L)*(1.-WDEL(L)*CDEL(L)**2)
-          TAU(L+1)     = TAU(L)+DTAU(L)
-          K            = 2*(L+1)
-          TAUCUMP(K)   = TAU(L+1)
-          TAUCUMP(K+1) = TAUCUMP(k)+(TAUCUM(K+1) - TAUCUM(k))*&
-               (1.-WDEL(L)*CDEL(L)**2)
-
-
-       END DO
-
-       !C  Bottom layer
-
-       L=L_NLAYRAD
-       W0(L)      = WDEL(L)*(1.-CDEL(L)**2)/(1.-WDEL(L)*CDEL(L)**2)
-       COSBAR(L)  = CDEL(L)/(1.+CDEL(L))
-       DTAU(L)    = DTDEL(L)*(1.-WDEL(L)*CDEL(L)**2)
-       TAU(L+1)   = TAU(L)+DTAU(L)
-       K          = 2*(L+1)
-       TAUCUMP(K) = TAU(L+1)
-!       if  (iproc .eq. 21 .and. dtau(47) .lt. -700000) then
-!          write(*,*) "dtau: ",DTAU(47),DTDEL(47),WDEL(47),CDEL(47),l_nlayrad
-!       endif
-       !C     WE GO WITH THE QUADRATURE APPROACH HERE.  THE "SQRT(3)" factors
-       !C     ARE THE UBARV TERM.
-
-       DO L=1,L_NLAYRAD
-
-          ALPHA(L)=SQRT( (1.0-W0(L))/(1.0-W0(L)*COSBAR(L)) )
-
-          !C       SET OF CONSTANTS DETERMINED BY DOM
+  TAU(1)=TDEL(1)*(1.-WDEL(1)*CDEL(1)**2)
+  TAUCUMP(1) = 0.0
+  TAUCUMP(2) = TAUCUM(2)*(1.-WDEL(1)*CDEL(1)**2)
+  TAUCUMP(3) = TAUCUM(2)+ (TAUCUM(3)-TAUCUM(2))*&
+       (1.-WDEL(1)*CDEL(1)**2)
+  DO L=1,L_NLAYRAD-1
+     W0(L)        = WDEL(L)*(1.-CDEL(L)**2)/&
+          (1.-WDEL(L)*CDEL(L)**2)
+     COSBAR(L)    = CDEL(L)/(1.+CDEL(L))
+     DTAU(L)      = DTDEL(L)*(1.-WDEL(L)*CDEL(L)**2)
+     TAU(L+1)     = TAU(L)+DTAU(L)
+     K            = 2*(L+1)
+     TAUCUMP(K)   = TAU(L+1)
+     TAUCUMP(K+1) = TAUCUMP(k)+(TAUCUM(K+1) - TAUCUM(k))*&
+          (1.-WDEL(L)*CDEL(L)**2)
+
+
+  END DO
+
+  !C  Bottom layer
+
+  L=L_NLAYRAD
+  W0(L)      = WDEL(L)*(1.-CDEL(L)**2)/(1.-WDEL(L)*CDEL(L)**2)
+  COSBAR(L)  = CDEL(L)/(1.+CDEL(L))
+  DTAU(L)    = DTDEL(L)*(1.-WDEL(L)*CDEL(L)**2)
+  TAU(L+1)   = TAU(L)+DTAU(L)
+  K          = 2*(L+1)
+  TAUCUMP(K) = TAU(L+1)
+  !       if  (iproc .eq. 21 .and. dtau(47) .lt. -700000) then
+  !          write(*,*) "dtau: ",DTAU(47),DTDEL(47),WDEL(47),CDEL(47),l_nlayrad
+  !       endif
+  !C     WE GO WITH THE QUADRATURE APPROACH HERE.  THE "SQRT(3)" factors
+  !C     ARE THE UBARV TERM.
+
+  DO L=1,L_NLAYRAD
+
+     ALPHA(L)=SQRT( (1.0-W0(L))/(1.0-W0(L)*COSBAR(L)) )
+
+     !C       SET OF CONSTANTS DETERMINED BY DOM
 
-          G1(L)    = (SQRT(3.0)*0.5)*(2.0- W0(L)*(1.0+COSBAR(L)))
-          G2(L)    = (SQRT(3.0)*W0(L)*0.5)*(1.0-COSBAR(L))
-          G3(L)    = 0.5*(1.0-SQRT(3.0)*COSBAR(L)*UBAR0)
-          LAMDA(L) = SQRT(G1(L)**2 - G2(L)**2)
-          GAMA(L)  = (G1(L)-LAMDA(L))/G2(L)
-       END DO
+     G1(L)    = (SQRT(3.0)*0.5)*(2.0- W0(L)*(1.0+COSBAR(L)))
+     G2(L)    = (SQRT(3.0)*W0(L)*0.5)*(1.0-COSBAR(L))
+     G3(L)    = 0.5*(1.0-SQRT(3.0)*COSBAR(L)*UBAR0)
+     LAMDA(L) = SQRT(G1(L)**2 - G2(L)**2)
+     GAMA(L)  = (G1(L)-LAMDA(L))/G2(L)
+  END DO
 
-       DO L=1,L_NLAYRAD
-          G4    = 1.0-G3(L)
-          DENOM = LAMDA(L)**2 - 1./UBAR0**2
+  DO L=1,L_NLAYRAD
+     G4    = 1.0-G3(L)
+     DENOM = LAMDA(L)**2 - 1./UBAR0**2
 
-          !C       THERE IS A POTENTIAL PROBLEM HERE IF W0=0 AND UBARV=UBAR0
-          !C       THEN DENOM WILL VANISH. THIS ONLY HAPPENS PHYSICALLY WHEN
-          !C       THE SCATTERING GOES TO ZERO
-          !C       PREVENT THIS WITH AN IF STATEMENT
+     !C       THERE IS A POTENTIAL PROBLEM HERE IF W0=0 AND UBARV=UBAR0
+     !C       THEN DENOM WILL VANISH. THIS ONLY HAPPENS PHYSICALLY WHEN
+     !C       THE SCATTERING GOES TO ZERO
+     !C       PREVENT THIS WITH AN IF STATEMENT
 
-          IF ( DENOM .EQ. 0.) THEN
-             DENOM=1.E-10
-          END IF
+     IF ( DENOM .EQ. 0.) THEN
+        DENOM=1.E-10
+     END IF
 
-          AM = F0PI*W0(L)*(G4   *(G1(L)+1./UBAR0) +G2(L)*G3(L) )/DENOM
-          AP = F0PI*W0(L)*(G3(L)*(G1(L)-1./UBAR0) +G2(L)*G4    )/DENOM
+     AM = F0PI*W0(L)*(G4   *(G1(L)+1./UBAR0) +G2(L)*G3(L) )/DENOM
+     AP = F0PI*W0(L)*(G3(L)*(G1(L)-1./UBAR0) +G2(L)*G4    )/DENOM
 
-          !C       CPM1 AND CMM1 ARE THE CPLUS AND CMINUS TERMS EVALUATED
-          !C       AT THE TOP OF THE LAYER, THAT IS LOWER   OPTICAL DEPTH TAU(L)
+     !C       CPM1 AND CMM1 ARE THE CPLUS AND CMINUS TERMS EVALUATED
+     !C       AT THE TOP OF THE LAYER, THAT IS LOWER   OPTICAL DEPTH TAU(L)
 
-          CPM1(L) = AP*EXP(-TAU(L)/UBAR0)
-          CMM1(L) = AM*EXP(-TAU(L)/UBAR0)
+     CPM1(L) = AP*EXP(-TAU(L)/UBAR0)
+     CMM1(L) = AM*EXP(-TAU(L)/UBAR0)
 
-          !C       CP AND CM ARE THE CPLUS AND CMINUS TERMS EVALUATED AT THE
-          !C       BOTTOM OF THE LAYER.  THAT IS AT HIGHER OPTICAL DEPTH TAU(L+1)
+     !C       CP AND CM ARE THE CPLUS AND CMINUS TERMS EVALUATED AT THE
+     !C       BOTTOM OF THE LAYER.  THAT IS AT HIGHER OPTICAL DEPTH TAU(L+1)
 
-          CP(L) = AP*EXP(-TAU(L+1)/UBAR0)
-          CM(L) = AM*EXP(-TAU(L+1)/UBAR0)
+     CP(L) = AP*EXP(-TAU(L+1)/UBAR0)
+     CM(L) = AM*EXP(-TAU(L+1)/UBAR0)
 
-       END DO
+  END DO
 
-       !C     NOW CALCULATE THE EXPONENTIAL TERMS NEEDED
-       !C     FOR THE TRIDIAGONAL ROTATED LAYERED METHOD
+  !C     NOW CALCULATE THE EXPONENTIAL TERMS NEEDED
+  !C     FOR THE TRIDIAGONAL ROTATED LAYERED METHOD
 
-       DO L=1,L_NLAYRAD
-          EXPTRM(L) = MIN(TAUMAX,LAMDA(L)*DTAU(L))  ! CLIPPED EXPONENTIAL
-          EP = EXP(EXPTRM(L))
+  DO L=1,L_NLAYRAD
+     EXPTRM(L) = MIN(TAUMAX,LAMDA(L)*DTAU(L))  ! CLIPPED EXPONENTIAL
+     EP = EXP(EXPTRM(L))
 
-          EM        = 1.0/EP
-          E1(L)     = EP+GAMA(L)*EM
-          E2(L)     = EP-GAMA(L)*EM
-          E3(L)     = GAMA(L)*EP+EM
-          E4(L)     = GAMA(L)*EP-EM
-!          if (E2(L) .ne. e2(L)) then
-!             write(*,*) "e2: ",exptrm(L),taumax,lamda(l),dtau(l),iproc,l
-!          endif
-       END DO
+     EM        = 1.0/EP
+     E1(L)     = EP+GAMA(L)*EM
+     E2(L)     = EP-GAMA(L)*EM
+     E3(L)     = GAMA(L)*EP+EM
+     E4(L)     = GAMA(L)*EP-EM
+     !          if (E2(L) .ne. e2(L)) then
+     !             write(*,*) "e2: ",exptrm(L),taumax,lamda(l),dtau(l),iproc,l
+     !          endif
+  END DO
 
-       CALL DSOLVER(NAYER,GAMA,CP,CM,CPM1,CMM1,E1,E2,E3,E4,BTOP,&
-            BSURF,RSF,XK1,XK2)
+  CALL DSOLVER(NAYER,GAMA,CP,CM,CPM1,CMM1,E1,E2,E3,E4,BTOP,&
+       BSURF,RSF,XK1,XK2)
 
-       !C     NOW WE CALCULATE THE FLUXES AT THE MIDPOINTS OF THE LAYERS.
+  !C     NOW WE CALCULATE THE FLUXES AT THE MIDPOINTS OF THE LAYERS.
 
-       !C  For original, unscaled, version, use TAUCUM, not TAUCUMP
-       DO L=1,L_NLAYRAD-1
-          !c     EXPTRM(L) = MIN(TAUMAX,LAMDA(L)*(TAUCUM(2*L+1)-TAUCUM(2*L)))
-          EXPTRM(L) = MIN(TAUMAX,LAMDA(L)*(TAUCUMP(2*L+1)-TAUCUMP(2*L)))
+  !C  For original, unscaled, version, use TAUCUM, not TAUCUMP
+  DO L=1,L_NLAYRAD-1
+     !c     EXPTRM(L) = MIN(TAUMAX,LAMDA(L)*(TAUCUM(2*L+1)-TAUCUM(2*L)))
+     EXPTRM(L) = MIN(TAUMAX,LAMDA(L)*(TAUCUMP(2*L+1)-TAUCUMP(2*L)))
 
-          EP = EXP(EXPTRM(L))
+     EP = EXP(EXPTRM(L))
 
-          EM    = 1.0/EP
-          G4    = 1.0-G3(L)
-          DENOM = LAMDA(L)**2 - 1./UBAR0**2
+     EM    = 1.0/EP
+     G4    = 1.0-G3(L)
+     DENOM = LAMDA(L)**2 - 1./UBAR0**2
 
-          !C       THERE IS A POTENTIAL PROBLEM HERE IF W0=0 AND UBARV=UBAR0
-          !C       THEN DENOM WILL VANISH. THIS ONLY HAPPENS PHYSICALLY WHEN
-          !C       THE SCATTERING GOES TO ZERO
-          !C       PREVENT THIS WITH A IF STATEMENT
+     !C       THERE IS A POTENTIAL PROBLEM HERE IF W0=0 AND UBARV=UBAR0
+     !C       THEN DENOM WILL VANISH. THIS ONLY HAPPENS PHYSICALLY WHEN
+     !C       THE SCATTERING GOES TO ZERO
+     !C       PREVENT THIS WITH A IF STATEMENT
 
-          IF ( DENOM .EQ. 0.) THEN
-             DENOM=1.E-10
-          END IF
+     IF ( DENOM .EQ. 0.) THEN
+        DENOM=1.E-10
+     END IF
 
-          AM = F0PI*W0(L)*(G4   *(G1(L)+1./UBAR0) +G2(L)*G3(L) )/DENOM
-          AP = F0PI*W0(L)*(G3(L)*(G1(L)-1./UBAR0) +G2(L)*G4    )/DENOM
+     AM = F0PI*W0(L)*(G4   *(G1(L)+1./UBAR0) +G2(L)*G3(L) )/DENOM
+     AP = F0PI*W0(L)*(G3(L)*(G1(L)-1./UBAR0) +G2(L)*G4    )/DENOM
 
-          !C       CPMID AND CMMID  ARE THE CPLUS AND CMINUS TERMS EVALUATED
-          !C       AT THE MIDDLE OF THE LAYER.
+     !C       CPMID AND CMMID  ARE THE CPLUS AND CMINUS TERMS EVALUATED
+     !C       AT THE MIDDLE OF THE LAYER.
 
-          TAUMID   = TAUCUMP(2*L+1)
-          !c       TAUMID   = TAUCUM(2*L+1)
+     TAUMID   = TAUCUMP(2*L+1)
+     !c       TAUMID   = TAUCUM(2*L+1)
 
-          CPMID = AP*EXP(-TAUMID/UBAR0)
-          CMMID = AM*EXP(-TAUMID/UBAR0)
+     CPMID = AP*EXP(-TAUMID/UBAR0)
+     CMMID = AM*EXP(-TAUMID/UBAR0)
 
-          FMIDP(L) = XK1(L)*EP + GAMA(L)*XK2(L)*EM + CPMID
-          FMIDM(L) = XK1(L)*EP*GAMA(L) + XK2(L)*EM + CMMID
+     FMIDP(L) = XK1(L)*EP + GAMA(L)*XK2(L)*EM + CPMID
+     FMIDM(L) = XK1(L)*EP*GAMA(L) + XK2(L)*EM + CMMID
 
-          !C       ADD THE DIRECT FLUX TO THE DOWNWELLING TERM
+     !C       ADD THE DIRECT FLUX TO THE DOWNWELLING TERM
 
-          FMIDM(L)= FMIDM(L)+UBAR0*F0PI*EXP(-MIN(TAUMID,TAUMAX)/UBAR0)
+     FMIDM(L)= FMIDM(L)+UBAR0*F0PI*EXP(-MIN(TAUMID,TAUMAX)/UBAR0)
 
-       END DO
+  END DO
 
-       !C     FLUX AT THE Ptop layer
+  !C     FLUX AT THE Ptop layer
 
-       EP    = 1.0
-       EM    = 1.0
-       G4    = 1.0-G3(1)
-       DENOM = LAMDA(1)**2 - 1./UBAR0**2
+  EP    = 1.0
+  EM    = 1.0
+  G4    = 1.0-G3(1)
+  DENOM = LAMDA(1)**2 - 1./UBAR0**2
 
-       !C     THERE IS A POTENTIAL PROBLEM HERE IF W0=0 AND UBARV=UBAR0
-       !C     THEN DENOM WILL VANISH. THIS ONLY HAPPENS PHYSICALLY WHEN
-       !C     THE SCATTERING GOES TO ZERO
-       !C     PREVENT THIS WITH A IF STATEMENT
+  !C     THERE IS A POTENTIAL PROBLEM HERE IF W0=0 AND UBARV=UBAR0
+  !C     THEN DENOM WILL VANISH. THIS ONLY HAPPENS PHYSICALLY WHEN
+  !C     THE SCATTERING GOES TO ZERO
+  !C     PREVENT THIS WITH A IF STATEMENT
 
-       IF ( DENOM .EQ. 0.) THEN
-          DENOM=1.E-10
-       END IF
+  IF ( DENOM .EQ. 0.) THEN
+     DENOM=1.E-10
+  END IF
 
-       AM = F0PI*W0(1)*(G4   *(G1(1)+1./UBAR0) +G2(1)*G3(1) )/DENOM
-       AP = F0PI*W0(1)*(G3(1)*(G1(1)-1./UBAR0) +G2(1)*G4    )/DENOM
+  AM = F0PI*W0(1)*(G4   *(G1(1)+1./UBAR0) +G2(1)*G3(1) )/DENOM
+  AP = F0PI*W0(1)*(G3(1)*(G1(1)-1./UBAR0) +G2(1)*G4    )/DENOM
 
-       !C     CPMID AND CMMID  ARE THE CPLUS AND CMINUS TERMS EVALUATED
-       !C     AT THE MIDDLE OF THE LAYER.
+  !C     CPMID AND CMMID  ARE THE CPLUS AND CMINUS TERMS EVALUATED
+  !C     AT THE MIDDLE OF THE LAYER.
 
-       CPMID  = AP
-       CMMID  = AM
+  CPMID  = AP
+  CMMID  = AM
 
-       FLUXUP = XK1(1)*EP + GAMA(1)*XK2(1)*EM + CPMID
-       FLUXDN = XK1(1)*EP*GAMA(1) + XK2(1)*EM + CMMID
+  FLUXUP = XK1(1)*EP + GAMA(1)*XK2(1)*EM + CPMID
+  FLUXDN = XK1(1)*EP*GAMA(1) + XK2(1)*EM + CMMID
 
-       !C     ADD THE DIRECT FLUX TO THE DOWNWELLING TERM
+  !C     ADD THE DIRECT FLUX TO THE DOWNWELLING TERM
 
-       fluxdn = fluxdn+UBAR0*F0PI*EXP(-MIN(TAUCUMP(2),TAUMAX)/UBAR0)
-       !c     fluxdn = fluxdn+UBAR0*F0PI*EXP(-MIN(TAUCUM(1),TAUMAX)/UBAR0)
+  fluxdn = fluxdn+UBAR0*F0PI*EXP(-MIN(TAUCUMP(2),TAUMAX)/UBAR0)
+  !c     fluxdn = fluxdn+UBAR0*F0PI*EXP(-MIN(TAUCUM(1),TAUMAX)/UBAR0)
 
-       !C     This is for the "special" bottom layer, where we take
-       !C     DTAU instead of DTAU/2.
+  !C     This is for the "special" bottom layer, where we take
+  !C     DTAU instead of DTAU/2.
 
-       L     = L_NLAYRAD
-       EXPTRM(L) = MIN(TAUMAX,LAMDA(L)*(TAUCUMP(L_LEVELS)-&
-            TAUCUMP(L_LEVELS-1)))
-       !c     EXPTRM(L) = MIN(TAUMAX,LAMDA(L)*(TAUCUM(L_LEVELS)-&
-       !c                                      TAUCUM(L_LEVELS-1)))
+  L     = L_NLAYRAD
+  EXPTRM(L) = MIN(TAUMAX,LAMDA(L)*(TAUCUMP(L_LEVELS)-&
+       TAUCUMP(L_LEVELS-1)))
+  !c     EXPTRM(L) = MIN(TAUMAX,LAMDA(L)*(TAUCUM(L_LEVELS)-&
+  !c                                      TAUCUM(L_LEVELS-1)))
 
-       EP    = EXP(EXPTRM(L))
-       EM    = 1.0/EP
-       G4    = 1.0-G3(L)
-       DENOM = LAMDA(L)**2 - 1./UBAR0**2
+  EP    = EXP(EXPTRM(L))
+  EM    = 1.0/EP
+  G4    = 1.0-G3(L)
+  DENOM = LAMDA(L)**2 - 1./UBAR0**2
 
-       !C     THERE IS A POTENTIAL PROBLEM HERE IF W0=0 AND UBARV=UBAR0
-       !C     THEN DENOM WILL VANISH. THIS ONLY HAPPENS PHYSICALLY WHEN
-       !C     THE SCATTERING GOES TO ZERO
-       !C     PREVENT THIS WITH A IF STATEMENT
+  !C     THERE IS A POTENTIAL PROBLEM HERE IF W0=0 AND UBARV=UBAR0
+  !C     THEN DENOM WILL VANISH. THIS ONLY HAPPENS PHYSICALLY WHEN
+  !C     THE SCATTERING GOES TO ZERO
+  !C     PREVENT THIS WITH A IF STATEMENT
 
-       IF ( DENOM .EQ. 0.) THEN
-          DENOM=1.E-10
-       END IF
+  IF ( DENOM .EQ. 0.) THEN
+     DENOM=1.E-10
+  END IF
 
-       AM = F0PI*W0(L)*(G4   *(G1(L)+1./UBAR0) +G2(L)*G3(L) )/DENOM
-       AP = F0PI*W0(L)*(G3(L)*(G1(L)-1./UBAR0) +G2(L)*G4    )/DENOM
+  AM = F0PI*W0(L)*(G4   *(G1(L)+1./UBAR0) +G2(L)*G3(L) )/DENOM
+  AP = F0PI*W0(L)*(G3(L)*(G1(L)-1./UBAR0) +G2(L)*G4    )/DENOM
 
-       !C     CPMID AND CMMID  ARE THE CPLUS AND CMINUS TERMS EVALUATED
-       !C     AT THE MIDDLE OF THE LAYER.
+  !C     CPMID AND CMMID  ARE THE CPLUS AND CMINUS TERMS EVALUATED
+  !C     AT THE MIDDLE OF THE LAYER.
 
-       TAUMID   = MIN(TAUCUMP(L_LEVELS),TAUMAX)
-       !c     TAUMID   = MIN(TAUCUM(L_LEVELS),TAUMAX)
-       CPMID    = AP*EXP(-MIN(TAUMID,TAUMAX)/UBAR0)
-       CMMID    = AM*EXP(-MIN(TAUMID,TAUMAX)/UBAR0)
+  TAUMID   = MIN(TAUCUMP(L_LEVELS),TAUMAX)
+  !c     TAUMID   = MIN(TAUCUM(L_LEVELS),TAUMAX)
+  CPMID    = AP*EXP(-MIN(TAUMID,TAUMAX)/UBAR0)
+  CMMID    = AM*EXP(-MIN(TAUMID,TAUMAX)/UBAR0)
 
-       FMIDP(L) = XK1(L)*EP + GAMA(L)*XK2(L)*EM + CPMID
-       FMIDM(L) = XK1(L)*EP*GAMA(L) + XK2(L)*EM + CMMID
-!if (iproc .eq. 21 .and. ilon .eq. 1 .and. ilat .eq. 4)
-!   if (fmidp(l) .ne. fmidp(l)) then
-!      write(*,*) fmidp(l),fmidm(l),ep, gama(l),xk2(l),em,cpmid
-!endif
-       !C  Save the diffuse downward flux for TEMPGR calculations
+  FMIDP(L) = XK1(L)*EP + GAMA(L)*XK2(L)*EM + CPMID
+  FMIDM(L) = XK1(L)*EP*GAMA(L) + XK2(L)*EM + CMMID
+  !if (iproc .eq. 21 .and. ilon .eq. 1 .and. ilat .eq. 4)
+  !   if (fmidp(l) .ne. fmidp(l)) then
+  !      write(*,*) fmidp(l),fmidm(l),ep, gama(l),xk2(l),em,cpmid
+  !endif
+  !C  Save the diffuse downward flux for TEMPGR calculations
 
-       DIFFV = FMIDM(L)
+  DIFFV = FMIDM(L)
 
-       !C     ADD THE DIRECT FLUX TO THE DOWNWELLING TERM
+  !C     ADD THE DIRECT FLUX TO THE DOWNWELLING TERM
 
-       FMIDM(L)= FMIDM(L)+UBAR0*F0PI*EXP(-MIN(TAUMID,TAUMAX)/UBAR0)
+  FMIDM(L)= FMIDM(L)+UBAR0*F0PI*EXP(-MIN(TAUMID,TAUMAX)/UBAR0)
 
 
-     END SUBROUTINE GFLUXV
-     ! ----------------------------------------------------------------------
+END SUBROUTINE GFLUXV
+! ----------------------------------------------------------------------
 
-     ! ----------------------------------------------------------------------
+! ----------------------------------------------------------------------
 
-     SUBROUTINE DSOLVER(NLX,GAMA,CP,CM,CPM1,CMM1,E1,E2,E3,E4,BTOP,&
-          BSURF,RSF,XK1,XK2)
+SUBROUTINE DSOLVER(NLX,GAMA,CP,CM,CPM1,CMM1,E1,E2,E3,E4,BTOP,&
+     BSURF,RSF,XK1,XK2)
 
-       !C  GCM2.0  Feb 2003
-       !C
-       !C DOUBLE PRECISION VERSION OF SOLVER
+  !C  GCM2.0  Feb 2003
+  !C
+  !C DOUBLE PRECISION VERSION OF SOLVER
 
-       implicit none
+  implicit none
 
-       integer,PARAMETER :: NMAX=201
-!      integer :: NL, L, N, LM1, LM2, I
-       integer :: NLX, L, N, LM1, LM2, I
-!      real :: GAMA(NL),CP(NL),CM(NL),CPM1(NL),CMM1(NL),XK1(NL)
-!      real :: XK2(NL),E1(NL),E2(NL),E3(NL),E4(NL),RSF,BSURF,BTOP
-       real :: GAMA(NLX),CP(NLX),CM(NLX),CPM1(NLX),CMM1(NLX),XK1(NLX)
-       real :: XK2(NLX),E1(NLX),E2(NLX),E3(NLX),E4(NLX),RSF,BSURF,BTOP
-       real :: AF(NMAX),BF(NMAX),CF(NMAX),DF(NMAX),XK(NMAX)
+  integer,PARAMETER :: NMAX=201
+  !      integer :: NL, L, N, LM1, LM2, I
+  integer :: NLX, L, N, LM1, LM2, I
+  !      real :: GAMA(NL),CP(NL),CM(NL),CPM1(NL),CMM1(NL),XK1(NL)
+  !      real :: XK2(NL),E1(NL),E2(NL),E3(NL),E4(NL),RSF,BSURF,BTOP
+  real :: GAMA(NLX),CP(NLX),CM(NLX),CPM1(NLX),CMM1(NLX),XK1(NLX)
+  real :: XK2(NLX),E1(NLX),E2(NLX),E3(NLX),E4(NLX),RSF,BSURF,BTOP
+  real :: AF(NMAX),BF(NMAX),CF(NMAX),DF(NMAX),XK(NMAX)
 !!$C*********************************************************
 !!$C* THIS SUBROUTINE SOLVES FOR THE COEFFICIENTS OF THE    *
 !!$C* TWO STREAM SOLUTION FOR GENERAL BOUNDARY CONDITIONS   *
@@ -3244,93 +3237,93 @@ ALTBOUND(0) = altbot
 !!$C* XK2    = COEFFICIENT OF THE NEGATIVE EXP TERM         *
 !!$C*********************************************************
 
-       !C======================================================================C
+  !C======================================================================C
 
-!      L=2*NL
-       L=2*NLX
+  !      L=2*NL
+  L=2*NLX
 
-       !C     ************MIXED COEFFICENTS**********
-       !C     THIS VERSION AVOIDS SINGULARITIES ASSOC.
-       !C     WITH W0=0 BY SOLVING FOR XK1+XK2, AND XK1-XK2.
+  !C     ************MIXED COEFFICENTS**********
+  !C     THIS VERSION AVOIDS SINGULARITIES ASSOC.
+  !C     WITH W0=0 BY SOLVING FOR XK1+XK2, AND XK1-XK2.
 
-       AF(1) = 0.0
-       BF(1) = GAMA(1)+1.
-       CF(1) = GAMA(1)-1.
-       DF(1) = BTOP-CMM1(1)
-       N     = 0
-       LM2   = L-2
+  AF(1) = 0.0
+  BF(1) = GAMA(1)+1.
+  CF(1) = GAMA(1)-1.
+  DF(1) = BTOP-CMM1(1)
+  N     = 0
+  LM2   = L-2
 
-       !C     EVEN TERMS
+  !C     EVEN TERMS
 
-       DO I=2,LM2,2
-          N     = N+1
-          AF(I) = (E1(N)+E3(N))*(GAMA(N+1)-1.)
-          BF(I) = (E2(N)+E4(N))*(GAMA(N+1)-1.)
-          CF(I) = 2.0*(1.-GAMA(N+1)**2)
-          DF(I) = (GAMA(N+1)-1.) * (CPM1(N+1) - CP(N)) +&
-               (1.-GAMA(N+1))* (CM(N)-CMM1(N+1))
-       END DO
+  DO I=2,LM2,2
+     N     = N+1
+     AF(I) = (E1(N)+E3(N))*(GAMA(N+1)-1.)
+     BF(I) = (E2(N)+E4(N))*(GAMA(N+1)-1.)
+     CF(I) = 2.0*(1.-GAMA(N+1)**2)
+     DF(I) = (GAMA(N+1)-1.) * (CPM1(N+1) - CP(N)) +&
+          (1.-GAMA(N+1))* (CM(N)-CMM1(N+1))
+  END DO
 
-       N   = 0
-       LM1 = L-1
-       DO I=3,LM1,2
-          N     = N+1
-          AF(I) = 2.0*(1.-GAMA(N)**2)
-          BF(I) = (E1(N)-E3(N))*(1.+GAMA(N+1))
-          CF(I) = (E1(N)+E3(N))*(GAMA(N+1)-1.)
-          DF(I) = E3(N)*(CPM1(N+1) - CP(N)) + E1(N)*(CM(N) - CMM1(N+1))
-       END DO
+  N   = 0
+  LM1 = L-1
+  DO I=3,LM1,2
+     N     = N+1
+     AF(I) = 2.0*(1.-GAMA(N)**2)
+     BF(I) = (E1(N)-E3(N))*(1.+GAMA(N+1))
+     CF(I) = (E1(N)+E3(N))*(GAMA(N+1)-1.)
+     DF(I) = E3(N)*(CPM1(N+1) - CP(N)) + E1(N)*(CM(N) - CMM1(N+1))
+  END DO
 
-!      AF(L) = E1(NL)-RSF*E3(NL)
-!      BF(L) = E2(NL)-RSF*E4(NL)
-       AF(L) = E1(NLX)-RSF*E3(NLX)
-       BF(L) = E2(NLX)-RSF*E4(NLX)
-       CF(L) = 0.0
-!      DF(L) = BSURF-CP(NL)+RSF*CM(NL)
-       DF(L) = BSURF-CP(NLX)+RSF*CM(NLX)
-!if (BF(L) .ne. bf(L)) then
-!   write(*,*) "BF: ",bf(L),e2(NlX),rsf,e4(NLX)
-!endif
-       CALL DTRIDGL(L,AF,BF,CF,DF,XK)
+  !      AF(L) = E1(NL)-RSF*E3(NL)
+  !      BF(L) = E2(NL)-RSF*E4(NL)
+  AF(L) = E1(NLX)-RSF*E3(NLX)
+  BF(L) = E2(NLX)-RSF*E4(NLX)
+  CF(L) = 0.0
+  !      DF(L) = BSURF-CP(NL)+RSF*CM(NL)
+  DF(L) = BSURF-CP(NLX)+RSF*CM(NLX)
+  !if (BF(L) .ne. bf(L)) then
+  !   write(*,*) "BF: ",bf(L),e2(NlX),rsf,e4(NLX)
+  !endif
+  CALL DTRIDGL(L,AF,BF,CF,DF,XK)
 
-       !C     ***UNMIX THE COEFFICIENTS****
+  !C     ***UNMIX THE COEFFICIENTS****
 
-!      DO 28 N=1,NL
-       DO 28 N=1,NLX
-          XK1(N) = XK(2*N-1)+XK(2*N)
-          XK2(N) = XK(2*N-1)-XK(2*N)
+  !      DO 28 N=1,NL
+  do N=1,NLX
+     XK1(N) = XK(2*N-1)+XK(2*N)
+     XK2(N) = XK(2*N-1)-XK(2*N)
 
-          !C       NOW TEST TO SEE IF XK2 IS REALLY ZERO TO THE LIMIT OF THE
-          !C       MACHINE ACCURACY  = 1 .E -30
-          !C       XK2 IS THE COEFFICEINT OF THE GROWING EXPONENTIAL AND MUST
-          !C       BE TREATED CAREFULLY
+     !C       NOW TEST TO SEE IF XK2 IS REALLY ZERO TO THE LIMIT OF THE
+     !C       MACHINE ACCURACY  = 1 .E -30
+     !C       XK2 IS THE COEFFICEINT OF THE GROWING EXPONENTIAL AND MUST
+     !C       BE TREATED CAREFULLY
 
-          IF(XK2(N) .EQ. 0.0) GO TO 28
+     IF(XK2(N) /= 0.0) CYCLE
 
-!!!! next line added by ridley and pawlowski
-          XK(2*N-1) = max(abs(XK(2*n-1)),1.0e-30)*sign(1.0,XK(2*n-1))
-
-
-          IF (ABS (XK2(N)/XK(2*N-1)) .LT. 1.E-30) XK2(N)=0.0
-
-28        CONTINUE
-
-        END SUBROUTINE DSOLVER
-        ! ----------------------------------------------------------------------
-
-        ! ----------------------------------------------------------------------
+     ! next line added by ridley and pawlowski
+     XK(2*N-1) = max(abs(XK(2*n-1)),1.0e-30)*sign(1.0,XK(2*n-1))
 
 
-        SUBROUTINE DTRIDGL(L,AF,BF,CF,DF,XK)
+     IF (ABS (XK2(N)/XK(2*N-1)) .LT. 1.E-30) XK2(N)=0.0
 
-          !C  GCM2.0  Feb 2003
+  end do
 
-          !C     DOUBLE PRESCISION VERSION OF TRIDGL
+END SUBROUTINE DSOLVER
+! ----------------------------------------------------------------------
 
-          INTEGER,PARAMETER :: NMAX=201
-          INTEGER :: L,I
-          REAL :: AF(L),BF(L),CF(L),DF(L),XK(L)
-          REAL :: AS(NMAX),DS(NMAX),X,XKB
+! ----------------------------------------------------------------------
+
+
+SUBROUTINE DTRIDGL(L,AF,BF,CF,DF,XK)
+
+  !C  GCM2.0  Feb 2003
+
+  !C     DOUBLE PRESCISION VERSION OF TRIDGL
+
+  INTEGER,PARAMETER :: NMAX=201
+  INTEGER :: L,I
+  REAL :: AF(L),BF(L),CF(L),DF(L),XK(L)
+  REAL :: AS(NMAX),DS(NMAX),X,XKB
 
 !!$C*    THIS SUBROUTINE SOLVES A SYSTEM OF TRIDIAGIONAL MATRIX
 !!$C*    EQUATIONS. THE FORM OF THE EQUATIONS ARE:
@@ -3338,39 +3331,39 @@ ALTBOUND(0) = altbot
 !!$C*    WHERE I=1,L  LESS THAN 103.
 !!$C* ..............REVIEWED -CP........
 
-          !C======================================================================C
+  !C======================================================================C
 
-          AS(L) = AF(L)/BF(L)
-          DS(L) = DF(L)/BF(L)
-!          if (AS(L) .ne. AS(L) .or. ds(L) .ne. ds(l)) then
-!             write(*,*) "ne: ", as(l),ds(l),BF(L)
-!endif
-          DO I=2,L
-             X         = 1./(BF(L+1-I) - CF(L+1-I)*AS(L+2-I))
-             AS(L+1-I) = AF(L+1-I)*X
-             DS(L+1-I) = (DF(L+1-I)-CF(L+1-I)*DS(L+2-I))*X
-!             if (ds(L+1-I) .ne. ds(L+1-I))then
-!                write(*,*)"dtr: ",I, df(L+1-I),DF(L+1-I),DS(L+2-I),X,BF(L+1-I),cf(L+1-I),AS(L+2-I),af(L+1-I)
-!             endif
-          END DO
+  AS(L) = AF(L)/BF(L)
+  DS(L) = DF(L)/BF(L)
+  !          if (AS(L) .ne. AS(L) .or. ds(L) .ne. ds(l)) then
+  !             write(*,*) "ne: ", as(l),ds(l),BF(L)
+  !endif
+  DO I=2,L
+     X         = 1./(BF(L+1-I) - CF(L+1-I)*AS(L+2-I))
+     AS(L+1-I) = AF(L+1-I)*X
+     DS(L+1-I) = (DF(L+1-I)-CF(L+1-I)*DS(L+2-I))*X
+     !             if (ds(L+1-I) .ne. ds(L+1-I))then
+     !                write(*,*)"dtr: ",I, df(L+1-I),DF(L+1-I),DS(L+2-I),X,BF(L+1-I),cf(L+1-I),AS(L+2-I),af(L+1-I)
+     !             endif
+  END DO
 
-          XK(1)=DS(1)
-          DO I=2,L
-             XKB   = XK(I-1)
-             XK(I) = DS(I)-AS(I)*XKB
+  XK(1)=DS(1)
+  DO I=2,L
+     XKB   = XK(I-1)
+     XK(I) = DS(I)-AS(I)*XKB
 
-END DO
+  END DO
 
 
-        END SUBROUTINE DTRIDGL
+END SUBROUTINE DTRIDGL
 
-        ! ----------------------------------------------------------------------
+! ----------------------------------------------------------------------
 
-        ! ----------------------------------------------------------------------
+! ----------------------------------------------------------------------
 
-        SUBROUTINE OPTCI(DTAUI,TAUCUMI,TLEV,PLEV,L_LAYERS,&
-             L_LEVELS,L_NLAYRAD,L_NLEVRAD,QREFV,COSBI,WBARI,TAUREF,&
-             TMID,PMID,NGWI,QH2O)
+SUBROUTINE OPTCI(DTAUI,TAUCUMI,TLEV,PLEV,L_LAYERS,&
+     L_LEVELS,L_NLAYRAD,L_NLEVRAD,QREFV,COSBI,WBARI,TAUREF,&
+     TMID,PMID,NGWI,QH2O)
 
 !!$C  GCM2.0  Feb 2003
 !!$C
@@ -3393,410 +3386,409 @@ END DO
 !!$C
 !!$C----------------------------------------------------------------------C
 
-          use GITM_planet
+  use GITM_planet
 
-          implicit none
+  implicit none
 
-          integer :: L_LAYERS,L_LEVELS,L_NLAYRAD,L_NLEVRAD
+  integer :: L_LAYERS,L_LEVELS,L_NLAYRAD,L_NLEVRAD
 
-          real :: DTAUI(LL_NLAYRAD,L_NSPECTI,L_NGAUSS)
-          real :: DTAUKI(LL_LEVELS+1,L_NSPECTI,L_NGAUSS)
-          real :: TAUI(LL_NLEVRAD,L_NSPECTI,L_NGAUSS)
-          real :: TAUCUMI(LL_LEVELS,L_NSPECTI,L_NGAUSS)
-          real :: TAUGAS, Qrefv
-          real :: TLEV(LL_LEVELS), PLEV(LL_LEVELS+1)
-          real :: TMID(LL_LEVELS), PMID(LL_LEVELS)
-          real :: COSBI(LL_NLAYRAD,L_NSPECTI,L_NGAUSS)
-          real :: WBARI(LL_NLAYRAD,L_NSPECTI,L_NGAUSS)
-          real :: TAUREF(LL_LEVELS+1)
+  real :: DTAUI(LL_NLAYRAD,L_NSPECTI,L_NGAUSS)
+  real :: DTAUKI(LL_LEVELS+1,L_NSPECTI,L_NGAUSS)
+  real :: TAUI(LL_NLEVRAD,L_NSPECTI,L_NGAUSS)
+  real :: TAUCUMI(LL_LEVELS,L_NSPECTI,L_NGAUSS)
+  real :: TAUGAS, Qrefv
+  real :: TLEV(LL_LEVELS), PLEV(LL_LEVELS+1)
+  real :: TMID(LL_LEVELS), PMID(LL_LEVELS)
+  real :: COSBI(LL_NLAYRAD,L_NSPECTI,L_NGAUSS)
+  real :: WBARI(LL_NLAYRAD,L_NSPECTI,L_NGAUSS)
+  real :: TAUREF(LL_LEVELS+1)
 
-          integer :: L, NW, NG, K, LK
-          integer :: MT(LL_LEVELS), MP(LL_LEVELS)
-          real ::  ANS, TAUREFL
-          real ::  TAEROS(LL_LEVELS,L_NSPECTI)
-          real ::  DPR(LL_LEVELS), U(LL_LEVELS), TAUCLD, TAUAC
-          real ::  LCOEF(4), LKCOEF(LL_LEVELS,4)
+  integer :: L, NW, NG, K, LK
+  integer :: MT(LL_LEVELS), MP(LL_LEVELS)
+  real ::  ANS, TAUREFL
+  real ::  TAEROS(LL_LEVELS,L_NSPECTI)
+  real ::  DPR(LL_LEVELS), U(LL_LEVELS), TAUCLD, TAUAC
+  real ::  LCOEF(4), LKCOEF(LL_LEVELS,4)
 
-          ! fraction of zeros in each spectral interval, as a function of T, P
+  ! fraction of zeros in each spectral interval, as a function of T, P
 
-          real :: dt, tt
-          real :: taugsurf(L_NSPECTI,L_NGAUSS-1)
+  real :: dt, tt
+  real :: taugsurf(L_NSPECTI,L_NGAUSS-1)
 
-          !C  Tlimit:  If the CO2 optical depth (top to the surface) is less than
-          !C  this value, we place that Gauss-point into the "zeros" channel.
-          !C  Set in driver, passed via common
+  !C  Tlimit:  If the CO2 optical depth (top to the surface) is less than
+  !C  this value, we place that Gauss-point into the "zeros" channel.
+  !C  Set in driver, passed via common
 
 
-          integer :: NGWI(L_NSPECTI)
+  integer :: NGWI(L_NSPECTI)
 
-          !C  Water mixing ratio variables
+  !C  Water mixing ratio variables
 
-          real ::  QH2O(LL_LEVELS),  WRATIO(LL_LEVELS)
-          real ::  KCOEF(4)
-          integer :: NH2O(LL_LEVELS)
+  real ::  QH2O(LL_LEVELS),  WRATIO(LL_LEVELS)
+  real ::  KCOEF(4)
+  integer :: NH2O(LL_LEVELS)
 
-          !C======================================================================C
+  !C======================================================================C
 
-          !C  Determine the total gas opacity throughout the column, for each
-          !C  spectral interval, NW, and each Gauss point, NG.
+  !C  Determine the total gas opacity throughout the column, for each
+  !C  spectral interval, NW, and each Gauss point, NG.
 
-          DTAUKI = 0.0
+  DTAUKI = 0.0
 
-          DO NG=1,L_NGAUSS-1
-             do NW=1,L_NSPECTI
-                TAUGSURF(NW,NG) = 0.0D0
-             end do
-          end do
+  DO NG=1,L_NGAUSS-1
+     do NW=1,L_NSPECTI
+        TAUGSURF(NW,NG) = 0.0D0
+     end do
+  end do
 
-          do K=2,L_LEVELS
-             DPR(k) = PLEV(K)-PLEV(K-1)
-             U(k)   = Cmk*DPR(k)
-!             if (U(k) .lt. 0) then
-!                write(*,*) u(k),dpr(k),plev(k), plev(k-1)
+  do K=2,L_LEVELS
+     DPR(k) = PLEV(K)-PLEV(K-1)
+     U(k)   = Cmk*DPR(k)
+     !             if (U(k) .lt. 0) then
+     !                write(*,*) u(k),dpr(k),plev(k), plev(k-1)
 
-!endif
-             call tpindex(PMID(K),TMID(K),QH2O(K),pfgasref,tgasref,&
-                  LCOEF,MT(K),MP(K),NH2O(K),WRATIO(K))
+     !endif
+     call tpindex(PMID(K),TMID(K),QH2O(K),pfgasref,tgasref,&
+          LCOEF,MT(K),MP(K),NH2O(K),WRATIO(K))
 
-             do LK=1,4
-                LKCOEF(K,LK) = LCOEF(LK)
-             end do
+     do LK=1,4
+        LKCOEF(K,LK) = LCOEF(LK)
+     end do
 
-             DO NW=1,L_NSPECTI
-                TAEROS(K,NW) = TAUREF(K)*Qexti(NW)/Qrefv
-             END DO
-          end do
-!stop
-          !C  TAUCLD = is cloud opacity, zero until further notice
+     DO NW=1,L_NSPECTI
+        TAEROS(K,NW) = TAUREF(K)*Qexti(NW)/Qrefv
+     END DO
+  end do
+  !stop
+  !C  TAUCLD = is cloud opacity, zero until further notice
 
-          TAUCLD = 0.0
+  TAUCLD = 0.0
 
-          do NW=1,L_NSPECTI
-             ngwi(NW) = L_NGAUSS
+  do NW=1,L_NSPECTI
+     ngwi(NW) = L_NGAUSS
 
-             !C  Now fill in the "clear" part of the spectrum (NG = L_NGAUSS)
-             !C  Which holds continuum opacity only
+     !C  Now fill in the "clear" part of the spectrum (NG = L_NGAUSS)
+     !C  Which holds continuum opacity only
 
-             do K=2,L_LEVELS
-                DTAUKI(K,NW,L_NGAUSS) = TAEROS(K,NW) + TAUCLD
-             end do
+     do K=2,L_LEVELS
+        DTAUKI(K,NW,L_NGAUSS) = TAEROS(K,NW) + TAUCLD
+     end do
 
-             do ng=L_NGAUSS-1,1,-1
-                do K=2,L_LEVELS
+     do ng=L_NGAUSS-1,1,-1
+        do K=2,L_LEVELS
 
-                   !C           NOW COMPUTE TAUGAS
+           !C           NOW COMPUTE TAUGAS
 
-                   !C  Interpolate between water mixing ratios
-                   !C  WRATIO = 0.0 if the requested water amount is equal to, or outside the
-                   !C  the range of water amount data.
+           !C  Interpolate between water mixing ratios
+           !C  WRATIO = 0.0 if the requested water amount is equal to, or outside the
+           !C  the range of water amount data.
 
-                   KCOEF(1) = CO2I(MT(K),MP(K),NH2O(K),NW,NG) + WRATIO(K)*&
-                        (CO2I(MT(K),MP(K),NH2O(K)+1,NW,NG) -&
-                        CO2I(MT(K),MP(K),NH2O(K),NW,NG))
+           KCOEF(1) = CO2I(MT(K),MP(K),NH2O(K),NW,NG) + WRATIO(K)*&
+                (CO2I(MT(K),MP(K),NH2O(K)+1,NW,NG) -&
+                CO2I(MT(K),MP(K),NH2O(K),NW,NG))
 
-                   KCOEF(2) = CO2I(MT(K),MP(K)+1,NH2O(K),NW,NG) + WRATIO(K)*&
-                        (CO2I(MT(K),MP(K)+1,NH2O(K)+1,NW,NG) -&
-                        CO2I(MT(K),MP(K)+1,NH2O(K),NW,NG))
+           KCOEF(2) = CO2I(MT(K),MP(K)+1,NH2O(K),NW,NG) + WRATIO(K)*&
+                (CO2I(MT(K),MP(K)+1,NH2O(K)+1,NW,NG) -&
+                CO2I(MT(K),MP(K)+1,NH2O(K),NW,NG))
 
-                   KCOEF(3) = CO2I(MT(K)+1,MP(K)+1,NH2O(K),NW,NG) + WRATIO(K)*&
-                        (CO2I(MT(K)+1,MP(K)+1,NH2O(K)+1,NW,NG) -&
-                        CO2I(MT(K)+1,MP(K)+1,NH2O(K),NW,NG))
+           KCOEF(3) = CO2I(MT(K)+1,MP(K)+1,NH2O(K),NW,NG) + WRATIO(K)*&
+                (CO2I(MT(K)+1,MP(K)+1,NH2O(K)+1,NW,NG) -&
+                CO2I(MT(K)+1,MP(K)+1,NH2O(K),NW,NG))
 
-                   KCOEF(4) = CO2I(MT(K)+1,MP(K),NH2O(K),NW,NG) + WRATIO(K)*&
-                        (CO2I(MT(K)+1,MP(K),NH2O(K)+1,NW,NG) -&
-                        CO2I(MT(K)+1,MP(K),NH2O(K),NW,NG))
+           KCOEF(4) = CO2I(MT(K)+1,MP(K),NH2O(K),NW,NG) + WRATIO(K)*&
+                (CO2I(MT(K)+1,MP(K),NH2O(K)+1,NW,NG) -&
+                CO2I(MT(K)+1,MP(K),NH2O(K),NW,NG))
 
-                   !C  Interpolate the CO2 k-coefficients to the requested T,P
+           !C  Interpolate the CO2 k-coefficients to the requested T,P
 
 
-                   ANS = LKCOEF(K,1)*KCOEF(1) + LKCOEF(K,2)*KCOEF(2) +&
-                        LKCOEF(K,3)*KCOEF(3) + LKCOEF(K,4)*KCOEF(4)
+           ANS = LKCOEF(K,1)*KCOEF(1) + LKCOEF(K,2)*KCOEF(2) +&
+                LKCOEF(K,3)*KCOEF(3) + LKCOEF(K,4)*KCOEF(4)
 
 
-                   TAUGAS          = U(k)*ANS
-                   TAUGSURF(NW,NG) = TAUGSURF(NW,NG) + TAUGAS
-                   DTAUKI(K,nw,ng) = TAUGAS+TAEROS(K,NW)+TAUCLD
-!                   if (nw .eq. 3 .and. ng .eq. 15) then1
-!                      write(*,*) dtauki(k,nw,ng),taugas,u(k),ans
-!                   endif
-    end do
+           TAUGAS          = U(k)*ANS
+           TAUGSURF(NW,NG) = TAUGSURF(NW,NG) + TAUGAS
+           DTAUKI(K,nw,ng) = TAUGAS+TAEROS(K,NW)+TAUCLD
+           !                   if (nw .eq. 3 .and. ng .eq. 15) then1
+           !                      write(*,*) dtauki(k,nw,ng),taugas,u(k),ans
+           !                   endif
+        end do
 
-                if(TAUGSURF(NW,NG) .LT. TLIMIT) THEN
-                   goto 10
-                else
-                   NGWI(NW) = NG
-                end if
+        if(TAUGSURF(NW,NG) .LT. TLIMIT) THEN
+           EXIT
+        else
+           NGWI(NW) = NG
+        end if
 
-             end do
-10           continue
+     end do
 
-          end do
-!stop
-          !C  Now the full treatment for the layers, where besides the opacity
-          !C  we need to calculate the scattering albedo and asymmetry factors
-          !C  for each layer
+  end do
+  !stop
+  !C  Now the full treatment for the layers, where besides the opacity
+  !C  we need to calculate the scattering albedo and asymmetry factors
+  !C  for each layer
 
-          DO NW=1,L_NSPECTI
+  DO NW=1,L_NSPECTI
 
-             !C  First, the special "clear" channel
+     !C  First, the special "clear" channel
 
-             NG = L_NGAUSS
+     NG = L_NGAUSS
 
-             DO L=1,L_NLAYRAD
-                K              = 2*L+1
-                TAUREFL        = (TAUREF(K)+TAUREF(K+1))/Qrefv
-                DTAUI(L,nw,ng) = DTAUKI(K,NW,NG)+DTAUKI(K+1,NW,NG)
-                if(DTAUI(L,NW,NG) .GT. 1.0E-9) then
-                   WBARI(L,nw,ng) = (QSCATI(NW)*TAUREFL)/DTAUI(L,NW,NG)
-                else
-                   WBARI(L,nw,ng) = 0.0D0
-                   DTAUI(L,NW,NG) = 1.0E-9
-                endif
+     DO L=1,L_NLAYRAD
+        K              = 2*L+1
+        TAUREFL        = (TAUREF(K)+TAUREF(K+1))/Qrefv
+        DTAUI(L,nw,ng) = DTAUKI(K,NW,NG)+DTAUKI(K+1,NW,NG)
+        if(DTAUI(L,NW,NG) .GT. 1.0E-9) then
+           WBARI(L,nw,ng) = (QSCATI(NW)*TAUREFL)/DTAUI(L,NW,NG)
+        else
+           WBARI(L,nw,ng) = 0.0D0
+           DTAUI(L,NW,NG) = 1.0E-9
+        endif
 
-                TAUAC = TAEROS(K,NW) + TAUCLD
-                if(TAUAC .GT. 0.0) then
-                   cosbi(L,NW,NG) = GI(NW)           !change formula to add clouds
-                else
-                   cosbi(L,NW,NG) = 0.0D0
-                end if
+        TAUAC = TAEROS(K,NW) + TAUCLD
+        if(TAUAC .GT. 0.0) then
+           cosbi(L,NW,NG) = GI(NW)           !change formula to add clouds
+        else
+           cosbi(L,NW,NG) = 0.0D0
+        end if
 
-             END DO
+     END DO
 
-          END DO
+  END DO
 
-          !C  . . .Now the other Gauss points, if needed.
+  !C  . . .Now the other Gauss points, if needed.
 
-          DO NW=1,L_NSPECTI
-             DO NG=L_NGAUSS-1,NGWI(NW),-1
+  DO NW=1,L_NSPECTI
+     DO NG=L_NGAUSS-1,NGWI(NW),-1
 
-                DO L=1,L_NLAYRAD
-                   K              = 2*L+1
-                   TAUREFL        = (TAUREF(K)+TAUREF(K+1))/Qrefv
-                   DTAUI(L,nw,ng) = DTAUKI(K,NW,NG)+DTAUKI(K+1,NW,NG)
-                   if(DTAUI(L,NW,NG) .GT. 1.0E-9) then
-                      WBARI(L,nw,ng) = (QSCATI(NW)*TAUREFL)/DTAUI(L,NW,NG)
-                   else
-                      WBARI(L,nw,ng) = 0.0D0
-                      DTAUI(L,NW,NG) = 1.0E-9
-                   endif
+        DO L=1,L_NLAYRAD
+           K              = 2*L+1
+           TAUREFL        = (TAUREF(K)+TAUREF(K+1))/Qrefv
+           DTAUI(L,nw,ng) = DTAUKI(K,NW,NG)+DTAUKI(K+1,NW,NG)
+           if(DTAUI(L,NW,NG) .GT. 1.0E-9) then
+              WBARI(L,nw,ng) = (QSCATI(NW)*TAUREFL)/DTAUI(L,NW,NG)
+           else
+              WBARI(L,nw,ng) = 0.0D0
+              DTAUI(L,NW,NG) = 1.0E-9
+           endif
 
-                   cosbi(L,NW,NG) = cosbi(L,NW,L_NGAUSS)
-                END DO
+           cosbi(L,NW,NG) = cosbi(L,NW,L_NGAUSS)
+        END DO
 
-             END DO
+     END DO
 
-          END DO     ! NW spectral loop
+  END DO     ! NW spectral loop
 
-          !C     TOTAL EXTINCTION OPTICAL DEPTHS
+  !C     TOTAL EXTINCTION OPTICAL DEPTHS
 
-          DO NW=1,L_NSPECTI
-             NG = L_NGAUSS
-             TAUI(1,NW,NG) = 0.0D0
-             DO L=1,L_NLAYRAD
-                TAUI(L+1,NW,NG) = TAUI(L,NW,NG)+DTAUI(L,NW,NG)
-             END DO
+  DO NW=1,L_NSPECTI
+     NG = L_NGAUSS
+     TAUI(1,NW,NG) = 0.0D0
+     DO L=1,L_NLAYRAD
+        TAUI(L+1,NW,NG) = TAUI(L,NW,NG)+DTAUI(L,NW,NG)
+     END DO
 
-             TAUCUMI(1,NW,NG)=0.0D0
-             DO K=2,L_LEVELS
-                TAUCUMI(K,NW,NG)=TAUCUMI(K-1,NW,NG)+DTAUKI(K,NW,NG)
-             END DO
+     TAUCUMI(1,NW,NG)=0.0D0
+     DO K=2,L_LEVELS
+        TAUCUMI(K,NW,NG)=TAUCUMI(K-1,NW,NG)+DTAUKI(K,NW,NG)
+     END DO
 
-             DO NG=L_NGAUSS-1,NGWI(NW),-1
+     DO NG=L_NGAUSS-1,NGWI(NW),-1
 
-                TAUI(1,NW,NG)=0.0D0
-                DO L=1,L_NLAYRAD
-                   TAUI(L+1,NW,NG)=TAUI(L,NW,NG)+DTAUI(L,NW,NG)
-                END DO
+        TAUI(1,NW,NG)=0.0D0
+        DO L=1,L_NLAYRAD
+           TAUI(L+1,NW,NG)=TAUI(L,NW,NG)+DTAUI(L,NW,NG)
+        END DO
 
-                TAUCUMI(1,NW,NG)=0.0D0
-                DO K=2,L_LEVELS
-                   TAUCUMI(K,NW,NG)=TAUCUMI(K-1,NW,NG)+DTAUKI(K,NW,NG)
-                END DO
+        TAUCUMI(1,NW,NG)=0.0D0
+        DO K=2,L_LEVELS
+           TAUCUMI(K,NW,NG)=TAUCUMI(K-1,NW,NG)+DTAUKI(K,NW,NG)
+        END DO
 
-             END DO
-          END DO
-!write(*,*) taucumi(:,3,15)
-!write(*,*) "dtauk: ",dtauki(:,3,15)
-!write(*,*) "dtaui: ",dtaui(:,3,15)
-!stop
+     END DO
+  END DO
+  !write(*,*) taucumi(:,3,15)
+  !write(*,*) "dtauk: ",dtauki(:,3,15)
+  !write(*,*) "dtaui: ",dtaui(:,3,15)
+  !stop
 
-        END SUBROUTINE OPTCI
+END SUBROUTINE OPTCI
 
 
-        ! ----------------------------------------------------------------------
+! ----------------------------------------------------------------------
 
-        ! ----------------------------------------------------------------------
+! ----------------------------------------------------------------------
 
-        SUBROUTINE SFLUXI(PLEV,TLEV,DTAUI,TAUCUMI,RSFI,L_LAYERS,L_LEVELS,&
-             L_NLAYRAD,L_NLEVRAD,COSBI,WBARI,NFLUXTOPI,FMNETI,&
-             fluxupi,fluxdni,NGWI)
+SUBROUTINE SFLUXI(PLEV,TLEV,DTAUI,TAUCUMI,RSFI,L_LAYERS,L_LEVELS,&
+     L_NLAYRAD,L_NLEVRAD,COSBI,WBARI,NFLUXTOPI,FMNETI,&
+     fluxupi,fluxdni,NGWI)
 
-          !C  GCM2.0  Feb 2003
+  !C  GCM2.0  Feb 2003
 
-          use GITM_planet
+  use GITM_planet
 
-          implicit none
+  implicit none
 
-          integer :: L_LAYERS,L_LEVELS,L_NLAYRAD,L_NLEVRAD
-          integer :: NLEVRAD, L, NW, NG, NTS, NTT
+  integer :: L_LAYERS,L_LEVELS,L_NLAYRAD,L_NLEVRAD
+  integer :: NLEVRAD, L, NW, NG, NTS, NTT
 
-          real :: TLEV(LL_LEVELS), PLEV(LL_LEVELS+1)
-          real :: TAUCUMI(LL_LEVELS,L_NSPECTI,L_NGAUSS)
-          real :: FMNETI(LL_NLAYRAD)
+  real :: TLEV(LL_LEVELS), PLEV(LL_LEVELS+1)
+  real :: TAUCUMI(LL_LEVELS,L_NSPECTI,L_NGAUSS)
+  real :: FMNETI(LL_NLAYRAD)
 
-          real :: DTAUI(LL_NLAYRAD,L_NSPECTI,L_NGAUSS)
-          real :: FMUPI(LL_NLAYRAD), FMDI(LL_NLAYRAD)
-          real :: COSBI(LL_NLAYRAD,L_NSPECTI,L_NGAUSS)
-          real :: WBARI(LL_NLAYRAD,L_NSPECTI,L_NGAUSS)
-          real :: NFLUXTOPI
-          real :: FTOPUP
+  real :: DTAUI(LL_NLAYRAD,L_NSPECTI,L_NGAUSS)
+  real :: FMUPI(LL_NLAYRAD), FMDI(LL_NLAYRAD)
+  real :: COSBI(LL_NLAYRAD,L_NSPECTI,L_NGAUSS)
+  real :: WBARI(LL_NLAYRAD,L_NSPECTI,L_NGAUSS)
+  real :: NFLUXTOPI
+  real :: FTOPUP
 
-          real :: RSFI, TSURF, BSURF, TTOP, BTOP, TAUTOP
-          real :: PLANCK, PLTOP
-          real :: fluxupi(LL_NLAYRAD), fluxdni(LL_NLAYRAD)
+  real :: RSFI, TSURF, BSURF, TTOP, BTOP, TAUTOP
+  real :: PLANCK, PLTOP
+  real :: fluxupi(LL_NLAYRAD), fluxdni(LL_NLAYRAD)
 
-          real :: fzero
-          integer :: NGWI(L_NSPECTI)
+  real :: fzero
+  integer :: NGWI(L_NSPECTI)
 
 
-          !C======================================================================C
+  !C======================================================================C
 
-          NLEVRAD = L_NLEVRAD
+  NLEVRAD = L_NLEVRAD
 
-          !C     ZERO THE NET FLUXES
+  !C     ZERO THE NET FLUXES
 
-          NFLUXTOPI = 0.0
+  NFLUXTOPI = 0.0
 
-          DO L=1,L_NLAYRAD
-             FMNETI(L)  = 0.0
-             FLUXUPI(L) = 0.0
-             FLUXDNI(L) = 0.0
-          END DO
+  DO L=1,L_NLAYRAD
+     FMNETI(L)  = 0.0
+     FLUXUPI(L) = 0.0
+     FLUXDNI(L) = 0.0
+  END DO
 
-          !C     WE NOW ENTER A MAJOR LOOP OVER SPECTRAL INTERVALS IN THE INFRARED
-          !C     TO CALCULATE THE NET FLUX IN EACH SPECTRAL INTERVAL
+  !C     WE NOW ENTER A MAJOR LOOP OVER SPECTRAL INTERVALS IN THE INFRARED
+  !C     TO CALCULATE THE NET FLUX IN EACH SPECTRAL INTERVAL
 
-          TTOP  = TLEV(2)
-          TSURF = TLEV(L_LEVELS)
+  TTOP  = TLEV(2)
+  TSURF = TLEV(L_LEVELS)
 
-          NTS   = TSURF*10.0D0-499
-          NTT   = TTOP *10.0D0-499
+  NTS   = TSURF*10.0D0-499
+  NTT   = TTOP *10.0D0-499
 
-          DO 501 NW=1,L_NSPECTI
+  DO NW=1,L_NSPECTI
 
-             !C       SURFACE EMISSIONS - INDEPENDENT OF GAUSS POINTS
+     !C       SURFACE EMISSIONS - INDEPENDENT OF GAUSS POINTS
 
-             BSURF = (1.-RSFI)*PLANCKIR(NW,NTS)
-             PLTOP = PLANCKIR(NW,NTT)
+     BSURF = (1.-RSFI)*PLANCKIR(NW,NTS)
+     PLTOP = PLANCKIR(NW,NTT)
 
-             !C  If FZEROI(NW) = 1, then the k-coefficients are zero - skip to the
-             !C  special Gauss point at the end.
+     !C  If FZEROI(NW) = 1, then the k-coefficients are zero - skip to the
+     !C  special Gauss point at the end.
 
-             FZERO = FZEROI(NW)
-             IF(FZERO.ge.0.99) goto 40
+     FZERO = FZEROI(NW)
+     IF(FZERO < 0.99)then
 
-             DO NG=1,NGWI(NW)-1
-                fzero = fzero + (1.0-FZEROI(NW))*GWEIGHT(NG)
-             END DO
+        DO NG=1,NGWI(NW)-1
+           fzero = fzero + (1.0-FZEROI(NW))*GWEIGHT(NG)
+        END DO
 
-             DO NG=NGWI(NW),L_NGAUSS-1
+        DO NG=NGWI(NW),L_NGAUSS-1
 
-                !C         SET UP THE UPPER AND LOWER BOUNDARY CONDITIONS ON THE IR
-                !C         CALCULATE THE DOWNWELLING RADIATION AT THE TOP OF THE MODEL
-                !C         OR THE TOP LAYER WILL COOL TO SPACE UNPHYSICALLY
+           !C         SET UP THE UPPER AND LOWER BOUNDARY CONDITIONS ON THE IR
+           !C         CALCULATE THE DOWNWELLING RADIATION AT THE TOP OF THE MODEL
+           !C         OR THE TOP LAYER WILL COOL TO SPACE UNPHYSICALLY
 
-                TAUTOP = DTAUI(1,NW,NG)*PLEV(2)/(PLEV(4)-PLEV(2))
-                BTOP   = (1.0-EXP(-TAUTOP/UBARI))*PLTOP
+           TAUTOP = DTAUI(1,NW,NG)*PLEV(2)/(PLEV(4)-PLEV(2))
+           BTOP   = (1.0-EXP(-TAUTOP/UBARI))*PLTOP
 
-                !C         WE CAN NOW SOLVE FOR THE COEFFICIENTS OF THE TWO STREAM
-                !C         CALL A SUBROUTINE THAT SOLVES  FOR THE FLUX TERMS
-                !C         WITHIN EACH INTERVAL AT THE MIDPOINT WAVENUMBER
-!write(*,*) "before: ",taucumi(1,nw,ng),nw,ng
-!write(*,*) "before: ",taucumi(:,nw,ng)
-                CALL GFLUXI(NLEVRAD,TLEV,NW,DWNI(NW),DTAUI(1,NW,NG),&
-                     TAUCUMI(1,NW,NG),&
-                     WBARI(1,NW,NG),COSBI(1,NW,NG),RSFI,BTOP,&
-                     BSURF,FTOPUP,FMUPI,FMDI,&
-                     L_LAYERS,L_LEVELS,L_NLAYRAD,L_NLEVRAD)
-!if (ng .eq. 15 .and. nw .eq. 3) stop
-                !C         NOW CALCULATE THE CUMULATIVE IR NET FLUX
-
-                NFLUXTOPI = NFLUXTOPI+FTOPUP*DWNI(NW)*GWEIGHT(NG)*&
-                     (1.0-FZEROI(NW))
-
-                DO L=1,L_NLEVRAD-1
-
-                   !C           CORRECT FOR THE WAVENUMBER INTERVALS
-!if (l .eq. 45 .and. ng .eq.15 .and. nw .eq. 3) then
-!stop
-!write(*,*) fmneti(l),fmupi(l),fmdi(l),dwni(nw),gweight(ng),fzeroi(nw)
-!endif
-                   FMNETI(L)  = FMNETI(L)+(FMUPI(L)-FMDI(L))*DWNI(NW)*&
-                        GWEIGHT(NG)*(1.0-FZEROI(NW))
-                   FLUXUPI(L) = FLUXUPI(L) + FMUPI(L)*DWNI(NW)*GWEIGHT(NG)*&
-                        (1.0-FZEROI(NW))
-                   FLUXDNI(L) = FLUXDNI(L) + FMDI(L)*DWNI(NW)*GWEIGHT(NG)*&
-                        (1.0-FZEROI(NW))
-!if (l .eq. 45 .and. ng .eq.15 .and. nw .eq. 3) then
-!write(*,*) fmneti(l)
-!stop
-!endif
-!if (fmneti(l) .ne. fmneti(l)) then
-!   write(*,*) l,l_nlevrad-1,ng,l_ngauss-1,nw,l_nspecti
-!stop
-!endif
-                END DO
-
-             END DO       !End NGAUSS LOOP
-
-40           CONTINUE
-
-             !C      SPECIAL 17th Gauss point
-
-             NG     = L_NGAUSS
-
-             TAUTOP = DTAUI(1,NW,NG)*PLEV(2)/(PLEV(4)-PLEV(2))
-             BTOP   = (1.0-EXP(-TAUTOP/UBARI))*PLTOP
-
-             !C      WE CAN NOW SOLVE FOR THE COEFFICIENTS OF THE TWO STREAM
-             !C      CALL A SUBROUTINE THAT SOLVES  FOR THE FLUX TERMS
-             !C      WITHIN EACH INTERVAL AT THE MIDPOINT WAVENUMBER
-
-             CALL GFLUXI(NLEVRAD,TLEV,NW,DWNI(NW),DTAUI(1,NW,NG),&
-                  TAUCUMI(1,NW,NG),&
-                  WBARI(1,NW,NG),COSBI(1,NW,NG),RSFI,BTOP,&
-                  BSURF,FTOPUP,FMUPI,FMDI,&
-                  L_LAYERS,L_LEVELS,L_NLAYRAD,L_NLEVRAD)
-
-             !C      NOW CALCULATE THE CUMULATIVE IR NET FLUX
-
-             NFLUXTOPI = NFLUXTOPI+FTOPUP*DWNI(NW)*FZERO
-
-             DO L=1,L_NLEVRAD-1
-
-                !C        CORRECT FOR THE WAVENUMBER INTERVALS
-
-                FMNETI(L)  = FMNETI(L)+(FMUPI(L)-FMDI(L))*DWNI(NW)*FZERO
-                FLUXUPI(L) = FLUXUPI(L) + FMUPI(L)*DWNI(NW)*FZERO
-                FLUXDNI(L) = FLUXDNI(L) + FMDI(L)*DWNI(NW)*FZERO
-             END DO
-
-
-501          CONTINUE      !End Spectral Interval LOOP
-
-             !C *** END OF MAJOR SPECTRAL INTERVAL LOOP IN THE INFRARED****
-
-
-           END SUBROUTINE SFLUXI
-
-
-           ! ----------------------------------------------------------------------
-
-           ! ----------------------------------------------------------------------
-
-           SUBROUTINE GFLUXI(NLL,TLEV,NW,DW,DTAU,TAUCUM,W0,COSBAR,&
-                RSF,BTOP,BSURF,FTOPUP,FMIDP,FMIDM,&
+           !C         WE CAN NOW SOLVE FOR THE COEFFICIENTS OF THE TWO STREAM
+           !C         CALL A SUBROUTINE THAT SOLVES  FOR THE FLUX TERMS
+           !C         WITHIN EACH INTERVAL AT THE MIDPOINT WAVENUMBER
+           !write(*,*) "before: ",taucumi(1,nw,ng),nw,ng
+           !write(*,*) "before: ",taucumi(:,nw,ng)
+           CALL GFLUXI(NLEVRAD,TLEV,NW,DWNI(NW),DTAUI(1,NW,NG),&
+                TAUCUMI(1,NW,NG),&
+                WBARI(1,NW,NG),COSBI(1,NW,NG),RSFI,BTOP,&
+                BSURF,FTOPUP,FMUPI,FMDI,&
                 L_LAYERS,L_LEVELS,L_NLAYRAD,L_NLEVRAD)
+           !if (ng .eq. 15 .and. nw .eq. 3) stop
+           !C         NOW CALCULATE THE CUMULATIVE IR NET FLUX
+
+           NFLUXTOPI = NFLUXTOPI+FTOPUP*DWNI(NW)*GWEIGHT(NG)*&
+                (1.0-FZEROI(NW))
+
+           DO L=1,L_NLEVRAD-1
+
+              !C           CORRECT FOR THE WAVENUMBER INTERVALS
+              !if (l .eq. 45 .and. ng .eq.15 .and. nw .eq. 3) then
+              !stop
+              !write(*,*) fmneti(l),fmupi(l),fmdi(l),dwni(nw),gweight(ng),fzeroi(nw)
+              !endif
+              FMNETI(L)  = FMNETI(L)+(FMUPI(L)-FMDI(L))*DWNI(NW)*&
+                   GWEIGHT(NG)*(1.0-FZEROI(NW))
+              FLUXUPI(L) = FLUXUPI(L) + FMUPI(L)*DWNI(NW)*GWEIGHT(NG)*&
+                   (1.0-FZEROI(NW))
+              FLUXDNI(L) = FLUXDNI(L) + FMDI(L)*DWNI(NW)*GWEIGHT(NG)*&
+                   (1.0-FZEROI(NW))
+              !if (l .eq. 45 .and. ng .eq.15 .and. nw .eq. 3) then
+              !write(*,*) fmneti(l)
+              !stop
+              !endif
+              !if (fmneti(l) .ne. fmneti(l)) then
+              !   write(*,*) l,l_nlevrad-1,ng,l_ngauss-1,nw,l_nspecti
+              !stop
+              !endif
+           END DO
+
+        END DO       !End NGAUSS LOOP
+
+     end if
+
+     !C      SPECIAL 17th Gauss point
+
+     NG     = L_NGAUSS
+
+     TAUTOP = DTAUI(1,NW,NG)*PLEV(2)/(PLEV(4)-PLEV(2))
+     BTOP   = (1.0-EXP(-TAUTOP/UBARI))*PLTOP
+
+     !C      WE CAN NOW SOLVE FOR THE COEFFICIENTS OF THE TWO STREAM
+     !C      CALL A SUBROUTINE THAT SOLVES  FOR THE FLUX TERMS
+     !C      WITHIN EACH INTERVAL AT THE MIDPOINT WAVENUMBER
+
+     CALL GFLUXI(NLEVRAD,TLEV,NW,DWNI(NW),DTAUI(1,NW,NG),&
+          TAUCUMI(1,NW,NG),&
+          WBARI(1,NW,NG),COSBI(1,NW,NG),RSFI,BTOP,&
+          BSURF,FTOPUP,FMUPI,FMDI,&
+          L_LAYERS,L_LEVELS,L_NLAYRAD,L_NLEVRAD)
+
+     !C      NOW CALCULATE THE CUMULATIVE IR NET FLUX
+
+     NFLUXTOPI = NFLUXTOPI+FTOPUP*DWNI(NW)*FZERO
+
+     DO L=1,L_NLEVRAD-1
+
+        !C        CORRECT FOR THE WAVENUMBER INTERVALS
+
+        FMNETI(L)  = FMNETI(L)+(FMUPI(L)-FMDI(L))*DWNI(NW)*FZERO
+        FLUXUPI(L) = FLUXUPI(L) + FMUPI(L)*DWNI(NW)*FZERO
+        FLUXDNI(L) = FLUXDNI(L) + FMDI(L)*DWNI(NW)*FZERO
+     END DO
+
+
+  end do      !End Spectral Interval LOOP
+
+  !C *** END OF MAJOR SPECTRAL INTERVAL LOOP IN THE INFRARED****
+
+
+END SUBROUTINE SFLUXI
+
+
+! ----------------------------------------------------------------------
+
+! ----------------------------------------------------------------------
+
+SUBROUTINE GFLUXI(NLL,TLEV,NW,DW,DTAU,TAUCUM,W0,COSBAR,&
+     RSF,BTOP,BSURF,FTOPUP,FMIDP,FMIDM,&
+     L_LAYERS,L_LEVELS,L_NLAYRAD,L_NLEVRAD)
 
 !!$C  GCM2.0  Feb 2003
 !!$C
@@ -3830,487 +3822,485 @@ END DO
 !!$C
 !!$C----------------------------------------------------------------------C
 
-             use GITM_planet
+  use GITM_planet
 
-             implicit none
+  implicit none
 
-             INTEGER :: L_LAYERS,L_LEVELS,L_NLAYRAD,L_NLEVRAD
-!            integer,PARAMETER :: NL=101 ! MUST BE LARGER THAN NLEVEL
-             integer,PARAMETER :: NL3=101 ! MUST BE LARGER THAN NLEVEL
-
-
-!            INTEGER :: NLL, NLAYER, L, NW, NT, NT2
-             INTEGER :: NLL, NLAYER, L, NW, NT3, NT2
-             REAL ::  TERM, CPMID, CMMID
-             REAL ::  EM,EP
-             REAL ::  COSBAR(LL_NLAYRAD), W0(LL_NLAYRAD), DTAU(LL_NLAYRAD)
-             REAL ::  TAUCUM(LL_LEVELS), DTAUK
-             REAL ::  TLEV(LL_LEVELS)
-             REAL ::  WAVEN, DW, RSF
-             REAL ::  BTOP, BSURF, FMIDP(LL_NLAYRAD), FMIDM(LL_NLAYRAD)
-             REAL ::  B0(NL3),B1(NL3),ALPHA(NL3),LAMDA(NL3),XK1(NL3),XK2(NL3)
-             REAL ::  GAMA(NL3),CP(NL3),CM(NL3),CPM1(NL3),CMM1(NL3),E1(NL3),E2(NL3)
-             REAL ::  E3(NL3),E4(NL3)
-             REAL ::  TAUMAX
-
-             REAL ::  FTOPUP, FLUXUP, FLUXDN
+  INTEGER :: L_LAYERS,L_LEVELS,L_NLAYRAD,L_NLEVRAD
+  !            integer,PARAMETER :: NL=101 ! MUST BE LARGER THAN NLEVEL
+  integer,PARAMETER :: NL3=101 ! MUST BE LARGER THAN NLEVEL
 
 
-             DATA TAUMAX / L_TAUMAX /
+  !            INTEGER :: NLL, NLAYER, L, NW, NT, NT2
+  INTEGER :: NLL, NLAYER, L, NW, NT3, NT2
+  REAL ::  TERM, CPMID, CMMID
+  REAL ::  EM,EP
+  REAL ::  COSBAR(LL_NLAYRAD), W0(LL_NLAYRAD), DTAU(LL_NLAYRAD)
+  REAL ::  TAUCUM(LL_LEVELS), DTAUK
+  REAL ::  TLEV(LL_LEVELS)
+  REAL ::  WAVEN, DW, RSF
+  REAL ::  BTOP, BSURF, FMIDP(LL_NLAYRAD), FMIDM(LL_NLAYRAD)
+  REAL ::  B0(NL3),B1(NL3),ALPHA(NL3),LAMDA(NL3),XK1(NL3),XK2(NL3)
+  REAL ::  GAMA(NL3),CP(NL3),CM(NL3),CPM1(NL3),CMM1(NL3),E1(NL3),E2(NL3)
+  REAL ::  E3(NL3),E4(NL3)
+  REAL ::  TAUMAX
 
-             !C======================================================================C
-
-             !C     WE GO WITH THE HEMISPHERIC CONSTANT APPROACH IN THE INFRARED
-!write(*,*)"gflux :", taucum
-!stop
-!            IF (NLL .GT. NL) STOP 'PARAMETER NL TOO SMALL IN GLUFV'
-             IF (NLL .GT. NL3) STOP 'PARAMETER NL TOO SMALL IN GLUFV'
-
-             NLAYER = L_NLAYRAD
-
-             DO L=1,L_NLAYRAD-1
-                ALPHA(L) = SQRT( (1.0-W0(L))/(1.0-W0(L)*COSBAR(L)) )
-                LAMDA(L) = ALPHA(L)*(1.0-W0(L)*COSBAR(L))/UBARI
-
-                NT2   = TLEV(2*L+2)*10.0D0-499
-!               NT    = TLEV(2*L)*10.0D0-499
-                NT3   = TLEV(2*L)*10.0D0-499
-
-!               B1(L) = (PLANCKIR(NW,NT2)-PLANCKIR(NW,NT))/DTAU(L)
-                B1(L) = (PLANCKIR(NW,NT2)-PLANCKIR(NW,NT3))/DTAU(L)
-!               B0(L) = PLANCKIR(NW,NT)
-                B0(L) = PLANCKIR(NW,NT3)
-             END DO
-
-             !C     Take care of special lower layer
-
-             L        = L_NLAYRAD
-             ALPHA(L) = SQRT( (1.0-W0(L))/(1.0-W0(L)*COSBAR(L)) )
-             LAMDA(L) = ALPHA(L)*(1.0-W0(L)*COSBAR(L))/UBARI
-
-!            NT    = TLEV(2*L+1)*10.0D0-499
-             NT3   = TLEV(2*L+1)*10.0D0-499
-             NT2   = TLEV(2*L)*10.0D0-499
-!            B1(L) = (PLANCKIR(NW,NT)-PLANCKIR(NW,NT2))/DTAU(L)
-             B1(L) = (PLANCKIR(NW,NT3)-PLANCKIR(NW,NT2))/DTAU(L)
-             B0(L) = PLANCKIR(NW,NT2)
-
-             DO L=1,L_NLAYRAD
-                GAMA(L) = (1.0-ALPHA(L))/(1.0+ALPHA(L))
-                TERM    = UBARI/(1.0-W0(L)*COSBAR(L))
-
-                !C       CP AND CM ARE THE CPLUS AND CMINUS TERMS EVALUATED AT THE
-                !C       BOTTOM OF THE LAYER.  THAT IS AT DTAU OPTICAL DEPTH
-
-                CP(L) = B0(L)+B1(L)*DTAU(L) +B1(L)*TERM
-                CM(L) = B0(L)+B1(L)*DTAU(L) -B1(L)*TERM
-
-                !C       CPM1 AND CMM1 ARE THE CPLUS AND CMINUS TERMS EVALUATED
-                !C       AT THE TOP OF THE LAYER, THAT IS ZERO OPTICAL DEPTH
-
-                CPM1(L) = B0(L)+B1(L)*TERM
-                CMM1(L) = B0(L)-B1(L)*TERM
-             END DO
-
-             !C     NOW CALCULATE THE EXPONENTIAL TERMS NEEDED
-             !C     FOR THE TRIDIAGONAL ROTATED LAYERED METHOD
-             !C     WARNING IF DTAU(J) IS GREATER THAN ABOUT 35 (VAX)
-             !C     WE CLIP IT TO AVOID OVERFLOW.
-
-             DO L=1,L_NLAYRAD
-
-                !C       CLIP THE EXPONENTIAL HERE.
-
-                EP    = EXP( MIN((LAMDA(L)*DTAU(L)),TAUMAX))
-                EM    = 1.0/EP
-                E1(L) = EP+GAMA(L)*EM
-                E2(L) = EP-GAMA(L)*EM
-                E3(L) = GAMA(L)*EP+EM
-                E4(L) = GAMA(L)*EP-EM
-             END DO
-
-             !c     B81=BTOP  ! RENAME BEFORE CALLING DSOLVER - used to be to set
-             !c     B82=BSURF ! them to real*8 - but now everything is real*8
-             !c     R81=RSF   ! so this may not be necessary
-
-             !C     Double precision tridiagonal solver
-
-             CALL DSOLVER(NLAYER,GAMA,CP,CM,CPM1,CMM1,E1,E2,E3,E4,BTOP,&
-                  BSURF,RSF,XK1,XK2)
-
-             !C     NOW WE CALCULATE THE FLUXES AT THE MIDPOINTS OF THE LAYERS.
-
-             DO L=1,L_NLAYRAD-1
-                DTAUK = TAUCUM(2*L+1)-TAUCUM(2*L)
-                EP    = EXP(MIN(LAMDA(L)*DTAUK,TAUMAX)) ! CLIPPED EXPONENTIAL
-                EM    = 1.0/EP
-                TERM  = UBARI/(1.-W0(L)*COSBAR(L))
-
-                !C       CP AND CM ARE THE CPLUS AND CMINUS TERMS EVALUATED AT THE
-                !C       BOTTOM OF THE LAYER.  THAT IS AT DTAU  OPTICAL DEPTH
-
-                CPMID    = B0(L)+B1(L)*DTAUK +B1(L)*TERM
-                CMMID    = B0(L)+B1(L)*DTAUK -B1(L)*TERM
-                FMIDP(L) = XK1(L)*EP + GAMA(L)*XK2(L)*EM + CPMID
-                FMIDM(L) = XK1(L)*EP*GAMA(L) + XK2(L)*EM + CMMID
-
-                !C       FOR FLUX WE INTEGRATE OVER THE HEMISPHERE TREATING INTENSITY CONSTANT
-
-                FMIDP(L) = FMIDP(L)*PI
-                FMIDM(L) = FMIDM(L)*PI
-
-!if (l .eq. 45) then
-!   write(*,*) "in glux: ",fmidp(l),fmidm(l), taucum(2*l+1),taucum(2*l)
-
-!endif
-             END DO
-
-             !C     And now, for the special bottom layer
-
-             L    = L_NLAYRAD
-
-             EP   = EXP(MIN((LAMDA(L)*DTAU(L)),TAUMAX)) ! CLIPPED EXPONENTIAL
-             EM   = 1.0/EP
-             TERM = UBARI/(1.-W0(L)*COSBAR(L))
-
-             !C     CP AND CM ARE THE CPLUS AND CMINUS TERMS EVALUATED AT THE
-             !C     BOTTOM OF THE LAYER.  THAT IS AT DTAU  OPTICAL DEPTH
-
-             CPMID    = B0(L)+B1(L)*DTAU(L) +B1(L)*TERM
-             CMMID    = B0(L)+B1(L)*DTAU(L) -B1(L)*TERM
-             FMIDP(L) = XK1(L)*EP + GAMA(L)*XK2(L)*EM + CPMID
-             FMIDM(L) = XK1(L)*EP*GAMA(L) + XK2(L)*EM + CMMID
-
-             !C     FOR FLUX WE INTEGRATE OVER THE HEMISPHERE TREATING INTENSITY CONSTANT
-
-             FMIDP(L) = FMIDP(L)*PI
-             FMIDM(L) = FMIDM(L)*PI
-
-             !C     FLUX AT THE PTOP LEVEL
-
-             EP   = 1.0
-             EM   = 1.0
-             TERM = UBARI/(1.0-W0(1)*COSBAR(1))
-
-             !C     CP AND CM ARE THE CPLUS AND CMINUS TERMS EVALUATED AT THE
-             !C     BOTTOM OF THE LAYER.  THAT IS AT DTAU  OPTICAL DEPTH
-
-             CPMID  = B0(1)+B1(1)*TERM
-             CMMID  = B0(1)-B1(1)*TERM
-
-             FLUXUP = XK1(1)*EP + GAMA(1)*XK2(1)*EM + CPMID
-             FLUXDN = XK1(1)*EP*GAMA(1) + XK2(1)*EM + CMMID
-
-             !C     FOR FLUX WE INTEGRATE OVER THE HEMISPHERE TREATING INTENSITY CONSTANT
-
-             FTOPUP = (FLUXUP-FLUXDN)*PI
+  REAL ::  FTOPUP, FLUXUP, FLUXDN
 
 
-           END SUBROUTINE GFLUXI
+  DATA TAUMAX / L_TAUMAX /
+
+  !C======================================================================C
+
+  !C     WE GO WITH THE HEMISPHERIC CONSTANT APPROACH IN THE INFRARED
+  !write(*,*)"gflux :", taucum
+  !stop
+  !            IF (NLL .GT. NL) STOP 'PARAMETER NL TOO SMALL IN GLUFV'
+  IF (NLL .GT. NL3) STOP 'PARAMETER NL TOO SMALL IN GLUFV'
+
+  NLAYER = L_NLAYRAD
+
+  DO L=1,L_NLAYRAD-1
+     ALPHA(L) = SQRT( (1.0-W0(L))/(1.0-W0(L)*COSBAR(L)) )
+     LAMDA(L) = ALPHA(L)*(1.0-W0(L)*COSBAR(L))/UBARI
+
+     NT2   = TLEV(2*L+2)*10.0D0-499
+     !               NT    = TLEV(2*L)*10.0D0-499
+     NT3   = TLEV(2*L)*10.0D0-499
+
+     !               B1(L) = (PLANCKIR(NW,NT2)-PLANCKIR(NW,NT))/DTAU(L)
+     B1(L) = (PLANCKIR(NW,NT2)-PLANCKIR(NW,NT3))/DTAU(L)
+     !               B0(L) = PLANCKIR(NW,NT)
+     B0(L) = PLANCKIR(NW,NT3)
+  END DO
+
+  !C     Take care of special lower layer
+
+  L        = L_NLAYRAD
+  ALPHA(L) = SQRT( (1.0-W0(L))/(1.0-W0(L)*COSBAR(L)) )
+  LAMDA(L) = ALPHA(L)*(1.0-W0(L)*COSBAR(L))/UBARI
+
+  !            NT    = TLEV(2*L+1)*10.0D0-499
+  NT3   = TLEV(2*L+1)*10.0D0-499
+  NT2   = TLEV(2*L)*10.0D0-499
+  !            B1(L) = (PLANCKIR(NW,NT)-PLANCKIR(NW,NT2))/DTAU(L)
+  B1(L) = (PLANCKIR(NW,NT3)-PLANCKIR(NW,NT2))/DTAU(L)
+  B0(L) = PLANCKIR(NW,NT2)
+
+  DO L=1,L_NLAYRAD
+     GAMA(L) = (1.0-ALPHA(L))/(1.0+ALPHA(L))
+     TERM    = UBARI/(1.0-W0(L)*COSBAR(L))
+
+     !C       CP AND CM ARE THE CPLUS AND CMINUS TERMS EVALUATED AT THE
+     !C       BOTTOM OF THE LAYER.  THAT IS AT DTAU OPTICAL DEPTH
+
+     CP(L) = B0(L)+B1(L)*DTAU(L) +B1(L)*TERM
+     CM(L) = B0(L)+B1(L)*DTAU(L) -B1(L)*TERM
+
+     !C       CPM1 AND CMM1 ARE THE CPLUS AND CMINUS TERMS EVALUATED
+     !C       AT THE TOP OF THE LAYER, THAT IS ZERO OPTICAL DEPTH
+
+     CPM1(L) = B0(L)+B1(L)*TERM
+     CMM1(L) = B0(L)-B1(L)*TERM
+  END DO
+
+  !C     NOW CALCULATE THE EXPONENTIAL TERMS NEEDED
+  !C     FOR THE TRIDIAGONAL ROTATED LAYERED METHOD
+  !C     WARNING IF DTAU(J) IS GREATER THAN ABOUT 35 (VAX)
+  !C     WE CLIP IT TO AVOID OVERFLOW.
+
+  DO L=1,L_NLAYRAD
+
+     !C       CLIP THE EXPONENTIAL HERE.
+
+     EP    = EXP( MIN((LAMDA(L)*DTAU(L)),TAUMAX))
+     EM    = 1.0/EP
+     E1(L) = EP+GAMA(L)*EM
+     E2(L) = EP-GAMA(L)*EM
+     E3(L) = GAMA(L)*EP+EM
+     E4(L) = GAMA(L)*EP-EM
+  END DO
+
+  !c     B81=BTOP  ! RENAME BEFORE CALLING DSOLVER - used to be to set
+  !c     B82=BSURF ! them to real*8 - but now everything is real*8
+  !c     R81=RSF   ! so this may not be necessary
+
+  !C     Double precision tridiagonal solver
+
+  CALL DSOLVER(NLAYER,GAMA,CP,CM,CPM1,CMM1,E1,E2,E3,E4,BTOP,&
+       BSURF,RSF,XK1,XK2)
+
+  !C     NOW WE CALCULATE THE FLUXES AT THE MIDPOINTS OF THE LAYERS.
+
+  DO L=1,L_NLAYRAD-1
+     DTAUK = TAUCUM(2*L+1)-TAUCUM(2*L)
+     EP    = EXP(MIN(LAMDA(L)*DTAUK,TAUMAX)) ! CLIPPED EXPONENTIAL
+     EM    = 1.0/EP
+     TERM  = UBARI/(1.-W0(L)*COSBAR(L))
+
+     !C       CP AND CM ARE THE CPLUS AND CMINUS TERMS EVALUATED AT THE
+     !C       BOTTOM OF THE LAYER.  THAT IS AT DTAU  OPTICAL DEPTH
+
+     CPMID    = B0(L)+B1(L)*DTAUK +B1(L)*TERM
+     CMMID    = B0(L)+B1(L)*DTAUK -B1(L)*TERM
+     FMIDP(L) = XK1(L)*EP + GAMA(L)*XK2(L)*EM + CPMID
+     FMIDM(L) = XK1(L)*EP*GAMA(L) + XK2(L)*EM + CMMID
+
+     !C       FOR FLUX WE INTEGRATE OVER THE HEMISPHERE TREATING INTENSITY CONSTANT
+
+     FMIDP(L) = FMIDP(L)*PI
+     FMIDM(L) = FMIDM(L)*PI
+
+     !if (l .eq. 45) then
+     !   write(*,*) "in glux: ",fmidp(l),fmidm(l), taucum(2*l+1),taucum(2*l)
+
+     !endif
+  END DO
+
+  !C     And now, for the special bottom layer
+
+  L    = L_NLAYRAD
+
+  EP   = EXP(MIN((LAMDA(L)*DTAU(L)),TAUMAX)) ! CLIPPED EXPONENTIAL
+  EM   = 1.0/EP
+  TERM = UBARI/(1.-W0(L)*COSBAR(L))
+
+  !C     CP AND CM ARE THE CPLUS AND CMINUS TERMS EVALUATED AT THE
+  !C     BOTTOM OF THE LAYER.  THAT IS AT DTAU  OPTICAL DEPTH
+
+  CPMID    = B0(L)+B1(L)*DTAU(L) +B1(L)*TERM
+  CMMID    = B0(L)+B1(L)*DTAU(L) -B1(L)*TERM
+  FMIDP(L) = XK1(L)*EP + GAMA(L)*XK2(L)*EM + CPMID
+  FMIDM(L) = XK1(L)*EP*GAMA(L) + XK2(L)*EM + CMMID
+
+  !C     FOR FLUX WE INTEGRATE OVER THE HEMISPHERE TREATING INTENSITY CONSTANT
+
+  FMIDP(L) = FMIDP(L)*PI
+  FMIDM(L) = FMIDM(L)*PI
+
+  !C     FLUX AT THE PTOP LEVEL
+
+  EP   = 1.0
+  EM   = 1.0
+  TERM = UBARI/(1.0-W0(1)*COSBAR(1))
+
+  !C     CP AND CM ARE THE CPLUS AND CMINUS TERMS EVALUATED AT THE
+  !C     BOTTOM OF THE LAYER.  THAT IS AT DTAU  OPTICAL DEPTH
+
+  CPMID  = B0(1)+B1(1)*TERM
+  CMMID  = B0(1)-B1(1)*TERM
+
+  FLUXUP = XK1(1)*EP + GAMA(1)*XK2(1)*EM + CPMID
+  FLUXDN = XK1(1)*EP*GAMA(1) + XK2(1)*EM + CMMID
+
+  !C     FOR FLUX WE INTEGRATE OVER THE HEMISPHERE TREATING INTENSITY CONSTANT
+
+  FTOPUP = (FLUXUP-FLUXDN)*PI
 
 
-           ! ----------------------------------------------------------------------
+END SUBROUTINE GFLUXI
 
-           subroutine set_planet_defaults
 
-             use ModInputs
+! ----------------------------------------------------------------------
 
-             DtLTERadiation = 900.0
+subroutine set_planet_defaults
 
-             return
+  use ModInputs
 
-           end subroutine set_planet_defaults
+  DtLTERadiation = 900.0
 
-           subroutine planet_limited_fluxes(iBlock)
-             !! Do Nothing
-           end subroutine planet_limited_fluxes
+  return
+
+end subroutine set_planet_defaults
+
+subroutine planet_limited_fluxes(iBlock)
+  !! Do Nothing
+end subroutine planet_limited_fluxes
 
 !***********************************************************************
 !  nlte_tcool supporting subroutines:  November 2017
 !***********************************************************************
 
 subroutine NLTEdlvr11_ZGRID (n_gcm, &
-           p_gcm, t_gcm, z_gcm, co2vmr_gcm, n2vmr_gcm, &
-           covmr_gcm, o3pvmr_gcm, mmean_gcm,cpnew_gcm, &
-           nl_cts_real, nzy_cts_real )
+     p_gcm, t_gcm, z_gcm, co2vmr_gcm, n2vmr_gcm, &
+     covmr_gcm, o3pvmr_gcm, mmean_gcm,cpnew_gcm, &
+     nl_cts_real, nzy_cts_real )
 
-!***********************************************************************
+  !***********************************************************************
 
-      use GITM_planet
-!     use ModNLTE
+  use GITM_planet
+  !     use ModNLTE
 
-!     include 'nlte_paramdef.h'
-!     include 'nlte_commons.h'
+  !     include 'nlte_paramdef.h'
+  !     include 'nlte_commons.h'
 
-      implicit none
+  implicit none
 
-!     Arguments
-      integer :: n_gcm             ! I
-      real :: p_gcm(n_gcm), t_gcm(n_gcm) ! I
-      real :: co2vmr_gcm(n_gcm), n2vmr_gcm(n_gcm) ! I
-      real :: covmr_gcm(n_gcm), o3pvmr_gcm(n_gcm) ! I
-      real :: z_gcm(n_gcm)         ! I
-      real :: mmean_gcm(n_gcm)     ! I
-      real :: cpnew_gcm(n_gcm)     ! I
-      integer ::   nl_cts_real, nzy_cts_real ! O
-      real :: zaux_gcm(n_gcm)
+  !     Arguments
+  integer :: n_gcm             ! I
+  real :: p_gcm(n_gcm), t_gcm(n_gcm) ! I
+  real :: co2vmr_gcm(n_gcm), n2vmr_gcm(n_gcm) ! I
+  real :: covmr_gcm(n_gcm), o3pvmr_gcm(n_gcm) ! I
+  real :: z_gcm(n_gcm)         ! I
+  real :: mmean_gcm(n_gcm)     ! I
+  real :: cpnew_gcm(n_gcm)     ! I
+  integer ::   nl_cts_real, nzy_cts_real ! O
+  real :: zaux_gcm(n_gcm)
 
-!     local variables
-      integer :: i, iz
-      real  :: distancia, meanm, gz, Hkm
-      real  :: zmin, zmax
-      real  :: mmean_nlte(n_gcm),cpnew_nlte(n_gcm)
-      real  :: gg,masa,radio,kboltzman
+  !     local variables
+  integer :: i, iz
+  real  :: distancia, meanm, gz, Hkm
+  real  :: zmin, zmax
+  real  :: mmean_nlte(n_gcm),cpnew_nlte(n_gcm)
+  real  :: gg,masa,radio,kboltzman
 
-!     functions
-      external :: hrkday_convert
-      real  :: 	hrkday_convert
+  !     functions
+  external :: hrkday_convert
+  real  :: 	hrkday_convert
 
-!***********************************************************************
+  !***********************************************************************
 
-!     Define el working grid para MZ1D (NL, ZL, ZMIN)
-!     y otro mas fino para M.Curtis (NZ, ZX, ZXMIN = ZMIN)
-!     Tambien el working grid para MZESC110 (NL_cts, ZL_cts, ZMIN_cts=??)
-!     Para ello hace falta una z de ref del GCM, que voy a suponer la inferior
+  !     Define el working grid para MZ1D (NL, ZL, ZMIN)
+  !     y otro mas fino para M.Curtis (NZ, ZX, ZXMIN = ZMIN)
+  !     Tambien el working grid para MZESC110 (NL_cts, ZL_cts, ZMIN_cts=??)
+  !     Para ello hace falta una z de ref del GCM, que voy a suponer la inferior
 
-!     Primero, construimos escala z_gcm
+  !     Primero, construimos escala z_gcm
 
-!      zaux_gcm(1) = z_gcm(1)             ! [km]
-!      gg=6.67259e-8
-!      masa=6.4163e26
-!      radio=3390.
-!      kboltzman=1.381e-16
+  !      zaux_gcm(1) = z_gcm(1)             ! [km]
+  !      gg=6.67259e-8
+  !      masa=6.4163e26
+  !      radio=3390.
+  !      kboltzman=1.381e-16
 
-!      do iz = 2, n_gcm
-!         distancia = ( radio + zaux_gcm(iz-1) )*1.e5
-!         gz = gg * masa / ( distancia * distancia )
-!         Hkm = 0.5*( t_gcm(iz)+t_gcm(iz-1) ) /
-!     $        ( mmean_gcm(iz)/6.023e23 * gz )
-!         Hkm = kboltzman * Hkm *1e-5 ! [km]
-!         zaux_gcm(iz) = zaux_gcm(iz-1) -
-!     $        Hkm * log( p_gcm(iz)/p_gcm(iz-1) )
-!      enddo
+  !      do iz = 2, n_gcm
+  !         distancia = ( radio + zaux_gcm(iz-1) )*1.e5
+  !         gz = gg * masa / ( distancia * distancia )
+  !         Hkm = 0.5*( t_gcm(iz)+t_gcm(iz-1) ) /
+  !     $        ( mmean_gcm(iz)/6.023e23 * gz )
+  !         Hkm = kboltzman * Hkm *1e-5 ! [km]
+  !         zaux_gcm(iz) = zaux_gcm(iz-1) -
+  !     $        Hkm * log( p_gcm(iz)/p_gcm(iz-1) )
+  !      enddo
 
 
-!     Segundo, definimos los límites de los 2 modelos de NLTE.
-!     NLTE model completo: indices [jlowerboundary,jtopboundary]
-!     NLTE CTS : indices [jbotCTS,jtopCTS] donde jbotCTS = jtopboundary-2
+  !     Segundo, definimos los límites de los 2 modelos de NLTE.
+  !     NLTE model completo: indices [jlowerboundary,jtopboundary]
+  !     NLTE CTS : indices [jbotCTS,jtopCTS] donde jbotCTS = jtopboundary-2
 
 !!!!!!!!!Primero el NLTE completo  !!!!!!!!
 
-                                ! Bottom boundary for NLTE model :
-                                !   Pbot_atm = 2e-2 mb = 1.974e-5 atm , lnp(nb)=9.9   (see mz1d.par)
-      jlowerboundary = 1
-      do while ( p_gcm(jlowerboundary) .gt. Pbottom_atm )
-         jlowerboundary = jlowerboundary + 1
-         if (jlowerboundary .gt. n_gcm) then
-            write (*,*) 'Error in lower boundary pressure.'
-            write (*,*) ' p_gcm too low or wrong. '
-	    write (*,*) ' p_gcm, Pbottom_atm =', &
-                 p_gcm(n_gcm), Pbottom_atm
-            stop ' Check input value "p_gcm" or modify "Pbottom_atm" '
-         endif
-      enddo
+  ! Bottom boundary for NLTE model :
+  !   Pbot_atm = 2e-2 mb = 1.974e-5 atm , lnp(nb)=9.9   (see mz1d.par)
+  jlowerboundary = 1
+  do while ( p_gcm(jlowerboundary) .gt. Pbottom_atm )
+     jlowerboundary = jlowerboundary + 1
+     if (jlowerboundary .gt. n_gcm) then
+        write (*,*) 'Error in lower boundary pressure.'
+        write (*,*) ' p_gcm too low or wrong. '
+        write (*,*) ' p_gcm, Pbottom_atm =', &
+             p_gcm(n_gcm), Pbottom_atm
+        stop ' Check input value "p_gcm" or modify "Pbottom_atm" '
+     endif
+  enddo
 
-                                ! Top boundary for NLTE model :
-                                !   Ptop_atm = 1e-9 atm                          (see mz1d.par)
-      jtopboundary = jlowerboundary
-      do while ( p_gcm(jtopboundary) .gt. Ptop_atm )
-         jtopboundary = jtopboundary + 1
-         if (jtopboundary .gt. n_gcm) then
-            write (*,*) '!!!!!!!! Warning in top boundary pressure. '
-            write (*,*) ' Ptop_atm too high for p_gcm. '
-            write (*,*) ' p_gcm, Ptop_atm =',  &
-                 p_gcm(n_gcm), Ptop_atm
-            write (*,*) '!!!!!!!! NLTE upper boundary modified '// &
-                 ' to match p_gcm'
-            jtopboundary=n_gcm
-            goto 5000
-         endif
-      enddo
- 5000 continue
+  ! Top boundary for NLTE model :
+  !   Ptop_atm = 1e-9 atm                          (see mz1d.par)
+  jtopboundary = jlowerboundary
+  do while ( p_gcm(jtopboundary) .gt. Ptop_atm )
+     jtopboundary = jtopboundary + 1
+     if (jtopboundary .gt. n_gcm) then
+        write (*,*) '!!!!!!!! Warning in top boundary pressure. '
+        write (*,*) ' Ptop_atm too high for p_gcm. '
+        write (*,*) ' p_gcm, Ptop_atm =',  &
+             p_gcm(n_gcm), Ptop_atm
+        write (*,*) '!!!!!!!! NLTE upper boundary modified '// &
+             ' to match p_gcm'
+        jtopboundary=n_gcm
+        EXIT
+     endif
+  enddo
 
-                                ! Grid steps
+  ! Grid steps
 
-      zmin = z_gcm(jlowerboundary)
-      zmax = z_gcm(jtopboundary)
-      deltaz = (zmax-zmin) / (nl-1)
-      do i=1,nl
-         zl(i) = zmin + (i-1) * deltaz
-      enddo
+  zmin = z_gcm(jlowerboundary)
+  zmax = z_gcm(jtopboundary)
+  deltaz = (zmax-zmin) / (nl-1)
+  do i=1,nl
+     zl(i) = zmin + (i-1) * deltaz
+  enddo
 
 
-                                ! Creamos el perfil del NLTE modelo completo interpolando
+  ! Creamos el perfil del NLTE modelo completo interpolando
 
-      call interhunt (    pl,zl,nl,      p_gcm,z_gcm,n_gcm, 2) ! [atm]
-!     call interhunt5veces &
-!               ( t, co2vmr, n2vmr, covmr, o3pvmr, &
-!               zl, nl, &
-!               t_gcm, co2vmr_gcm, n2vmr_gcm, covmr_gcm, o3pvmr_gcm, &
-!               z_gcm, n_gcm, 1)
-      call interhunt5veces &
-                ( tl, co2vmr, n2vmr, covmr, o3pvmr, &
-                zl, nl, &
-                t_gcm, co2vmr_gcm, n2vmr_gcm, covmr_gcm, o3pvmr_gcm, &
-                z_gcm, n_gcm, 1)
-      call interhunt ( mmean_nlte,zl,nl,mmean_gcm,z_gcm,n_gcm,1)
-      call interhunt ( cpnew_nlte,zl,nl,cpnew_gcm,z_gcm,n_gcm,1)
+  call interhunt (    pl,zl,nl,      p_gcm,z_gcm,n_gcm, 2) ! [atm]
+  !     call interhunt5veces &
+  !               ( t, co2vmr, n2vmr, covmr, o3pvmr, &
+  !               zl, nl, &
+  !               t_gcm, co2vmr_gcm, n2vmr_gcm, covmr_gcm, o3pvmr_gcm, &
+  !               z_gcm, n_gcm, 1)
+  call interhunt5veces &
+       ( tl, co2vmr, n2vmr, covmr, o3pvmr, &
+       zl, nl, &
+       t_gcm, co2vmr_gcm, n2vmr_gcm, covmr_gcm, o3pvmr_gcm, &
+       z_gcm, n_gcm, 1)
+  call interhunt ( mmean_nlte,zl,nl,mmean_gcm,z_gcm,n_gcm,1)
+  call interhunt ( cpnew_nlte,zl,nl,cpnew_gcm,z_gcm,n_gcm,1)
 
-      do i = 1, nl
-!        nt(i) = 7.339e+21 * pl(i) / t(i) ! --> [cm-3]
-!        nt(i) = 7.339e+21 * pl(i) / tl(i) ! --> [cm-3]
-         ntl(i) = 7.339e+21 * pl(i) / tl(i) ! --> [cm-3]
-         co2(i) = ntl(i) * co2vmr(i)
-         n2(i) = ntl(i) * n2vmr(i)
-         co(i) = ntl(i) * covmr(i)
-         o3p(i) = ntl(i) * o3pvmr(i)
-!     hrkday_factor(i) =  hrkday_convert( t(i),
-!     $        	  co2vmr(i), o3pvmr(i), n2vmr(i), covmr(i) )
-!     hrkday_factor(i) =  hrkday_convert( tl(i),
-!     $        	  co2vmr(i), o3pvmr(i), n2vmr(i), covmr(i) )
-         hrkday_factor(i) = hrkday_convert(mmean_nlte(i) &
-              ,cpnew_nlte(i))
-      enddo
+  do i = 1, nl
+     !        nt(i) = 7.339e+21 * pl(i) / t(i) ! --> [cm-3]
+     !        nt(i) = 7.339e+21 * pl(i) / tl(i) ! --> [cm-3]
+     ntl(i) = 7.339e+21 * pl(i) / tl(i) ! --> [cm-3]
+     co2(i) = ntl(i) * co2vmr(i)
+     n2(i) = ntl(i) * n2vmr(i)
+     co(i) = ntl(i) * covmr(i)
+     o3p(i) = ntl(i) * o3pvmr(i)
+     !     hrkday_factor(i) =  hrkday_convert( t(i),
+     !     $        	  co2vmr(i), o3pvmr(i), n2vmr(i), covmr(i) )
+     !     hrkday_factor(i) =  hrkday_convert( tl(i),
+     !     $        	  co2vmr(i), o3pvmr(i), n2vmr(i), covmr(i) )
+     hrkday_factor(i) = hrkday_convert(mmean_nlte(i) &
+          ,cpnew_nlte(i))
+  enddo
 
-                                !  Comprobar que las temps no se salen del grid del histograma
+  !  Comprobar que las temps no se salen del grid del histograma
 
-      do i=1,nl
-!        if (t(i) .gt. 500.0) then
-         if (tl(i) .gt. 500.0) then
-            write (*,*) '!!!! WARNING    Temp higher than Histogram.'
-            write (*,*) ' Histogram will be extrapolated. '
-!           write (*,*) ' i, t(i), pl(i) =', i, t(i), pl(i)
-            write (*,*) ' i, tl(i), pl(i) =', i, tl(i), pl(i)
-         endif
-!        if (t(i) .lt. 50.0) then
-         if (tl(i) .lt. 50.0) then
-            write (*,*) '!!!! WARNING    Temp lower than Histogram.'
-            write (*,*) ' Histogram will be extrapolated. '
-!           write (*,*) ' i, t(i), pl(i) =', i, t(i), pl(i)
-            write (*,*) ' i, tl(i), pl(i) =', i, tl(i), pl(i)
-         endif
-      enddo
+  do i=1,nl
+     !        if (t(i) .gt. 500.0) then
+     if (tl(i) .gt. 500.0) then
+        write (*,*) '!!!! WARNING    Temp higher than Histogram.'
+        write (*,*) ' Histogram will be extrapolated. '
+        !           write (*,*) ' i, t(i), pl(i) =', i, t(i), pl(i)
+        write (*,*) ' i, tl(i), pl(i) =', i, tl(i), pl(i)
+     endif
+     !        if (t(i) .lt. 50.0) then
+     if (tl(i) .lt. 50.0) then
+        write (*,*) '!!!! WARNING    Temp lower than Histogram.'
+        write (*,*) ' Histogram will be extrapolated. '
+        !           write (*,*) ' i, t(i), pl(i) =', i, t(i), pl(i)
+        write (*,*) ' i, tl(i), pl(i) =', i, tl(i), pl(i)
+     endif
+  enddo
 
-                                !  Fine grid for transmittance calculations
+  !  Fine grid for transmittance calculations
 
-      zmin = z_gcm(jlowerboundary)
-      zmax = z_gcm(jtopboundary)
-      deltazy = (zmax-zmin) / (nzy-1)
-      do i=1,nzy
-         zy(i) = zmin + (i-1) * deltazy
-      enddo
-      call interhunt (    py,zy,nzy,      p_gcm,z_gcm,n_gcm, 2) ! [atm]
-      call interhunt2veces ( ty,co2y, zy,nzy, &
-           t_gcm,co2vmr_gcm, z_gcm,n_gcm, 1)
+  zmin = z_gcm(jlowerboundary)
+  zmax = z_gcm(jtopboundary)
+  deltazy = (zmax-zmin) / (nzy-1)
+  do i=1,nzy
+     zy(i) = zmin + (i-1) * deltazy
+  enddo
+  call interhunt (    py,zy,nzy,      p_gcm,z_gcm,n_gcm, 2) ! [atm]
+  call interhunt2veces ( ty,co2y, zy,nzy, &
+       t_gcm,co2vmr_gcm, z_gcm,n_gcm, 1)
 
-      do i=1,nzy
-         nty(i) = 7.339e+21 * py(i) / ty(i) ! --> [cm-3]
-         co2y(i) = co2y(i) * nty(i)
-      enddo
+  do i=1,nzy
+     nty(i) = 7.339e+21 * py(i) / ty(i) ! --> [cm-3]
+     co2y(i) = co2y(i) * nty(i)
+  enddo
 
 
 !!!!!!!!!Segundo, el NLTE - CTS  !!!!!!!!
 
-                                ! Grid steps
-      deltaz_cts = deltaz
-      zl_cts(1) = zl(nl-1)
-      nl_cts_real = 1
-      do i=2,nl_cts
-         zl_cts(i) = zl_cts(1) + (i-1)*deltaz_cts
-         if (zl_cts(i) .gt. z_gcm(n_gcm)) then
-!            write (*,*) '!!!!!!!! Warning in top CTS layers. '
-!            write (*,*) ' zl_Cts too high for z_gcm. '
-!            write (*,*) ' z_gcm, zl_cts(i), i =',
-!     $           z_gcm(n_gcm), zl_cts(i), i
-!            write (*,*) '!!!!!!!! NLTE-CTS upper boundary modified '//
-!     $           ' to match z_gcm'
-            nl_cts_real=i-1
-!            write (*,*) '  Original,Real NL_CTS=', nl_cts,nl_cts_real
-            goto 6000
-         endif
-      enddo
-      nl_cts_real = nl_cts
- 6000 continue
+  ! Grid steps
+  deltaz_cts = deltaz
+  zl_cts(1) = zl(nl-1)
+  nl_cts_real = 1
+  do i=2,nl_cts
+     zl_cts(i) = zl_cts(1) + (i-1)*deltaz_cts
+     if (zl_cts(i) .gt. z_gcm(n_gcm)) then
+        !            write (*,*) '!!!!!!!! Warning in top CTS layers. '
+        !            write (*,*) ' zl_Cts too high for z_gcm. '
+        !            write (*,*) ' z_gcm, zl_cts(i), i =',
+        !     $           z_gcm(n_gcm), zl_cts(i), i
+        !            write (*,*) '!!!!!!!! NLTE-CTS upper boundary modified '//
+        !     $           ' to match z_gcm'
+        nl_cts_real=i-1
+        !            write (*,*) '  Original,Real NL_CTS=', nl_cts,nl_cts_real
+        goto 6000
+     endif
+  enddo
+  nl_cts_real = nl_cts
+6000 continue
 
-                                ! Creamos perfil por interpolacion
+  ! Creamos perfil por interpolacion
 
-      call interhuntlimits ( pl_cts,zl_cts,nl_cts, 1,nl_cts_real, &
-                p_gcm,z_gcm,n_gcm, 2)
-      call interhuntlimits5veces &
-                ( t_cts, co2vmr_cts, n2vmr_cts, covmr_cts, o3pvmr_cts, &
-                zl_cts, nl_cts, &
-                1,nl_cts_real,  &
-                t_gcm, co2vmr_gcm, n2vmr_gcm, covmr_gcm, o3pvmr_gcm, &
-                z_gcm, n_gcm, 1)
-      call interhuntlimits( cpnew_cts,zl_cts,nl_cts,1,nl_cts_real, &
-                cpnew_gcm,z_gcm,n_gcm, 1)
-      call interhuntlimits( mmean_cts,zl_cts,nl_cts,1,nl_cts_real, &
-                mmean_gcm,z_gcm,n_gcm, 1)
+  call interhuntlimits ( pl_cts,zl_cts,nl_cts, 1,nl_cts_real, &
+       p_gcm,z_gcm,n_gcm, 2)
+  call interhuntlimits5veces &
+       ( t_cts, co2vmr_cts, n2vmr_cts, covmr_cts, o3pvmr_cts, &
+       zl_cts, nl_cts, &
+       1,nl_cts_real,  &
+       t_gcm, co2vmr_gcm, n2vmr_gcm, covmr_gcm, o3pvmr_gcm, &
+       z_gcm, n_gcm, 1)
+  call interhuntlimits( cpnew_cts,zl_cts,nl_cts,1,nl_cts_real, &
+       cpnew_gcm,z_gcm,n_gcm, 1)
+  call interhuntlimits( mmean_cts,zl_cts,nl_cts,1,nl_cts_real, &
+       mmean_gcm,z_gcm,n_gcm, 1)
 
-      do i = 1, nl_cts_real
-         nt_cts(i) = 7.339e+21 * pl_cts(i) / t_cts(i) ! --> [cm-3]
-         co2_cts(i) = nt_cts(i) * co2vmr_cts(i)
-         n2_cts(i) = nt_cts(i) * n2vmr_cts(i)
-         co_cts(i) = nt_cts(i) * covmr_cts(i)
-         o3p_cts(i) = nt_cts(i) * o3pvmr_cts(i)
-         hrkday_factor_cts(i) =  hrkday_convert( mmean_cts(i) &
-             ,cpnew_cts(i) )
-      enddo
+  do i = 1, nl_cts_real
+     nt_cts(i) = 7.339e+21 * pl_cts(i) / t_cts(i) ! --> [cm-3]
+     co2_cts(i) = nt_cts(i) * co2vmr_cts(i)
+     n2_cts(i) = nt_cts(i) * n2vmr_cts(i)
+     co_cts(i) = nt_cts(i) * covmr_cts(i)
+     o3p_cts(i) = nt_cts(i) * o3pvmr_cts(i)
+     hrkday_factor_cts(i) =  hrkday_convert( mmean_cts(i) &
+          ,cpnew_cts(i) )
+  enddo
 
-                                !  Comprobar que las temps no se salen del grid del histograma
-      do i=1,nl_cts_real
-         if (t_cts(i) .gt. thist_stored(1,mm_stored(1))) then
-            write (*,*) '!!!! WARNING    Temp higher than Histogram.'
-            write (*,*) ' ZGRID: Histogram will be extrapolated. '
-!           write (*,*) ' i, t(i), pl(i) =', i, t_cts(i), pl_cts(i)
-            write (*,*) ' i, tl(i), pl(i) =', i, t_cts(i), pl_cts(i)
-         endif
-         if (t_cts(i) .lt. 50.0) then
-            write (*,*) '!!!! WARNING    Temp lower than Histogram.'
-            write (*,*) ' ZGRID: Histogram will be extrapolated. '
-!           write (*,*) ' i, t(i), pl(i) =', i, t_cts(i), pl_cts(i)
-            write (*,*) ' i, tl(i), pl(i) =', i, t_cts(i), pl_cts(i)
-         endif
-      enddo
+  !  Comprobar que las temps no se salen del grid del histograma
+  do i=1,nl_cts_real
+     if (t_cts(i) .gt. thist_stored(1,mm_stored(1))) then
+        write (*,*) '!!!! WARNING    Temp higher than Histogram.'
+        write (*,*) ' ZGRID: Histogram will be extrapolated. '
+        !           write (*,*) ' i, t(i), pl(i) =', i, t_cts(i), pl_cts(i)
+        write (*,*) ' i, tl(i), pl(i) =', i, t_cts(i), pl_cts(i)
+     endif
+     if (t_cts(i) .lt. 50.0) then
+        write (*,*) '!!!! WARNING    Temp lower than Histogram.'
+        write (*,*) ' ZGRID: Histogram will be extrapolated. '
+        !           write (*,*) ' i, t(i), pl(i) =', i, t_cts(i), pl_cts(i)
+        write (*,*) ' i, tl(i), pl(i) =', i, t_cts(i), pl_cts(i)
+     endif
+  enddo
 
-                                ! Calculo del indice maximo del GCM hasta donde llega el NLTE-CTS
-      jtopCTS = jtopboundary
-      do while ( p_gcm(jtopCTS) .gt. pl_cts(nl_cts_real) )
-         jtopCTS = jtopCTS + 1
-         if (jtopCTS .gt. n_gcm) then
-            write (*,*) '!!!!!!!! Warning in top boundary pressure. '
-            write (*,*) ' Ptop_NLTECTS too high for p_gcm. '
-            write (*,*) ' p_gcm, Ptop_NLTECTS =',  &
-                      p_gcm(n_gcm), pl_cts(nl_cts_real)
-            write (*,*) '!!!!!!!! NLTE-CTS upper boundary modified '// &
-                      ' to match p_gcm'
-            jtopCTS=n_gcm
-            goto 7000
-         endif
-      enddo
- 7000 continue
+  ! Calculo del indice maximo del GCM hasta donde llega el NLTE-CTS
+  jtopCTS = jtopboundary
+  do while ( p_gcm(jtopCTS) .gt. pl_cts(nl_cts_real) )
+     jtopCTS = jtopCTS + 1
+     if (jtopCTS .gt. n_gcm) then
+        write (*,*) '!!!!!!!! Warning in top boundary pressure. '
+        write (*,*) ' Ptop_NLTECTS too high for p_gcm. '
+        write (*,*) ' p_gcm, Ptop_NLTECTS =',  &
+             p_gcm(n_gcm), pl_cts(nl_cts_real)
+        write (*,*) '!!!!!!!! NLTE-CTS upper boundary modified '// &
+             ' to match p_gcm'
+        jtopCTS=n_gcm
+        EXIT
+     endif
+  enddo
 
-                                !  Fine grid for transmittance calculations
+  !  Fine grid for transmittance calculations
 
-      deltazy_cts = 0.25*deltaz_cts ! Comprobar el factor 4 en mz1d.par
-      do i=1,nzy_cts
-         zy_cts(i) = zl_cts(1) + (i-1) * deltazy_cts
-      enddo
-      nzy_cts_real = (nl_cts_real - 1)*4 + 1
-      call interhuntlimits ( py_cts,zy_cts,nzy_cts, 1,nzy_cts_real, &
-                p_gcm, z_gcm, n_gcm,   2) ! [atm]
-      call interhuntlimits2veces &
-                ( ty_cts,co2y_cts, zy_cts,nzy_cts,  1,nzy_cts_real, &
-                t_gcm,co2vmr_gcm, z_gcm,n_gcm, 1)
+  deltazy_cts = 0.25*deltaz_cts ! Comprobar el factor 4 en mz1d.par
+  do i=1,nzy_cts
+     zy_cts(i) = zl_cts(1) + (i-1) * deltazy_cts
+  enddo
+  nzy_cts_real = (nl_cts_real - 1)*4 + 1
+  call interhuntlimits ( py_cts,zy_cts,nzy_cts, 1,nzy_cts_real, &
+       p_gcm, z_gcm, n_gcm,   2) ! [atm]
+  call interhuntlimits2veces &
+       ( ty_cts,co2y_cts, zy_cts,nzy_cts,  1,nzy_cts_real, &
+       t_gcm,co2vmr_gcm, z_gcm,n_gcm, 1)
 
-      do i=1,nzy_cts_real
-         nty_cts(i) = 7.339e+21 * py_cts(i) / ty_cts(i) ! --> [cm-3]
-         co2y_cts(i) = co2y_cts(i) * nty_cts(i)
-      enddo
+  do i=1,nzy_cts_real
+     nty_cts(i) = 7.339e+21 * py_cts(i) / ty_cts(i) ! --> [cm-3]
+     co2y_cts(i) = co2y_cts(i) * nty_cts(i)
+  enddo
 
-!     write (*,*) '  NL = ', NL
-!     write (*,*) '  Original,Real NL_CTS=', nl_cts,nl_cts_real
-!     write (*,*) '  Original,Real NZY_CTS =', nzy_cts,nzy_cts_real
+  !     write (*,*) '  NL = ', NL
+  !     write (*,*) '  Original,Real NL_CTS=', nl_cts,nl_cts_real
+  !     write (*,*) '  Original,Real NZY_CTS =', nzy_cts,nzy_cts_real
 
 end subroutine NLTEdlvr11_ZGRID
 
@@ -4319,780 +4309,776 @@ end subroutine NLTEdlvr11_ZGRID
 
 subroutine NLTEdlvr11_CZALU(ierr,varerr)
 
-!***********************************************************************
+  !***********************************************************************
 
-      use GITM_planet
-!     use ModNLTE
+  use GITM_planet
+  !     use ModNLTE
 
-!     include 'nlte_paramdef.h'
-!     include 'nlte_commons.h'
+  !     include 'nlte_paramdef.h'
+  !     include 'nlte_commons.h'
 
-      implicit none
+  implicit none
 
-!************common variables and constants*****************************
+  !************common variables and constants*****************************
 
-!     Arguments
+  !     Arguments
 
-      integer :: ierr
-      real*8 :: varerr
-
-
-!     local variables
-
-!     matrixes and vectors
-
-      real*8 :: e110(nl), e210(nl), e310(nl), e410(nl)
-      real*8 :: e121(nl)
-      real*8 :: f1(nl,nl)
-
-      real*8 :: cax1(nl,nl), cax2(nl,nl), cax3(nl,nl)
-      real*8 :: v1(nl), v2(nl), v3(nl)
-      real*8 :: alf11(nl,nl), alf12(nl,nl)
-      real*8 :: alf21(nl,nl), alf31(nl,nl), alf41(nl,nl)
-      real*8 :: a11(nl), a1112(nl,nl)
-      real*8 :: a1121(nl,nl), a1131(nl,nl), a1141(nl,nl)
-      real*8 ::  a21(nl), a2131(nl,nl), a2141(nl,nl)
-      real*8 ::	a2111(nl,nl), a2112(nl,nl)
-      real*8 ::  a31(nl), a3121(nl,nl), a3141(nl,nl)
-      real*8 ::	a3111(nl,nl), a3112(nl,nl)
-      real*8 :: a41(nl), a4121(nl,nl), a4131(nl,nl)
-      real*8 ::	a4111(nl,nl), a4112(nl,nl)
-      real*8 :: a12(nl), a1211(nl,nl)
-      real*8 ::	a1221(nl,nl), a1231(nl,nl), a1241(nl,nl)
-
-      real*8 ::  aalf11(nl,nl),aalf21(nl,nl), &
-           aalf31(nl,nl),aalf41(nl,nl)
-      real*8 :: aa11(nl), aa1121(nl,nl), aa1131(nl,nl), aa1141(nl,nl)
-      real*8 :: aa21(nl), aa2111(nl,nl), aa2131(nl,nl), aa2141(nl,nl)
-      real*8 :: aa31(nl), aa3111(nl,nl), aa3121(nl,nl), aa3141(nl,nl)
-      real*8 :: aa41(nl), aa4111(nl,nl), aa4121(nl,nl), aa4131(nl,nl)
-      real*8 :: aa1211(nl,nl),aa1221(nl,nl), &
-           aa1231(nl,nl),aa1241(nl,nl)
-      real*8 ::  aa1112(nl,nl),aa2112(nl,nl), &
-           aa3112(nl,nl),aa4112(nl,nl)
-
-      real*8 :: aaalf11(nl,nl), aaalf31(nl,nl), aaalf41(nl,nl)
-      real*8 :: aaa11(nl),aaa1131(nl,nl),aaa1141(nl,nl)
-      real*8 :: aaa31(nl),aaa3111(nl,nl),aaa3141(nl,nl)
-      real*8 :: aaa41(nl),aaa4111(nl,nl),aaa4131(nl,nl)
-
-      real*8 :: aaaalf11(nl,nl),aaaalf41(nl,nl)
-      real*8 :: aaaa11(nl),aaaa1141(nl,nl)
-      real*8 ::aaaa41(nl),aaaa4111(nl,nl)
+  integer :: ierr
+  real*8 :: varerr
 
 
-!     populations
-      real*8 :: n10(nl), n11(nl), n12(nl)
-      real*8 :: n20(nl), n21(nl)
-      real*8 :: n30(nl), n31(nl)
-      real*8 :: n40(nl), n41(nl)
+  !     local variables
 
-!     productions and loses
-      real*8 :: d19b1,d19c1
-      real*8 :: d19bp1,d19cp1
-      real*8 :: d19c2
-      real*8 :: d19cp2
-      real*8 :: d19c3
-      real*8 :: d19cp3
-      real*8 :: d19c4
-      real*8 :: d19cp4
+  !     matrixes and vectors
 
-      real*8 :: l11, l12, l21, l31, l41
-      real*8 :: p11, p12, p21, p31, p41
-      real*8 :: p1112, p1211, p1221, p1231, p1241
-      real*8 :: p1121, p1131, p1141
-      real*8 :: p2111, p2112, p2131, p2141
-      real*8 :: p3111, p3112, p3121, p3141
-      real*8 :: p4111, p4112, p4121, p4131
+  real*8 :: e110(nl), e210(nl), e310(nl), e410(nl)
+  real*8 :: e121(nl)
+  real*8 :: f1(nl,nl)
 
-      real*8 :: pl11, pl12, pl21, pl31, pl41
+  real*8 :: cax1(nl,nl), cax2(nl,nl), cax3(nl,nl)
+  real*8 :: v1(nl), v2(nl), v3(nl)
+  real*8 :: alf11(nl,nl), alf12(nl,nl)
+  real*8 :: alf21(nl,nl), alf31(nl,nl), alf41(nl,nl)
+  real*8 :: a11(nl), a1112(nl,nl)
+  real*8 :: a1121(nl,nl), a1131(nl,nl), a1141(nl,nl)
+  real*8 ::  a21(nl), a2131(nl,nl), a2141(nl,nl)
+  real*8 ::	a2111(nl,nl), a2112(nl,nl)
+  real*8 ::  a31(nl), a3121(nl,nl), a3141(nl,nl)
+  real*8 ::	a3111(nl,nl), a3112(nl,nl)
+  real*8 :: a41(nl), a4121(nl,nl), a4131(nl,nl)
+  real*8 ::	a4111(nl,nl), a4112(nl,nl)
+  real*8 :: a12(nl), a1211(nl,nl)
+  real*8 ::	a1221(nl,nl), a1231(nl,nl), a1241(nl,nl)
 
-      real*8 :: minvt11, minvt21, minvt31, minvt41
+  real*8 ::  aalf11(nl,nl),aalf21(nl,nl), &
+       aalf31(nl,nl),aalf41(nl,nl)
+  real*8 :: aa11(nl), aa1121(nl,nl), aa1131(nl,nl), aa1141(nl,nl)
+  real*8 :: aa21(nl), aa2111(nl,nl), aa2131(nl,nl), aa2141(nl,nl)
+  real*8 :: aa31(nl), aa3111(nl,nl), aa3121(nl,nl), aa3141(nl,nl)
+  real*8 :: aa41(nl), aa4111(nl,nl), aa4121(nl,nl), aa4131(nl,nl)
+  real*8 :: aa1211(nl,nl),aa1221(nl,nl), &
+       aa1231(nl,nl),aa1241(nl,nl)
+  real*8 ::  aa1112(nl,nl),aa2112(nl,nl), &
+       aa3112(nl,nl),aa4112(nl,nl)
 
-!     local constants and indexes
+  real*8 :: aaalf11(nl,nl), aaalf31(nl,nl), aaalf41(nl,nl)
+  real*8 :: aaa11(nl),aaa1131(nl,nl),aaa1141(nl,nl)
+  real*8 :: aaa31(nl),aaa3111(nl,nl),aaa3141(nl,nl)
+  real*8 :: aaa41(nl),aaa4111(nl,nl),aaa4131(nl,nl)
 
-      real*8 :: co2t, o3pdbl, codble, n2dble
-      real*8 :: a12_einst(nl)
-      real*8 :: a21_einst(nl), a31_einst(nl), a41_einst(nl)
-      real :: tsurf
+  real*8 :: aaaalf11(nl,nl),aaaalf41(nl,nl)
+  real*8 :: aaaa11(nl),aaaa1141(nl,nl)
+  real*8 ::aaaa41(nl),aaaa4111(nl,nl)
 
-      integer :: i, isot
 
-!     external functions and subroutines
+  !     populations
+  real*8 :: n10(nl), n11(nl), n12(nl)
+  real*8 :: n20(nl), n21(nl)
+  real*8 :: n30(nl), n31(nl)
+  real*8 :: n40(nl), n41(nl)
 
-      external :: planckdp
-      real*8 ::	planckdp
+  !     productions and loses
+  real*8 :: d19b1,d19c1
+  real*8 :: d19bp1,d19cp1
+  real*8 :: d19c2
+  real*8 :: d19cp2
+  real*8 :: d19c3
+  real*8 :: d19cp3
+  real*8 :: d19c4
+  real*8 :: d19cp4
+
+  real*8 :: l11, l12, l21, l31, l41
+  real*8 :: p11, p12, p21, p31, p41
+  real*8 :: p1112, p1211, p1221, p1231, p1241
+  real*8 :: p1121, p1131, p1141
+  real*8 :: p2111, p2112, p2131, p2141
+  real*8 :: p3111, p3112, p3121, p3141
+  real*8 :: p4111, p4112, p4121, p4131
+
+  real*8 :: pl11, pl12, pl21, pl31, pl41
+
+  real*8 :: minvt11, minvt21, minvt31, minvt41
+
+  !     local constants and indexes
+
+  real*8 :: co2t, o3pdbl, codble, n2dble
+  real*8 :: a12_einst(nl)
+  real*8 :: a21_einst(nl), a31_einst(nl), a41_einst(nl)
+  real :: tsurf
+
+  integer :: i, isot
+
+  !     external functions and subroutines
+
+  external :: planckdp
+  real*8 ::	planckdp
 
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!start program
 
-      ierr = 0
-      varerr = 0.d0
-
-      call zero4v( aa11, aa21, aa31, aa41, nl)
-      call zero4m( aa1121, aa1131, aa1141, aalf11, nl)
-      call zero4m( aa2111, aa2131, aa2141, aalf21, nl)
-      call zero4m( aa3111, aa3121, aa3141, aalf31, nl)
-      call zero4m( aa4111, aa4121, aa4131, aalf41, nl)
-      call zero4m( aa1112, aa2112, aa3112, aa4112, nl)
-      call zero4m( aa1211, aa1221, aa1231, aa1241, nl)
-      call zero3v( aaa41, aaa31, aaa11, nl )
-      call zero3m( aaa4111, aaa4131, aaalf41, nl)
-      call zero3m( aaa3111, aaa3141, aaalf31, nl)
-      call zero3m( aaa1131, aaa1141, aaalf11, nl)
-      call zero2v( aaaa11, aaaa41, nl )
-      call zero2m( aaaa1141, aaaalf11, nl)
-      call zero2m( aaaa4111, aaaalf41, nl)
-
-      call zero2v (vt11,vt12,nl)
-      call zero3v (vt21,vt31,vt41,nl)
-      call zero2v (hr110,hr121,nl)
-      call zero3v (hr210,hr310,hr410,nl)
-      call zero2v (sl110,sl121,nl)
-      call zero3v (sl210,sl310,sl410,nl)
-
-      call zero4v (el11,el21,el31,el41,nl)
-      call zero4v (e110,e210,e310,e410,nl)
-      call zero2v (el12,e121,nl)
-
-      call zero3m (cax1,cax2,cax3,nl)
-      f1(1:nl,1:nl)=0.d0
-!      call zerom (f1,nl)
-
-      call zero3v (v1,v2,v3,nl)
-
-      call zero4m (alf11,alf21,alf31,alf41,nl)
-      alf12(1:nl,1:nl)=0.d0
-!      call zerom (alf12,nl)
-      call zero2v (a11,a12,nl)
-      call zero3v (a21,a31,a41,nl)
-
-      call zero3m (a1121,a1131,a1141,nl)
-      a1112(1:nl,1:nl)=0.d0
-!      call zerom (a1112,nl)
-
-      call zero3m (a1221,a1231,a1241,nl)
-      a1211(1:nl,1:nl)=0.d0
-!      call zerom (a1211,nl)
-
-      call zero2m (a2111,a2112,nl)
-      call zero2m (a2131,a2141,nl)
-      call zero2m (a3111,a3112,nl)
-      call zero2m (a3121,a3141,nl)
-      call zero2m (a4111,a4112,nl)
-      call zero2m (a4121,a4131,nl)
-
-      call zero2v (n11,n12,nl)
-      call zero3v (n21,n31,n41,nl)
-
-      nu11 = dble(nu(1,1))
-      nu12 = dble(nu(1,2))
-      nu121 =  nu12-nu11
-      nu21 =  dble(nu(2,1))
-      nu31 =  dble(nu(3,1))
-      nu41 =  dble(nu(4,1))
-
-!
-!
-      do i=1,nl
-         n10(i) = dble( co2(i) * imr(1) )
-         n20(i) = dble( co2(i) * imr(2) )
-         n30(i) = dble( co2(i) * imr(3) )
-         n40(i) = dble( co2(i) * imr(4) )
-         if ( input_cza.ge.1 ) then
-	    n11(i) = n10(i) *2.d0 *exp( -ee*nu11/v626t1(i) )
-	    n21(i) = n20(i) *2.d0 *exp( -ee*nu21/v628t1(i) )
-	    n31(i) = n30(i) *2.d0* exp( -ee*nu31/v636t1(i) )
-	    n41(i) = n40(i) *2.d0* exp( -ee*nu41/v627t1(i) )
-         end if
-      enddo
-
-!
-!     curtis matrix calculation
-!
-      call zero3m (c210,c310,c410, nl)
-
-      if ( input_cza.ge.1 ) then
-
-         if (itt_cza.eq.15 ) then
-
-	    call MZMC121
-
-         elseif (itt_cza.eq.13) then
-
-!            call zerom ( c121, nl )
-            c121(1:nl,1:nl)=0.d0
-            call MZESC121
-            call MZTVC121( ierr,varerr )
-            if (ierr .gt. 0) call ERRORS (ierr,varerr)
-
-         endif
-
-      endif
-
-                                ! Lower Boundary
-!     tsurf = t(1)
-      tsurf = tl(1)
-      do i=1,nl
-         sl110(i) = vc110(i) * planckdp( tsurf, nu11 )
-         sl210(i) = vc210(i) * planckdp( tsurf, nu21 )
-         sl310(i) = vc310(i) * planckdp( tsurf, nu31 )
-         sl410(i) = vc410(i) * planckdp( tsurf, nu41 )
-      end do
-      if (input_cza.ge.1) then
-         do i=1,nl
-	    sl121(i) = vc121(i) * planckdp( tsurf, nu121 )
-         end do
-      endif
-
-
-
-      do 4,i=nl,1,-1            !----------------------------------------------
-
-         co2t = dble( co2(i) *(imr(1)+imr(3)+imr(2)+imr(4)) )
-         o3pdbl = dble( o3p(i) )
-         n2dble = dble( n2(i) )
-         codble = dble ( co(i) )
-
-         call GETK_dlvr11 ( tl(i) )
-
-                                ! V-T productions and losses V-T
-
-         isot = 1
-         d19b1 = k19ba(isot)*co2t + k19bb(isot)*n2dble &
-              + k19bc(isot)*codble
-         d19c1 = k19ca(isot)*co2t + k19cb(isot)*n2dble &
-              + k19cc(isot)*codble
-         d19bp1 = k19bap(isot)*co2t + k19bbp(isot)*n2dble &
-              + k19bcp(isot)*codble
-         d19cp1 = k19cap(isot)*co2t + k19cbp(isot)*n2dble &
-              + k19ccp(isot)*codble
-         isot = 2
-         d19c2 = k19ca(isot)*co2t + k19cb(isot)*n2dble &
-              + k19cc(isot)*codble
-         d19cp2 = k19cap(isot)*co2t + k19cbp(isot)*n2dble &
-              + k19ccp(isot)*codble
-         isot = 3
-         d19c3 = k19ca(isot)*co2t + k19cb(isot)*n2dble &
-              + k19cc(isot)*codble
-         d19cp3 = k19cap(isot)*co2t + k19cbp(isot)*n2dble &
-              + k19ccp(isot)*codble
-         isot = 4
-         d19c4 = k19ca(isot)*co2t + k19cb(isot)*n2dble &
-              + k19cc(isot)*codble
-         d19cp4 = k19cap(isot)*co2t + k19cbp(isot)*n2dble &
-              + k19ccp(isot)*codble
-                                !
-         l11 = d19c1 + k20c(1)*o3pdbl
-         p11 = ( d19cp1 + k20cp(1)*o3pdbl ) * n10(i)
-         l21 = d19c2 + k20c(2)*o3pdbl
-         p21 = ( d19cp2 + k20cp(2)*o3pdbl ) *n20(i)
-         l31 = d19c3 + k20c(3)*o3pdbl
-         p31 = ( d19cp3 + k20cp(3)*o3pdbl ) *n30(i)
-         l41 = d19c4 + k20c(4)*o3pdbl
-         p41 = ( d19cp4 + k20cp(4)*o3pdbl ) *n40(i)
-
-                                ! Addition of V-V
-
-         l11 = l11 + k21cp(2)*n20(i) + k21cp(3)*n30(i) &
-              + k21cp(4)*n40(i)
-         p1121 = k21c(2) * n10(i)
-         p1131 = k21c(3) * n10(i)
-         p1141 = k21c(4) * n10(i)
-                                !
-         l21 = l21 + k21c(2)*n10(i) + k23k21c*n30(i) + k24k21c*n40(i)
-         p2111 = k21cp(2) * n20(i)
-         p2131 = k23k21cp * n20(i)
-         p2141 = k24k21cp * n20(i)
-                                !
-         l31 = l31 + k21c(3)*n10(i) + k23k21cp*n20(i) + k34k21c*n40(i)
-         p3111 = k21cp(3)* n30(i)
-         p3121 = k23k21c * n30(i)
-         p3141 = k34k21cp* n30(i)
-                                !
-         l41 = l41 + k21c(4)*n10(i) + k24k21cp*n20(i) + k34k21cp*n30(i)
-         p4111 = k21cp(4)* n40(i)
-         p4121 = k24k21c * n40(i)
-         p4131 = k34k21c * n40(i)
-
-
-         if ( input_cza.ge.1 ) then
-
-	    l12 = d19b1 &
-                 + k20b(1)*o3pdbl &
-                 + k21b(1)*n10(i) &
-                 + k33c*( n20(i) + n30(i) + n40(i) )
-	    p12 = k21bp(1)*n11(i) * n11(i)
-	    p1211 = d19bp1 + k20bp(1)*o3pdbl
-	    p1221 = k33cp(2)*n11(i)
-	    p1231 = k33cp(3)*n11(i)
-	    p1241 = k33cp(4)*n11(i)
-
-	    l11 = l11 + d19bp1 &
-                 + k20bp(1)*o3pdbl &
-                 + 2.d0 * k21bp(1) * n11(i) &
-                 +   k33cp(2)*n21(i) + k33cp(3)*n31(i) + k33cp(4)*n41(i)
-	    p1112 = d19b1  &
-                 + k20b(1)*o3pdbl &
-                 + 2.d0*k21b(1)*n10(i) &
-                 + k33c*( n20(i) + n30(i) + n40(i) )
-
-	    l21 = l21 + k33cp(2)*n11(i)
-	    p2112 = k33c*n20(i)
-
-	    l31 = l31 + k33cp(3)*n11(i)
-	    p3112 = k33c*n30(i)
-
-	    l41 = l41 + k33cp(4)*n11(i)
-	    p4112 = k33c*n40(i)
-
-         end if
-
-
-         ! For ITT=13,15
-         a21_einst(i) = a2_010_000 * 1.8d0 / 4.d0 * taustar21(i)
-         a31_einst(i) = a3_010_000 * 1.8d0 / 4.d0 * taustar31(i)
-         a41_einst(i) = a4_010_000 * 1.8d0 / 4.d0 * taustar41(i)
-
-         l21 = l21 + a21_einst(i)
-         l31 = l31 + a31_einst(i)
-         l41 = l41 + a41_einst(i)
-
-         ! For ITT=13
-         if (input_cza.ge.1 .and. itt_cza.eq.13) then
-            a12_einst(i) = a1_020_010/3.d0 * 1.8d0/4.d0 * taustar12(i)
-            l12=l12+a12_einst(i)
-         endif
-
-
-         ! Checking for collisional severe errors
-         if (l11 .le. 0.0d0) then
-            ierr = 21
-            varerr = l11
-            return
-         elseif (l21 .le. 0.0d0) then
-            ierr = 22
-            varerr = l21
-            return
-         elseif (l31 .le. 0.0d0) then
-            ierr = 23
-            varerr = l31
-            return
-         elseif (l41 .le. 0.0d0) then
-            ierr = 24
-            varerr = l41
-            return
-         endif
-         if (input_cza.ge.1) then
-	    if (l12 .lt. 0.0d0) then
-               ierr = 25
-               varerr = l12
-               return
-            endif
-         endif
-         !
-
-         a11(i) = gamma1*nu11**3.d0 * 1.d0/2.d0 * (p11) /  &
-              (n10(i)*l11)
-         a1121(i,i) = (nu11/nu21)**3.d0 * n20(i)/n10(i) * p1121/l11
-         a1131(i,i) = (nu11/nu31)**3.d0 * n30(i)/n10(i) * p1131/l11
-         a1141(i,i) = (nu11/nu41)**3.d0 * n40(i)/n10(i) * p1141/l11
-         e110(i) = 2.d0* vlight*nu11**2.d0 * 1.d0/2.d0 / &
-              ( n10(i) * l11 )
-
-         a21(i) = gamma1*nu21**3.d0 * 1.d0/2.d0 *  &
-              (p21)/(n20(i)*l21)
-         a2111(i,i) = (nu21/nu11)**3.d0 * n10(i)/n20(i) * p2111/l21
-         a2131(i,i) = (nu21/nu31)**3.d0 * n30(i)/n20(i) * p2131/l21
-         a2141(i,i) = (nu21/nu41)**3.d0 * n40(i)/n20(i) * p2141/l21
-         e210(i) = 2.d0*vlight*nu21**2.d0 * 1.d0/2.d0 /  &
-              ( n20(i) * l21 )
-
-         a31(i) = gamma1*nu31**3.d0 * 1.d0/2.d0 * (p31) /   &
-              (n30(i)*l31)
-         a3111(i,i) = (nu31/nu11)**3.d0 * n10(i)/n30(i) * p3111/l31
-         a3121(i,i) = (nu31/nu21)**3.d0 * n20(i)/n30(i) * p3121/l31
-         a3141(i,i) = (nu31/nu41)**3.d0 * n40(i)/n30(i) * p3141/l31
-         e310(i) = 2.d0*vlight*nu31**2.d0 * 1.d0/2.d0 /   &
-              ( n30(i) * l31 )
-
-         a41(i) = gamma1*nu41**3.d0 * 1.d0/2.d0 * (p41) /   &
-              (n40(i)*l41)
-         a4111(i,i) = (nu41/nu11)**3.d0 * n10(i)/n40(i) * p4111/l41
-         a4121(i,i) = (nu41/nu21)**3.d0 * n20(i)/n40(i) * p4121/l41
-         a4131(i,i) = (nu41/nu31)**3.d0 * n30(i)/n40(i) * p4131/l41
-         e410(i) = 2.d0*vlight*nu41**2.d0 * 1.d0/2.d0 /   &
-              ( n40(i) * l41 )
-
-         if (input_cza.ge.1) then
-
-	    a1112(i,i) = (nu11/nu121)**3.d0 * n11(i)/n10(i) *   &
-                 p1112/l11
-	    a2112(i,i) = (nu21/nu121)**3.d0 * n11(i)/n20(i) *   &
-                p2112/l21
-	    a3112(i,i) = (nu31/nu121)**3.d0 * n11(i)/n30(i) *   &
-                 p3112/l31
-	    a4112(i,i) = (nu41/nu121)**3.d0 * n11(i)/n40(i) *   &
-                 p4112/l41
-	    a12(i) = gamma1*nu121**3.d0 *2.d0/4.d0* (p12)/   &
-                 (n11(i)*l12)
-	    a1211(i,i) = (nu121/nu11)**3.d0 * n10(i)/n11(i) *   &
-                 p1211/l12
-	    a1221(i,i) = (nu121/nu21)**3.d0 * n20(i)/n11(i) *   &
-                 p1221/l12
-	    a1231(i,i) = (nu121/nu31)**3.d0 * n30(i)/n11(i) *   &
-                 p1231/l12
-	    a1241(i,i) = (nu121/nu41)**3.d0 * n40(i)/n11(i) *   &
-                 p1241/l12
-	    e121(i) = 2.d0*vlight*nu121**2.d0 *2.d0/4.d0 /   &
-                 ( n11(i) * l12 )
-
-         end if
-
-
- 4    continue    !-------------------------------------------------------
-
-
-                  !!!!!!!!!!!! Solucion del sistema
-
-                  !! Paso 0 :  Calculo de los alphas   alf11, alf21, alf31, alf41, alf12
-
-      call unit  ( cax2, nl )
-
-      call diago ( cax1, e110, nl )
-      call mulmmf90 ( cax3, cax1,c110, nl )
-      call resmmf90 ( alf11, cax2,cax3, nl )
-
-      call diago ( cax1, e210, nl )
-      call mulmmf90 ( cax3, cax1,c210, nl )
-      call resmmf90 ( alf21, cax2,cax3, nl )
-
-      call diago ( cax1, e310, nl )
-      call mulmmf90 ( cax3, cax1,c310, nl )
-      call resmmf90 ( alf31, cax2,cax3, nl )
-
-      call diago ( cax1, e410, nl )
-      call mulmmf90 ( cax3, cax1,c410, nl )
-      call resmmf90 ( alf41, cax2,cax3, nl )
-
-      if (input_cza.ge.1) then
-         call diago ( cax1, e121, nl )
-         call mulmmf90 ( cax3, cax1,c121, nl )
-         call resmmf90 ( alf12, cax2,cax3, nl )
-      endif
-
-                                !! Paso 1 :  Calculo de vectores y matrices con 1 barra (aa***)
-
-      if (input_cza.eq.0) then  !  Skip paso 1, pues el12 no se calcula
-
-                                ! el11
-         call sypvvv( aa11, a11,e110,sl110, nl )
-         call samem( aa1121, a1121, nl )
-         call samem( aa1131, a1131, nl )
-         call samem( aa1141, a1141, nl )
-         call samem( aalf11, alf11, nl )
-
-                                ! el21
-         call sypvvv( aa21, a21,e210,sl210, nl )
-         call samem( aa2111, a2111, nl )
-         call samem( aa2131, a2131, nl )
-         call samem( aa2141, a2141, nl )
-         call samem( aalf21, alf21, nl )
-
-                                ! el31
-         call sypvvv( aa31, a31,e310,sl310, nl )
-         call samem( aa3111, a3111, nl )
-         call samem( aa3121, a3121, nl )
-         call samem( aa3141, a3141, nl )
-         call samem( aalf31, alf31, nl )
-
-                                ! el41
-         call sypvvv( aa41, a41,e410,sl410, nl )
-         call samem( aa4111, a4111, nl )
-         call samem( aa4121, a4121, nl )
-         call samem( aa4131, a4131, nl )
-         call samem( aalf41, alf41, nl )
-
-
-      else                      !      (input_cza.ge.1) ,   FH !
-
-
-         call sypvvv( v1, a12,e121,sl121, nl ) ! a12 + e121 * sl121
-
-                                ! aa11
-         call sypvvv( v2, a11,e110,sl110, nl )
-         call trucommvv( aa11 , alf12,a1112,v2, v1, nl )
-
-                                ! aalf11
-         call invdiag( cax1, a1112, nl )
-         call mulmmf90( cax2, alf12, cax1, nl ) ! alf12 * (1/a1112)
-         call mulmmf90( cax3, cax2, alf11, nl )
-         call resmmf90( aalf11, cax3, a1211, nl )
-                                ! aa1121
-         call trucodiag(aa1121, alf12,a1112,a1121, a1221, nl)
-                                ! aa1131
-         call trucodiag(aa1131, alf12,a1112,a1131, a1231, nl)
-                                ! aa1141
-         call trucodiag(aa1141, alf12,a1112,a1141, a1241, nl)
-
-
-                                ! aa21
-         call sypvvv( v2, a21,e210,sl210, nl )
-         call trucommvv( aa21 , alf12,a2112,v2, v1, nl )
-
-                                ! aalf21
-         call invdiag( cax1, a2112, nl )
-         call mulmmf90( cax2, alf12, cax1, nl ) ! alf12 * (1/a2112)
-         call mulmmf90( cax3, cax2, alf21, nl )
-         call resmmf90( aalf21, cax3, a1221, nl )
-                                ! aa2111
-         call trucodiag(aa2111, alf12,a2112,a2111, a1211, nl)
-                                ! aa2131
-         call trucodiag(aa2131, alf12,a2112,a2131, a1231, nl)
-                                ! aa2141
-         call trucodiag(aa2141, alf12,a2112,a2141, a1241, nl)
-
-
-                                ! aa31
-         call sypvvv ( v2, a31,e310,sl310, nl )
-         call trucommvv( aa31 , alf12,a3112,v2, v1, nl )
-                                ! aalf31
-         call invdiag( cax1, a3112, nl )
-         call mulmmf90( cax2, alf12, cax1, nl ) ! alf12 * (1/a3112)
-         call mulmmf90( cax3, cax2, alf31, nl )
-         call resmmf90( aalf31, cax3, a1231, nl )
-                                ! aa3111
-         call trucodiag(aa3111, alf12,a3112,a3111, a1211, nl)
-                                ! aa3121
-         call trucodiag(aa3121, alf12,a3112,a3121, a1221, nl)
-                                ! aa3141
-         call trucodiag(aa3141, alf12,a3112,a3141, a1241, nl)
-
-
-                                ! aa41
-         call sypvvv( v2, a41,e410,sl410, nl )
-         call trucommvv( aa41 , alf12,a4112,v2, v1, nl )
-                                ! aalf41
-         call invdiag( cax1, a4112, nl )
-         call mulmmf90( cax2, alf12, cax1, nl ) ! alf12 * (1/a4112)
-         call mulmmf90( cax3, cax2, alf41, nl )
-         call resmmf90( aalf41, cax3, a1241, nl )
-                                ! aa4111
-         call trucodiag(aa4111, alf12,a4112,a4111, a1211, nl)
-                                ! aa4121
-         call trucodiag(aa4121, alf12,a4112,a4121, a1221, nl)
-                                ! aa4131
-         call trucodiag(aa4131, alf12,a4112,a4131, a1231, nl)
-
-      endif                     ! Final  caso input_cza.ge.1
-
-
-                                !! Paso 2 :  Calculo de vectores y matrices con 2 barras (aaa***)
-
-                                ! aaalf41
-      call invdiag( cax1, aa4121, nl )
-      call mulmmf90( cax2, aalf21, cax1, nl ) ! alf21 * (1/a4121)
-      call mulmmf90( cax3, cax2, aalf41, nl )
-      call resmmf90( aaalf41, cax3, aa2141, nl )
-                                ! aaa41
-      call trucommvv(aaa41, aalf21,aa4121,aa41, aa21, nl)
-                                ! aaa4111
-      call trucodiag(aaa4111, aalf21,aa4121,aa4111, aa2111, nl)
-                                ! aaa4131
-      call trucodiag(aaa4131, aalf21,aa4121,aa4131, aa2131, nl)
-
-                                ! aaalf31
-      call invdiag( cax1, aa3121, nl )
-      call mulmmf90( cax2, aalf21, cax1, nl ) ! alf21 * (1/a3121)
-      call mulmmf90( cax3, cax2, aalf31, nl )
-      call resmmf90( aaalf31, cax3, aa2131, nl )
-                                ! aaa31
-      call trucommvv(aaa31, aalf21,aa3121,aa31, aa21, nl)
-                                ! aaa3111
-      call trucodiag(aaa3111, aalf21,aa3121,aa3111, aa2111, nl)
-                                ! aaa3141
-      call trucodiag(aaa3141, aalf21,aa3121,aa3141, aa2141, nl)
-
-                                ! aaalf11
-      call invdiag( cax1, aa1121, nl )
-      call mulmmf90( cax2, aalf21, cax1, nl ) ! alf21 * (1/a1121)
-      call mulmmf90( cax3, cax2, aalf11, nl )
-      call resmmf90( aaalf11, cax3, aa2111, nl )
-                                ! aaa11
-      call trucommvv(aaa11, aalf21,aa1121,aa11, aa21, nl)
-                                ! aaa1131
-      call trucodiag(aaa1131, aalf21,aa1121,aa1131, aa2131, nl)
-                                ! aaa1141
-      call trucodiag(aaa1141, aalf21,aa1121,aa1141, aa2141, nl)
-
-
-                                !! Paso 3 :  Calculo de vectores y matrices con 3 barras (aaaa***)
-
-                                ! aaaalf41
-      call invdiag( cax1, aaa4131, nl )
-      call mulmmf90( cax2, aaalf31, cax1, nl ) ! aaalf31 * (1/aaa4131)
-      call mulmmf90( cax3, cax2, aaalf41, nl )
-      call resmmf90( aaaalf41, cax3, aaa3141, nl )
-                                ! aaaa41
-      call trucommvv(aaaa41, aaalf31,aaa4131,aaa41, aaa31, nl)
-                                ! aaaa4111
-      call trucodiag(aaaa4111, aaalf31,aaa4131,aaa4111,aaa3111, nl)
-
-                                ! aaaalf11
-      call invdiag( cax1, aaa1131, nl )
-      call mulmmf90( cax2, aaalf31, cax1, nl ) ! aaalf31 * (1/aaa4131)
-      call mulmmf90( cax3, cax2, aaalf11, nl )
-      call resmmf90( aaaalf11, cax3, aaa3111, nl )
-                                ! aaaa11
-      call trucommvv(aaaa11, aaalf31,aaa1131,aaa11, aaa31, nl)
-                                ! aaaa1141
-      call trucodiag(aaaa1141, aaalf31,aaa1131,aaa1141,aaa3141, nl)
-
-
-                                !! Paso 4 :  Calculo de vectores y matrices finales y calculo de J1
-
-      call trucommvv(v1, aaaalf41,aaaa1141,aaaa11, aaaa41, nl)
-                                !
-      call invdiag( cax1, aaaa1141, nl )
-      call mulmmf90( cax2, aaaalf41, cax1, nl ) ! aaaalf41 * (1/aaaa1141)
-      call mulmmf90( cax3, cax2, aaaalf11, nl )
-      call resmmf90( cax1, cax3, aaaa4111, nl )
-                                !
-      call LUdec ( el11, cax1, v1, nl, nl2 )
-
-                                ! Solucion para el41
-      call sypvmv( v1, aaaa41, aaaa4111,el11, nl )
-      call LUdec ( el41, aaaalf41, v1, nl, nl2 )
-
-                                ! Solucion para el31
-      call sypvmv( v2, aaa31, aaa3111,el11, nl )
-      call sypvmv( v1,    v2, aaa3141,el41, nl )
-      call LUdec ( el31, aaalf31, v1, nl, nl2 )
-
-                                ! Solucion para el21
-      call sypvmv( v3, aa21, aa2111,el11, nl )
-      call sypvmv( v2,   v3, aa2131,el31, nl )
-      call sypvmv( v1,   v2, aa2141,el41, nl )
-      call LUdec ( el21, aalf21, v1, nl, nl2 )
-
-                                !!!
-      el11(1) = planckdp( tl(1), nu11 )
-      el21(1) = planckdp( tl(1), nu21 )
-      el31(1) = planckdp( tl(1), nu31 )
-      el41(1) = planckdp( tl(1), nu41 )
-      el11(nl) = 2.d0 * el11(nl-1) - el11(nl2)
-      el21(nl) = 2.d0 * el21(nl-1) - el21(nl2)
-      el31(nl) = 2.d0 * el31(nl-1) - el31(nl2)
-      el41(nl) = 2.d0 * el41(nl-1) - el41(nl2)
-
-      call mulmv ( v1, c110,el11, nl )
-      call sumvv ( hr110, v1,sl110, nl )
-
-                                ! Solucion para el12
-      if (input_cza.ge.1) then
-
-         call sypvmv( v1, a12, a1211,el11, nl )
-         call sypvmv( v3,  v1, a1221,el21, nl )
-         call sypvmv( v2,  v3, a1231,el31, nl )
-         call sypvmv( v1,  v2, a1241,el41, nl )
-         call LUdec ( el12, alf12, v1, nl, nl2 )
-
-         el12(1) = planckdp( tl(1), nu121 )
-         el12(nl) = 2.d0 * el12(nl-1) - el12(nl2)
-
-         if (itt_cza.eq.15) then
-            call mulmv ( v1, c121,el12, nl )
-            call sumvv ( hr121, v1,sl121, nl )
-         endif
-
-      end if
-
-
-
-      if (input_cza.lt.1) then
-
-         minvt11 = 1.d6
-         minvt21 = 1.d6
-         minvt31 = 1.d6
-         minvt41 = 1.d6
-         do i=1,nl
-	    pl11 = el11(i)/( gamma1 * nu11**3.0d0  * 1.d0/2.d0 /n10(i) )
-	    pl21 = el21(i)/( gamma1 * nu21**3.0d0  * 1.d0/2.d0 /n20(i) )
-	    pl31 = el31(i)/( gamma1 * nu31**3.0d0  * 1.d0/2.d0 /n30(i) )
-	    pl41 = el41(i)/( gamma1 * nu41**3.0d0  * 1.d0/2.d0 /n40(i) )
-	    vt11(i) = -ee*nu11 / log( abs(pl11) / (2.0d0*n10(i)) )
-	    vt21(i) = -ee*nu21 / log( abs(pl21) / (2.0d0*n20(i)) )
-	    vt31(i) = -ee*nu31 / log( abs(pl31) / (2.0d0*n30(i)) )
-	    vt41(i) = -ee*nu41 / log( abs(pl41) / (2.0d0*n40(i)) )
-	    hr210(i) = sl210(i) -hplanck*vlight*nu21 *a21_einst(i)*pl21
-	    hr310(i) = sl310(i) -hplanck*vlight*nu31 *a31_einst(i)*pl31
-	    hr410(i) = sl410(i) -hplanck*vlight*nu41 *a41_einst(i)*pl41
-
-            minvt11 = min( minvt11,vt11(i) )
-	    minvt21 = min( minvt21,vt21(i) )
-	    minvt31 = min( minvt31,vt31(i) )
-	    minvt41 = min( minvt41,vt41(i) )
-         enddo
-
-         ! Checking for errors in Tvibs
-         if (minvt11 .le. 0.d0) then
-            ierr = 26
-            varerr = minvt11
-            return
-         elseif (minvt21 .le. 0.d0) then
-            ierr = 27
-            varerr = minvt21
-            return
-         elseif (minvt31 .le. 0.d0) then
-            ierr = 28
-            varerr = minvt31
-            return
-         elseif (minvt41 .le. 0.d0) then
-            ierr = 29
-            varerr = minvt41
-            return
-         endif
-
-         v626t1(1:nl)=vt11(1:nl)
-         v628t1(1:nl)=vt21(1:nl)
-         v636t1(1:nl)=vt31(1:nl)
-         v627t1(1:nl)=vt41(1:nl)
-!         call dinterconnection( v626t1, vt11 )
-!         call dinterconnection ( v628t1, vt21 )
-!         call dinterconnection ( v636t1, vt31 )
-!         call dinterconnection ( v627t1, vt41 )
-
-      else
-
-         do i=1,nl
-	    pl21 = el21(i)/( gamma1 * nu21**3.0d0 * 1.d0/2.d0 / n20(i) )
-	    pl31 = el31(i)/( gamma1 * nu31**3.0d0 * 1.d0/2.d0 / n30(i) )
-	    pl41 = el41(i)/( gamma1 * nu41**3.0d0 * 1.d0/2.d0 / n40(i) )
-	    hr210(i) = sl210(i) -hplanck*vlight*nu21 *a21_einst(i)*pl21
-	    hr310(i) = sl310(i) -hplanck*vlight*nu31 *a31_einst(i)*pl31
-	    hr410(i) = sl410(i) -hplanck*vlight*nu41 *a41_einst(i)*pl41
- 	    if (itt_cza.eq.13) then
-               pl12 = el12(i)/( gamma1*nu121**3.0d0 * 2.d0/4.d0 /n11(i) )
-               hr121(i) = - hplanck*vlight * nu121 * a12_einst(i)*pl12
-               hr121(i) = hr121(i) + sl121(i)
-            endif
-         enddo
-
-      endif
-
-                                ! K/Dday
-      do i=1,nl
-!        hr110(i)=hr110(i)*dble( hrkday_factor(i) / nt(i) )
-!        hr210(i)=hr210(i)*dble( hrkday_factor(i) / nt(i) )
-!        hr310(i)=hr310(i)*dble( hrkday_factor(i) / nt(i) )
-!        hr410(i)=hr410(i)*dble( hrkday_factor(i) / nt(i) )
-!        hr121(i)=hr121(i)*dble( hrkday_factor(i) / nt(i) )
-         hr110(i)=hr110(i)*dble( hrkday_factor(i) / ntl(i) )
-         hr210(i)=hr210(i)*dble( hrkday_factor(i) / ntl(i) )
-         hr310(i)=hr310(i)*dble( hrkday_factor(i) / ntl(i) )
-         hr410(i)=hr410(i)*dble( hrkday_factor(i) / ntl(i) )
-         hr121(i)=hr121(i)*dble( hrkday_factor(i) / ntl(i) )
-      end do
+  ierr = 0
+  varerr = 0.d0
+
+  call zero4v( aa11, aa21, aa31, aa41, nl)
+  call zero4m( aa1121, aa1131, aa1141, aalf11, nl)
+  call zero4m( aa2111, aa2131, aa2141, aalf21, nl)
+  call zero4m( aa3111, aa3121, aa3141, aalf31, nl)
+  call zero4m( aa4111, aa4121, aa4131, aalf41, nl)
+  call zero4m( aa1112, aa2112, aa3112, aa4112, nl)
+  call zero4m( aa1211, aa1221, aa1231, aa1241, nl)
+  call zero3v( aaa41, aaa31, aaa11, nl )
+  call zero3m( aaa4111, aaa4131, aaalf41, nl)
+  call zero3m( aaa3111, aaa3141, aaalf31, nl)
+  call zero3m( aaa1131, aaa1141, aaalf11, nl)
+  call zero2v( aaaa11, aaaa41, nl )
+  call zero2m( aaaa1141, aaaalf11, nl)
+  call zero2m( aaaa4111, aaaalf41, nl)
+
+  call zero2v (vt11,vt12,nl)
+  call zero3v (vt21,vt31,vt41,nl)
+  call zero2v (hr110,hr121,nl)
+  call zero3v (hr210,hr310,hr410,nl)
+  call zero2v (sl110,sl121,nl)
+  call zero3v (sl210,sl310,sl410,nl)
+
+  call zero4v (el11,el21,el31,el41,nl)
+  call zero4v (e110,e210,e310,e410,nl)
+  call zero2v (el12,e121,nl)
+
+  call zero3m (cax1,cax2,cax3,nl)
+  f1(1:nl,1:nl)=0.d0
+  !      call zerom (f1,nl)
+
+  call zero3v (v1,v2,v3,nl)
+
+  call zero4m (alf11,alf21,alf31,alf41,nl)
+  alf12(1:nl,1:nl)=0.d0
+  !      call zerom (alf12,nl)
+  call zero2v (a11,a12,nl)
+  call zero3v (a21,a31,a41,nl)
+
+  call zero3m (a1121,a1131,a1141,nl)
+  a1112(1:nl,1:nl)=0.d0
+  !      call zerom (a1112,nl)
+
+  call zero3m (a1221,a1231,a1241,nl)
+  a1211(1:nl,1:nl)=0.d0
+  !      call zerom (a1211,nl)
+
+  call zero2m (a2111,a2112,nl)
+  call zero2m (a2131,a2141,nl)
+  call zero2m (a3111,a3112,nl)
+  call zero2m (a3121,a3141,nl)
+  call zero2m (a4111,a4112,nl)
+  call zero2m (a4121,a4131,nl)
+
+  call zero2v (n11,n12,nl)
+  call zero3v (n21,n31,n41,nl)
+
+  nu11 = dble(nu(1,1))
+  nu12 = dble(nu(1,2))
+  nu121 =  nu12-nu11
+  nu21 =  dble(nu(2,1))
+  nu31 =  dble(nu(3,1))
+  nu41 =  dble(nu(4,1))
+
+  !
+  !
+  do i=1,nl
+     n10(i) = dble( co2(i) * imr(1) )
+     n20(i) = dble( co2(i) * imr(2) )
+     n30(i) = dble( co2(i) * imr(3) )
+     n40(i) = dble( co2(i) * imr(4) )
+     if ( input_cza.ge.1 ) then
+        n11(i) = n10(i) *2.d0 *exp( -ee*nu11/v626t1(i) )
+        n21(i) = n20(i) *2.d0 *exp( -ee*nu21/v628t1(i) )
+        n31(i) = n30(i) *2.d0* exp( -ee*nu31/v636t1(i) )
+        n41(i) = n40(i) *2.d0* exp( -ee*nu41/v627t1(i) )
+     end if
+  enddo
+
+  !
+  !     curtis matrix calculation
+  !
+  call zero3m (c210,c310,c410, nl)
+
+  if ( input_cza.ge.1 ) then
+
+     if (itt_cza.eq.15 ) then
+
+        call MZMC121
+
+     elseif (itt_cza.eq.13) then
+
+        !            call zerom ( c121, nl )
+        c121(1:nl,1:nl)=0.d0
+        call MZESC121
+        call MZTVC121( ierr,varerr )
+        if (ierr .gt. 0) call ERRORS (ierr,varerr)
+
+     endif
+
+  endif
+
+  ! Lower Boundary
+  !     tsurf = t(1)
+  tsurf = tl(1)
+  do i=1,nl
+     sl110(i) = vc110(i) * planckdp( tsurf, nu11 )
+     sl210(i) = vc210(i) * planckdp( tsurf, nu21 )
+     sl310(i) = vc310(i) * planckdp( tsurf, nu31 )
+     sl410(i) = vc410(i) * planckdp( tsurf, nu41 )
+  end do
+  if (input_cza.ge.1) then
+     do i=1,nl
+        sl121(i) = vc121(i) * planckdp( tsurf, nu121 )
+     end do
+  endif
+
+  do i=nl,1,-1
+
+     co2t = dble( co2(i) *(imr(1)+imr(3)+imr(2)+imr(4)) )
+     o3pdbl = dble( o3p(i) )
+     n2dble = dble( n2(i) )
+     codble = dble ( co(i) )
+
+     call GETK_dlvr11 ( tl(i) )
+
+     ! V-T productions and losses V-T
+
+     isot = 1
+     d19b1 = k19ba(isot)*co2t + k19bb(isot)*n2dble &
+          + k19bc(isot)*codble
+     d19c1 = k19ca(isot)*co2t + k19cb(isot)*n2dble &
+          + k19cc(isot)*codble
+     d19bp1 = k19bap(isot)*co2t + k19bbp(isot)*n2dble &
+          + k19bcp(isot)*codble
+     d19cp1 = k19cap(isot)*co2t + k19cbp(isot)*n2dble &
+          + k19ccp(isot)*codble
+     isot = 2
+     d19c2 = k19ca(isot)*co2t + k19cb(isot)*n2dble &
+          + k19cc(isot)*codble
+     d19cp2 = k19cap(isot)*co2t + k19cbp(isot)*n2dble &
+          + k19ccp(isot)*codble
+     isot = 3
+     d19c3 = k19ca(isot)*co2t + k19cb(isot)*n2dble &
+          + k19cc(isot)*codble
+     d19cp3 = k19cap(isot)*co2t + k19cbp(isot)*n2dble &
+          + k19ccp(isot)*codble
+     isot = 4
+     d19c4 = k19ca(isot)*co2t + k19cb(isot)*n2dble &
+          + k19cc(isot)*codble
+     d19cp4 = k19cap(isot)*co2t + k19cbp(isot)*n2dble &
+          + k19ccp(isot)*codble
+     !
+     l11 = d19c1 + k20c(1)*o3pdbl
+     p11 = ( d19cp1 + k20cp(1)*o3pdbl ) * n10(i)
+     l21 = d19c2 + k20c(2)*o3pdbl
+     p21 = ( d19cp2 + k20cp(2)*o3pdbl ) *n20(i)
+     l31 = d19c3 + k20c(3)*o3pdbl
+     p31 = ( d19cp3 + k20cp(3)*o3pdbl ) *n30(i)
+     l41 = d19c4 + k20c(4)*o3pdbl
+     p41 = ( d19cp4 + k20cp(4)*o3pdbl ) *n40(i)
+
+     ! Addition of V-V
+
+     l11 = l11 + k21cp(2)*n20(i) + k21cp(3)*n30(i) &
+          + k21cp(4)*n40(i)
+     p1121 = k21c(2) * n10(i)
+     p1131 = k21c(3) * n10(i)
+     p1141 = k21c(4) * n10(i)
+     !
+     l21 = l21 + k21c(2)*n10(i) + k23k21c*n30(i) + k24k21c*n40(i)
+     p2111 = k21cp(2) * n20(i)
+     p2131 = k23k21cp * n20(i)
+     p2141 = k24k21cp * n20(i)
+     !
+     l31 = l31 + k21c(3)*n10(i) + k23k21cp*n20(i) + k34k21c*n40(i)
+     p3111 = k21cp(3)* n30(i)
+     p3121 = k23k21c * n30(i)
+     p3141 = k34k21cp* n30(i)
+     !
+     l41 = l41 + k21c(4)*n10(i) + k24k21cp*n20(i) + k34k21cp*n30(i)
+     p4111 = k21cp(4)* n40(i)
+     p4121 = k24k21c * n40(i)
+     p4131 = k34k21c * n40(i)
+
+
+     if ( input_cza.ge.1 ) then
+
+        l12 = d19b1 &
+             + k20b(1)*o3pdbl &
+             + k21b(1)*n10(i) &
+             + k33c*( n20(i) + n30(i) + n40(i) )
+        p12 = k21bp(1)*n11(i) * n11(i)
+        p1211 = d19bp1 + k20bp(1)*o3pdbl
+        p1221 = k33cp(2)*n11(i)
+        p1231 = k33cp(3)*n11(i)
+        p1241 = k33cp(4)*n11(i)
+
+        l11 = l11 + d19bp1 &
+             + k20bp(1)*o3pdbl &
+             + 2.d0 * k21bp(1) * n11(i) &
+             +   k33cp(2)*n21(i) + k33cp(3)*n31(i) + k33cp(4)*n41(i)
+        p1112 = d19b1  &
+             + k20b(1)*o3pdbl &
+             + 2.d0*k21b(1)*n10(i) &
+             + k33c*( n20(i) + n30(i) + n40(i) )
+
+        l21 = l21 + k33cp(2)*n11(i)
+        p2112 = k33c*n20(i)
+
+        l31 = l31 + k33cp(3)*n11(i)
+        p3112 = k33c*n30(i)
+
+        l41 = l41 + k33cp(4)*n11(i)
+        p4112 = k33c*n40(i)
+
+     end if
+
+
+     ! For ITT=13,15
+     a21_einst(i) = a2_010_000 * 1.8d0 / 4.d0 * taustar21(i)
+     a31_einst(i) = a3_010_000 * 1.8d0 / 4.d0 * taustar31(i)
+     a41_einst(i) = a4_010_000 * 1.8d0 / 4.d0 * taustar41(i)
+
+     l21 = l21 + a21_einst(i)
+     l31 = l31 + a31_einst(i)
+     l41 = l41 + a41_einst(i)
+
+     ! For ITT=13
+     if (input_cza.ge.1 .and. itt_cza.eq.13) then
+        a12_einst(i) = a1_020_010/3.d0 * 1.8d0/4.d0 * taustar12(i)
+        l12=l12+a12_einst(i)
+     endif
+
+
+     ! Checking for collisional severe errors
+     if (l11 .le. 0.0d0) then
+        ierr = 21
+        varerr = l11
+        return
+     elseif (l21 .le. 0.0d0) then
+        ierr = 22
+        varerr = l21
+        return
+     elseif (l31 .le. 0.0d0) then
+        ierr = 23
+        varerr = l31
+        return
+     elseif (l41 .le. 0.0d0) then
+        ierr = 24
+        varerr = l41
+        return
+     endif
+     if (input_cza.ge.1) then
+        if (l12 .lt. 0.0d0) then
+           ierr = 25
+           varerr = l12
+           return
+        endif
+     endif
+     !
+
+     a11(i) = gamma1*nu11**3.d0 * 1.d0/2.d0 * (p11) /  &
+          (n10(i)*l11)
+     a1121(i,i) = (nu11/nu21)**3.d0 * n20(i)/n10(i) * p1121/l11
+     a1131(i,i) = (nu11/nu31)**3.d0 * n30(i)/n10(i) * p1131/l11
+     a1141(i,i) = (nu11/nu41)**3.d0 * n40(i)/n10(i) * p1141/l11
+     e110(i) = 2.d0* vlight*nu11**2.d0 * 1.d0/2.d0 / &
+          ( n10(i) * l11 )
+
+     a21(i) = gamma1*nu21**3.d0 * 1.d0/2.d0 *  &
+          (p21)/(n20(i)*l21)
+     a2111(i,i) = (nu21/nu11)**3.d0 * n10(i)/n20(i) * p2111/l21
+     a2131(i,i) = (nu21/nu31)**3.d0 * n30(i)/n20(i) * p2131/l21
+     a2141(i,i) = (nu21/nu41)**3.d0 * n40(i)/n20(i) * p2141/l21
+     e210(i) = 2.d0*vlight*nu21**2.d0 * 1.d0/2.d0 /  &
+          ( n20(i) * l21 )
+
+     a31(i) = gamma1*nu31**3.d0 * 1.d0/2.d0 * (p31) /   &
+          (n30(i)*l31)
+     a3111(i,i) = (nu31/nu11)**3.d0 * n10(i)/n30(i) * p3111/l31
+     a3121(i,i) = (nu31/nu21)**3.d0 * n20(i)/n30(i) * p3121/l31
+     a3141(i,i) = (nu31/nu41)**3.d0 * n40(i)/n30(i) * p3141/l31
+     e310(i) = 2.d0*vlight*nu31**2.d0 * 1.d0/2.d0 /   &
+          ( n30(i) * l31 )
+
+     a41(i) = gamma1*nu41**3.d0 * 1.d0/2.d0 * (p41) /   &
+          (n40(i)*l41)
+     a4111(i,i) = (nu41/nu11)**3.d0 * n10(i)/n40(i) * p4111/l41
+     a4121(i,i) = (nu41/nu21)**3.d0 * n20(i)/n40(i) * p4121/l41
+     a4131(i,i) = (nu41/nu31)**3.d0 * n30(i)/n40(i) * p4131/l41
+     e410(i) = 2.d0*vlight*nu41**2.d0 * 1.d0/2.d0 /   &
+          ( n40(i) * l41 )
+
+     if (input_cza.ge.1) then
+
+        a1112(i,i) = (nu11/nu121)**3.d0 * n11(i)/n10(i) *   &
+             p1112/l11
+        a2112(i,i) = (nu21/nu121)**3.d0 * n11(i)/n20(i) *   &
+             p2112/l21
+        a3112(i,i) = (nu31/nu121)**3.d0 * n11(i)/n30(i) *   &
+             p3112/l31
+        a4112(i,i) = (nu41/nu121)**3.d0 * n11(i)/n40(i) *   &
+             p4112/l41
+        a12(i) = gamma1*nu121**3.d0 *2.d0/4.d0* (p12)/   &
+             (n11(i)*l12)
+        a1211(i,i) = (nu121/nu11)**3.d0 * n10(i)/n11(i) *   &
+             p1211/l12
+        a1221(i,i) = (nu121/nu21)**3.d0 * n20(i)/n11(i) *   &
+             p1221/l12
+        a1231(i,i) = (nu121/nu31)**3.d0 * n30(i)/n11(i) *   &
+             p1231/l12
+        a1241(i,i) = (nu121/nu41)**3.d0 * n40(i)/n11(i) *   &
+             p1241/l12
+        e121(i) = 2.d0*vlight*nu121**2.d0 *2.d0/4.d0 /   &
+             ( n11(i) * l12 )
+
+     end if
+
+  end do
+
+!!!!!!!!!!!! Solucion del sistema
+
+  !! Paso 0 :  Calculo de los alphas   alf11, alf21, alf31, alf41, alf12
+
+  call unit  ( cax2, nl )
+
+  call diago ( cax1, e110, nl )
+  call mulmmf90 ( cax3, cax1,c110, nl )
+  call resmmf90 ( alf11, cax2,cax3, nl )
+
+  call diago ( cax1, e210, nl )
+  call mulmmf90 ( cax3, cax1,c210, nl )
+  call resmmf90 ( alf21, cax2,cax3, nl )
+
+  call diago ( cax1, e310, nl )
+  call mulmmf90 ( cax3, cax1,c310, nl )
+  call resmmf90 ( alf31, cax2,cax3, nl )
+
+  call diago ( cax1, e410, nl )
+  call mulmmf90 ( cax3, cax1,c410, nl )
+  call resmmf90 ( alf41, cax2,cax3, nl )
+
+  if (input_cza.ge.1) then
+     call diago ( cax1, e121, nl )
+     call mulmmf90 ( cax3, cax1,c121, nl )
+     call resmmf90 ( alf12, cax2,cax3, nl )
+  endif
+
+  !! Paso 1 :  Calculo de vectores y matrices con 1 barra (aa***)
+
+  if (input_cza.eq.0) then  !  Skip paso 1, pues el12 no se calcula
+
+     ! el11
+     call sypvvv( aa11, a11,e110,sl110, nl )
+     call samem( aa1121, a1121, nl )
+     call samem( aa1131, a1131, nl )
+     call samem( aa1141, a1141, nl )
+     call samem( aalf11, alf11, nl )
+
+     ! el21
+     call sypvvv( aa21, a21,e210,sl210, nl )
+     call samem( aa2111, a2111, nl )
+     call samem( aa2131, a2131, nl )
+     call samem( aa2141, a2141, nl )
+     call samem( aalf21, alf21, nl )
+
+     ! el31
+     call sypvvv( aa31, a31,e310,sl310, nl )
+     call samem( aa3111, a3111, nl )
+     call samem( aa3121, a3121, nl )
+     call samem( aa3141, a3141, nl )
+     call samem( aalf31, alf31, nl )
+
+     ! el41
+     call sypvvv( aa41, a41,e410,sl410, nl )
+     call samem( aa4111, a4111, nl )
+     call samem( aa4121, a4121, nl )
+     call samem( aa4131, a4131, nl )
+     call samem( aalf41, alf41, nl )
+
+
+  else                      !      (input_cza.ge.1) ,   FH !
+
+
+     call sypvvv( v1, a12,e121,sl121, nl ) ! a12 + e121 * sl121
+
+     ! aa11
+     call sypvvv( v2, a11,e110,sl110, nl )
+     call trucommvv( aa11 , alf12,a1112,v2, v1, nl )
+
+     ! aalf11
+     call invdiag( cax1, a1112, nl )
+     call mulmmf90( cax2, alf12, cax1, nl ) ! alf12 * (1/a1112)
+     call mulmmf90( cax3, cax2, alf11, nl )
+     call resmmf90( aalf11, cax3, a1211, nl )
+     ! aa1121
+     call trucodiag(aa1121, alf12,a1112,a1121, a1221, nl)
+     ! aa1131
+     call trucodiag(aa1131, alf12,a1112,a1131, a1231, nl)
+     ! aa1141
+     call trucodiag(aa1141, alf12,a1112,a1141, a1241, nl)
+
+
+     ! aa21
+     call sypvvv( v2, a21,e210,sl210, nl )
+     call trucommvv( aa21 , alf12,a2112,v2, v1, nl )
+
+     ! aalf21
+     call invdiag( cax1, a2112, nl )
+     call mulmmf90( cax2, alf12, cax1, nl ) ! alf12 * (1/a2112)
+     call mulmmf90( cax3, cax2, alf21, nl )
+     call resmmf90( aalf21, cax3, a1221, nl )
+     ! aa2111
+     call trucodiag(aa2111, alf12,a2112,a2111, a1211, nl)
+     ! aa2131
+     call trucodiag(aa2131, alf12,a2112,a2131, a1231, nl)
+     ! aa2141
+     call trucodiag(aa2141, alf12,a2112,a2141, a1241, nl)
+
+
+     ! aa31
+     call sypvvv ( v2, a31,e310,sl310, nl )
+     call trucommvv( aa31 , alf12,a3112,v2, v1, nl )
+     ! aalf31
+     call invdiag( cax1, a3112, nl )
+     call mulmmf90( cax2, alf12, cax1, nl ) ! alf12 * (1/a3112)
+     call mulmmf90( cax3, cax2, alf31, nl )
+     call resmmf90( aalf31, cax3, a1231, nl )
+     ! aa3111
+     call trucodiag(aa3111, alf12,a3112,a3111, a1211, nl)
+     ! aa3121
+     call trucodiag(aa3121, alf12,a3112,a3121, a1221, nl)
+     ! aa3141
+     call trucodiag(aa3141, alf12,a3112,a3141, a1241, nl)
+
+
+     ! aa41
+     call sypvvv( v2, a41,e410,sl410, nl )
+     call trucommvv( aa41 , alf12,a4112,v2, v1, nl )
+     ! aalf41
+     call invdiag( cax1, a4112, nl )
+     call mulmmf90( cax2, alf12, cax1, nl ) ! alf12 * (1/a4112)
+     call mulmmf90( cax3, cax2, alf41, nl )
+     call resmmf90( aalf41, cax3, a1241, nl )
+     ! aa4111
+     call trucodiag(aa4111, alf12,a4112,a4111, a1211, nl)
+     ! aa4121
+     call trucodiag(aa4121, alf12,a4112,a4121, a1221, nl)
+     ! aa4131
+     call trucodiag(aa4131, alf12,a4112,a4131, a1231, nl)
+
+  endif                     ! Final  caso input_cza.ge.1
+
+
+  !! Paso 2 :  Calculo de vectores y matrices con 2 barras (aaa***)
+
+  ! aaalf41
+  call invdiag( cax1, aa4121, nl )
+  call mulmmf90( cax2, aalf21, cax1, nl ) ! alf21 * (1/a4121)
+  call mulmmf90( cax3, cax2, aalf41, nl )
+  call resmmf90( aaalf41, cax3, aa2141, nl )
+  ! aaa41
+  call trucommvv(aaa41, aalf21,aa4121,aa41, aa21, nl)
+  ! aaa4111
+  call trucodiag(aaa4111, aalf21,aa4121,aa4111, aa2111, nl)
+  ! aaa4131
+  call trucodiag(aaa4131, aalf21,aa4121,aa4131, aa2131, nl)
+
+  ! aaalf31
+  call invdiag( cax1, aa3121, nl )
+  call mulmmf90( cax2, aalf21, cax1, nl ) ! alf21 * (1/a3121)
+  call mulmmf90( cax3, cax2, aalf31, nl )
+  call resmmf90( aaalf31, cax3, aa2131, nl )
+  ! aaa31
+  call trucommvv(aaa31, aalf21,aa3121,aa31, aa21, nl)
+  ! aaa3111
+  call trucodiag(aaa3111, aalf21,aa3121,aa3111, aa2111, nl)
+  ! aaa3141
+  call trucodiag(aaa3141, aalf21,aa3121,aa3141, aa2141, nl)
+
+  ! aaalf11
+  call invdiag( cax1, aa1121, nl )
+  call mulmmf90( cax2, aalf21, cax1, nl ) ! alf21 * (1/a1121)
+  call mulmmf90( cax3, cax2, aalf11, nl )
+  call resmmf90( aaalf11, cax3, aa2111, nl )
+  ! aaa11
+  call trucommvv(aaa11, aalf21,aa1121,aa11, aa21, nl)
+  ! aaa1131
+  call trucodiag(aaa1131, aalf21,aa1121,aa1131, aa2131, nl)
+  ! aaa1141
+  call trucodiag(aaa1141, aalf21,aa1121,aa1141, aa2141, nl)
+
+
+  !! Paso 3 :  Calculo de vectores y matrices con 3 barras (aaaa***)
+
+  ! aaaalf41
+  call invdiag( cax1, aaa4131, nl )
+  call mulmmf90( cax2, aaalf31, cax1, nl ) ! aaalf31 * (1/aaa4131)
+  call mulmmf90( cax3, cax2, aaalf41, nl )
+  call resmmf90( aaaalf41, cax3, aaa3141, nl )
+  ! aaaa41
+  call trucommvv(aaaa41, aaalf31,aaa4131,aaa41, aaa31, nl)
+  ! aaaa4111
+  call trucodiag(aaaa4111, aaalf31,aaa4131,aaa4111,aaa3111, nl)
+
+  ! aaaalf11
+  call invdiag( cax1, aaa1131, nl )
+  call mulmmf90( cax2, aaalf31, cax1, nl ) ! aaalf31 * (1/aaa4131)
+  call mulmmf90( cax3, cax2, aaalf11, nl )
+  call resmmf90( aaaalf11, cax3, aaa3111, nl )
+  ! aaaa11
+  call trucommvv(aaaa11, aaalf31,aaa1131,aaa11, aaa31, nl)
+  ! aaaa1141
+  call trucodiag(aaaa1141, aaalf31,aaa1131,aaa1141,aaa3141, nl)
+
+
+  !! Paso 4 :  Calculo de vectores y matrices finales y calculo de J1
+
+  call trucommvv(v1, aaaalf41,aaaa1141,aaaa11, aaaa41, nl)
+  !
+  call invdiag( cax1, aaaa1141, nl )
+  call mulmmf90( cax2, aaaalf41, cax1, nl ) ! aaaalf41 * (1/aaaa1141)
+  call mulmmf90( cax3, cax2, aaaalf11, nl )
+  call resmmf90( cax1, cax3, aaaa4111, nl )
+  !
+  call LUdec ( el11, cax1, v1, nl, nl2 )
+
+  ! Solucion para el41
+  call sypvmv( v1, aaaa41, aaaa4111,el11, nl )
+  call LUdec ( el41, aaaalf41, v1, nl, nl2 )
+
+  ! Solucion para el31
+  call sypvmv( v2, aaa31, aaa3111,el11, nl )
+  call sypvmv( v1,    v2, aaa3141,el41, nl )
+  call LUdec ( el31, aaalf31, v1, nl, nl2 )
+
+  ! Solucion para el21
+  call sypvmv( v3, aa21, aa2111,el11, nl )
+  call sypvmv( v2,   v3, aa2131,el31, nl )
+  call sypvmv( v1,   v2, aa2141,el41, nl )
+  call LUdec ( el21, aalf21, v1, nl, nl2 )
+
+!!!
+  el11(1) = planckdp( tl(1), nu11 )
+  el21(1) = planckdp( tl(1), nu21 )
+  el31(1) = planckdp( tl(1), nu31 )
+  el41(1) = planckdp( tl(1), nu41 )
+  el11(nl) = 2.d0 * el11(nl-1) - el11(nl2)
+  el21(nl) = 2.d0 * el21(nl-1) - el21(nl2)
+  el31(nl) = 2.d0 * el31(nl-1) - el31(nl2)
+  el41(nl) = 2.d0 * el41(nl-1) - el41(nl2)
+
+  call mulmv ( v1, c110,el11, nl )
+  call sumvv ( hr110, v1,sl110, nl )
+
+  ! Solucion para el12
+  if (input_cza.ge.1) then
+
+     call sypvmv( v1, a12, a1211,el11, nl )
+     call sypvmv( v3,  v1, a1221,el21, nl )
+     call sypvmv( v2,  v3, a1231,el31, nl )
+     call sypvmv( v1,  v2, a1241,el41, nl )
+     call LUdec ( el12, alf12, v1, nl, nl2 )
+
+     el12(1) = planckdp( tl(1), nu121 )
+     el12(nl) = 2.d0 * el12(nl-1) - el12(nl2)
+
+     if (itt_cza.eq.15) then
+        call mulmv ( v1, c121,el12, nl )
+        call sumvv ( hr121, v1,sl121, nl )
+     endif
+
+  end if
+
+
+
+  if (input_cza.lt.1) then
+
+     minvt11 = 1.d6
+     minvt21 = 1.d6
+     minvt31 = 1.d6
+     minvt41 = 1.d6
+     do i=1,nl
+        pl11 = el11(i)/( gamma1 * nu11**3.0d0  * 1.d0/2.d0 /n10(i) )
+        pl21 = el21(i)/( gamma1 * nu21**3.0d0  * 1.d0/2.d0 /n20(i) )
+        pl31 = el31(i)/( gamma1 * nu31**3.0d0  * 1.d0/2.d0 /n30(i) )
+        pl41 = el41(i)/( gamma1 * nu41**3.0d0  * 1.d0/2.d0 /n40(i) )
+        vt11(i) = -ee*nu11 / log( abs(pl11) / (2.0d0*n10(i)) )
+        vt21(i) = -ee*nu21 / log( abs(pl21) / (2.0d0*n20(i)) )
+        vt31(i) = -ee*nu31 / log( abs(pl31) / (2.0d0*n30(i)) )
+        vt41(i) = -ee*nu41 / log( abs(pl41) / (2.0d0*n40(i)) )
+        hr210(i) = sl210(i) -hplanck*vlight*nu21 *a21_einst(i)*pl21
+        hr310(i) = sl310(i) -hplanck*vlight*nu31 *a31_einst(i)*pl31
+        hr410(i) = sl410(i) -hplanck*vlight*nu41 *a41_einst(i)*pl41
+
+        minvt11 = min( minvt11,vt11(i) )
+        minvt21 = min( minvt21,vt21(i) )
+        minvt31 = min( minvt31,vt31(i) )
+        minvt41 = min( minvt41,vt41(i) )
+     enddo
+
+     ! Checking for errors in Tvibs
+     if (minvt11 .le. 0.d0) then
+        ierr = 26
+        varerr = minvt11
+        return
+     elseif (minvt21 .le. 0.d0) then
+        ierr = 27
+        varerr = minvt21
+        return
+     elseif (minvt31 .le. 0.d0) then
+        ierr = 28
+        varerr = minvt31
+        return
+     elseif (minvt41 .le. 0.d0) then
+        ierr = 29
+        varerr = minvt41
+        return
+     endif
+
+     v626t1(1:nl)=vt11(1:nl)
+     v628t1(1:nl)=vt21(1:nl)
+     v636t1(1:nl)=vt31(1:nl)
+     v627t1(1:nl)=vt41(1:nl)
+     !         call dinterconnection( v626t1, vt11 )
+     !         call dinterconnection ( v628t1, vt21 )
+     !         call dinterconnection ( v636t1, vt31 )
+     !         call dinterconnection ( v627t1, vt41 )
+
+  else
+
+     do i=1,nl
+        pl21 = el21(i)/( gamma1 * nu21**3.0d0 * 1.d0/2.d0 / n20(i) )
+        pl31 = el31(i)/( gamma1 * nu31**3.0d0 * 1.d0/2.d0 / n30(i) )
+        pl41 = el41(i)/( gamma1 * nu41**3.0d0 * 1.d0/2.d0 / n40(i) )
+        hr210(i) = sl210(i) -hplanck*vlight*nu21 *a21_einst(i)*pl21
+        hr310(i) = sl310(i) -hplanck*vlight*nu31 *a31_einst(i)*pl31
+        hr410(i) = sl410(i) -hplanck*vlight*nu41 *a41_einst(i)*pl41
+        if (itt_cza.eq.13) then
+           pl12 = el12(i)/( gamma1*nu121**3.0d0 * 2.d0/4.d0 /n11(i) )
+           hr121(i) = - hplanck*vlight * nu121 * a12_einst(i)*pl12
+           hr121(i) = hr121(i) + sl121(i)
+        endif
+     enddo
+
+  endif
+
+  ! K/Dday
+  do i=1,nl
+     !        hr110(i)=hr110(i)*dble( hrkday_factor(i) / nt(i) )
+     !        hr210(i)=hr210(i)*dble( hrkday_factor(i) / nt(i) )
+     !        hr310(i)=hr310(i)*dble( hrkday_factor(i) / nt(i) )
+     !        hr410(i)=hr410(i)*dble( hrkday_factor(i) / nt(i) )
+     !        hr121(i)=hr121(i)*dble( hrkday_factor(i) / nt(i) )
+     hr110(i)=hr110(i)*dble( hrkday_factor(i) / ntl(i) )
+     hr210(i)=hr210(i)*dble( hrkday_factor(i) / ntl(i) )
+     hr310(i)=hr310(i)*dble( hrkday_factor(i) / ntl(i) )
+     hr410(i)=hr410(i)*dble( hrkday_factor(i) / ntl(i) )
+     hr121(i)=hr121(i)*dble( hrkday_factor(i) / ntl(i) )
+  end do
 
 end subroutine NLTEdlvr11_CZALU
 
@@ -5101,115 +5087,115 @@ end subroutine NLTEdlvr11_CZALU
 
 subroutine NLTEdlvr11_FB626CTS( hr110CTS, nl_cts_real )
 
-!***********************************************************************
+  !***********************************************************************
 
-      use GITM_planet
-!     use ModNLTE
+  use GITM_planet
+  !     use ModNLTE
 
-!     include 'nlte_paramdef.h'
-!     include 'nlte_commons.h'
+  !     include 'nlte_paramdef.h'
+  !     include 'nlte_commons.h'
 
-      implicit none
+  implicit none
 
 !!!!!!!!!!!!!!!!!! common variables and constants
 
 
-! Arguments
-      real*8 :: hr110CTS(nl_cts)   ! output
-      integer  :: nl_cts_real      ! i
+  ! Arguments
+  real*8 :: hr110CTS(nl_cts)   ! output
+  integer  :: nl_cts_real      ! i
 
-! local variables
+  ! local variables
 
-      real*8 :: n11CTS(nl_cts), slopeTstar110(nl_cts)
-      real*8 :: n10(nl_cts), co2t, codbl, n2dbl, o3pdbl
-      real*8 :: d19c1, d19cp1, l11, p11
-      real*8 :: a11_einst(nl_cts), hcv, maxslope
-      integer :: i, isot
+  real*8 :: n11CTS(nl_cts), slopeTstar110(nl_cts)
+  real*8 :: n10(nl_cts), co2t, codbl, n2dbl, o3pdbl
+  real*8 :: d19c1, d19cp1, l11, p11
+  real*8 :: a11_einst(nl_cts), hcv, maxslope
+  integer :: i, isot
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  start program
 
-      nu11 = dble(nu(1,1))
-      hcv =  hplanck*vlight*nu11
+  nu11 = dble(nu(1,1))
+  hcv =  hplanck*vlight*nu11
 
-      call zero2v (hr110CTS,n11CTS,nl_cts)
+  call zero2v (hr110CTS,n11CTS,nl_cts)
 
-      do i=1,nl_cts_real
+  do i=1,nl_cts_real
 
-         co2t = dble ( co2_cts(i) *(imr(1)+imr(3)+imr(2)+imr(4)) )
-         n10(i) = dble( co2_cts(i) * imr(1) )
-         codbl = dble(co_cts(i))
-         o3pdbl = dble(o3p_cts(i))
-         n2dbl = dble(n2_cts(i))
+     co2t = dble ( co2_cts(i) *(imr(1)+imr(3)+imr(2)+imr(4)) )
+     n10(i) = dble( co2_cts(i) * imr(1) )
+     codbl = dble(co_cts(i))
+     o3pdbl = dble(o3p_cts(i))
+     n2dbl = dble(n2_cts(i))
 
-         call GETK_dlvr11 ( t_cts(i) )
-         isot = 1
-         d19c1 = k19ca(isot)*co2t + k19cb(isot)*n2dbl  &
-                   + k19cc(isot)*codbl
-         d19cp1 = k19cap(isot)*co2t + k19cbp(isot)*n2dbl  &
-                   + k19ccp(isot)*codbl
-         l11 = d19c1 + k20c(1)*o3pdbl
-         p11 = ( d19cp1 + k20cp(1)*o3pdbl ) * n10(i)
+     call GETK_dlvr11 ( t_cts(i) )
+     isot = 1
+     d19c1 = k19ca(isot)*co2t + k19cb(isot)*n2dbl  &
+          + k19cc(isot)*codbl
+     d19cp1 = k19cap(isot)*co2t + k19cbp(isot)*n2dbl  &
+          + k19ccp(isot)*codbl
+     l11 = d19c1 + k20c(1)*o3pdbl
+     p11 = ( d19cp1 + k20cp(1)*o3pdbl ) * n10(i)
 
-         a11_einst(i) = a1_010_000 * 1.8d0/4.d0 * taustar11_cts(i)
+     a11_einst(i) = a1_010_000 * 1.8d0/4.d0 * taustar11_cts(i)
 
-         n11CTS(i) = p11 / (l11 + a11_einst(i))
+     n11CTS(i) = p11 / (l11 + a11_einst(i))
 
-         hr110CTS(i) = - n11CTS(i) * a11_einst(i) * hcv
-         hr110CTS(i) = hr110CTS(i)*  &
-              dble( hrkday_factor_cts(i) / nt_cts(i) ) !K/Day
+     hr110CTS(i) = - n11CTS(i) * a11_einst(i) * hcv
+     hr110CTS(i) = hr110CTS(i)*  &
+          dble( hrkday_factor_cts(i) / nt_cts(i) ) !K/Day
 
-      enddo
+  enddo
 
 
-! calculo de la altura de transicion, a partir de Tstar
-! y merging con el hr110(i), ya calculado con CZALU
+  ! calculo de la altura de transicion, a partir de Tstar
+  ! y merging con el hr110(i), ya calculado con CZALU
 
-      slopeTstar110(1) = taustar11_cts(2)-taustar11_cts(1)
-      slopeTstar110(nl_cts_real) = taustar11_cts(nl_cts_real) -  &
-                taustar11_cts(nl_cts_real-1)
-      maxslope = max( slopeTstar110(1),slopeTstar110(nl_cts_real))
-      if (nl_cts_real .gt. 2) then
-         do i=2,nl_cts_real-1
-            slopeTstar110(i) = ( taustar11_cts(i+1) - &
-                      taustar11_cts(i-1) ) * 0.5d0
-            if ( slopeTstar110(i) .gt. maxslope ) then
-                !write (*,*) i, pl_cts(i), maxslope, slopeTstar110(i)
-               maxslope=slopeTstar110(i)
-            endif
-         enddo
-      endif
+  slopeTstar110(1) = taustar11_cts(2)-taustar11_cts(1)
+  slopeTstar110(nl_cts_real) = taustar11_cts(nl_cts_real) -  &
+       taustar11_cts(nl_cts_real-1)
+  maxslope = max( slopeTstar110(1),slopeTstar110(nl_cts_real))
+  if (nl_cts_real .gt. 2) then
+     do i=2,nl_cts_real-1
+        slopeTstar110(i) = ( taustar11_cts(i+1) - &
+             taustar11_cts(i-1) ) * 0.5d0
+        if ( slopeTstar110(i) .gt. maxslope ) then
+           !write (*,*) i, pl_cts(i), maxslope, slopeTstar110(i)
+           maxslope=slopeTstar110(i)
+        endif
+     enddo
+  endif
 
 end subroutine NLTEdlvr11_FB626CTS
 
 function hrkday_convert(mmean_nlte,cpmean_nlte)
-!***********************************************************************
-!     hrkday_convert.f   ***********paramaters instead from MGITM **********
-!
-!     fortran function that returns the factor for conversion from
-!     hr' [erg s-1 cm-3] to hr [ k day-1 ]
-!     Retain units of K/Earth_day for all heat balance terms in MGITM
-!     nov 2017        swb      adapted to MGITM
-!     mar 2010        fgg      adapted to GCM
-!     jan 99          malv     add o2 as major component.
-!     ago 98          malv     also returns cp_avg,pm_avg
-!     jul 98          malv     first version.
-!***********************************************************************
+  !***********************************************************************
+  !     hrkday_convert.f   ***********paramaters instead from MGITM **********
+  !
+  !     fortran function that returns the factor for conversion from
+  !     hr' [erg s-1 cm-3] to hr [ k day-1 ]
+  !     Retain units of K/Earth_day for all heat balance terms in MGITM
+  !     nov 2017        swb      adapted to MGITM
+  !     mar 2010        fgg      adapted to GCM
+  !     jan 99          malv     add o2 as major component.
+  !     ago 98          malv     also returns cp_avg,pm_avg
+  !     jul 98          malv     first version.
+  !***********************************************************************
 
-      use ModConstants, only :  Avogadros_Number
+  use ModConstants, only :  Avogadros_Number
 
-      implicit none
+  implicit none
 
-!     argumentos
-      real, parameter :: n_avog = Avogadros_Number
-!     real, parameter :: daysec = 88775.  !  Mars daysec
-      real, parameter :: daysec = 86400.
-      real  :: mmean_nlte,cpmean_nlte
-      real :: hrkday_convert
+  !     argumentos
+  real, parameter :: n_avog = Avogadros_Number
+  !     real, parameter :: daysec = 88775.  !  Mars daysec
+  real, parameter :: daysec = 86400.
+  real  :: mmean_nlte,cpmean_nlte
+  real :: hrkday_convert
 
-!cccccccccccccccccccccccccccccccccccc
+  !cccccccccccccccccccccccccccccccccccc
 
-      hrkday_convert = daysec * n_avog /  &
-           ( cpmean_nlte * 1.e4 * mmean_nlte )
+  hrkday_convert = daysec * n_avog /  &
+       ( cpmean_nlte * 1.e4 * mmean_nlte )
 
 end function hrkday_convert
 
