@@ -36,6 +36,8 @@ subroutine calc_chemistry(iBlock)
 
   nImplicitSourceCalls = nSpeciesAll * 2 + 1
 
+  EmissionTotals = 0.0
+  
   call report("Chemistry",2)
   call start_timing("calc_chemistry")
   if (iDebugLevel > 3) then
