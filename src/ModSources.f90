@@ -159,6 +159,8 @@ contains
     allocate(SIR(nLons, nLats, nAlts, 59, nBlocks))
 
     ChemicalHeatingS = 0.0
+    AuroralHeating = 0.0
+    
   end subroutine init_mod_sources
   !=========================================================================
   subroutine clean_mod_sources
