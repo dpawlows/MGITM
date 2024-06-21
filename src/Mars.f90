@@ -5201,258 +5201,257 @@ end function hrkday_convert
 
 subroutine ERRORS (ierr,varerr)
 
-!***********************************************************************
+  !***********************************************************************
 
-      implicit none
+  implicit none
 
-! Arguments
-      integer  :: ierr
-      real*8 :: varerr
+  ! Arguments
+  integer  :: ierr
+  real*8 :: varerr
 
-!***************
+  !***************
 
-      if (ierr .eq. 15) then
-         write (*,*) ' ERROR in MZESC110.    ierr=',ierr
-         write (*,*) '                VAR available=', varerr
-         write (*,*) '   c2 < 0 after INTZHUNT_CTS'
+  if (ierr .eq. 15) then
+     write (*,*) ' ERROR in MZESC110.    ierr=',ierr
+     write (*,*) '                VAR available=', varerr
+     write (*,*) '   c2 < 0 after INTZHUNT_CTS'
 
-      elseif (ierr .eq. 16) then
-         write (*,*) ' ERROR in MZESC110.    ierr=',ierr
-         write (*,*) '                VAR available=', varerr
-         write (*,*) '   p2 < 0 after INTZHUNT_CTS'
+  elseif (ierr .eq. 16) then
+     write (*,*) ' ERROR in MZESC110.    ierr=',ierr
+     write (*,*) '                VAR available=', varerr
+     write (*,*) '   p2 < 0 after INTZHUNT_CTS'
 
-      elseif (ierr .eq. 17) then
-         write (*,*) ' ERROR in MZESC110.    ierr=',ierr
-         write (*,*) '                VAR available=', varerr
-         write (*,*) '   mr2 < 0 after INTZHUNT_CTS'
+  elseif (ierr .eq. 17) then
+     write (*,*) ' ERROR in MZESC110.    ierr=',ierr
+     write (*,*) '                VAR available=', varerr
+     write (*,*) '   mr2 < 0 after INTZHUNT_CTS'
 
-      elseif (ierr .eq. 18) then
-         write (*,*) ' ERROR in MZESC110.    ierr=',ierr
-         write (*,*) '                VAR available=', varerr
-         write (*,*) '   t2 < 0 after INTZHUNT_CTS'
+  elseif (ierr .eq. 18) then
+     write (*,*) ' ERROR in MZESC110.    ierr=',ierr
+     write (*,*) '                VAR available=', varerr
+     write (*,*) '   t2 < 0 after INTZHUNT_CTS'
 
-      elseif (ierr .eq. 19) then
-         write (*,*) ' ERROR in MZESC110.    ierr=',ierr
-         write (*,*) '                VAR available=', varerr
-         write (*,*) '   st2 < 0 after INTZHUNT_CTS'
+  elseif (ierr .eq. 19) then
+     write (*,*) ' ERROR in MZESC110.    ierr=',ierr
+     write (*,*) '                VAR available=', varerr
+     write (*,*) '   st2 < 0 after INTZHUNT_CTS'
 
-      elseif (ierr .eq. 33) then
-         write (*,*) ' ERROR in MZESC110.    ierr=',ierr
-         write (*,*) '                VAR available=', varerr
-         write (*,*) '   [CO2] < 0 at TOA.'
+  elseif (ierr .eq. 33) then
+     write (*,*) ' ERROR in MZESC110.    ierr=',ierr
+     write (*,*) '                VAR available=', varerr
+     write (*,*) '   [CO2] < 0 at TOA.'
 
-      elseif (ierr .eq. 42) then
-         write (*,*) ' ERROR in MZTUD110.    ierr=',ierr
-         write (*,*) '                VAR available=', varerr
-         write (*,*) '   Atmospheric transmittance too large. '
+  elseif (ierr .eq. 42) then
+     write (*,*) ' ERROR in MZTUD110.    ierr=',ierr
+     write (*,*) '                VAR available=', varerr
+     write (*,*) '   Atmospheric transmittance too large. '
 
-      elseif (ierr .eq. 43) then
-         write (*,*) ' ERROR in MZTUD110.    ierr=',ierr
-         write (*,*) '                VAR available=', varerr
-         write (*,*) '   [CO2] < 0 at  CurtisMatrix top.'
+  elseif (ierr .eq. 43) then
+     write (*,*) ' ERROR in MZTUD110.    ierr=',ierr
+     write (*,*) '                VAR available=', varerr
+     write (*,*) '   [CO2] < 0 at  CurtisMatrix top.'
 
-      elseif (ierr .eq. 45) then
-         write (*,*) ' ERROR in MZTUD110.    ierr=',ierr
-         write (*,*) '                VAR available=', varerr
-         write (*,*) '   c2 < 0 after INTZHUNT'
+  elseif (ierr .eq. 45) then
+     write (*,*) ' ERROR in MZTUD110.    ierr=',ierr
+     write (*,*) '                VAR available=', varerr
+     write (*,*) '   c2 < 0 after INTZHUNT'
 
-      elseif (ierr .eq. 46) then
-         write (*,*) ' ERROR in MZTUD110.    ierr=',ierr
-         write (*,*) '                VAR available=', varerr
-         write (*,*) '   p2 < 0 after INTZHUNT'
+  elseif (ierr .eq. 46) then
+     write (*,*) ' ERROR in MZTUD110.    ierr=',ierr
+     write (*,*) '                VAR available=', varerr
+     write (*,*) '   p2 < 0 after INTZHUNT'
 
-      elseif (ierr .eq. 47) then
-         write (*,*) ' ERROR in MZTUD110.    ierr=',ierr
-         write (*,*) '                VAR available=', varerr
-         write (*,*) '   mr2 < 0 after INTZHUNT'
+  elseif (ierr .eq. 47) then
+     write (*,*) ' ERROR in MZTUD110.    ierr=',ierr
+     write (*,*) '                VAR available=', varerr
+     write (*,*) '   mr2 < 0 after INTZHUNT'
 
-      elseif (ierr .eq. 48) then
-         write (*,*) ' ERROR in MZTUD110.    ierr=',ierr
-         write (*,*) '                VAR available=', varerr
-         write (*,*) '   t2 < 0 after INTZHUNT'
+  elseif (ierr .eq. 48) then
+     write (*,*) ' ERROR in MZTUD110.    ierr=',ierr
+     write (*,*) '                VAR available=', varerr
+     write (*,*) '   t2 < 0 after INTZHUNT'
 
-      elseif (ierr .eq. 49) then
-         write (*,*) ' ERROR in MZTUD110.    ierr=',ierr
-         write (*,*) '                VAR available=', varerr
-         write (*,*) '   st2 < 0 after INTZHUNT'
+  elseif (ierr .eq. 49) then
+     write (*,*) ' ERROR in MZTUD110.    ierr=',ierr
+     write (*,*) '                VAR available=', varerr
+     write (*,*) '   st2 < 0 after INTZHUNT'
 
-      elseif (ierr .eq. 75) then
-         write (*,*) ' ERROR in MZTUD110.    ierr=',ierr
-         write (*,*) '                VAR available=', varerr
-         write (*,*) '   c1 < 0 after INTZHUNT'
+  elseif (ierr .eq. 75) then
+     write (*,*) ' ERROR in MZTUD110.    ierr=',ierr
+     write (*,*) '                VAR available=', varerr
+     write (*,*) '   c1 < 0 after INTZHUNT'
 
-      elseif (ierr .eq. 76) then
-         write (*,*) ' ERROR in MZTUD110.    ierr=',ierr
-         write (*,*) '                VAR available=', varerr
-         write (*,*) '   p1 < 0 after INTZHUNT'
+  elseif (ierr .eq. 76) then
+     write (*,*) ' ERROR in MZTUD110.    ierr=',ierr
+     write (*,*) '                VAR available=', varerr
+     write (*,*) '   p1 < 0 after INTZHUNT'
 
-      elseif (ierr .eq. 77) then
-         write (*,*) ' ERROR in MZTUD110.    ierr=',ierr
-         write (*,*) '                VAR available=', varerr
-         write (*,*) '   mr1 < 0 after INTZHUNT'
+  elseif (ierr .eq. 77) then
+     write (*,*) ' ERROR in MZTUD110.    ierr=',ierr
+     write (*,*) '                VAR available=', varerr
+     write (*,*) '   mr1 < 0 after INTZHUNT'
 
-      elseif (ierr .eq. 78) then
-         write (*,*) ' ERROR in MZTUD110.    ierr=',ierr
-         write (*,*) '                VAR available=', varerr
-         write (*,*) '   t1 < 0 after INTZHUNT'
+  elseif (ierr .eq. 78) then
+     write (*,*) ' ERROR in MZTUD110.    ierr=',ierr
+     write (*,*) '                VAR available=', varerr
+     write (*,*) '   t1 < 0 after INTZHUNT'
 
-      elseif (ierr .eq. 79) then
-         write (*,*) ' ERROR in MZTUD110.    ierr=',ierr
-         write (*,*) '                VAR available=', varerr
-         write (*,*) '   st1 < 0 after INTZHUNT'
+  elseif (ierr .eq. 79) then
+     write (*,*) ' ERROR in MZTUD110.    ierr=',ierr
+     write (*,*) '                VAR available=', varerr
+     write (*,*) '   st1 < 0 after INTZHUNT'
 
-      elseif (ierr .eq. 83) then
-         write (*,*) ' ERROR in MZTUD121.    ierr=',ierr
-         write (*,*) '                VAR available=', varerr
-         write (*,*) '   [CO2] < 0 at  CurtisMatrix top.'
+  elseif (ierr .eq. 83) then
+     write (*,*) ' ERROR in MZTUD121.    ierr=',ierr
+     write (*,*) '                VAR available=', varerr
+     write (*,*) '   [CO2] < 0 at  CurtisMatrix top.'
 
-      elseif (ierr .eq. 85) then
-         write (*,*) ' ERROR in MZTUD121.    ierr=',ierr
-         write (*,*) '                VAR available=', varerr
-         write (*,*) '   c1 < 0 after INTZHUNT'
+  elseif (ierr .eq. 85) then
+     write (*,*) ' ERROR in MZTUD121.    ierr=',ierr
+     write (*,*) '                VAR available=', varerr
+     write (*,*) '   c1 < 0 after INTZHUNT'
 
-      elseif (ierr .eq. 86) then
-         write (*,*) ' ERROR in MZTUD121.    ierr=',ierr
-         write (*,*) '                VAR available=', varerr
-         write (*,*) '   p1 < 0 after INTZHUNT'
+  elseif (ierr .eq. 86) then
+     write (*,*) ' ERROR in MZTUD121.    ierr=',ierr
+     write (*,*) '                VAR available=', varerr
+     write (*,*) '   p1 < 0 after INTZHUNT'
 
-      elseif (ierr .eq. 87) then
-         write (*,*) ' ERROR in MZTUD121.    ierr=',ierr
-         write (*,*) '                VAR available=', varerr
-         write (*,*) '   mr1 < 0 after INTZHUNT'
+  elseif (ierr .eq. 87) then
+     write (*,*) ' ERROR in MZTUD121.    ierr=',ierr
+     write (*,*) '                VAR available=', varerr
+     write (*,*) '   mr1 < 0 after INTZHUNT'
 
-      elseif (ierr .eq. 88) then
-         write (*,*) ' ERROR in MZTUD121.    ierr=',ierr
-         write (*,*) '                VAR available=', varerr
-         write (*,*) '   t1 < 0 after INTZHUNT'
+  elseif (ierr .eq. 88) then
+     write (*,*) ' ERROR in MZTUD121.    ierr=',ierr
+     write (*,*) '                VAR available=', varerr
+     write (*,*) '   t1 < 0 after INTZHUNT'
 
-      elseif (ierr .eq. 89) then
-         write (*,*) ' ERROR in MZTUD121.    ierr=',ierr
-         write (*,*) '                VAR available=', varerr
-         write (*,*) '   st1 < 0 after INTZHUNT'
+  elseif (ierr .eq. 89) then
+     write (*,*) ' ERROR in MZTUD121.    ierr=',ierr
+     write (*,*) '                VAR available=', varerr
+     write (*,*) '   st1 < 0 after INTZHUNT'
 
-      elseif (ierr .eq. 51) then
-         write (*,*) ' ERROR in MZTVC121.    ierr=',ierr
-         write (*,*) '                VAR available=', varerr
-         write (*,*) '   Ground transmittance vector VC < 0 '
+  elseif (ierr .eq. 51) then
+     write (*,*) ' ERROR in MZTVC121.    ierr=',ierr
+     write (*,*) '                VAR available=', varerr
+     write (*,*) '   Ground transmittance vector VC < 0 '
 
-      elseif (ierr .eq. 52) then
-         write (*,*) ' ERROR in MZTVC121.    ierr=',ierr
-         write (*,*) '                VAR available=', varerr
-         write (*,*) '   Atmospheric transmittance too large. '
+  elseif (ierr .eq. 52) then
+     write (*,*) ' ERROR in MZTVC121.    ierr=',ierr
+     write (*,*) '                VAR available=', varerr
+     write (*,*) '   Atmospheric transmittance too large. '
 
-      elseif (ierr .eq. 53) then
-         write (*,*) ' ERROR in MZTVC121.    ierr=',ierr
-         write (*,*) '                VAR available=', varerr
-         write (*,*) '   [CO2] < 0 at  CurtisMatrix top.'
+  elseif (ierr .eq. 53) then
+     write (*,*) ' ERROR in MZTVC121.    ierr=',ierr
+     write (*,*) '                VAR available=', varerr
+     write (*,*) '   [CO2] < 0 at  CurtisMatrix top.'
 
-      elseif (ierr .eq. 55) then
-         write (*,*) ' ERROR in MZTVC121.    ierr=',ierr
-         write (*,*) '                VAR available=', varerr
-         write (*,*) '   c2 < 0 after INTZHUNT'
+  elseif (ierr .eq. 55) then
+     write (*,*) ' ERROR in MZTVC121.    ierr=',ierr
+     write (*,*) '                VAR available=', varerr
+     write (*,*) '   c2 < 0 after INTZHUNT'
 
-      elseif (ierr .eq. 56) then
-         write (*,*) ' ERROR in MZTVC121.    ierr=',ierr
-         write (*,*) '                VAR available=', varerr
-         write (*,*) '   p2 < 0 after INTZHUNT'
+  elseif (ierr .eq. 56) then
+     write (*,*) ' ERROR in MZTVC121.    ierr=',ierr
+     write (*,*) '                VAR available=', varerr
+     write (*,*) '   p2 < 0 after INTZHUNT'
 
-      elseif (ierr .eq. 57) then
-         write (*,*) ' ERROR in MZTVC121.    ierr=',ierr
-         write (*,*) '                VAR available=', varerr
-         write (*,*) '   mr2 < 0 after INTZHUNT'
+  elseif (ierr .eq. 57) then
+     write (*,*) ' ERROR in MZTVC121.    ierr=',ierr
+     write (*,*) '                VAR available=', varerr
+     write (*,*) '   mr2 < 0 after INTZHUNT'
 
-      elseif (ierr .eq. 58) then
-         write (*,*) ' ERROR in MZTVC121.    ierr=',ierr
-         write (*,*) '                VAR available=', varerr
-         write (*,*) '   t2 < 0 after INTZHUNT'
+  elseif (ierr .eq. 58) then
+     write (*,*) ' ERROR in MZTVC121.    ierr=',ierr
+     write (*,*) '                VAR available=', varerr
+     write (*,*) '   t2 < 0 after INTZHUNT'
 
-      elseif (ierr .eq. 59) then
-         write (*,*) ' ERROR in MZTVC121.    ierr=',ierr
-         write (*,*) '                VAR available=', varerr
-         write (*,*) '   st2 < 0 after INTZHUNT'
+  elseif (ierr .eq. 59) then
+     write (*,*) ' ERROR in MZTVC121.    ierr=',ierr
+     write (*,*) '                VAR available=', varerr
+     write (*,*) '   st2 < 0 after INTZHUNT'
 
-      elseif (ierr .eq. 63) then
-         write (*,*) ' ERROR in MZESC121sub.    ierr=',ierr
-         write (*,*) '                VAR available=', varerr
-         write (*,*) '   [CO2] < 0 at  CurtisMatrix top.'
+  elseif (ierr .eq. 63) then
+     write (*,*) ' ERROR in MZESC121sub.    ierr=',ierr
+     write (*,*) '                VAR available=', varerr
+     write (*,*) '   [CO2] < 0 at  CurtisMatrix top.'
 
-      elseif (ierr .eq. 65) then
-         write (*,*) ' ERROR in MZESC121sub.    ierr=',ierr
-         write (*,*) '                VAR available=', varerr
-         write (*,*) '   c2 < 0 after INTZHUNT'
+  elseif (ierr .eq. 65) then
+     write (*,*) ' ERROR in MZESC121sub.    ierr=',ierr
+     write (*,*) '                VAR available=', varerr
+     write (*,*) '   c2 < 0 after INTZHUNT'
 
-      elseif (ierr .eq. 66) then
-         write (*,*) ' ERROR in MZESC121sub.    ierr=',ierr
-         write (*,*) '                VAR available=', varerr
-         write (*,*) '   p2 < 0 after INTZHUNT'
+  elseif (ierr .eq. 66) then
+     write (*,*) ' ERROR in MZESC121sub.    ierr=',ierr
+     write (*,*) '                VAR available=', varerr
+     write (*,*) '   p2 < 0 after INTZHUNT'
 
-      elseif (ierr .eq. 67) then
-         write (*,*) ' ERROR in MZESC121sub.    ierr=',ierr
-         write (*,*) '                VAR available=', varerr
-         write (*,*) '   mr2 < 0 after INTZHUNT'
+  elseif (ierr .eq. 67) then
+     write (*,*) ' ERROR in MZESC121sub.    ierr=',ierr
+     write (*,*) '                VAR available=', varerr
+     write (*,*) '   mr2 < 0 after INTZHUNT'
 
-      elseif (ierr .eq. 68) then
-         write (*,*) ' ERROR in MZESC121sub.    ierr=',ierr
-         write (*,*) '                VAR available=', varerr
-         write (*,*) '   t2 < 0 after INTZHUNT'
+  elseif (ierr .eq. 68) then
+     write (*,*) ' ERROR in MZESC121sub.    ierr=',ierr
+     write (*,*) '                VAR available=', varerr
+     write (*,*) '   t2 < 0 after INTZHUNT'
 
-      elseif (ierr .eq. 69) then
-         write (*,*) ' ERROR in MZESC121sub.    ierr=',ierr
-         write (*,*) '                VAR available=', varerr
-         write (*,*) '   st2 < 0 after INTZHUNT'
+  elseif (ierr .eq. 69) then
+     write (*,*) ' ERROR in MZESC121sub.    ierr=',ierr
+     write (*,*) '                VAR available=', varerr
+     write (*,*) '   st2 < 0 after INTZHUNT'
 
-      elseif (ierr .eq. 21) then
-         write (*,*) ' ERROR in CZA.    ierr=',ierr
-         write (*,*) '                VAR available=', varerr
-         write (*,*) '   l11 < 0 '
+  elseif (ierr .eq. 21) then
+     write (*,*) ' ERROR in CZA.    ierr=',ierr
+     write (*,*) '                VAR available=', varerr
+     write (*,*) '   l11 < 0 '
 
-      elseif (ierr .eq. 22) then
-         write (*,*) ' ERROR in CZA.    ierr=',ierr
-         write (*,*) '                VAR available=', varerr
-         write (*,*) '   l21 < 0 '
+  elseif (ierr .eq. 22) then
+     write (*,*) ' ERROR in CZA.    ierr=',ierr
+     write (*,*) '                VAR available=', varerr
+     write (*,*) '   l21 < 0 '
 
-      elseif (ierr .eq. 23) then
-         write (*,*) ' ERROR in CZA.    ierr=',ierr
-         write (*,*) '                VAR available=', varerr
-         write (*,*) '   l31 < 0 '
+  elseif (ierr .eq. 23) then
+     write (*,*) ' ERROR in CZA.    ierr=',ierr
+     write (*,*) '                VAR available=', varerr
+     write (*,*) '   l31 < 0 '
 
-      elseif (ierr .eq. 24) then
-         write (*,*) ' ERROR in CZA.    ierr=',ierr
-         write (*,*) '                VAR available=', varerr
-         write (*,*) '   l41 < 0 '
+  elseif (ierr .eq. 24) then
+     write (*,*) ' ERROR in CZA.    ierr=',ierr
+     write (*,*) '                VAR available=', varerr
+     write (*,*) '   l41 < 0 '
 
-      elseif (ierr .eq. 25) then
-         write (*,*) ' ERROR in CZA.    ierr=',ierr
-         write (*,*) '                VAR available=', varerr
-         write (*,*) '   l12 < 0 '
+  elseif (ierr .eq. 25) then
+     write (*,*) ' ERROR in CZA.    ierr=',ierr
+     write (*,*) '                VAR available=', varerr
+     write (*,*) '   l12 < 0 '
 
-      elseif (ierr .eq. 26) then
-         write (*,*) ' ERROR in CZA.    ierr=',ierr
-         write (*,*) '                VAR available=', varerr
-         write (*,*) '   Negative vibr.temp   xvt11 < 0 '
+  elseif (ierr .eq. 26) then
+     write (*,*) ' ERROR in CZA.    ierr=',ierr
+     write (*,*) '                VAR available=', varerr
+     write (*,*) '   Negative vibr.temp   xvt11 < 0 '
 
-      elseif (ierr .eq. 27) then
-         write (*,*) ' ERROR in CZA.    ierr=',ierr
-         write (*,*) '                VAR available=', varerr
-         write (*,*) '   Negative vibr.temp   xvt21 < 0 '
+  elseif (ierr .eq. 27) then
+     write (*,*) ' ERROR in CZA.    ierr=',ierr
+     write (*,*) '                VAR available=', varerr
+     write (*,*) '   Negative vibr.temp   xvt21 < 0 '
 
-      elseif (ierr .eq. 28) then
-         write (*,*) ' ERROR in CZA.    ierr=',ierr
-         write (*,*) '                VAR available=', varerr
-         write (*,*) '   Negative vibr.temp   xvt31 < 0 '
+  elseif (ierr .eq. 28) then
+     write (*,*) ' ERROR in CZA.    ierr=',ierr
+     write (*,*) '                VAR available=', varerr
+     write (*,*) '   Negative vibr.temp   xvt31 < 0 '
 
-      elseif (ierr .eq. 29) then
-         write (*,*) ' ERROR in CZA.    ierr=',ierr
-         write (*,*) '                VAR available=', varerr
-         write (*,*) '   Negative vibr.temp   xvt41 < 0 '
+  elseif (ierr .eq. 29) then
+     write (*,*) ' ERROR in CZA.    ierr=',ierr
+     write (*,*) '                VAR available=', varerr
+     write (*,*) '   Negative vibr.temp   xvt41 < 0 '
 
 
-      endif
+  endif
 
-      stop ' Stopped in NLTE scheme due to severe error.'
-      end
+  stop ' Stopped in NLTE scheme due to severe error.'
 
-!end subroutine ERRORS
+end subroutine ERRORS
 
 !***********************************************************************
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -5467,2069 +5466,2053 @@ subroutine ERRORS (ierr,varerr)
 !
 !***********************************************************************
 !     subroutine MZESC110 (ig,nl_cts_real, nzy_cts_real,ierr,varerr)
-      subroutine MZESC110 (nl_cts_real, nzy_cts_real,ierr,varerr)
-!***********************************************************************
-!     Includes the following 1-d model subroutines:
-!     *** Old MZESC110_dlvr11_03.f
-!
-!     -MZESC110_dlvr11_03.f
-!     -MZTUD110_dlvr11_03.f
-!     -MZMC121_dlvr11_03.f
-!     -MZTUD121_dlvr11_03.f
-!     -MZESC121_dlvr11_03.f
-!     -MZESC121sub_dlvr11_03.f
-!     -MZTVC121_dlvr11.f
-!     -MZTVC121sub_dlvr11_03.f
-!***********************************************************************
+subroutine MZESC110 (nl_cts_real, nzy_cts_real,ierr,varerr)
+  !***********************************************************************
+  !     Includes the following 1-d model subroutines:
+  !     *** Old MZESC110_dlvr11_03.f
+  !
+  !     -MZESC110_dlvr11_03.f
+  !     -MZTUD110_dlvr11_03.f
+  !     -MZMC121_dlvr11_03.f
+  !     -MZTUD121_dlvr11_03.f
+  !     -MZESC121_dlvr11_03.f
+  !     -MZESC121sub_dlvr11_03.f
+  !     -MZTVC121_dlvr11.f
+  !     -MZTVC121sub_dlvr11_03.f
+  !***********************************************************************
 
-      use GITM_planet
-!     use ModNLTE
+  use GITM_planet
+  !     use ModNLTE
 
-!     include 'nlte_paramdef.h'
-!     include 'nlte_commons.h'
+  !     include 'nlte_paramdef.h'
+  !     include 'nlte_commons.h'
 
-      implicit none
+  implicit none
 
-!     arguments
-      integer ::     nl_cts_real, nzy_cts_real ! i
-!     integer ::    ig
+  !     arguments
+  integer ::     nl_cts_real, nzy_cts_real ! i
+  !     integer ::    ig
 
-!     old arguments
-      integer ::         ierr      ! o
-      real*8 ::          varerr    ! o
+  !     old arguments
+  integer ::         ierr      ! o
+  real*8 ::          varerr    ! o
 
-!     local variables and constants
-      integer :: 	i, iaquiHIST , iaquiZ
-      integer ::   isot
-      real*8 ::    argumento
-      real*8 ::	   tauinf(nl_cts)
-      real*8 ::	   con(nzy_cts), coninf
-      real*8 ::	   c1, c2 , ccc
-      real*8 ::	   t1, t2
-      real*8 ::    p1, p2
-      real*8 ::	   mr1, mr2
-      real*8 ::	   st1, st2
-      real*8 ::	   c1box(nbox_max), c2box(nbox_max)
-      real*8 ::    ff      ! to avoid too small numbers
-      real*8 ::	   st, beta, ts
-      real*8 ::	   tyd(nzy_cts)
-      real*8 ::	   correc
-      real*8 ::	   deltanudbl, deltazdbl
-      real*8 ::    yy
+  !     local variables and constants
+  integer :: 	i, iaquiHIST , iaquiZ
+  integer ::   isot
+  real*8 ::    argumento
+  real*8 ::	   tauinf(nl_cts)
+  real*8 ::	   con(nzy_cts), coninf
+  real*8 ::	   c1, c2 , ccc
+  real*8 ::	   t1, t2
+  real*8 ::    p1, p2
+  real*8 ::	   mr1, mr2
+  real*8 ::	   st1, st2
+  real*8 ::	   c1box(nbox_max), c2box(nbox_max)
+  real*8 ::    ff      ! to avoid too small numbers
+  real*8 ::	   st, beta, ts
+  real*8 ::	   tyd(nzy_cts)
+  real*8 ::	   correc
+  real*8 ::	   deltanudbl, deltazdbl
+  real*8 ::    yy
 
-!     external function
-      external  :: we_clean
-      real*8    :: we_clean
+  !     external function
+  external  :: we_clean
+  real*8    :: we_clean
 
-!***********************************************************************
-      ierr = 0
-      varerr = 0.d0
-!
-      beta = 1.8d5
-      ibcode1 = '1'
-      isot = 1
-      deltanudbl = dble(deltanu(1,1))
-      deltazdbl = dble(deltaz_cts)
-      ff=1.0d10
+  !***********************************************************************
+  ierr = 0
+  varerr = 0.d0
+  !
+  beta = 1.8d5
+  ibcode1 = '1'
+  isot = 1
+  deltanudbl = dble(deltanu(1,1))
+  deltazdbl = dble(deltaz_cts)
+  ff=1.0d10
 
-!
-      do i=1,nzy_cts_real
-         tyd(i) = dble(ty_cts(i))
-         con(i) =  dble( co2y_cts(i) * imr(isot) )
-         correc = 2.d0 * dexp( -ee*dble(elow(isot,2))/tyd(i) )
-         con(i) = con(i) * ( 1.d0 - correc )
-         mr_cts(i) = dble(co2y_cts(i)/nty_cts(i))
-      end do
-      if ( con(nzy_cts_real) .le. 0.0d0 ) then
-         ierr = 33
-         varerr = con(nzy_cts_real)
-         return
-      elseif ( con(nzy_cts_real-1) .le. con(nzy_cts_real) ) then
-         write (*,*) ' WARNING in MZESC110 '
-         write (*,*) '    [CO2] growing with altitude at TOA.'
-         write (*,*) '    [CO2] @ TOA = ', con(nzy_cts_real)
-         coninf = dble( con(nzy_cts_real) )
-      else
-         coninf = dble( con(nzy_cts_real) /  &
-                log( con(nzy_cts_real-1) / con(nzy_cts_real) ) )
-      endif
-!
-      call gethist_03 ( 1 )
+  !
+  do i=1,nzy_cts_real
+     tyd(i) = dble(ty_cts(i))
+     con(i) =  dble( co2y_cts(i) * imr(isot) )
+     correc = 2.d0 * dexp( -ee*dble(elow(isot,2))/tyd(i) )
+     con(i) = con(i) * ( 1.d0 - correc )
+     mr_cts(i) = dble(co2y_cts(i)/nty_cts(i))
+  end do
+  if ( con(nzy_cts_real) .le. 0.0d0 ) then
+     ierr = 33
+     varerr = con(nzy_cts_real)
+     return
+  elseif ( con(nzy_cts_real-1) .le. con(nzy_cts_real) ) then
+     write (*,*) ' WARNING in MZESC110 '
+     write (*,*) '    [CO2] growing with altitude at TOA.'
+     write (*,*) '    [CO2] @ TOA = ', con(nzy_cts_real)
+     coninf = dble( con(nzy_cts_real) )
+  else
+     coninf = dble( con(nzy_cts_real) /  &
+          log( con(nzy_cts_real-1) / con(nzy_cts_real) ) )
+  endif
+  !
+  call gethist_03 ( 1 )
 
-!
-!     tauinf
-!
-      call initial
+  !
+  !     tauinf
+  !
+  call initial
 
-      iaquiHIST = nhist/2
-      iaquiZ = nzy_cts_real - 2
+  iaquiHIST = nhist/2
+  iaquiZ = nzy_cts_real - 2
 
-      do i=nl_cts_real,1,-1
+  do i=nl_cts_real,1,-1
 
-         if(i.eq.nl_cts_real)then
+     if(i.eq.nl_cts_real)then
 
-            call intzhunt_cts (iaquiZ, zl_cts(i), nzy_cts_real,  &
-                    c2,p2,mr2,t2, con)
-            do kr=1,nbox
-               ta(kr)=t2
-	    end do
-            call interstrhunt (iaquiHIST, st2,t2,ka,ta)
-                                ! Check interpolation errors :
-            if (c2.le.0.0d0) then
-               ierr=15
-               varerr=c2
-               return
-       	    elseif (p2.le.0.0d0) then
-               ierr=16
-               varerr=p2
-               return
-	    elseif (mr2.le.0.0d0) then
-               ierr=17
-               varerr=mr2
-               return
-	    elseif (t2.le.0.0d0) then
-               ierr=18
-               varerr=t2
-               return
-	    elseif (st2.le.0.0d0) then
-               ierr=19
-               varerr=st2
-               return
-	    endif
-                                !
-            aa = p2 * coninf * mr2 * (st2 * ff)
-            cc = coninf * st2
-            dd = t2 * coninf * st2
-            do kr=1,nbox
-               ccbox(kr) = coninf * ka(kr)
-               ddbox(kr) = t2 * ccbox(kr)
-               c2box(kr) = c2 * ka(kr) * deltazdbl
-            end do
-            c2 = c2 * st2 * deltazdbl
+        call intzhunt_cts (iaquiZ, zl_cts(i), nzy_cts_real,  &
+             c2,p2,mr2,t2, con)
+        do kr=1,nbox
+           ta(kr)=t2
+        end do
+        call interstrhunt (iaquiHIST, st2,t2,ka,ta)
+        ! Check interpolation errors :
+        if (c2.le.0.0d0) then
+           ierr=15
+           varerr=c2
+           return
+        elseif (p2.le.0.0d0) then
+           ierr=16
+           varerr=p2
+           return
+        elseif (mr2.le.0.0d0) then
+           ierr=17
+           varerr=mr2
+           return
+        elseif (t2.le.0.0d0) then
+           ierr=18
+           varerr=t2
+           return
+        elseif (st2.le.0.0d0) then
+           ierr=19
+           varerr=st2
+           return
+        endif
+        !
+        aa = p2 * coninf * mr2 * (st2 * ff)
+        cc = coninf * st2
+        dd = t2 * coninf * st2
+        do kr=1,nbox
+           ccbox(kr) = coninf * ka(kr)
+           ddbox(kr) = t2 * ccbox(kr)
+           c2box(kr) = c2 * ka(kr) * deltazdbl
+        end do
+        c2 = c2 * st2 * deltazdbl
 
-         else
+     else
 
-            call intzhunt_cts (iaquiZ, zl_cts(i), nzy_cts_real,  &
-                  c1,p1,mr1,t1, con)
-            do kr=1,nbox
-               ta(kr)=t1
-            end do
-            call interstrhunt (iaquiHIST, st1,t1,ka,ta)
-            do kr=1,nbox
-               c1box(kr) = c1 * ka(kr) * deltazdbl
-            end do
-            c1 = c1 * st1 * deltazdbl
-            aa = aa + ( p1*mr1*(c1*ff) + p2*mr2*(c2*ff)) / 2.d0
-            cc = cc + ( c1 + c2 ) / 2.d0
-            ccc = ( c1 + c2 ) / 2.d0
-            dd = dd + ( t1*c1 + t2*c2 ) / 2.d0
-            do kr=1,nbox
-               ccbox(kr) = ccbox(kr) +  &
-                    ( c1box(kr) + c2box(kr) )/2.d0
-               ddbox(kr) = ddbox(kr) +  &
-                    ( t1*c1box(kr)+t2*c2box(kr) )/2.d0
-            end do
+        call intzhunt_cts (iaquiZ, zl_cts(i), nzy_cts_real,  &
+             c1,p1,mr1,t1, con)
+        do kr=1,nbox
+           ta(kr)=t1
+        end do
+        call interstrhunt (iaquiHIST, st1,t1,ka,ta)
+        do kr=1,nbox
+           c1box(kr) = c1 * ka(kr) * deltazdbl
+        end do
+        c1 = c1 * st1 * deltazdbl
+        aa = aa + ( p1*mr1*(c1*ff) + p2*mr2*(c2*ff)) / 2.d0
+        cc = cc + ( c1 + c2 ) / 2.d0
+        ccc = ( c1 + c2 ) / 2.d0
+        dd = dd + ( t1*c1 + t2*c2 ) / 2.d0
+        do kr=1,nbox
+           ccbox(kr) = ccbox(kr) +  &
+                ( c1box(kr) + c2box(kr) )/2.d0
+           ddbox(kr) = ddbox(kr) +  &
+                ( t1*c1box(kr)+t2*c2box(kr) )/2.d0
+        end do
 
-            mr2 = mr1
-            c2=c1
-            do kr=1,nbox
-               c2box(kr) = c1box(kr)
-            end do
-            t2=t1
-            p2=p1
-         end if
+        mr2 = mr1
+        c2=c1
+        do kr=1,nbox
+           c2box(kr) = c1box(kr)
+        end do
+        t2=t1
+        p2=p1
+     end if
 
-         pp = aa / (cc*ff)
+     pp = aa / (cc*ff)
 
-         ts = dd/cc
-         do kr=1,nbox
-   	    ta(kr) = ddbox(kr) / ccbox(kr)
-         end do
-         call interstrhunt(iaquiHIST, st,ts,ka,ta)
-         call intershphunt(iaquiHIST, alsa,alda,ta)
+     ts = dd/cc
+     do kr=1,nbox
+        ta(kr) = ddbox(kr) / ccbox(kr)
+     end do
+     call interstrhunt(iaquiHIST, st,ts,ka,ta)
+     call intershphunt(iaquiHIST, alsa,alda,ta)
 
-!
-         eqw=0.0d0
-         do  kr=1,nbox
-            yy = ccbox(kr) * beta
-            w = we_clean ( yy, pp, alsa(kr),alda(kr) )
-            eqw = eqw + no(kr)*w
-         end do
+     !
+     eqw=0.0d0
+     do  kr=1,nbox
+        yy = ccbox(kr) * beta
+        w = we_clean ( yy, pp, alsa(kr),alda(kr) )
+        eqw = eqw + no(kr)*w
+     end do
 
-         argumento = eqw / deltanudbl
-         tauinf(i) = dexp( - argumento )
-         if (i.eq.nl_cts_real) then
-            taustar11_cts(i) = 0.0d0
-         else
-            taustar11_cts(i) = deltanudbl * (tauinf(i+1)-tauinf(i)) &
-                 / ( beta * ccc )
-         endif
+     argumento = eqw / deltanudbl
+     tauinf(i) = dexp( - argumento )
+     if (i.eq.nl_cts_real) then
+        taustar11_cts(i) = 0.0d0
+     else
+        taustar11_cts(i) = deltanudbl * (tauinf(i+1)-tauinf(i)) &
+             / ( beta * ccc )
+     endif
 
-      end do
-
-
-      call mzescape_normaliz_02 ( taustar11_cts, nl_cts_real, 2 )
+  end do
 
 
-      end subroutine MZESC110
+  call mzescape_normaliz_02 ( taustar11_cts, nl_cts_real, 2 )
 
-!***********************************************************************
-!
-      subroutine MZTUD110( ierr, varerr )
-!
-!***********************************************************************
-!     *** Old MZTUD110_dlvr11_03.f
-!***********************************************************************
 
-      use GITM_planet
-!     use ModNLTE
-
-!     include 'nlte_paramdef.h'
-!     include 'nlte_commons.h'
-
-      implicit none
-
-!     arguments
-      integer  ::         ierr      ! o
-      real*8   ::          varerr    ! o
-
-!     local variables and constants
-      integer  :: 	      i, in, ir, iaquiHIST , iaquiZ
-      integer  ::             ib, isot
-      real*8   :: 	      tau(nl,nl), argumento
-      real*8   :: 	      tauinf(nl)
-      real*8   :: 	      con(nzy), coninf
-      real*8   :: 	      c1, c2
-      real*8   :: 	      t1, t2
-      real*8   :: 	      p1, p2
-      real*8   ::	      mr1, mr2
-      real*8   :: 	      st1, st2
-      real*8   :: 	      c1box(nbox_max), c2box(nbox_max)
-      real*8   ::	      ff      ! to avoid too small numbers
-      real*8   ::	      tvtbs(nzy)
-      real*8   :: 	      st, beta, ts
-      real*8   ::  	      zld(nl), zyd(nzy), deltazdbl
-      real*8   :: 	      correc
-      real*8   ::	      deltanudbl
-      real*8   ::             maxtau, yy
-
-!     external function
-      external  ::            we_clean
-      real*8    ::            we_clean
+end subroutine MZESC110
 
 !***********************************************************************
-
-      ierr = 0
-      varerr = 0.d0
 !
-      ib = 1
-      beta = 1.8d5
-      ibcode1 = '1'
-      isot = 1
-      deltanudbl = dble(deltanu(1,1))
-      deltazdbl = dble(deltaz)
-      ff=1.0d10
-
-!
-      do i=1,nzy
-         zyd(i) = dble(zy(i))
-      enddo
-      do i=1,nl
-         zld(i) = dble(zl(i))
-      enddo
-      call interhuntdp ( tvtbs,zyd,nzy, v626t1,zld,nl, 1 )
-      do i=1,nzy
-         con(i) =  dble( co2y(i) * imr(isot) )
-         correc = 2.d0 * dexp( -ee*dble(elow(isot,2))/tvtbs(i) )
-         con(i) = con(i) * ( 1.d0 - correc )
-         mr(i) = dble(co2y(i)/nty(i))
-      end do
-      if ( con(nzy) .le. 0.0d0 ) then
-         ierr = 43
-         varerr = con(nzy)
-         return
-      elseif ( con(nzy-1) .le. con(nzy) ) then
-         write (*,*) ' WARNING in MZTUD110 '
-         write (*,*) '    [CO2] grows with height at CurtisMatrix top.'
-         write (*,*) '    [CO2] @ top = ', con(nzy)
-         coninf = dble( con(nzy) )
-      else
-         coninf = dble( con(nzy) / log( con(nzy-1) / con(nzy) ) )
-      endif
-      call mztf_correccion ( coninf, con, ib )
-
-!
-      call gethist_03 ( 1 )
-
-!
-!     tauinf
-!
-      call initial
-
-      iaquiHIST = nhist/2
-      iaquiZ = nzy - 2
-
-      do i=nl,1,-1
-
-         if(i.eq.nl)then
-
-            call intzhunt (iaquiZ, zl(i),c2,p2,mr2,t2, con)
-            do kr=1,nbox
-               ta(kr)=t2
-            end do
-            call interstrhunt (iaquiHIST, st2,t2,ka,ta)
-            ! Check interpolation errors :
-            if (c2.le.0.0d0) then
-               ierr=45
-               varerr=c2
-               return
-            elseif (p2.le.0.0d0) then
-               ierr=46
-               varerr=p2
-               return
-            elseif (mr2.le.0.0d0) then
-               ierr=47
-               varerr=mr2
-               return
-            elseif (t2.le.0.0d0) then
-               ierr=48
-               varerr=t2
-               return
-            elseif (st2.le.0.0d0) then
-               ierr=49
-               varerr=st2
-               return
-            endif
-                                !
-            aa = p2 * coninf * mr2 * (st2 * ff)
-            cc = coninf * st2
-            dd = t2 * coninf * st2
-            do kr=1,nbox
-               ccbox(kr) = coninf * ka(kr)
-               ddbox(kr) = t2 * ccbox(kr)
-               c2box(kr) = c2 * ka(kr) * deltazdbl
-            end do
-            c2 = c2 * st2 * deltazdbl
-
-         else
-
-            call intzhunt (iaquiZ, zl(i),c1,p1,mr1,t1, con)
-            do kr=1,nbox
-               ta(kr)=t1
-            end do
-            call interstrhunt (iaquiHIST, st1,t1,ka,ta)
-            do kr=1,nbox
-               c1box(kr) = c1 * ka(kr) * deltazdbl
-            end do
-            ! Check interpolation errors :
-            if (c1.le.0.0d0) then
-               ierr=75
-               varerr=c1
-               return
-            elseif (p1.le.0.0d0) then
-               ierr=76
-               varerr=p1
-               return
-            elseif (mr1.le.0.0d0) then
-               ierr=77
-               varerr=mr1
-               return
-            elseif (t1.le.0.0d0) then
-               ierr=78
-               varerr=t1
-               return
-            elseif (st1.le.0.0d0) then
-               ierr=79
-               varerr=st1
-               return
-            endif
-	    !
-            c1 = c1 * st1 * deltazdbl
-            aa = aa + ( p1*mr1*(c1*ff) + p2*mr2*(c2*ff)) / 2.d0
-            cc = cc + ( c1 + c2 ) / 2.d0
-            dd = dd + ( t1*c1 + t2*c2 ) / 2.d0
-            do kr=1,nbox
-               ccbox(kr) = ccbox(kr) +  &
-                   ( c1box(kr) + c2box(kr) )/2.d0
-               ddbox(kr) = ddbox(kr) +  &
-                   ( t1*c1box(kr)+t2*c2box(kr) )/2.d0
-            end do
-
-            mr2 = mr1
-            c2=c1
-            do kr=1,nbox
-               c2box(kr) = c1box(kr)
-            end do
-            t2=t1
-            p2=p1
-         end if
-
-         pp = aa / (cc*ff)
-
-         ts = dd/cc
-         do kr=1,nbox
-   	    ta(kr) = ddbox(kr) / ccbox(kr)
-         end do
-         call interstrhunt(iaquiHIST, st,ts,ka,ta)
-         call intershphunt(iaquiHIST, alsa,alda,ta)
-
-!
-         eqw=0.0d0
-         do  kr=1,nbox
-            yy = ccbox(kr) * beta
-            w = we_clean ( yy, pp, alsa(kr),alda(kr) )
-            eqw = eqw + no(kr)*w
-         end do
-
-         argumento = eqw / deltanudbl
-         tauinf(i) = dexp( - argumento )
-
-      end do
-
-!
-!     tau
-!
-
-      iaquiZ = 2
-      do 1 in=1,nl-1
-
-         call initial
-         call intzhunt (iaquiZ, zl(in), c1,p1,mr1,t1, con)
-         do kr=1,nbox
-            ta(kr) = t1
-         end do
-         call interstrhunt (iaquiHIST, st1,t1,ka,ta)
-         do kr=1,nbox
-            c1box(kr) = c1 * ka(kr) * deltazdbl
-         end do
-         c1 = c1 * st1 * deltazdbl
-
-         do 2 ir=in,nl-1
-
-            if (ir.eq.in) then
-               tau(in,ir) = 1.d0
-               goto 2
-            end if
-
-            call intzhunt (iaquiZ, zl(ir), c2,p2,mr2,t2, con)
-            do kr=1,nbox
-               ta(kr) = t2
-            end do
-            call interstrhunt (iaquiHIST, st2,t2,ka,ta)
-            do kr=1,nbox
-               c2box(kr) = c2 * ka(kr) * deltazdbl
-            end do
-            c2 = c2 * st2 * deltazdbl
-
-            aa = aa + ( p1*mr1*(c1*ff) + p2*mr2*(c2*ff)) / 2.d0
-            cc = cc + ( c1 + c2 ) / 2.d0
-            dd = dd + ( t1*c1 + t2*c2 ) / 2.d0
-            do kr=1,nbox
-               ccbox(kr) = ccbox(kr) +  &
-                     ( c1box(kr) + c2box(kr) ) / 2.d0
-               ddbox(kr) = ddbox(kr) +  &
-                     ( t1*c1box(kr) + t2*c2box(kr) ) / 2.d0
-            end do
-
-            mr1=mr2
-            t1=t2
-            c1=c2
-            p1=p2
-            do kr=1,nbox
-               c1box(kr) = c2box(kr)
-            end do
-
-            pp = aa / (cc * ff)
-
-            ts = dd/cc
-            do kr=1,nbox
-               ta(kr) = ddbox(kr) / ccbox(kr)
-            end do
-            call interstrhunt(iaquiHIST, st,ts,ka,ta)
-            call intershphunt(iaquiHIST, alsa,alda,ta)
-!
-            eqw=0.0d0
-            do kr=1,nbox
-               yy = ccbox(kr) * beta
-               w = we_clean ( yy, pp, alsa(kr),alda(kr) )
-               eqw = eqw + no(kr)*w
-            end do
-
-            argumento = eqw / deltanudbl
-            tau(in,ir) = exp( - argumento )
-
-
- 2       continue
-
- 1    continue
-
-
-!
-!     tau(in,ir) for n>r
-!
-
-      in=nl
-
-      call initial
-
-      iaquiZ = nzy - 2
-      call intzhunt (iaquiZ, zl(in), c1,p1,mr1,t1, con)
-      do kr=1,nbox
-         ta(kr) = t1
-      end do
-      call interstrhunt (iaquiHIST,st1,t1,ka,ta)
-      do kr=1,nbox
-         c1box(kr) = c1 * ka(kr) * deltazdbl
-      end do
-      c1 = c1 * st1 * deltazdbl
-
-      do 4 ir=in-1,1,-1
-
-         call intzhunt (iaquiZ, zl(ir), c2,p2,mr2,t2, con)
-         do kr=1,nbox
-            ta(kr) = t2
-         end do
-         call interstrhunt (iaquiHIST, st2,t2,ka,ta)
-         do kr=1,nbox
-            c2box(kr) = c2 * ka(kr) * deltazdbl
-         end do
-         c2 = c2 * st2 * deltazdbl
-
-         aa = aa + ( p1*mr1*(c1*ff) + p2*mr2*(c2*ff)) / 2.d0
-         cc = cc + ( c1 + c2 ) / 2.d0
-         dd = dd + ( t1*c1 + t2*c2 ) / 2.d0
-         do kr=1,nbox
-            ccbox(kr) = ccbox(kr) +  &
-                 ( c1box(kr) + c2box(kr) ) / 2.d0
-            ddbox(kr) = ddbox(kr) +  &
-                 ( t1*c1box(kr) + t2*c2box(kr) ) / 2.d0
-         end do
-
-         mr1=mr2
-         c1=c2
-         t1=t2
-         p1=p2
-         do kr=1,nbox
-            c1box(kr) = c2box(kr)
-         end do
-
-         pp = aa / (cc * ff)
-         ts = dd / cc
-         do kr=1,nbox
-            ta(kr) = ddbox(kr) / ccbox(kr)
-         end do
-         call interstrhunt (iaquiHIST, st,ts,ka,ta)
-         call intershphunt (iaquiHIST, alsa,alda,ta)
-
-!
-
-         eqw=0.0d0
-         do kr=1,nbox
-            yy = ccbox(kr) * beta
-            w = we_clean ( yy, pp, alsa(kr),alda(kr) )
-            eqw = eqw + no(kr)*w
-         end do
-
-         argumento = eqw / deltanudbl
-         tau(in,ir) = exp( - argumento )
-
-
- 4    continue
-
-!
-      do in=nl-1,2,-1
-         do ir=in-1,1,-1
-            tau(in,ir) = tau(ir,in)
-         end do
-      end do
-
-!
-!     Tracking potential numerical errors
-!
-      maxtau = 0.0d0
-      do in=nl-1,2,-1
-         do ir=in-1,1,-1
-            maxtau = max( maxtau, tau(in,ir) )
-         end do
-      end do
-      if (maxtau .gt. 1.0d0) then
-         ierr = 42
-         varerr = maxtau
-         return
-      endif
-
-
-!
-      call MZCUD110 ( tauinf,tau )
-
-      end subroutine MZTUD110
-
-
-!***********************************************************************
-
-      subroutine MZCUD110 ( tauinf,tau )
-
-!***********************************************************************
-!     *** Old file MZCUD_dlvr11.f ***
-!***********************************************************************
-
-      use ModConstants, only : pi
-      use GITM_planet
-!     use ModNLTE
-
-!     include 'nlte_paramdef.h'
-!     include 'nlte_commons.h'
-
-      implicit none
-
-!     arguments
-      real*8  :: 		tau(nl,nl) ! i
-      real*8  ::		tauinf(nl) ! i
-
-
-!     local variables
-      integer :: 	i, in, ir
-!     real*8  ::	a(nl,nl), cf(nl,nl), pideltanu, deltazdp, pi
-      real*8  ::	a(nl,nl), cf(nl,nl), pideltanu, deltazdp
-
-!***********************************************************************
-
-!     pi = 3.141592
-      pideltanu = pi * dble(deltanu(1,1))
-      deltazdp = 2.0d5 * dble(deltaz)
-
-      do in=1,nl
-         do ir=1,nl
-            cf(in,ir) = 0.0d0
-            c110(in,ir) = 0.0d0
-            a(in,ir) = 0.0d0
-         end do
-         vc110(in) = 0.0d0
-      end do
-
-!
-      do in=1,nl
-         do ir=1,nl
-
-            if (ir.eq.1) then
-               cf(in,ir) = tau(in,ir) - tau(in,1)
-            elseif (ir.eq.nl) then
-               cf(in,ir) = tauinf(in) - tau(in,ir-1)
-            else
-               cf(in,ir) = tau(in,ir) - tau(in,ir-1)
-            end if
-
-         end do
-      end do
-
-!
-      do in=2,nl-1
-         do ir=1,nl
-            if (ir.eq.in+1) a(in,ir) = -1.d0
-            if (ir.eq.in-1) a(in,ir) = +1.d0
-            a(in,ir) = a(in,ir) / deltazdp
-         end do
-      end do
-
-!
-      do in=1,nl
-         do ir=1,nl
-	    cf(in,ir) = cf(in,ir) * pideltanu
-         end do
-      end do
-
-      do in=2,nl-1
-         do ir=1,nl
-	    do i=1,nl
-               c110(in,ir) = c110(in,ir) + a(in,i) * cf(i,ir)
-	    end do
-         end do
-      end do
-
-      do in=2,nl-1
-         vc110(in) =  pideltanu/deltazdp *  &
-              ( tau(in-1,1) - tau(in+1,1) )
-      end do
-
-
-!
-      do in=2,nl-1
-         c110(in,nl-2) = c110(in,nl-2) - c110(in,nl)
-         c110(in,nl-1) = c110(in,nl-1) + 2.d0*c110(in,nl)
-      end do
-
-      end subroutine MZCUD110
-
-
-
-!***********************************************************************
-
-      subroutine MZMC121
-
-!***********************************************************************
-!     *** Old MZMC121_dlvr11_03.f ***
-!***********************************************************************
-
-      use GITM_planet
-!     use ModNLTE
-
-!     include 'nlte_paramdef.h'
-!     include 'nlte_commons.h'
-
-      implicit none
-
-                                ! local variables
-
-      real*8  ::  cax1(nl,nl)
-      real*8  ::  v1(nl), cm_factor, vc_factor
-      real    ::  nuaux1, nuaux2, nuaux3
-      real*8  ::  faux2,faux3, daux2,daux3
-      real*8  ::  varerr
-
-      integer ::  i,j,ik,ib
-      integer ::  ierr
-
-!************************************************************************
-
-      c121(1:nl,1:nl)=0.d0
-!      call zerom (c121,nl)
-      vc121(1:nl)=0.d0
-!      call zerov (vc121,nl)
-
-      nuaux1 = nu(1,2) - nu(1,1) ! 667.75
-      nuaux2 = nu12_0200-nu(1,1) ! 618.03
-      nuaux3 = nu12_1000-nu(1,1) ! 720.81
-      faux2 = dble(nuaux2/nuaux1)
-      faux3 = dble(nuaux3/nuaux1)
-      daux2 = dble(nuaux1-nuaux2)
-      daux3 = dble(nuaux1-nuaux3)
-
-      do 11, ik=1,3
-
-         ib=ik+1
-         cax1(1:nl,1:nl)=0.d0
-!         call zerom (cax1,nl)
-         call MZTUD121 ( cax1,v1, ib, ierr, varerr )
-         if (ierr .gt. 0) call ERRORS (ierr,varerr)
-
-         do i=1,nl
-
-	    if(ik.eq.1)then
-               cm_factor = faux2**2.d0 * exp( daux2*ee/dble(tl(i)) )
-               vc_factor = 1.d0/faux2
-	    elseif(ik.eq.2)then
-               cm_factor = 1.d0
-               vc_factor = 1.d0
-	    elseif(ik.eq.3)then
-               cm_factor = faux3**2.d0 * exp( daux3*ee/dble(tl(i)) )
-               vc_factor = 1.d0 / faux3
-            else
-               write (*,*) ' Error in 626 hot band index  ik =', ik
-               stop ' ik can only be = 2,3,4.   Check needed.'
-	    end if
-	    do j=1,nl
-               c121(i,j) = c121(i,j) + cax1(i,j) * cm_factor
-	    end do
-
-	    vc121(i) = vc121(i) + v1(i) * vc_factor
-
-         end do
-
- 11   continue
-
-      end subroutine MZMC121
-
-
-!***********************************************************************
-
-      subroutine MZTUD121 ( cf,vc, ib, ierr, varerr )
-
-!***********************************************************************
-!     *** Old MZTUD121_dlvr11_03.f ***
-!***********************************************************************
-
-      use GITM_planet
-!     use ModNLTE
-
-!     include 'nlte_paramdef.h'
-!     include 'nlte_commons.h'
-
-      implicit none
-
-!     arguments
-      real*8  ::  	      cf(nl,nl)	! o
-      real*8  ::	      vc(nl)    ! o
-      integer ::	      ib        ! i
-      integer ::              ierr      ! o
-      real*8  ::              varerr    ! o
-
-
-!     local variables and constants
-      integer :: 	      i, in, ir, iaquiHIST, iaquiZ
-      integer :: 	      isot
-      real*8  ::              tau(nl,nl), argumento, deltazdbl
-      real*8  :: 	      tauinf(nl)
-      real*8  :: 	      con(nzy), coninf
-      real*8  :: 	      c1, c2
-      real*8  :: 	      t1, t2
-      real*8  :: 	      p1, p2
-      real*8  ::	      mr1, mr2
-      real*8  :: 	      st1, st2
-      real*8  :: 	      c1box(nbox_max), c2box(nbox_max)
-      real*8  ::	      ff      ! to avoid too small numbers
-      real*8  ::	      tvtbs(nzy)
-      real*8  :: 	      st, beta, ts
-      real*8  ::  	      zld(nl), zyd(nzy)
-      real*8  :: 	      correc
-      real*8  ::  	      deltanudbl
-      real*8  ::              yy
-
-!     external function
-      external ::             we_clean
-      real*8   ::             we_clean
-
-
-!     formats
- 101  format(i1)
-!***********************************************************************
-
-      ierr = 0
-      varerr = 0.d0
-
-!     some values
-      beta = 1.8d5
-      isot = 1
-      write (ibcode1,101) ib
-      deltanudbl = dble( deltanu(isot,ib) )
-      ff=1.0d10
-      deltazdbl = dble(deltaz)
-
-!!!
-      do i=1,nl
-         zld(i) = dble(zl(i))
-      enddo
-      do i=1,nzy
-         zyd(i) = dble(zy(i))
-      enddo
-
-      call interhuntdp ( tvtbs,zyd,nzy, v626t1,zld,nl, 1 )
-
-      do i=1,nzy
-         con(i) =  dble( co2y(i) * imr(isot) )
-         correc = 2.d0 * exp( -ee*dble(elow(isot,2))/tvtbs(i) )
-         con(i) = con(i) * ( 1.d0 - correc )
-         mr(i) = dble( co2y(i) / nty(i) )
-      end do
-
-      if ( con(nzy) .le. 0.0d0 ) then
-         ierr = 83
-         varerr = con(nzy)
-         return
-      elseif ( con(nzy-1) .le. con(nzy) ) then
-         write (*,*) ' WARNING in MZTUD121 '
-         write (*,*) '    [CO2] grows with height at CurtisMatrix top.'
-         write (*,*) '    [CO2] @ top = ', con(nzy)
-         coninf = dble( con(nzy) )
-      else
-         coninf = dble( con(nzy) / log( con(nzy-1) / con(nzy) ) )
-      endif
-      call mztf_correccion ( coninf, con, ib )
-
-!!!
-      call gethist_03 ( ib )
-
-
-!
-!     tauinf(nl)
-!
-      call initial
-
-      iaquiZ = nzy - 2
-      iaquiHIST = nhist / 2
-
-      do i=nl,1,-1
-
-         if(i.eq.nl)then
-
-            call intzhunt ( iaquiZ, zl(i),c2,p2,mr2,t2, con)
-            do kr=1,nbox
-               ta(kr)=t2
-            end do
-            call interstrhunt (iaquiHIST, st2,t2,ka,ta)
-            aa = p2 * coninf * mr2 * (st2 * ff)
-            cc = coninf * st2
-            dd = t2 * coninf * st2
-            do kr=1,nbox
-               ccbox(kr) = coninf * ka(kr)
-               ddbox(kr) = t2 * ccbox(kr)
-               c2box(kr) = c2 * ka(kr) * deltazdbl
-            end do
-            c2 = c2 * st2 * deltazdbl
-
-         else
-            call intzhunt ( iaquiZ, zl(i),c1,p1,mr1,t1, con)
-            do kr=1,nbox
-               ta(kr)=t1
-            end do
-            call interstrhunt (iaquiHIST, st1,t1,ka,ta)
-            do kr=1,nbox
-               c1box(kr) = c1 * ka(kr) * deltazdbl
-            end do
-            ! Check interpolation errors :
-            if (c1.le.0.0d0) then
-               ierr=85
-               varerr=c1
-               return
-            elseif (p1.le.0.0d0) then
-               ierr=86
-               varerr=p1
-               return
-            elseif (mr1.le.0.0d0) then
-               ierr=87
-               varerr=mr1
-               return
-            elseif (t1.le.0.0d0) then
-               ierr=88
-               varerr=t1
-               return
-            elseif (st1.le.0.0d0) then
-               ierr=89
-               varerr=st1
-               return
-            endif
-	    !
-            c1 = c1 * st1 * deltazdbl
-            aa = aa + ( p1*mr1*(c1*ff) + p2*mr2*(c2*ff)) / 2.d0
-            cc = cc + ( c1 + c2 ) / 2.d0
-            dd = dd + ( t1*c1 + t2*c2 ) / 2.d0
-            do kr=1,nbox
-               ccbox(kr) = ccbox(kr) +  &
-                   ( c1box(kr) + c2box(kr) )/2.d0
-               ddbox(kr) = ddbox(kr) +  &
-                   ( t1*c1box(kr)+t2*c2box(kr) )/2.d0
-            end do
-
-            mr2 = mr1
-            c2=c1
-            do kr=1,nbox
-               c2box(kr) = c1box(kr)
-            end do
-            t2=t1
-            p2=p1
-         end if
-
-         pp = aa / (cc*ff)
-
-         ts = dd/cc
-         do kr=1,nbox
-   	    ta(kr) = ddbox(kr) / ccbox(kr)
-         end do
-         call interstrhunt(iaquiHIST, st,ts,ka,ta)
-         call intershphunt(iaquiHIST, alsa,alda,ta)
-
-!
-
-         eqw = 0.0d0
-         do  kr=1,nbox
-            yy = ccbox(kr) * beta
-            w = we_clean ( yy, pp, alsa(kr),alda(kr) )
-            eqw = eqw + no(kr)*w
-         end do
-
-         argumento = eqw / deltanudbl
-         tauinf(i) = dexp( - argumento )
-
-
-      end do                    ! i continue
-
-
-!
-!     tau(in,ir) for n<=r
-!
-
-      iaquiZ = 2
-      do 1 in=1,nl-1
-
-         call initial
-         call intzhunt ( iaquiZ, zl(in), c1,p1,mr1,t1, con)
-         do kr=1,nbox
-            ta(kr) = t1
-         end do
-         call interstrhunt (iaquiHIST, st1,t1,ka,ta)
-         do kr=1,nbox
-            c1box(kr) = c1 * ka(kr) * deltazdbl
-         end do
-         c1 = c1 * st1 * deltazdbl
-
-         do 2 ir=in,nl-1
-
-            if (ir.eq.in) then
-               tau(in,ir) = 1.d0
-               goto 2
-            end if
-
-            call intzhunt ( iaquiZ, zl(ir), c2,p2,mr2,t2, con)
-            do kr=1,nbox
-               ta(kr) = t2
-            end do
-            call interstrhunt (iaquiHIST, st2,t2,ka,ta)
-            do kr=1,nbox
-               c2box(kr) = c2 * ka(kr) * deltazdbl
-            end do
-            c2 = c2 * st2 * deltazdbl
-
-            aa = aa + ( p1*mr1*(c1*ff) + p2*mr2*(c2*ff)) / 2.d0
-            cc = cc + ( c1 + c2 ) / 2.d0
-            dd = dd + ( t1*c1 + t2*c2 ) / 2.d0
-            do kr=1,nbox
-               ccbox(kr) = ccbox(kr) +  &
-                   ( c1box(kr) + c2box(kr) ) / 2.d0
-               ddbox(kr) = ddbox(kr) +  &
-                   ( t1*c1box(kr) + t2*c2box(kr) ) / 2.d0
-            end do
-
-            mr1=mr2
-            t1=t2
-            c1=c2
-            p1=p2
-            do kr=1,nbox
-               c1box(kr) = c2box(kr)
-            end do
-
-            pp = aa / (cc * ff)
-
-            ts = dd/cc
-            do kr=1,nbox
-               ta(kr) = ddbox(kr) / ccbox(kr)
-            end do
-            call interstrhunt(iaquiHIST, st,ts,ka,ta)
-            call intershphunt(iaquiHIST, alsa,alda,ta)
-
-!
-
-            eqw = 0.0d0
-            do kr=1,nbox
-               yy = ccbox(kr) * beta
-               w = we_clean ( yy, pp, alsa(kr),alda(kr) )
-               eqw = eqw + no(kr)*w
-            end do
-
-            argumento = eqw / deltanudbl
-            tau(in,ir) = dexp( - argumento )
-
- 2       continue
-
- 1    continue
-
-!
-!     tau(in,ir) for n>r
-!
-
-      in=nl
-
-      call initial
-      iaquiZ = nzy - 2
-      call intzhunt ( iaquiZ, zl(in), c1,p1,mr1,t1, con)
-      do kr=1,nbox
-         ta(kr) = t1
-      end do
-      call interstrhunt (iaquiHIST, st1,t1,ka,ta)
-      do kr=1,nbox
-         c1box(kr) = c1 * ka(kr) * deltazdbl
-      end do
-      c1 = c1 * st1 * deltazdbl
-
-      do 4 ir=in-1,1,-1
-
-         call intzhunt ( iaquiZ, zl(ir), c2,p2,mr2,t2, con)
-         do kr=1,nbox
-            ta(kr) = t2
-         end do
-         call interstrhunt (iaquiHIST, st2,t2,ka,ta)
-         do kr=1,nbox
-            c2box(kr) = c2 * ka(kr) * deltazdbl
-         end do
-         c2 = c2 * st2 * deltazdbl
-
-         aa = aa + ( p1*mr1*(c1*ff) + p2*mr2*(c2*ff)) / 2.d0
-         cc = cc + ( c1 + c2 ) / 2.d0
-         dd = dd + ( t1*c1 + t2*c2 ) / 2.d0
-         do kr=1,nbox
-            ccbox(kr) = ccbox(kr) +  &
+subroutine MZTUD110( ierr, varerr )
+  !
+  !***********************************************************************
+  !     *** Old MZTUD110_dlvr11_03.f
+  !***********************************************************************
+
+  use GITM_planet
+  !     use ModNLTE
+
+  !     include 'nlte_paramdef.h'
+  !     include 'nlte_commons.h'
+
+  implicit none
+
+  !     arguments
+  integer  ::         ierr      ! o
+  real*8   ::          varerr    ! o
+
+  !     local variables and constants
+  integer  :: 	      i, in, ir, iaquiHIST , iaquiZ
+  integer  ::             ib, isot
+  real*8   :: 	      tau(nl,nl), argumento
+  real*8   :: 	      tauinf(nl)
+  real*8   :: 	      con(nzy), coninf
+  real*8   :: 	      c1, c2
+  real*8   :: 	      t1, t2
+  real*8   :: 	      p1, p2
+  real*8   ::	      mr1, mr2
+  real*8   :: 	      st1, st2
+  real*8   :: 	      c1box(nbox_max), c2box(nbox_max)
+  real*8   ::	      ff      ! to avoid too small numbers
+  real*8   ::	      tvtbs(nzy)
+  real*8   :: 	      st, beta, ts
+  real*8   ::  	      zld(nl), zyd(nzy), deltazdbl
+  real*8   :: 	      correc
+  real*8   ::	      deltanudbl
+  real*8   ::             maxtau, yy
+
+  !     external function
+  external  ::            we_clean
+  real*8    ::            we_clean
+
+  !***********************************************************************
+
+  ierr = 0
+  varerr = 0.d0
+  !
+  ib = 1
+  beta = 1.8d5
+  ibcode1 = '1'
+  isot = 1
+  deltanudbl = dble(deltanu(1,1))
+  deltazdbl = dble(deltaz)
+  ff=1.0d10
+
+  !
+  do i=1,nzy
+     zyd(i) = dble(zy(i))
+  enddo
+  do i=1,nl
+     zld(i) = dble(zl(i))
+  enddo
+  call interhuntdp ( tvtbs,zyd,nzy, v626t1,zld,nl, 1 )
+  do i=1,nzy
+     con(i) =  dble( co2y(i) * imr(isot) )
+     correc = 2.d0 * dexp( -ee*dble(elow(isot,2))/tvtbs(i) )
+     con(i) = con(i) * ( 1.d0 - correc )
+     mr(i) = dble(co2y(i)/nty(i))
+  end do
+  if ( con(nzy) .le. 0.0d0 ) then
+     ierr = 43
+     varerr = con(nzy)
+     return
+  elseif ( con(nzy-1) .le. con(nzy) ) then
+     write (*,*) ' WARNING in MZTUD110 '
+     write (*,*) '    [CO2] grows with height at CurtisMatrix top.'
+     write (*,*) '    [CO2] @ top = ', con(nzy)
+     coninf = dble( con(nzy) )
+  else
+     coninf = dble( con(nzy) / log( con(nzy-1) / con(nzy) ) )
+  endif
+  call mztf_correccion ( coninf, con, ib )
+
+  !
+  call gethist_03 ( 1 )
+
+  !
+  !     tauinf
+  !
+  call initial
+
+  iaquiHIST = nhist/2
+  iaquiZ = nzy - 2
+
+  do i=nl,1,-1
+
+     if(i.eq.nl)then
+
+        call intzhunt (iaquiZ, zl(i),c2,p2,mr2,t2, con)
+        do kr=1,nbox
+           ta(kr)=t2
+        end do
+        call interstrhunt (iaquiHIST, st2,t2,ka,ta)
+        ! Check interpolation errors :
+        if (c2.le.0.0d0) then
+           ierr=45
+           varerr=c2
+           return
+        elseif (p2.le.0.0d0) then
+           ierr=46
+           varerr=p2
+           return
+        elseif (mr2.le.0.0d0) then
+           ierr=47
+           varerr=mr2
+           return
+        elseif (t2.le.0.0d0) then
+           ierr=48
+           varerr=t2
+           return
+        elseif (st2.le.0.0d0) then
+           ierr=49
+           varerr=st2
+           return
+        endif
+        !
+        aa = p2 * coninf * mr2 * (st2 * ff)
+        cc = coninf * st2
+        dd = t2 * coninf * st2
+        do kr=1,nbox
+           ccbox(kr) = coninf * ka(kr)
+           ddbox(kr) = t2 * ccbox(kr)
+           c2box(kr) = c2 * ka(kr) * deltazdbl
+        end do
+        c2 = c2 * st2 * deltazdbl
+
+     else
+
+        call intzhunt (iaquiZ, zl(i),c1,p1,mr1,t1, con)
+        do kr=1,nbox
+           ta(kr)=t1
+        end do
+        call interstrhunt (iaquiHIST, st1,t1,ka,ta)
+        do kr=1,nbox
+           c1box(kr) = c1 * ka(kr) * deltazdbl
+        end do
+        ! Check interpolation errors :
+        if (c1.le.0.0d0) then
+           ierr=75
+           varerr=c1
+           return
+        elseif (p1.le.0.0d0) then
+           ierr=76
+           varerr=p1
+           return
+        elseif (mr1.le.0.0d0) then
+           ierr=77
+           varerr=mr1
+           return
+        elseif (t1.le.0.0d0) then
+           ierr=78
+           varerr=t1
+           return
+        elseif (st1.le.0.0d0) then
+           ierr=79
+           varerr=st1
+           return
+        endif
+        !
+        c1 = c1 * st1 * deltazdbl
+        aa = aa + ( p1*mr1*(c1*ff) + p2*mr2*(c2*ff)) / 2.d0
+        cc = cc + ( c1 + c2 ) / 2.d0
+        dd = dd + ( t1*c1 + t2*c2 ) / 2.d0
+        do kr=1,nbox
+           ccbox(kr) = ccbox(kr) +  &
+                ( c1box(kr) + c2box(kr) )/2.d0
+           ddbox(kr) = ddbox(kr) +  &
+                ( t1*c1box(kr)+t2*c2box(kr) )/2.d0
+        end do
+
+        mr2 = mr1
+        c2=c1
+        do kr=1,nbox
+           c2box(kr) = c1box(kr)
+        end do
+        t2=t1
+        p2=p1
+     end if
+
+     pp = aa / (cc*ff)
+
+     ts = dd/cc
+     do kr=1,nbox
+        ta(kr) = ddbox(kr) / ccbox(kr)
+     end do
+     call interstrhunt(iaquiHIST, st,ts,ka,ta)
+     call intershphunt(iaquiHIST, alsa,alda,ta)
+
+     !
+     eqw=0.0d0
+     do  kr=1,nbox
+        yy = ccbox(kr) * beta
+        w = we_clean ( yy, pp, alsa(kr),alda(kr) )
+        eqw = eqw + no(kr)*w
+     end do
+
+     argumento = eqw / deltanudbl
+     tauinf(i) = dexp( - argumento )
+
+  end do
+
+  !
+  !     tau
+  !
+
+  iaquiZ = 2
+  do in=1,nl-1
+
+     call initial
+     call intzhunt (iaquiZ, zl(in), c1,p1,mr1,t1, con)
+     do kr=1,nbox
+        ta(kr) = t1
+     end do
+     call interstrhunt (iaquiHIST, st1,t1,ka,ta)
+     do kr=1,nbox
+        c1box(kr) = c1 * ka(kr) * deltazdbl
+     end do
+     c1 = c1 * st1 * deltazdbl
+
+     do ir=in,nl-1
+
+        if (ir.eq.in) then
+           tau(in,ir) = 1.d0
+           CYCLE
+        end if
+
+        call intzhunt (iaquiZ, zl(ir), c2,p2,mr2,t2, con)
+        do kr=1,nbox
+           ta(kr) = t2
+        end do
+        call interstrhunt (iaquiHIST, st2,t2,ka,ta)
+        do kr=1,nbox
+           c2box(kr) = c2 * ka(kr) * deltazdbl
+        end do
+        c2 = c2 * st2 * deltazdbl
+
+        aa = aa + ( p1*mr1*(c1*ff) + p2*mr2*(c2*ff)) / 2.d0
+        cc = cc + ( c1 + c2 ) / 2.d0
+        dd = dd + ( t1*c1 + t2*c2 ) / 2.d0
+        do kr=1,nbox
+           ccbox(kr) = ccbox(kr) +  &
                 ( c1box(kr) + c2box(kr) ) / 2.d0
-            ddbox(kr) = ddbox(kr) +  &
+           ddbox(kr) = ddbox(kr) +  &
                 ( t1*c1box(kr) + t2*c2box(kr) ) / 2.d0
-         end do
+        end do
 
-         mr1=mr2
-         c1=c2
-         t1=t2
-         p1=p2
-         do kr=1,nbox
-            c1box(kr) = c2box(kr)
-         end do
+        mr1=mr2
+        t1=t2
+        c1=c2
+        p1=p2
+        do kr=1,nbox
+           c1box(kr) = c2box(kr)
+        end do
 
-         pp = aa / (cc * ff)
-         ts = dd / cc
-         do kr=1,nbox
-            ta(kr) = ddbox(kr) / ccbox(kr)
-         end do
-         call interstrhunt (iaquiHIST, st,ts,ka,ta)
-         call intershphunt (iaquiHIST, alsa,alda,ta)
+        pp = aa / (cc * ff)
 
-!
-         eqw=0.0d0
-         do kr=1,nbox
-            yy = ccbox(kr) * beta
-            w = we_clean ( yy, pp, alsa(kr),alda(kr) )
-            eqw = eqw + no(kr)*w
-         end do
+        ts = dd/cc
+        do kr=1,nbox
+           ta(kr) = ddbox(kr) / ccbox(kr)
+        end do
+        call interstrhunt(iaquiHIST, st,ts,ka,ta)
+        call intershphunt(iaquiHIST, alsa,alda,ta)
+        !
+        eqw=0.0d0
+        do kr=1,nbox
+           yy = ccbox(kr) * beta
+           w = we_clean ( yy, pp, alsa(kr),alda(kr) )
+           eqw = eqw + no(kr)*w
+        end do
 
-         argumento = eqw / deltanudbl
-         tau(in,ir) = dexp( - argumento )
+        argumento = eqw / deltanudbl
+        tau(in,ir) = exp( - argumento )
 
- 4    continue
+     end do
+  end do
+
+  !
+  !     tau(in,ir) for n>r
+  !
+
+  in=nl
+
+  call initial
+
+  iaquiZ = nzy - 2
+  call intzhunt (iaquiZ, zl(in), c1,p1,mr1,t1, con)
+  do kr=1,nbox
+     ta(kr) = t1
+  end do
+  call interstrhunt (iaquiHIST,st1,t1,ka,ta)
+  do kr=1,nbox
+     c1box(kr) = c1 * ka(kr) * deltazdbl
+  end do
+  c1 = c1 * st1 * deltazdbl
+
+  do ir=in-1,1,-1
+
+     call intzhunt (iaquiZ, zl(ir), c2,p2,mr2,t2, con)
+     do kr=1,nbox
+        ta(kr) = t2
+     end do
+     call interstrhunt (iaquiHIST, st2,t2,ka,ta)
+     do kr=1,nbox
+        c2box(kr) = c2 * ka(kr) * deltazdbl
+     end do
+     c2 = c2 * st2 * deltazdbl
+
+     aa = aa + ( p1*mr1*(c1*ff) + p2*mr2*(c2*ff)) / 2.d0
+     cc = cc + ( c1 + c2 ) / 2.d0
+     dd = dd + ( t1*c1 + t2*c2 ) / 2.d0
+     do kr=1,nbox
+        ccbox(kr) = ccbox(kr) +  &
+             ( c1box(kr) + c2box(kr) ) / 2.d0
+        ddbox(kr) = ddbox(kr) +  &
+             ( t1*c1box(kr) + t2*c2box(kr) ) / 2.d0
+     end do
+
+     mr1=mr2
+     c1=c2
+     t1=t2
+     p1=p2
+     do kr=1,nbox
+        c1box(kr) = c2box(kr)
+     end do
+
+     pp = aa / (cc * ff)
+     ts = dd / cc
+     do kr=1,nbox
+        ta(kr) = ddbox(kr) / ccbox(kr)
+     end do
+     call interstrhunt (iaquiHIST, st,ts,ka,ta)
+     call intershphunt (iaquiHIST, alsa,alda,ta)
+
+     !
+
+     eqw=0.0d0
+     do kr=1,nbox
+        yy = ccbox(kr) * beta
+        w = we_clean ( yy, pp, alsa(kr),alda(kr) )
+        eqw = eqw + no(kr)*w
+     end do
+
+     argumento = eqw / deltanudbl
+     tau(in,ir) = exp( - argumento )
+
+  end do
+
+  do in=nl-1,2,-1
+     do ir=in-1,1,-1
+        tau(in,ir) = tau(ir,in)
+     end do
+  end do
+
+  !
+  !     Tracking potential numerical errors
+  !
+  maxtau = 0.0d0
+  do in=nl-1,2,-1
+     do ir=in-1,1,-1
+        maxtau = max( maxtau, tau(in,ir) )
+     end do
+  end do
+  if (maxtau .gt. 1.0d0) then
+     ierr = 42
+     varerr = maxtau
+     return
+  endif
+
+  call MZCUD110 ( tauinf,tau )
+
+end subroutine MZTUD110
+
+
+!***********************************************************************
+
+subroutine MZCUD110 ( tauinf,tau )
+
+  !***********************************************************************
+  !     *** Old file MZCUD_dlvr11.f ***
+  !***********************************************************************
+
+  use ModConstants, only : pi
+  use GITM_planet
+  !     use ModNLTE
+
+  !     include 'nlte_paramdef.h'
+  !     include 'nlte_commons.h'
+
+  implicit none
+
+  !     arguments
+  real*8  :: 		tau(nl,nl) ! i
+  real*8  ::		tauinf(nl) ! i
+
+
+  !     local variables
+  integer :: 	i, in, ir
+  !     real*8  ::	a(nl,nl), cf(nl,nl), pideltanu, deltazdp, pi
+  real*8  ::	a(nl,nl), cf(nl,nl), pideltanu, deltazdp
+
+  !***********************************************************************
+
+  !     pi = 3.141592
+  pideltanu = pi * dble(deltanu(1,1))
+  deltazdp = 2.0d5 * dble(deltaz)
+
+  do in=1,nl
+     do ir=1,nl
+        cf(in,ir) = 0.0d0
+        c110(in,ir) = 0.0d0
+        a(in,ir) = 0.0d0
+     end do
+     vc110(in) = 0.0d0
+  end do
+
+  !
+  do in=1,nl
+     do ir=1,nl
+
+        if (ir.eq.1) then
+           cf(in,ir) = tau(in,ir) - tau(in,1)
+        elseif (ir.eq.nl) then
+           cf(in,ir) = tauinf(in) - tau(in,ir-1)
+        else
+           cf(in,ir) = tau(in,ir) - tau(in,ir-1)
+        end if
+
+     end do
+  end do
+
+  !
+  do in=2,nl-1
+     do ir=1,nl
+        if (ir.eq.in+1) a(in,ir) = -1.d0
+        if (ir.eq.in-1) a(in,ir) = +1.d0
+        a(in,ir) = a(in,ir) / deltazdp
+     end do
+  end do
+
+  !
+  do in=1,nl
+     do ir=1,nl
+        cf(in,ir) = cf(in,ir) * pideltanu
+     end do
+  end do
+
+  do in=2,nl-1
+     do ir=1,nl
+        do i=1,nl
+           c110(in,ir) = c110(in,ir) + a(in,i) * cf(i,ir)
+        end do
+     end do
+  end do
+
+  do in=2,nl-1
+     vc110(in) =  pideltanu/deltazdp *  &
+          ( tau(in-1,1) - tau(in+1,1) )
+  end do
+
+
+  !
+  do in=2,nl-1
+     c110(in,nl-2) = c110(in,nl-2) - c110(in,nl)
+     c110(in,nl-1) = c110(in,nl-1) + 2.d0*c110(in,nl)
+  end do
+
+end subroutine MZCUD110
+
+
+
+!***********************************************************************
+
+subroutine MZMC121
+
+  !***********************************************************************
+  !     *** Old MZMC121_dlvr11_03.f ***
+  !***********************************************************************
+
+  use GITM_planet
+  !     use ModNLTE
+
+  !     include 'nlte_paramdef.h'
+  !     include 'nlte_commons.h'
+
+  implicit none
+
+  ! local variables
+
+  real*8  ::  cax1(nl,nl)
+  real*8  ::  v1(nl), cm_factor, vc_factor
+  real    ::  nuaux1, nuaux2, nuaux3
+  real*8  ::  faux2,faux3, daux2,daux3
+  real*8  ::  varerr
+
+  integer ::  i,j,ik,ib
+  integer ::  ierr
+
+  !************************************************************************
+
+  c121(1:nl,1:nl)=0.d0
+  !      call zerom (c121,nl)
+  vc121(1:nl)=0.d0
+  !      call zerov (vc121,nl)
+
+  nuaux1 = nu(1,2) - nu(1,1) ! 667.75
+  nuaux2 = nu12_0200-nu(1,1) ! 618.03
+  nuaux3 = nu12_1000-nu(1,1) ! 720.81
+  faux2 = dble(nuaux2/nuaux1)
+  faux3 = dble(nuaux3/nuaux1)
+  daux2 = dble(nuaux1-nuaux2)
+  daux3 = dble(nuaux1-nuaux3)
+
+  do ik=1,3
+
+     ib=ik+1
+     cax1(1:nl,1:nl)=0.d0
+     !         call zerom (cax1,nl)
+     call MZTUD121 ( cax1,v1, ib, ierr, varerr )
+     if (ierr .gt. 0) call ERRORS (ierr,varerr)
+
+     do i=1,nl
+
+        if(ik.eq.1)then
+           cm_factor = faux2**2.d0 * exp( daux2*ee/dble(tl(i)) )
+           vc_factor = 1.d0/faux2
+        elseif(ik.eq.2)then
+           cm_factor = 1.d0
+           vc_factor = 1.d0
+        elseif(ik.eq.3)then
+           cm_factor = faux3**2.d0 * exp( daux3*ee/dble(tl(i)) )
+           vc_factor = 1.d0 / faux3
+        else
+           write (*,*) ' Error in 626 hot band index  ik =', ik
+           stop ' ik can only be = 2,3,4.   Check needed.'
+        end if
+        do j=1,nl
+           c121(i,j) = c121(i,j) + cax1(i,j) * cm_factor
+        end do
+
+        vc121(i) = vc121(i) + v1(i) * vc_factor
+
+     end do
+  end do
+
+end subroutine MZMC121
+
+
+!***********************************************************************
+
+subroutine MZTUD121 ( cf,vc, ib, ierr, varerr )
+
+  !***********************************************************************
+  !     *** Old MZTUD121_dlvr11_03.f ***
+  !***********************************************************************
+
+  use GITM_planet
+  !     use ModNLTE
+
+  !     include 'nlte_paramdef.h'
+  !     include 'nlte_commons.h'
+
+  implicit none
+
+  !     arguments
+  real*8  ::  	      cf(nl,nl)	! o
+  real*8  ::	      vc(nl)    ! o
+  integer ::	      ib        ! i
+  integer ::              ierr      ! o
+  real*8  ::              varerr    ! o
+
+
+  !     local variables and constants
+  integer :: 	      i, in, ir, iaquiHIST, iaquiZ
+  integer :: 	      isot
+  real*8  ::              tau(nl,nl), argumento, deltazdbl
+  real*8  :: 	      tauinf(nl)
+  real*8  :: 	      con(nzy), coninf
+  real*8  :: 	      c1, c2
+  real*8  :: 	      t1, t2
+  real*8  :: 	      p1, p2
+  real*8  ::	      mr1, mr2
+  real*8  :: 	      st1, st2
+  real*8  :: 	      c1box(nbox_max), c2box(nbox_max)
+  real*8  ::	      ff      ! to avoid too small numbers
+  real*8  ::	      tvtbs(nzy)
+  real*8  :: 	      st, beta, ts
+  real*8  ::  	      zld(nl), zyd(nzy)
+  real*8  :: 	      correc
+  real*8  ::  	      deltanudbl
+  real*8  ::              yy
+
+  !     external function
+  external ::             we_clean
+  real*8   ::             we_clean
+
+
+  !     formats
+101 format(i1)
+  !***********************************************************************
+
+  ierr = 0
+  varerr = 0.d0
+
+  !     some values
+  beta = 1.8d5
+  isot = 1
+  write (ibcode1,101) ib
+  deltanudbl = dble( deltanu(isot,ib) )
+  ff=1.0d10
+  deltazdbl = dble(deltaz)
 
 !!!
+  do i=1,nl
+     zld(i) = dble(zl(i))
+  enddo
+  do i=1,nzy
+     zyd(i) = dble(zy(i))
+  enddo
 
-      do in=nl-1,2,-1
-         do ir=in-1,1,-1
-            tau(in,ir) = tau(ir,in)
-         end do
-      end do
+  call interhuntdp ( tvtbs,zyd,nzy, v626t1,zld,nl, 1 )
 
-!
-      call MZCUD121 ( tauinf,tau, cf, vc, ib )
+  do i=1,nzy
+     con(i) =  dble( co2y(i) * imr(isot) )
+     correc = 2.d0 * exp( -ee*dble(elow(isot,2))/tvtbs(i) )
+     con(i) = con(i) * ( 1.d0 - correc )
+     mr(i) = dble( co2y(i) / nty(i) )
+  end do
 
-      end subroutine MZTUD121
+  if ( con(nzy) .le. 0.0d0 ) then
+     ierr = 83
+     varerr = con(nzy)
+     return
+  elseif ( con(nzy-1) .le. con(nzy) ) then
+     write (*,*) ' WARNING in MZTUD121 '
+     write (*,*) '    [CO2] grows with height at CurtisMatrix top.'
+     write (*,*) '    [CO2] @ top = ', con(nzy)
+     coninf = dble( con(nzy) )
+  else
+     coninf = dble( con(nzy) / log( con(nzy-1) / con(nzy) ) )
+  endif
+  call mztf_correccion ( coninf, con, ib )
+
+!!!
+  call gethist_03 ( ib )
+
+
+  !
+  !     tauinf(nl)
+  !
+  call initial
+
+  iaquiZ = nzy - 2
+  iaquiHIST = nhist / 2
+
+  do i=nl,1,-1
+
+     if(i.eq.nl)then
+
+        call intzhunt ( iaquiZ, zl(i),c2,p2,mr2,t2, con)
+        do kr=1,nbox
+           ta(kr)=t2
+        end do
+        call interstrhunt (iaquiHIST, st2,t2,ka,ta)
+        aa = p2 * coninf * mr2 * (st2 * ff)
+        cc = coninf * st2
+        dd = t2 * coninf * st2
+        do kr=1,nbox
+           ccbox(kr) = coninf * ka(kr)
+           ddbox(kr) = t2 * ccbox(kr)
+           c2box(kr) = c2 * ka(kr) * deltazdbl
+        end do
+        c2 = c2 * st2 * deltazdbl
+
+     else
+        call intzhunt ( iaquiZ, zl(i),c1,p1,mr1,t1, con)
+        do kr=1,nbox
+           ta(kr)=t1
+        end do
+        call interstrhunt (iaquiHIST, st1,t1,ka,ta)
+        do kr=1,nbox
+           c1box(kr) = c1 * ka(kr) * deltazdbl
+        end do
+        ! Check interpolation errors :
+        if (c1.le.0.0d0) then
+           ierr=85
+           varerr=c1
+           return
+        elseif (p1.le.0.0d0) then
+           ierr=86
+           varerr=p1
+           return
+        elseif (mr1.le.0.0d0) then
+           ierr=87
+           varerr=mr1
+           return
+        elseif (t1.le.0.0d0) then
+           ierr=88
+           varerr=t1
+           return
+        elseif (st1.le.0.0d0) then
+           ierr=89
+           varerr=st1
+           return
+        endif
+        !
+        c1 = c1 * st1 * deltazdbl
+        aa = aa + ( p1*mr1*(c1*ff) + p2*mr2*(c2*ff)) / 2.d0
+        cc = cc + ( c1 + c2 ) / 2.d0
+        dd = dd + ( t1*c1 + t2*c2 ) / 2.d0
+        do kr=1,nbox
+           ccbox(kr) = ccbox(kr) +  &
+                ( c1box(kr) + c2box(kr) )/2.d0
+           ddbox(kr) = ddbox(kr) +  &
+                ( t1*c1box(kr)+t2*c2box(kr) )/2.d0
+        end do
+
+        mr2 = mr1
+        c2=c1
+        do kr=1,nbox
+           c2box(kr) = c1box(kr)
+        end do
+        t2=t1
+        p2=p1
+     end if
+
+     pp = aa / (cc*ff)
+
+     ts = dd/cc
+     do kr=1,nbox
+        ta(kr) = ddbox(kr) / ccbox(kr)
+     end do
+     call interstrhunt(iaquiHIST, st,ts,ka,ta)
+     call intershphunt(iaquiHIST, alsa,alda,ta)
+
+     !
+
+     eqw = 0.0d0
+     do  kr=1,nbox
+        yy = ccbox(kr) * beta
+        w = we_clean ( yy, pp, alsa(kr),alda(kr) )
+        eqw = eqw + no(kr)*w
+     end do
+
+     argumento = eqw / deltanudbl
+     tauinf(i) = dexp( - argumento )
+
+
+  end do                    ! i continue
+
+
+  !
+  !     tau(in,ir) for n<=r
+  !
+
+  iaquiZ = 2
+  do in=1,nl-1
+
+     call initial
+     call intzhunt ( iaquiZ, zl(in), c1,p1,mr1,t1, con)
+     do kr=1,nbox
+        ta(kr) = t1
+     end do
+     call interstrhunt (iaquiHIST, st1,t1,ka,ta)
+     do kr=1,nbox
+        c1box(kr) = c1 * ka(kr) * deltazdbl
+     end do
+     c1 = c1 * st1 * deltazdbl
+
+     do ir=in,nl-1
+
+        if (ir.eq.in) then
+           tau(in,ir) = 1.d0
+           CYCLE
+        end if
+
+        call intzhunt ( iaquiZ, zl(ir), c2,p2,mr2,t2, con)
+        do kr=1,nbox
+           ta(kr) = t2
+        end do
+        call interstrhunt (iaquiHIST, st2,t2,ka,ta)
+        do kr=1,nbox
+           c2box(kr) = c2 * ka(kr) * deltazdbl
+        end do
+        c2 = c2 * st2 * deltazdbl
+
+        aa = aa + ( p1*mr1*(c1*ff) + p2*mr2*(c2*ff)) / 2.d0
+        cc = cc + ( c1 + c2 ) / 2.d0
+        dd = dd + ( t1*c1 + t2*c2 ) / 2.d0
+        do kr=1,nbox
+           ccbox(kr) = ccbox(kr) +  &
+                ( c1box(kr) + c2box(kr) ) / 2.d0
+           ddbox(kr) = ddbox(kr) +  &
+                ( t1*c1box(kr) + t2*c2box(kr) ) / 2.d0
+        end do
+
+        mr1=mr2
+        t1=t2
+        c1=c2
+        p1=p2
+        do kr=1,nbox
+           c1box(kr) = c2box(kr)
+        end do
+
+        pp = aa / (cc * ff)
+
+        ts = dd/cc
+        do kr=1,nbox
+           ta(kr) = ddbox(kr) / ccbox(kr)
+        end do
+        call interstrhunt(iaquiHIST, st,ts,ka,ta)
+        call intershphunt(iaquiHIST, alsa,alda,ta)
+
+        !
+
+        eqw = 0.0d0
+        do kr=1,nbox
+           yy = ccbox(kr) * beta
+           w = we_clean ( yy, pp, alsa(kr),alda(kr) )
+           eqw = eqw + no(kr)*w
+        end do
+
+        argumento = eqw / deltanudbl
+        tau(in,ir) = dexp( - argumento )
+
+     end do
+  end do
+
+  !
+  !     tau(in,ir) for n>r
+  !
+
+  in=nl
+
+  call initial
+  iaquiZ = nzy - 2
+  call intzhunt ( iaquiZ, zl(in), c1,p1,mr1,t1, con)
+  do kr=1,nbox
+     ta(kr) = t1
+  end do
+  call interstrhunt (iaquiHIST, st1,t1,ka,ta)
+  do kr=1,nbox
+     c1box(kr) = c1 * ka(kr) * deltazdbl
+  end do
+  c1 = c1 * st1 * deltazdbl
+
+  do ir=in-1,1,-1
+
+     call intzhunt ( iaquiZ, zl(ir), c2,p2,mr2,t2, con)
+     do kr=1,nbox
+        ta(kr) = t2
+     end do
+     call interstrhunt (iaquiHIST, st2,t2,ka,ta)
+     do kr=1,nbox
+        c2box(kr) = c2 * ka(kr) * deltazdbl
+     end do
+     c2 = c2 * st2 * deltazdbl
+
+     aa = aa + ( p1*mr1*(c1*ff) + p2*mr2*(c2*ff)) / 2.d0
+     cc = cc + ( c1 + c2 ) / 2.d0
+     dd = dd + ( t1*c1 + t2*c2 ) / 2.d0
+     do kr=1,nbox
+        ccbox(kr) = ccbox(kr) +  &
+             ( c1box(kr) + c2box(kr) ) / 2.d0
+        ddbox(kr) = ddbox(kr) +  &
+             ( t1*c1box(kr) + t2*c2box(kr) ) / 2.d0
+     end do
+
+     mr1=mr2
+     c1=c2
+     t1=t2
+     p1=p2
+     do kr=1,nbox
+        c1box(kr) = c2box(kr)
+     end do
+
+     pp = aa / (cc * ff)
+     ts = dd / cc
+     do kr=1,nbox
+        ta(kr) = ddbox(kr) / ccbox(kr)
+     end do
+     call interstrhunt (iaquiHIST, st,ts,ka,ta)
+     call intershphunt (iaquiHIST, alsa,alda,ta)
+
+     !
+     eqw=0.0d0
+     do kr=1,nbox
+        yy = ccbox(kr) * beta
+        w = we_clean ( yy, pp, alsa(kr),alda(kr) )
+        eqw = eqw + no(kr)*w
+     end do
+
+     argumento = eqw / deltanudbl
+     tau(in,ir) = dexp( - argumento )
+
+  end do
+
+  do in=nl-1,2,-1
+     do ir=in-1,1,-1
+        tau(in,ir) = tau(ir,in)
+     end do
+  end do
+
+  !
+  call MZCUD121 ( tauinf,tau, cf, vc, ib )
+
+end subroutine MZTUD121
 
 
 
 !***********************************************************************
 
-      subroutine MZCUD121 ( tauinf,tau, c,vc, ib )
+subroutine MZCUD121 ( tauinf,tau, c,vc, ib )
 
-!***********************************************************************
-!     *** Old MZCUD121_dlvr11.f ***
-!***********************************************************************
+  !***********************************************************************
+  !     *** Old MZCUD121_dlvr11.f ***
+  !***********************************************************************
 
-      use ModConstants, only : pi
-      use GITM_planet
+  use ModConstants, only : pi
+  use GITM_planet
 
-!     include 'nlte_paramdef.h'
-!     include 'nlte_commons.h'
+  !     include 'nlte_paramdef.h'
+  !     include 'nlte_commons.h'
 
-      implicit none
+  implicit none
 
-!     arguments
-      real*8 ::	   c(nl,nl) ! o
-      real*8 ::	   vc(nl)  ! o
-      real*8 ::	   tau(nl,nl) ! i
-      real*8 ::	   tauinf(nl) ! i
-      integer ::   ib      ! i
+  !     arguments
+  real*8 ::	   c(nl,nl) ! o
+  real*8 ::	   vc(nl)  ! o
+  real*8 ::	   tau(nl,nl) ! i
+  real*8 ::	   tauinf(nl) ! i
+  integer ::   ib      ! i
 
-!     local variables
-      integer ::   i, in, ir, isot
-!     real*8  ::   a(nl,nl), cf(nl,nl), pideltanu, deltazdbl,pi
-      real*8  ::   a(nl,nl), cf(nl,nl), pideltanu, deltazdbl
+  !     local variables
+  integer ::   i, in, ir, isot
+  !     real*8  ::   a(nl,nl), cf(nl,nl), pideltanu, deltazdbl,pi
+  real*8  ::   a(nl,nl), cf(nl,nl), pideltanu, deltazdbl
 
-!***********************************************************************
+  !***********************************************************************
 
-!     pi=3.141592
-      isot = 1
-      pideltanu = pi*dble(deltanu(isot,ib))
-      deltazdbl = dble(deltaz)
-!
-      do in=1,nl
+  !     pi=3.141592
+  isot = 1
+  pideltanu = pi*dble(deltanu(isot,ib))
+  deltazdbl = dble(deltaz)
+  !
+  do in=1,nl
 
-         do ir=1,nl
+     do ir=1,nl
 
-            cf(in,ir) = 0.0d0
-            c(in,ir) = 0.0d0
-            a(in,ir) = 0.0d0
+        cf(in,ir) = 0.0d0
+        c(in,ir) = 0.0d0
+        a(in,ir) = 0.0d0
 
-         end do
+     end do
 
-         vc(in) = 0.0d0
+     vc(in) = 0.0d0
 
-      end do
-
-
-!
-      do in=1,nl
-         do ir=1,nl
-
-            if (ir.eq.1) then
-               cf(in,ir) = tau(in,ir) - tau(in,1)
-            elseif (ir.eq.nl) then
-               cf(in,ir) = tauinf(in) - tau(in,ir-1)
-            else
-               cf(in,ir) = tau(in,ir) - tau(in,ir-1)
-            end if
-
-         end do
-      end do
+  end do
 
 
-!
-      do in=2,nl-1
-         do ir=1,nl
-            if (ir.eq.in+1) a(in,ir) = -1.d0
-            if (ir.eq.in-1) a(in,ir) = +1.d0
-            a(in,ir) = a(in,ir) / ( 2.d5*deltazdbl )
-         end do
-      end do
+  !
+  do in=1,nl
+     do ir=1,nl
 
-!
-      do in=1,nl
-         do ir=1,nl
-	    cf(in,ir) = cf(in,ir) * pideltanu
-         end do
-      end do
+        if (ir.eq.1) then
+           cf(in,ir) = tau(in,ir) - tau(in,1)
+        elseif (ir.eq.nl) then
+           cf(in,ir) = tauinf(in) - tau(in,ir-1)
+        else
+           cf(in,ir) = tau(in,ir) - tau(in,ir-1)
+        end if
 
-
-      do in=2,nl-1
-         do ir=1,nl
-	    do i=1,nl
-               c(in,ir) = c(in,ir) + a(in,i) * cf(i,ir)
-	    end do
-         end do
-         vc(in) =  pideltanu /( 2.d5*deltazdbl ) *  &
-                  ( tau(in-1,1) - tau(in+1,1) )
-      end do
-
-!
-      do in=2,nl-1
-         c(in,nl-2) = c(in,nl-2) - c(in,nl)
-         c(in,nl-1) = c(in,nl-1) + 2.d0*c(in,nl)
-      end do
-
-      end subroutine MZCUD121
+     end do
+  end do
 
 
-!***********************************************************************
+  !
+  do in=2,nl-1
+     do ir=1,nl
+        if (ir.eq.in+1) a(in,ir) = -1.d0
+        if (ir.eq.in-1) a(in,ir) = +1.d0
+        a(in,ir) = a(in,ir) / ( 2.d5*deltazdbl )
+     end do
+  end do
 
-      subroutine MZESC121
+  !
+  do in=1,nl
+     do ir=1,nl
+        cf(in,ir) = cf(in,ir) * pideltanu
+     end do
+  end do
 
-!***********************************************************************
-!     *** Old MZESC121_dlvr11_03.f ***
-!***********************************************************************
 
-      use GITM_planet
-!     use ModNLTE
+  do in=2,nl-1
+     do ir=1,nl
+        do i=1,nl
+           c(in,ir) = c(in,ir) + a(in,i) * cf(i,ir)
+        end do
+     end do
+     vc(in) =  pideltanu /( 2.d5*deltazdbl ) *  &
+          ( tau(in-1,1) - tau(in+1,1) )
+  end do
 
-!     include 'nlte_paramdef.h'
-!     include 'nlte_commons.h'
+  !
+  do in=2,nl-1
+     c(in,nl-2) = c(in,nl-2) - c(in,nl)
+     c(in,nl-1) = c(in,nl-1) + 2.d0*c(in,nl)
+  end do
 
-      implicit none
-
-!     local variables
-      integer ::          i,ierr
-      real*8  ::          factor0200, factor0220, factor1000
-      real*8  ::          aux_0200(nl), aux2_0200(nl)
-      real*8  ::          aux_0220(nl), aux2_0220(nl)
-      real*8  ::          aux_1000(nl), aux2_1000(nl)
-      real*8  ::          varerr
-
-!***********************************************************************
-
-!      call zerov (taustar12, nl)
-      taustar12(1:nl)=0.d0
-      call zero2v(aux_0200,aux2_0200, nl)
-      call zero2v(aux_0220,aux2_0220, nl)
-      call zero2v(aux_1000,aux2_1000, nl)
-
-      call MZESC121sub (aux_0200,aux2_0200, 2 , ierr, varerr)
-      if (ierr .gt. 0) call ERRORS (ierr,varerr)
-      call MZESC121sub (aux_0220,aux2_0220, 3 , ierr, varerr)
-      if (ierr .gt. 0) call ERRORS (ierr,varerr)
-      call MZESC121sub (aux_1000,aux2_1000, 4 , ierr, varerr)
-      if (ierr .gt. 0) call ERRORS (ierr,varerr)
-
-      factor0220 = 1.d0
-      factor0200 = dble( (nu(1,2)-nu(1,1)) / (nu12_0200-nu(1,1)) )
-      factor1000 = dble( (nu(1,2)-nu(1,1)) / (nu12_1000-nu(1,1)) )
-      do i=1,nl
-         taustar12(i) = taustar12(i)  &
-                   + aux_0200(i) * factor0200  &
-                   + aux_0220(i) * factor0220  &
-                   + aux_1000(i) * factor1000
-      enddo
-
-      call mzescape_normaliz ( taustar12, 2 )
-
-      end subroutine
-
+end subroutine MZCUD121
 
 
 !***********************************************************************
 
-      subroutine MZESC121sub (taustar,tauinf, ib, ierr, varerr )
+subroutine MZESC121
 
-!***********************************************************************
-!     *** Old MZESC121sub_dlvr11_03.f ***
-!***********************************************************************
+  !***********************************************************************
+  !     *** Old MZESC121_dlvr11_03.f ***
+  !***********************************************************************
 
-      use GITM_planet
-!     use ModNLTE
+  use GITM_planet
+  !     use ModNLTE
 
-!     include 'nlte_paramdef.h'
-!     include 'nlte_commons.h'
+  !     include 'nlte_paramdef.h'
+  !     include 'nlte_commons.h'
 
-      implicit none
+  implicit none
 
-!     arguments
-      real*8 ::               taustar(nl) ! o
-      real*8 :: 	      tauinf(nl)  ! o
-      integer ::	      ib          ! i
-      integer ::              ierr        ! o
-      real*8  ::              varerr      ! o
+  !     local variables
+  integer ::          i,ierr
+  real*8  ::          factor0200, factor0220, factor1000
+  real*8  ::          aux_0200(nl), aux2_0200(nl)
+  real*8  ::          aux_0220(nl), aux2_0220(nl)
+  real*8  ::          aux_1000(nl), aux2_1000(nl)
+  real*8  ::          varerr
 
+  !***********************************************************************
 
-!     local variables and constants
-      integer :: 	      i, iaquiHIST, iaquiZ, isot
-      real*8  :: 	      con(nzy), coninf
-      real*8  :: 	      c1, c2, ccc
-      real*8  :: 	      t1, t2
-      real*8  :: 	      p1, p2
-      real*8  ::	      mr1, mr2
-      real*8  :: 	      st1, st2
-      real*8  :: 	      c1box(70), c2box(70)
-      real*8  ::	      ff      ! to avoid too small numbers
-      real*8  ::	      tvtbs(nzy)
-      real*8  :: 	      st, beta, ts
-      real*8  ::  	      zld(nl), zyd(nzy)
-      real*8  :: 	      correc
-      real*8  :: 	      deltanudbl, deltazdbl
-      real*8  ::              yy
+  !      call zerov (taustar12, nl)
+  taustar12(1:nl)=0.d0
+  call zero2v(aux_0200,aux2_0200, nl)
+  call zero2v(aux_0220,aux2_0220, nl)
+  call zero2v(aux_1000,aux2_1000, nl)
 
-!     external function
-      external ::             we_clean
-      real*8   ::             we_clean
+  call MZESC121sub (aux_0200,aux2_0200, 2 , ierr, varerr)
+  if (ierr .gt. 0) call ERRORS (ierr,varerr)
+  call MZESC121sub (aux_0220,aux2_0220, 3 , ierr, varerr)
+  if (ierr .gt. 0) call ERRORS (ierr,varerr)
+  call MZESC121sub (aux_1000,aux2_1000, 4 , ierr, varerr)
+  if (ierr .gt. 0) call ERRORS (ierr,varerr)
 
-!     formats
- 101  format(i1)
+  factor0220 = 1.d0
+  factor0200 = dble( (nu(1,2)-nu(1,1)) / (nu12_0200-nu(1,1)) )
+  factor1000 = dble( (nu(1,2)-nu(1,1)) / (nu12_1000-nu(1,1)) )
+  do i=1,nl
+     taustar12(i) = taustar12(i)  &
+          + aux_0200(i) * factor0200  &
+          + aux_0220(i) * factor0220  &
+          + aux_1000(i) * factor1000
+  enddo
 
-!***********************************************************************
+  call mzescape_normaliz ( taustar12, 2 )
 
-      ierr = 0
-      varerr = 0.d0
-!
-      beta = 1.8d5
-      isot = 1
-      write ( ibcode1, 101) ib
-      deltanudbl = dble( deltanu(isot,ib) )
-      ff=1.0d10
-      deltazdbl = dble(deltaz)
+end subroutine MZESC121
 
-!
-      do i=1,nzy
-         zyd(i) = dble(zy(i))
-      enddo
-      do i=1,nl
-         zld(i) = dble(zl(i))
-      enddo
-
-      call interhuntdp ( tvtbs,zyd,nzy, v626t1,zld,nl, 1 )
-
-      do i=1,nzy
-         con(i) =  dble( co2y(i) * imr(isot) )
-         correc = 2.d0 * dexp( -ee*dble(elow(isot,2))/tvtbs(i) )
-         con(i) = con(i) * ( 1.d0 - correc )
-         mr(i) = dble(co2y(i)/nty(i))
-      end do
-      if ( con(nzy) .le. 0.0d0 ) then
-         ierr = 63
-         varerr = con(nzy)
-         return
-      elseif ( con(nzy-1) .le. con(nzy) ) then
-         write (*,*) ' WARNING in MZESC121sub '
-         write (*,*) '    [CO2] grows with height at CurtisMatrix top.'
-         write (*,*) '    [CO2] @ top = ', con(nzy)
-         coninf = dble( con(nzy) )
-      else
-         coninf = dble( con(nzy) / log( con(nzy-1) / con(nzy) ) )
-      endif
-      call mztf_correccion ( coninf, con, ib )
-
-!
-      call gethist_03 ( ib )
-
-!
-!     tauinf
-!
-      call initial
-
-      iaquiHIST = nhist/2
-      iaquiZ = nzy - 2
-
-      do i=nl,1,-1
-
-         if(i.eq.nl)then
-
-            call intzhunt (iaquiZ, zl(i),c2,p2,mr2,t2, con)
-            do kr=1,nbox
-               ta(kr)=t2
-	    end do
-            call interstrhunt (iaquiHIST, st2,t2,ka,ta)
-            ! Check interpolation errors :
-            if (c2.le.0.0d0) then
-               ierr=65
-               varerr=c2
-               return
-            elseif (p2.le.0.0d0) then
-               ierr=66
-               varerr=p2
-               return
-            elseif (mr2.le.0.0d0) then
-               ierr=67
-               varerr=mr2
-               return
-            elseif (t2.le.0.0d0) then
-               ierr=68
-               varerr=t2
-               return
-            elseif (st2.le.0.0d0) then
-               ierr=69
-               varerr=st2
-               return
-            endif
-	    !
-            aa = p2 * coninf * mr2 * (st2 * ff)
-            cc = coninf * st2
-            dd = t2 * coninf * st2
-            do kr=1,nbox
-               ccbox(kr) = coninf * ka(kr)
-               ddbox(kr) = t2 * ccbox(kr)
-               c2box(kr) = c2 * ka(kr) * deltazdbl
-            end do
-            c2 = c2 * st2 * deltazdbl
-
-         else
-            call intzhunt (iaquiZ, zl(i),c1,p1,mr1,t1, con)
-            do kr=1,nbox
-               ta(kr)=t1
-            end do
-            call interstrhunt (iaquiHIST,st1,t1,ka,ta)
-            do kr=1,nbox
-               c1box(kr) = c1 * ka(kr) * deltazdbl
-            end do
-            c1 = c1 * st1 * deltazdbl
-            aa = aa + ( p1*mr1*(c1*ff) + p2*mr2*(c2*ff)) / 2.d0
-            cc = cc + ( c1 + c2 ) / 2.d0
-            ccc = ( c1 + c2 ) / 2.d0
-            dd = dd + ( t1*c1 + t2*c2 ) / 2.d0
-            do kr=1,nbox
-               ccbox(kr) = ccbox(kr) +  &
-                   ( c1box(kr) + c2box(kr) )/2.d0
-               ddbox(kr) = ddbox(kr) +  &
-                   ( t1*c1box(kr)+t2*c2box(kr) )/2.d0
-            end do
-
-            mr2 = mr1
-            c2=c1
-            do kr=1,nbox
-               c2box(kr) = c1box(kr)
-            end do
-            t2=t1
-            p2=p1
-         end if
-
-         pp = aa / (cc*ff)
-
-         ts = dd/cc
-         do kr=1,nbox
-   	    ta(kr) = ddbox(kr) / ccbox(kr)
-         end do
-         call interstrhunt(iaquiHIST,st,ts,ka,ta)
-         call intershphunt(iaquiHIST,alsa,alda,ta)
-
-!
-         eqw=0.0d0
-         do  kr=1,nbox
-            yy = ccbox(kr) * beta
-            w = we_clean ( yy, pp, alsa(kr),alda(kr) )
-            eqw = eqw + no(kr)*w
-         end do
-         tauinf(i) = dexp( - eqw / deltanudbl )
-         if (tauinf(i).lt.0.d0) tauinf(i) = 0.0d0
-
-         if (i.eq.nl) then
-            taustar(i) = 0.0d0
-         else
-            taustar(i) = deltanudbl * (tauinf(i+1)-tauinf(i))  &
-                 / ( beta * ccc  )
-         endif
-
-      end do
-
-
-      end subroutine MZESC121sub
 
 
 !***********************************************************************
 
-      subroutine MZTVC121( ierr, varerr )
+subroutine MZESC121sub (taustar,tauinf, ib, ierr, varerr )
+
+  !***********************************************************************
+  !     *** Old MZESC121sub_dlvr11_03.f ***
+  !***********************************************************************
+
+  use GITM_planet
+  !     use ModNLTE
+
+  !     include 'nlte_paramdef.h'
+  !     include 'nlte_commons.h'
+
+  implicit none
+
+  !     arguments
+  real*8 ::               taustar(nl) ! o
+  real*8 :: 	      tauinf(nl)  ! o
+  integer ::	      ib          ! i
+  integer ::              ierr        ! o
+  real*8  ::              varerr      ! o
+
+
+  !     local variables and constants
+  integer :: 	      i, iaquiHIST, iaquiZ, isot
+  real*8  :: 	      con(nzy), coninf
+  real*8  :: 	      c1, c2, ccc
+  real*8  :: 	      t1, t2
+  real*8  :: 	      p1, p2
+  real*8  ::	      mr1, mr2
+  real*8  :: 	      st1, st2
+  real*8  :: 	      c1box(70), c2box(70)
+  real*8  ::	      ff      ! to avoid too small numbers
+  real*8  ::	      tvtbs(nzy)
+  real*8  :: 	      st, beta, ts
+  real*8  ::  	      zld(nl), zyd(nzy)
+  real*8  :: 	      correc
+  real*8  :: 	      deltanudbl, deltazdbl
+  real*8  ::              yy
+
+  !     external function
+  external ::             we_clean
+  real*8   ::             we_clean
+
+  !     formats
+101 format(i1)
+
+  !***********************************************************************
+
+  ierr = 0
+  varerr = 0.d0
+  !
+  beta = 1.8d5
+  isot = 1
+  write ( ibcode1, 101) ib
+  deltanudbl = dble( deltanu(isot,ib) )
+  ff=1.0d10
+  deltazdbl = dble(deltaz)
+
+  !
+  do i=1,nzy
+     zyd(i) = dble(zy(i))
+  enddo
+  do i=1,nl
+     zld(i) = dble(zl(i))
+  enddo
+
+  call interhuntdp ( tvtbs,zyd,nzy, v626t1,zld,nl, 1 )
+
+  do i=1,nzy
+     con(i) =  dble( co2y(i) * imr(isot) )
+     correc = 2.d0 * dexp( -ee*dble(elow(isot,2))/tvtbs(i) )
+     con(i) = con(i) * ( 1.d0 - correc )
+     mr(i) = dble(co2y(i)/nty(i))
+  end do
+  if ( con(nzy) .le. 0.0d0 ) then
+     ierr = 63
+     varerr = con(nzy)
+     return
+  elseif ( con(nzy-1) .le. con(nzy) ) then
+     write (*,*) ' WARNING in MZESC121sub '
+     write (*,*) '    [CO2] grows with height at CurtisMatrix top.'
+     write (*,*) '    [CO2] @ top = ', con(nzy)
+     coninf = dble( con(nzy) )
+  else
+     coninf = dble( con(nzy) / log( con(nzy-1) / con(nzy) ) )
+  endif
+  call mztf_correccion ( coninf, con, ib )
+
+  !
+  call gethist_03 ( ib )
+
+  !
+  !     tauinf
+  !
+  call initial
+
+  iaquiHIST = nhist/2
+  iaquiZ = nzy - 2
+
+  do i=nl,1,-1
+
+     if(i.eq.nl)then
+
+        call intzhunt (iaquiZ, zl(i),c2,p2,mr2,t2, con)
+        do kr=1,nbox
+           ta(kr)=t2
+        end do
+        call interstrhunt (iaquiHIST, st2,t2,ka,ta)
+        ! Check interpolation errors :
+        if (c2.le.0.0d0) then
+           ierr=65
+           varerr=c2
+           return
+        elseif (p2.le.0.0d0) then
+           ierr=66
+           varerr=p2
+           return
+        elseif (mr2.le.0.0d0) then
+           ierr=67
+           varerr=mr2
+           return
+        elseif (t2.le.0.0d0) then
+           ierr=68
+           varerr=t2
+           return
+        elseif (st2.le.0.0d0) then
+           ierr=69
+           varerr=st2
+           return
+        endif
+        !
+        aa = p2 * coninf * mr2 * (st2 * ff)
+        cc = coninf * st2
+        dd = t2 * coninf * st2
+        do kr=1,nbox
+           ccbox(kr) = coninf * ka(kr)
+           ddbox(kr) = t2 * ccbox(kr)
+           c2box(kr) = c2 * ka(kr) * deltazdbl
+        end do
+        c2 = c2 * st2 * deltazdbl
+
+     else
+        call intzhunt (iaquiZ, zl(i),c1,p1,mr1,t1, con)
+        do kr=1,nbox
+           ta(kr)=t1
+        end do
+        call interstrhunt (iaquiHIST,st1,t1,ka,ta)
+        do kr=1,nbox
+           c1box(kr) = c1 * ka(kr) * deltazdbl
+        end do
+        c1 = c1 * st1 * deltazdbl
+        aa = aa + ( p1*mr1*(c1*ff) + p2*mr2*(c2*ff)) / 2.d0
+        cc = cc + ( c1 + c2 ) / 2.d0
+        ccc = ( c1 + c2 ) / 2.d0
+        dd = dd + ( t1*c1 + t2*c2 ) / 2.d0
+        do kr=1,nbox
+           ccbox(kr) = ccbox(kr) +  &
+                ( c1box(kr) + c2box(kr) )/2.d0
+           ddbox(kr) = ddbox(kr) +  &
+                ( t1*c1box(kr)+t2*c2box(kr) )/2.d0
+        end do
+
+        mr2 = mr1
+        c2=c1
+        do kr=1,nbox
+           c2box(kr) = c1box(kr)
+        end do
+        t2=t1
+        p2=p1
+     end if
+
+     pp = aa / (cc*ff)
+
+     ts = dd/cc
+     do kr=1,nbox
+        ta(kr) = ddbox(kr) / ccbox(kr)
+     end do
+     call interstrhunt(iaquiHIST,st,ts,ka,ta)
+     call intershphunt(iaquiHIST,alsa,alda,ta)
+
+     !
+     eqw=0.0d0
+     do  kr=1,nbox
+        yy = ccbox(kr) * beta
+        w = we_clean ( yy, pp, alsa(kr),alda(kr) )
+        eqw = eqw + no(kr)*w
+     end do
+     tauinf(i) = dexp( - eqw / deltanudbl )
+     if (tauinf(i).lt.0.d0) tauinf(i) = 0.0d0
+
+     if (i.eq.nl) then
+        taustar(i) = 0.0d0
+     else
+        taustar(i) = deltanudbl * (tauinf(i+1)-tauinf(i))  &
+             / ( beta * ccc  )
+     endif
+
+  end do
+
+
+end subroutine MZESC121sub
+
 
 !***********************************************************************
-!     *** Old MZTVC121_dlvr11.f ***
-!***********************************************************************
 
-      use GITM_planet
-!     use ModNLTE
+subroutine MZTVC121( ierr, varerr )
 
-!     include 'nlte_paramdef.h'
-!     include 'nlte_commons.h'
+  !***********************************************************************
+  !     *** Old MZTVC121_dlvr11.f ***
+  !***********************************************************************
 
-      implicit none
+  use GITM_planet
+  !     use ModNLTE
+
+  !     include 'nlte_paramdef.h'
+  !     include 'nlte_commons.h'
+
+  implicit none
 
 !!!!!!!!!!!!!!!!!!!!!!!
-!     common variables & constants
+  !     common variables & constants
 
 
-      integer :: ierr
-      real*8 :: varerr
+  integer :: ierr
+  real*8 :: varerr
 
 
-!     local variables
+  !     local variables
 
-      real*8 :: v1(nl), vc_factor
-      integer :: i,ik,ib
+  real*8 :: v1(nl), vc_factor
+  integer :: i,ik,ib
 
-!************************************************************************
+  !************************************************************************
 
-!      call zerov( vc121, nl )
-      vc121(1:nl)=0.d0
+  !      call zerov( vc121, nl )
+  vc121(1:nl)=0.d0
 
-      do 11, ik=1,3
+  do ik=1,3
 
-         ib=ik+1
+     ib=ik+1
 
-         call MZTVC121sub (v1, ib, ierr,varerr )
+     call MZTVC121sub (v1, ib, ierr,varerr )
 
-         do i=1,nl
+     do i=1,nl
 
-	    if(ik.eq.1)then
-               vc_factor =  &
-                   dble( (nu(1,2)-nu(1,1)) / (nu12_0200-nu(1,1)) )
-	    elseif(ik.eq.2)then
-               vc_factor = 1.d0
-	    elseif(ik.eq.3)then
-               vc_factor =  &
-                  dble( (nu(1,2)-nu(1,1)) / (nu12_1000-nu(1,1)) )
-	    end if
+        if(ik.eq.1)then
+           vc_factor =  &
+                dble( (nu(1,2)-nu(1,1)) / (nu12_0200-nu(1,1)) )
+        elseif(ik.eq.2)then
+           vc_factor = 1.d0
+        elseif(ik.eq.3)then
+           vc_factor =  &
+                dble( (nu(1,2)-nu(1,1)) / (nu12_1000-nu(1,1)) )
+        end if
 
-	    vc121(i) = vc121(i) + v1(i) * vc_factor
+        vc121(i) = vc121(i) + v1(i) * vc_factor
 
-         end do
+     end do
+  end do
 
- 11   continue
-
-      end subroutine MZTVC121
+end subroutine MZTVC121
 
 
 !***********************************************************************
 
-      subroutine MZTVC121sub  ( vc, ib,  ierr, varerr )
+subroutine MZTVC121sub  ( vc, ib,  ierr, varerr )
 
-!     *** Old MZTVC121sub_dlvr11_03.f ***
-!***********************************************************************
+  !     *** Old MZTVC121sub_dlvr11_03.f ***
+  !***********************************************************************
 
-      use ModConstants, only : pi
-      use GITM_planet
-!     use ModNLTE
+  use ModConstants, only : pi
+  use GITM_planet
+  !     use ModNLTE
 
-!     include 'nlte_paramdef.h'
-!     include 'nlte_commons.h'
+  !     include 'nlte_paramdef.h'
+  !     include 'nlte_commons.h'
 
-      implicit none
+  implicit none
 
 
-!     arguments
-      real*8 ::	            vc(nl)  ! o
-      integer ::	    ib      ! i
-      integer ::            ierr    ! o
-      real*8 ::             varerr  ! o
+  !     arguments
+  real*8 ::	            vc(nl)  ! o
+  integer ::	    ib      ! i
+  integer ::            ierr    ! o
+  real*8 ::             varerr  ! o
 
-!     local variables and constants
-      integer :: 	    i, in, ir, iaquiHIST , iaquiZ, isot
-      real*8  :: 	    tau(nl,nl), argumento
-      real*8  :: 	    con(nzy), coninf
-      real*8  :: 	    c1, c2
-      real*8  :: 	    t1, t2
-      real*8  :: 	    p1, p2
-      real*8  ::	    mr1, mr2
-      real*8  :: 	    st1, st2
-      real*8  :: 	    c1box(70), c2box(70)
-      real*8  ::	    ff      ! to avoid too small numbers
-      real*8  ::	    tvtbs(nzy)
-      real*8  :: 	    st, beta, ts
-      real*8  ::  	    zld(nl), zyd(nzy), deltazdbl
-      real*8  :: 	    correc
-      real*8  :: 	    deltanudbl, pideltanu
-      real*8  ::            yy
-      real*8  ::            minvc, maxtau
+  !     local variables and constants
+  integer :: 	    i, in, ir, iaquiHIST , iaquiZ, isot
+  real*8  :: 	    tau(nl,nl), argumento
+  real*8  :: 	    con(nzy), coninf
+  real*8  :: 	    c1, c2
+  real*8  :: 	    t1, t2
+  real*8  :: 	    p1, p2
+  real*8  ::	    mr1, mr2
+  real*8  :: 	    st1, st2
+  real*8  :: 	    c1box(70), c2box(70)
+  real*8  ::	    ff      ! to avoid too small numbers
+  real*8  ::	    tvtbs(nzy)
+  real*8  :: 	    st, beta, ts
+  real*8  ::  	    zld(nl), zyd(nzy), deltazdbl
+  real*8  :: 	    correc
+  real*8  :: 	    deltanudbl, pideltanu
+  real*8  ::            yy
+  real*8  ::            minvc, maxtau
 
-!     external function
-      external ::          we_clean
-      real*8   ::          we_clean
+  !     external function
+  external ::          we_clean
+  real*8   ::          we_clean
 
-!     formats
- 101  format(i1)
+  !     formats
+101 format(i1)
 
-!***********************************************************************
+  !***********************************************************************
 
-      ierr = 0
-      varerr = 0.d0
-!
-!     pi=3.141592
-      isot = 1
-      beta = 1.8d5
-      write (ibcode1,101) ib
-      deltanudbl = dble( deltanu(isot,ib) )
-      pideltanu = pi*deltanudbl
-      ff=1.0d10
-      deltazdbl = dble(deltaz)
-!
-!
-!
+  ierr = 0
+  varerr = 0.d0
+  !
+  !     pi=3.141592
+  isot = 1
+  beta = 1.8d5
+  write (ibcode1,101) ib
+  deltanudbl = dble( deltanu(isot,ib) )
+  pideltanu = pi*deltanudbl
+  ff=1.0d10
+  deltazdbl = dble(deltaz)
+  !
+  !
+  !
 
-      do i=1,nzy
-         zyd(i) = dble(zy(i))
-      enddo
-      do i=1,nl
-         zld(i) = dble(zl(i))
-      enddo
+  do i=1,nzy
+     zyd(i) = dble(zy(i))
+  enddo
+  do i=1,nl
+     zld(i) = dble(zl(i))
+  enddo
 
-      call interhuntdp ( tvtbs,zyd,nzy, v626t1,zld,nl, 1 )
+  call interhuntdp ( tvtbs,zyd,nzy, v626t1,zld,nl, 1 )
 
-      do i=1,nzy
-         con(i) =  dble( co2y(i) * imr(isot) )
-         correc = 2.d0 * dexp( -ee*dble(elow(isot,2))/tvtbs(i) )
-         con(i) = con(i) * ( 1.d0 - correc )
-         mr(i) = dble(co2y(i)/nty(i))
-      end do
+  do i=1,nzy
+     con(i) =  dble( co2y(i) * imr(isot) )
+     correc = 2.d0 * dexp( -ee*dble(elow(isot,2))/tvtbs(i) )
+     con(i) = con(i) * ( 1.d0 - correc )
+     mr(i) = dble(co2y(i)/nty(i))
+  end do
 
-      if ( con(nzy) .le. 0.0d0 ) then
-         ierr = 53
-         varerr = con(nzy)
-         return
-      elseif ( con(nzy-1) .le. con(nzy) ) then
-         write (*,*) ' WARNING in MZTVC121sub '
-         write (*,*) '    [CO2] grows with height at CurtisMatrix top.'
-         write (*,*) '    [CO2] @ top = ', con(nzy)
-         coninf = dble( con(nzy) )
-      else
-         coninf = dble( con(nzy) / log( con(nzy-1) / con(nzy) ) )
-      endif
-      call mztf_correccion ( coninf, con, ib )
+  if ( con(nzy) .le. 0.0d0 ) then
+     ierr = 53
+     varerr = con(nzy)
+     return
+  elseif ( con(nzy-1) .le. con(nzy) ) then
+     write (*,*) ' WARNING in MZTVC121sub '
+     write (*,*) '    [CO2] grows with height at CurtisMatrix top.'
+     write (*,*) '    [CO2] @ top = ', con(nzy)
+     coninf = dble( con(nzy) )
+  else
+     coninf = dble( con(nzy) / log( con(nzy-1) / con(nzy) ) )
+  endif
+  call mztf_correccion ( coninf, con, ib )
 
 !!!
-      call gethist_03 ( ib )
+  call gethist_03 ( ib )
 
-!
-!     tau(1,ir)
-!
-      call initial
+  !
+  !     tau(1,ir)
+  !
+  call initial
 
-      iaquiHIST = nhist/2
+  iaquiHIST = nhist/2
 
-      in=1
+  in=1
 
-      tau(in,1) = 1.d0
+  tau(in,1) = 1.d0
 
-      call initial
-      iaquiZ = 2
-      call intzhunt ( iaquiZ, zl(in), c1,p1,mr1,t1, con)
-      do kr=1,nbox
-         ta(kr) = t1
-      end do
-      call interstrhunt (iaquiHIST, st1,t1,ka,ta)
-      do kr=1,nbox
-         c1box(kr) = c1 * ka(kr) * deltazdbl
-      end do
-      c1 = c1 * st1 * deltazdbl
-                                ! Check interpolation errors :
-      if (c1.le.0.0d0) then
-         ierr=55
-         varerr=c1
-         return
-      elseif (p1.le.0.0d0) then
-         ierr=56
-         varerr=p1
-         return
-      elseif (mr1.le.0.0d0) then
-         ierr=57
-         varerr=mr1
-         return
-      elseif (t1.le.0.0d0) then
-         ierr=58
-         varerr=t1
-         return
-      elseif (st1.le.0.0d0) then
-         ierr=59
-         varerr=st1
-         return
-      endif
-                                !
+  call initial
+  iaquiZ = 2
+  call intzhunt ( iaquiZ, zl(in), c1,p1,mr1,t1, con)
+  do kr=1,nbox
+     ta(kr) = t1
+  end do
+  call interstrhunt (iaquiHIST, st1,t1,ka,ta)
+  do kr=1,nbox
+     c1box(kr) = c1 * ka(kr) * deltazdbl
+  end do
+  c1 = c1 * st1 * deltazdbl
+  ! Check interpolation errors :
+  if (c1.le.0.0d0) then
+     ierr=55
+     varerr=c1
+     return
+  elseif (p1.le.0.0d0) then
+     ierr=56
+     varerr=p1
+     return
+  elseif (mr1.le.0.0d0) then
+     ierr=57
+     varerr=mr1
+     return
+  elseif (t1.le.0.0d0) then
+     ierr=58
+     varerr=t1
+     return
+  elseif (st1.le.0.0d0) then
+     ierr=59
+     varerr=st1
+     return
+  endif
+  !
 
-      do 2 ir=2,nl
+  do ir=2,nl
 
-         call intzhunt (iaquiZ, zl(ir), c2,p2,mr2,t2, con)
-         do kr=1,nbox
-            ta(kr) = t2
-         end do
-         call interstrhunt (iaquiHIST, st2,t2,ka,ta)
-         do kr=1,nbox
-            c2box(kr) = c2 * ka(kr) * deltazdbl
-         end do
-         c2 = c2 * st2 * deltazdbl
+     call intzhunt (iaquiZ, zl(ir), c2,p2,mr2,t2, con)
+     do kr=1,nbox
+        ta(kr) = t2
+     end do
+     call interstrhunt (iaquiHIST, st2,t2,ka,ta)
+     do kr=1,nbox
+        c2box(kr) = c2 * ka(kr) * deltazdbl
+     end do
+     c2 = c2 * st2 * deltazdbl
 
-         aa = aa + ( p1*mr1*(c1*ff) + p2*mr2*(c2*ff)) / 2.d0
-         cc = cc + ( c1 + c2 ) / 2.d0
-         dd = dd + ( t1*c1 + t2*c2 ) / 2.d0
-         do kr=1,nbox
-            ccbox(kr) = ccbox(kr) + ( c1box(kr) + c2box(kr) ) /2.d0
-            ddbox(kr) = ddbox(kr) +  &
-                  ( t1*c1box(kr) + t2*c2box(kr) ) / 2.d0
-         end do
+     aa = aa + ( p1*mr1*(c1*ff) + p2*mr2*(c2*ff)) / 2.d0
+     cc = cc + ( c1 + c2 ) / 2.d0
+     dd = dd + ( t1*c1 + t2*c2 ) / 2.d0
+     do kr=1,nbox
+        ccbox(kr) = ccbox(kr) + ( c1box(kr) + c2box(kr) ) /2.d0
+        ddbox(kr) = ddbox(kr) +  &
+             ( t1*c1box(kr) + t2*c2box(kr) ) / 2.d0
+     end do
 
-         mr1=mr2
-         t1=t2
-         c1=c2
-         p1=p2
-         do kr=1,nbox
-            c1box(kr) = c2box(kr)
-         end do
+     mr1=mr2
+     t1=t2
+     c1=c2
+     p1=p2
+     do kr=1,nbox
+        c1box(kr) = c2box(kr)
+     end do
 
-         pp = aa / (cc * ff)
+     pp = aa / (cc * ff)
 
-         ts = dd/cc
-         do kr=1,nbox
-   	    ta(kr) = ddbox(kr) / ccbox(kr)
-         end do
-         call interstrhunt(iaquiHIST, st,ts,ka,ta)
-         call intershphunt(iaquiHIST, alsa,alda,ta)
+     ts = dd/cc
+     do kr=1,nbox
+        ta(kr) = ddbox(kr) / ccbox(kr)
+     end do
+     call interstrhunt(iaquiHIST, st,ts,ka,ta)
+     call intershphunt(iaquiHIST, alsa,alda,ta)
 
-         eqw=0.0d0
-         do kr=1,nbox
-            yy = ccbox(kr) * beta
-            w = we_clean ( yy, pp, alsa(kr),alda(kr) )
-            eqw = eqw + no(kr)*w
-         end do
+     eqw=0.0d0
+     do kr=1,nbox
+        yy = ccbox(kr) * beta
+        w = we_clean ( yy, pp, alsa(kr),alda(kr) )
+        eqw = eqw + no(kr)*w
+     end do
 
-         argumento = eqw / deltanudbl
-         tau(in,ir) = dexp( - argumento )
+     argumento = eqw / deltanudbl
+     tau(in,ir) = dexp( - argumento )
 
- 2    continue
+  end do
 
+  do in=nl,2,-1
+     tau(in,1) = tau(1,in)
+  end do
 
-!
-!
-!
-      do in=nl,2,-1
-         tau(in,1) = tau(1,in)
-      end do
+  !
+  vc(1) = 0.0d0
+  vc(nl) = 0.0d0
+  do in=2,nl-1
+     vc(in) =  pideltanu /( 2.d5*deltazdbl ) *  &
+          ( tau(in-1,1) - tau(in+1,1) )
+     if (vc(in) .lt. 0.0d0) vc(in) = vc(in-1)
+  end do
 
-!
-      vc(1) = 0.0d0
-      vc(nl) = 0.0d0
-      do in=2,nl-1
-         vc(in) =  pideltanu /( 2.d5*deltazdbl ) *  &
-                   ( tau(in-1,1) - tau(in+1,1) )
-         if (vc(in) .lt. 0.0d0) vc(in) = vc(in-1)
-      end do
+  !
+  !     Tracking potential numerical errors
+  !
+  minvc = 1.d6
+  maxtau = tau(nl,1)
+  do in=2,nl-1
+     minvc = min( minvc, vc(in) )
+     maxtau = max( maxtau, tau(in,1) )
+  end do
+  if (maxtau .gt. 1.0d0) then
+     ierr = 52
+     varerr = maxtau
+     return
+  else if (minvc .lt. 0.0d0) then
+     ierr = 51
+     varerr = minvc
+     return
+  endif
 
-!
-!     Tracking potential numerical errors
-!
-      minvc = 1.d6
-      maxtau = tau(nl,1)
-      do in=2,nl-1
-         minvc = min( minvc, vc(in) )
-         maxtau = max( maxtau, tau(in,1) )
-      end do
-      if (maxtau .gt. 1.0d0) then
-         ierr = 52
-         varerr = maxtau
-         return
-      else if (minvc .lt. 0.0d0) then
-         ierr = 51
-         varerr = minvc
-         return
-      endif
-
-      end subroutine MZTVC121sub
+end subroutine MZTVC121sub
 ! ***********************************************************************
 
-      subroutine init_nlte_setup
+subroutine init_nlte_setup
 
-! ***********************************************************************
-!     swb     Nov 17          Adapt to MGITM on Pleiades
-!     malv    Oct 09          Adapt mz1d_onlyTCR_MUCHASveces.f to "V09"
-!     malv    Sep 07          Add LU deccomp & repetition option to test CPU
-!     malv    Jan 07          Add new vertical fine-grid for NLTE
-!     apr 06  malv            Read date,effuv from Driver. T fixed at zbott.
-!     2003    fgg             Double precission in UV, Photoq, Conduct & Diff
-!     oct 02  malv            V02: New scheme to allow for continuity eq.
-!     dec 01  malv            See changes/progress of the code in mz1d.actual
-!     nov 01  malv            adapt for parameterizations of tcr y shr
-!     nov 98  malv            add chemical & photochem. processes
-!     jul 98  malv            transic hiperb con zs fuera de la region
-!     equil hidrostatico. smoothing en cr y sh
-!     jan 98	malv		first version
-!***********************************************************************
-      use GITM_planet
+  ! ***********************************************************************
+  !     swb     Nov 17          Adapt to MGITM on Pleiades
+  !     malv    Oct 09          Adapt mz1d_onlyTCR_MUCHASveces.f to "V09"
+  !     malv    Sep 07          Add LU deccomp & repetition option to test CPU
+  !     malv    Jan 07          Add new vertical fine-grid for NLTE
+  !     apr 06  malv            Read date,effuv from Driver. T fixed at zbott.
+  !     2003    fgg             Double precission in UV, Photoq, Conduct & Diff
+  !     oct 02  malv            V02: New scheme to allow for continuity eq.
+  !     dec 01  malv            See changes/progress of the code in mz1d.actual
+  !     nov 01  malv            adapt for parameterizations of tcr y shr
+  !     nov 98  malv            add chemical & photochem. processes
+  !     jul 98  malv            transic hiperb con zs fuera de la region
+  !     equil hidrostatico. smoothing en cr y sh
+  !     jan 98	malv		first version
+  !***********************************************************************
+  use GITM_planet
 
-!     include	'nlte_paramdef.h'  !  Set MGITM path to all datafiles :
-!                                     /UA/DataIn/ *.dat
-!     include	'nlte_commons.h'
+  !     include	'nlte_paramdef.h'  !  Set MGITM path to all datafiles :
+  !                                     /UA/DataIn/ *.dat
+  !     include	'nlte_commons.h'
 
-      implicit none
+  implicit none
 
-!***********************************************************************
+  !***********************************************************************
 
-!     local variables
+  !     local variables
 
-      integer ::i, k, lun1, lun2
-      real*8  ::  xx
-      character	:: isotcode*2
+  integer ::i, k, lun1, lun2
+  real*8  ::  xx
+  character	:: isotcode*2
 
-!     formats
- 132  format (i2)
+  !     formats
+132 format (i2)
 
-!**********************************************************************
+  !**********************************************************************
 
-!     *** Groups old 1-d model subroutines SETTINGS and LeeESCTVCISO_dlvr11
-!     *** Both were called in old NLTEdlvr11_SETUP ***
+  !     *** Groups old 1-d model subroutines SETTINGS and LeeESCTVCISO_dlvr11
+  !     *** Both were called in old NLTEdlvr11_SETUP ***
 
-!     *** Old SETTINGS ***
+  !     *** Old SETTINGS ***
 
-      lun1 = 1
-      lun2 = 2
+  lun1 = 1
+  lun2 = 2
 
-      do k=1,nisot
-         write (isotcode,132) indexisot(k)
-!        open (lun1,  &
-!                file=trim(datafile)//'UA/DataIn/enelow' &
-!                //isotcode//'.dat',status='old')
-         open (lun1, &
-                 file='UA/DataIn/enelow' &
-                 //isotcode//'.dat',status='old')
-!        open (lun2,  &
-!                file=trim(datafile)//'UA/DataIn/deltanu' &
-!                //isotcode//'.dat',status='old')
-         open (lun2,  &
-                 file='UA/DataIn/deltanu'  &
-                 //isotcode//'.dat',status='old')
-         read (lun1,*)
-         read (lun2,*)
-         read (lun1,*) (elow(k,i), i=1,nb)
-         read (lun2,*) (deltanu(k,i), i=1,nb)
-         close (lun1)
-         close (lun2)
-      end do
+  do k=1,nisot
+     write (isotcode,132) indexisot(k)
+     !        open (lun1,  &
+     !                file=trim(datafile)//'UA/DataIn/enelow' &
+     !                //isotcode//'.dat',status='old')
+     open (lun1, &
+          file='UA/DataIn/enelow' &
+          //isotcode//'.dat',status='old')
+     !        open (lun2,  &
+     !                file=trim(datafile)//'UA/DataIn/deltanu' &
+     !                //isotcode//'.dat',status='old')
+     open (lun2,  &
+          file='UA/DataIn/deltanu'  &
+          //isotcode//'.dat',status='old')
+     read (lun1,*)
+     read (lun2,*)
+     read (lun1,*) (elow(k,i), i=1,nb)
+     read (lun2,*) (deltanu(k,i), i=1,nb)
+     close (lun1)
+     close (lun2)
+  end do
 
-      a1_010_000 = 1.3546d00
-      a2_010_000 = 1.3452d00
-      a3_010_000 = 1.1878d00
-      a4_010_000 = 1.2455d00
-      a1_020_010 = 4.35d0
+  a1_010_000 = 1.3546d00
+  a2_010_000 = 1.3452d00
+  a3_010_000 = 1.1878d00
+  a4_010_000 = 1.2455d00
+  a1_020_010 = 4.35d0
 
-!     *** Old LeeESCTVCISO_dlvr11 ***
+  !     *** Old LeeESCTVCISO_dlvr11 ***
 
-!     open( 11, file=trim(datafile)//  &
-!            'UA/DataIn/parametp_Tstar_IAA1204.dat' )
-      open( 11, file=  &
-             'UA/DataIn/parametp_Tstar_IAA1204.dat' )
-      read (11, *)
-      do i=1,nztabul
-         read (11,*) lnpnbtab(i), tstar11tab(i),  &
-                tstar21tab(i), tstar31tab(i), tstar41tab(i)
-      enddo
-      close (11)
+  !     open( 11, file=trim(datafile)//  &
+  !            'UA/DataIn/parametp_Tstar_IAA1204.dat' )
+  open( 11, file=  &
+       'UA/DataIn/parametp_Tstar_IAA1204.dat' )
+  read (11, *)
+  do i=1,nztabul
+     read (11,*) lnpnbtab(i), tstar11tab(i),  &
+          tstar21tab(i), tstar31tab(i), tstar41tab(i)
+  enddo
+  close (11)
 
-!     open( 12, file=trim(datafile)//  &
-!            'UA/DataIn/parametp_VC_IAA1204.dat' )
-      open( 12, file=  &
-             'UA/DataIn/parametp_VC_IAA1204.dat' )
-      read (12, *)
-      do i=1,nztabul
-         read (12,*) xx, vc210tab(i), vc310tab(i), vc410tab(i)
-      enddo
-      close (12)
-      xx=xx
+  !     open( 12, file=trim(datafile)//  &
+  !            'UA/DataIn/parametp_VC_IAA1204.dat' )
+  open( 12, file=  &
+       'UA/DataIn/parametp_VC_IAA1204.dat' )
+  read (12, *)
+  do i=1,nztabul
+     read (12,*) xx, vc210tab(i), vc310tab(i), vc410tab(i)
+  enddo
+  close (12)
+  xx=xx
 
-      call LeeHISTOGRMS
+  call LeeHISTOGRMS
 
-      end subroutine init_nlte_setup
-
-!***********************************************************************
-      subroutine LeeHISTOGRMS
-!***********************************************************************
-      use GITM_planet
-
-!     include	'nlte_paramdef.h'
-!     include	'nlte_commons.h'
-
-      implicit none
-
-!     local variables and constants
-      integer :: ihist
-
+end subroutine init_nlte_setup
 
 !***********************************************************************
+subroutine LeeHISTOGRMS
+  !***********************************************************************
+  use GITM_planet
 
-                                ! Banda fundamental
-                                !
-!     hisfile = trim(datafile)//  &
-!            'UA/DataIn/hid26-1.dat'
-      hisfile = 'UA/DataIn/hid26-1.dat'
-      ihist = 1
-      call rhist_03 (ihist)
+  !     include	'nlte_paramdef.h'
+  !     include	'nlte_commons.h'
 
-                                ! First Hot bands
-                                !
-!     hisfile = trim(datafile)//  &
-!            'UA/DataIn/hid26-2.dat'
-      hisfile = 'UA/DataIn/hid26-2.dat'
-      ihist = 2
-      call rhist_03 (ihist)
+  implicit none
 
-!     hisfile = trim(datafile)//  &
-!            'UA/DataIn/hid26-3.dat'
-      hisfile = 'UA/DataIn/hid26-3.dat'
-      ihist = 3
-      call rhist_03 (ihist)
+  !     local variables and constants
+  integer :: ihist
 
-!     hisfile = trim(datafile)//  &
-!            'UA/DataIn/hid26-4.dat'
-      hisfile = 'UA/DataIn/hid26-4.dat'
-      ihist = 4
-      call rhist_03 (ihist)
 
-      end subroutine LeeHISTOGRMS
+  !***********************************************************************
+
+  ! Banda fundamental
+  !
+  !     hisfile = trim(datafile)//  &
+  !            'UA/DataIn/hid26-1.dat'
+  hisfile = 'UA/DataIn/hid26-1.dat'
+  ihist = 1
+  call rhist_03 (ihist)
+
+  ! First Hot bands
+  !
+  !     hisfile = trim(datafile)//  &
+  !            'UA/DataIn/hid26-2.dat'
+  hisfile = 'UA/DataIn/hid26-2.dat'
+  ihist = 2
+  call rhist_03 (ihist)
+
+  !     hisfile = trim(datafile)//  &
+  !            'UA/DataIn/hid26-3.dat'
+  hisfile = 'UA/DataIn/hid26-3.dat'
+  ihist = 3
+  call rhist_03 (ihist)
+
+  !     hisfile = trim(datafile)//  &
+  !            'UA/DataIn/hid26-4.dat'
+  hisfile = 'UA/DataIn/hid26-4.dat'
+  ihist = 4
+  call rhist_03 (ihist)
+
+end subroutine LeeHISTOGRMS
 
 
 !***********************************************************************
 !     *** Old GETK_dlvr11.f ***
 
-      subroutine GETK_dlvr11(tt)
+subroutine GETK_dlvr11(tt)
 
-!***********************************************************************
-      use GITM_planet
+  !***********************************************************************
+  use GITM_planet
 
-!     include	'nlte_paramdef.h'
-!     include	'nlte_commons.h'
+  !     include	'nlte_paramdef.h'
+  !     include	'nlte_commons.h'
 
-      implicit none
+  implicit none
 
-!     arguments
-      real ::	tt	! i. temperature
+  !     arguments
+  real ::	tt	! i. temperature
 
-!     ! local variables:
-      real*8 :: k20x, k20xb, k20xc
-      real*8 :: k19xca,k19xcb,k19xcc
-      real*8 :: k19xba,k19xbb,k19xbc
-      real*8 :: k21x,k21xa,k21xb,k21xc
-      real*8 :: anu, factor , tdt
-      integer :: 	i
+  !     ! local variables:
+  real*8 :: k20x, k20xb, k20xc
+  real*8 :: k19xca,k19xcb,k19xcc
+  real*8 :: k19xba,k19xbb,k19xbc
+  real*8 :: k21x,k21xa,k21xb,k21xc
+  real*8 :: anu, factor , tdt
+  integer :: 	i
 
-!***********************************************************************
+  !***********************************************************************
 
-      tdt = dble(tt)
+  tdt = dble(tt)
 
-                                !! k19 & k20
+  !! k19 & k20
 
-      k20x = 3.d-12
-!     k20x = 4.d-12
-      k20xc = k20x * rf20
-      k20xb = 2.d0 * k20xc
+  k20x = 3.d-12
+  !     k20x = 4.d-12
+  k20xc = k20x * rf20
+  k20xb = 2.d0 * k20xc
 
-      k19xca = 4.2d-12 * exp( -2988.d0/tdt + 303930.d0/tdt**2.d0 )
-      if (tt.le.175.) k19xca = 3.3d-15
-      k19xcb = 2.1d-12 * exp( -2659.d0/tdt + 223052.d0/tdt**2.d0 )
-      if (tt.le.175.) k19xcb = 7.6d-16
-      k19xca = k19xca * rf19
-      k19xcb = k19xcb * rf19
-      k19xcc = k19xcb
+  k19xca = 4.2d-12 * exp( -2988.d0/tdt + 303930.d0/tdt**2.d0 )
+  if (tt.le.175.) k19xca = 3.3d-15
+  k19xcb = 2.1d-12 * exp( -2659.d0/tdt + 223052.d0/tdt**2.d0 )
+  if (tt.le.175.) k19xcb = 7.6d-16
+  k19xca = k19xca * rf19
+  k19xcb = k19xcb * rf19
+  k19xcc = k19xcb
 
-      factor = 2.5d0
-      k19xba = factor * k19xca
-      k19xbb = factor * k19xcb
-      k19xbc = factor * k19xcc
+  factor = 2.5d0
+  k19xba = factor * k19xca
+  k19xbb = factor * k19xcb
+  k19xbc = factor * k19xcc
 
-      do i = 1, nisot
+  do i = 1, nisot
 
-         k19ba(i) = k19xba
-         k19ca(i) = k19xca
-         k19bb(i) = k19xbb
-         k19cb(i) = k19xcb
-         k19bc(i) = k19xbc
-         k19cc(i) = k19xcc
+     k19ba(i) = k19xba
+     k19ca(i) = k19xca
+     k19bb(i) = k19xbb
+     k19cb(i) = k19xcb
+     k19bc(i) = k19xbc
+     k19cc(i) = k19xcc
 
-         k20b(i) = k20xb
-         k20c(i) = k20xc
+     k20b(i) = k20xb
+     k20c(i) = k20xc
 
-         anu = dble( nu(i,2)-nu(i,1) )
+     anu = dble( nu(i,2)-nu(i,1) )
 
-         k19bap(i) = k19ba(i) * 2.d0 * exp( -ee*anu/tdt )
-         k19bbp(i) = k19bb(i) * 2.d0 * exp( -ee*anu/tdt )
-         k19bcp(i) = k19bc(i) * 2.d0 * exp( -ee*anu/tdt )
+     k19bap(i) = k19ba(i) * 2.d0 * exp( -ee*anu/tdt )
+     k19bbp(i) = k19bb(i) * 2.d0 * exp( -ee*anu/tdt )
+     k19bcp(i) = k19bc(i) * 2.d0 * exp( -ee*anu/tdt )
 
-         k20bp(i) = k20b(i)*4.d0/2.d0 * exp( -ee/tdt * anu )
+     k20bp(i) = k20b(i)*4.d0/2.d0 * exp( -ee/tdt * anu )
 
-         anu = dble( nu(i,1) )
+     anu = dble( nu(i,1) )
 
-         k19cap(i) = k19ca(i) * 2.d0 * exp( -ee*anu/tdt )
-         k19cbp(i) = k19cb(i) * 2.d0 * exp( -ee*anu/tdt )
-         k19ccp(i) = k19cc(i) * 2.d0 * exp( -ee*anu/tdt )
+     k19cap(i) = k19ca(i) * 2.d0 * exp( -ee*anu/tdt )
+     k19cbp(i) = k19cb(i) * 2.d0 * exp( -ee*anu/tdt )
+     k19ccp(i) = k19cc(i) * 2.d0 * exp( -ee*anu/tdt )
 
-         k20cp(i) = k20c(i)*2.d0/1.d0 * exp( -ee/tdt * anu )
+     k20cp(i) = k20c(i)*2.d0/1.d0 * exp( -ee/tdt * anu )
 
-      end do
-
-
-                                !! k21 &  k23k21c &  k24k21c & k34k21c
-
-      k21x = 2.49d-11
-      k21xb = k21x
-      k21xa = 3.d0/2.d0 * k21xb
-      k21xc = k21xb / 2.d0
-
-      k21xa = k21xa * rf21a
-      k21xb = k21xb * rf21b
-      k21xc = k21xc * rf21c
-
-      do i = 1, nisot
-	 k21b(i) = k21xb
-	 k21c(i) = k21xc
-	 k21bp(i) = k21b(i) *  &
-            exp( -ee/tdt* dble(nu(i,2)-nu(i,1)-nu(1,1)) )
-	 k21cp(i) = k21c(i) *  &
-            exp( -ee/tdt * dble(nu(i,1)-nu(1,1)) )
-      end do
-
-      k23k21c = k21xc
-      k24k21c = k21xc
-      k34k21c = k21xc
-      k23k21cp = k23k21c*2.d0/2.d0 *  &
-           exp( -ee/tdt* dble(nu(2,1)-nu(3,1)) )
-      k24k21cp = k24k21c*2.d0/2.d0 *  &
-           exp( -ee/tdt* dble(nu(2,1)-nu(4,1)) )
-      k34k21cp = k34k21c*2.d0/2.d0 *  &
-           exp( -ee/tdt* dble(nu(3,1)-nu(4,1)) )
+  end do
 
 
-                                !! k33
+  !! k21 &  k23k21c &  k24k21c & k34k21c
 
-      k33c = k21x * rf33bc
-      do i=2,nisot
-	 k33cp(i) = k33c *  &
-           exp( -ee/tdt * dble(nu(1,2)-nu(1,1)-nu(i,1)) )
-      end do
+  k21x = 2.49d-11
+  k21xb = k21x
+  k21xa = 3.d0/2.d0 * k21xb
+  k21xc = k21xb / 2.d0
 
-      end subroutine GETK_dlvr11
+  k21xa = k21xa * rf21a
+  k21xb = k21xb * rf21b
+  k21xc = k21xc * rf21c
+
+  do i = 1, nisot
+     k21b(i) = k21xb
+     k21c(i) = k21xc
+     k21bp(i) = k21b(i) *  &
+          exp( -ee/tdt* dble(nu(i,2)-nu(i,1)-nu(1,1)) )
+     k21cp(i) = k21c(i) *  &
+          exp( -ee/tdt * dble(nu(i,1)-nu(1,1)) )
+  end do
+
+  k23k21c = k21xc
+  k24k21c = k21xc
+  k34k21c = k21xc
+  k23k21cp = k23k21c*2.d0/2.d0 *  &
+       exp( -ee/tdt* dble(nu(2,1)-nu(3,1)) )
+  k24k21cp = k24k21c*2.d0/2.d0 *  &
+       exp( -ee/tdt* dble(nu(2,1)-nu(4,1)) )
+  k34k21cp = k34k21c*2.d0/2.d0 *  &
+       exp( -ee/tdt* dble(nu(3,1)-nu(4,1)) )
+
+
+  !! k33
+
+  k33c = k21x * rf33bc
+  do i=2,nisot
+     k33cp(i) = k33c *  &
+          exp( -ee/tdt * dble(nu(1,2)-nu(1,1)-nu(i,1)) )
+  end do
+
+end subroutine GETK_dlvr11
 
 !***********************************************************************
 !  3-datasets not readin: hid27-1.dat, hid28-1.dat, hid36-1.dat
@@ -7564,1690 +7547,1681 @@ subroutine ERRORS (ierr,varerr)
 !************************************************************************
 
 !***********************************************************************
-      function planckdp(tp,xnu)
-!***********************************************************************
+function planckdp(tp,xnu)
+  !***********************************************************************
 
-      use GITM_planet
-!     use ModNLTE
+  use GITM_planet
+  !     use ModNLTE
 
-!     include 'nlte_paramdef.h'
-!     include 'nlte_commons.h'
+  !     include 'nlte_paramdef.h'
+  !     include 'nlte_commons.h'
 
-      implicit none
+  implicit none
 
-      real*8 :: planckdp
-      real*8 :: xnu
-      real :: tp
+  real*8 :: planckdp
+  real*8 :: xnu
+  real :: tp
 
-!     planckdp = gamma*xnu**3.0d0 / exp( ee*xnu/dble(tp) )
-                                !erg cm-2.sr-1/cm-1.
-      planckdp = gamma1*xnu**3.0d0 / exp( ee*xnu/dble(tp) )
-                                !erg cm-2.sr-1/cm-1.
+  !     planckdp = gamma*xnu**3.0d0 / exp( ee*xnu/dble(tp) )
+  !erg cm-2.sr-1/cm-1.
+  planckdp = gamma1*xnu**3.0d0 / exp( ee*xnu/dble(tp) )
+  !erg cm-2.sr-1/cm-1.
 
-      end function planckdp
-
-!***********************************************************************
-      subroutine leetvt
+end function planckdp
 
 !***********************************************************************
+subroutine leetvt
 
-      use GITM_planet
-!     use ModNLTE
+  !***********************************************************************
 
-!     include 'nlte_paramdef.h'
-!     include 'nlte_commons.h'
+  use GITM_planet
+  !     use ModNLTE
 
-      implicit none
+  !     include 'nlte_paramdef.h'
+  !     include 'nlte_commons.h'
 
-!     local variables
-      integer :: i
-      real*8 ::	zld(nl), zyd(nzy)
-      real*8  ::xvt11(nzy), xvt21(nzy), xvt31(nzy), xvt41(nzy)
+  implicit none
 
-!***********************************************************************
+  !     local variables
+  integer :: i
+  real*8 ::	zld(nl), zyd(nzy)
+  real*8  ::xvt11(nzy), xvt21(nzy), xvt31(nzy), xvt41(nzy)
 
-      do i=1,nzy
-         zyd(i) = dble(zy(i))
-         xvt11(i)= dble( ty(i) )
-         xvt21(i)= dble( ty(i) )
-         xvt31(i)= dble( ty(i) )
-         xvt41(i)= dble( ty(i) )
-      end do
+  !***********************************************************************
 
-      do i=1,nl
-         zld(i) = dble( zl(i) )
-      enddo
-      call interhuntdp4veces ( v626t1,v628t1,v636t1,v627t1, zld,nl,  &
-          xvt11, xvt21, xvt31, xvt41, zyd,nzy, 1 )
+  do i=1,nzy
+     zyd(i) = dble(zy(i))
+     xvt11(i)= dble( ty(i) )
+     xvt21(i)= dble( ty(i) )
+     xvt31(i)= dble( ty(i) )
+     xvt41(i)= dble( ty(i) )
+  end do
 
-      end subroutine leetvt
+  do i=1,nl
+     zld(i) = dble( zl(i) )
+  enddo
+  call interhuntdp4veces ( v626t1,v628t1,v636t1,v627t1, zld,nl,  &
+       xvt11, xvt21, xvt31, xvt41, zyd,nzy, 1 )
+
+end subroutine leetvt
 
 
 !     ****************************************************************
 !     *** MZTFSUB_dlvr11_02.f ***
 !     ****************************************************************
-      subroutine initial
+subroutine initial
 
-!     ****************************************************************
+  !     ****************************************************************
 
-      use GITM_planet
-!     use ModNLTE
+  use GITM_planet
+  !     use ModNLTE
 
-!     include 'nlte_paramdef.h'
-!     include 'nlte_commons.h'
+  !     include 'nlte_paramdef.h'
+  !     include 'nlte_commons.h'
 
-      implicit none
+  implicit none
 
-!     local variables
-      integer :: 	i
+  !     local variables
+  integer :: 	i
 
-!     ***************
+  !     ***************
 
-      eqw = 0.0d00
-      aa = 0.0d00
-      cc = 0.0d00
-      dd = 0.0d00
+  eqw = 0.0d00
+  aa = 0.0d00
+  cc = 0.0d00
+  dd = 0.0d00
 
-      do i=1,nbox
-         ccbox(i) = 0.0d0
-         ddbox(i) = 0.0d0
-      end do
+  do i=1,nbox
+     ccbox(i) = 0.0d0
+     ddbox(i) = 0.0d0
+  end do
 
-      end subroutine initial
-
-!     **********************************************************************
-
-      subroutine intershphunt (i, alsx,adx,xtemp)
+end subroutine initial
 
 !     **********************************************************************
 
-      use GITM_planet
-!     use ModNLTE
+subroutine intershphunt (i, alsx,adx,xtemp)
 
-!     include 'nlte_paramdef.h'
-!     include 'nlte_commons.h'
+  !     **********************************************************************
 
-      implicit none
+  use GITM_planet
+  !     use ModNLTE
 
-!     arguments
-      real*8 :: alsx(nbox_max),adx(nbox_max) ! Output
-      real*8 :: xtemp(nbox_max)    ! Input
-      integer ::    i              ! I , O
+  !     include 'nlte_paramdef.h'
+  !     include 'nlte_commons.h'
 
-!     local variables
-      integer :: k
-      real*8  :: factor
-      real*8  :: temperatura     ! para evitar valores ligeramnt out of limits
+  implicit none
 
-!     ***********
+  !     arguments
+  real*8 :: alsx(nbox_max),adx(nbox_max) ! Output
+  real*8 :: xtemp(nbox_max)    ! Input
+  integer ::    i              ! I , O
 
-      do 1, k=1,nbox
-         temperatura = xtemp(k)
-         if (abs(xtemp(k)-thist(1)).le.0.01d0) then
-            temperatura=thist(1)
-         elseif (abs(xtemp(k)-thist(nhist)).le.0.01d0) then
-            temperatura=thist(nhist)
-         elseif (xtemp(k).lt.thist(1)) then
-            temperatura=thist(1)
-            write (*,*) ' WARNING intershphunt/ Too low atmosph Tk:'
-            write (*,*) ' WARNING      k,xtemp = ', k,xtemp(k)
-            write (*,*) ' Minimum Tk in histogram used : ', thist(1)
-         elseif (xtemp(k).gt.thist(nhist)) then
-            temperatura=thist(nhist)
-            write (*,*) ' WARNING intershphunt/ Very high atmosph Tk:'
-            write (*,*) ' WARNING      k,xtemp = ', k,xtemp(k)
-            write (*,*) ' Max Tk in histogram used : ', thist(nhist)
-         endif
-         call huntdp ( thist,nhist, temperatura, i )
-         if ( i.eq.0 .or. i.eq.nhist ) then
-	    write (*,*) ' HUNT/ Limits input grid:',  &
-                 thist(1),thist(nhist)
-	    write (*,*) ' HUNT/ location in grid:', xtemp(k)
-            stop ' INTERSHP/ Interpolation error. T out of Histogram.'
-         endif
-         factor = 1.d0 /  (thist(i+1)-thist(i))
-         alsx(k) = (( xls1(i,k)*(thist(i+1)-xtemp(k)) +  &
-              xls1(i+1,k)*(xtemp(k)-thist(i)) )) * factor
-         adx(k)  = (( xld1(i,k)*(thist(i+1)-xtemp(k)) +  &
-              xld1(i+1,k)*(xtemp(k)-thist(i)) )) * factor
- 1    continue
+  !     local variables
+  integer :: k
+  real*8  :: factor
+  real*8  :: temperatura     ! para evitar valores ligeramnt out of limits
 
-      end subroutine intershphunt
+  !     ***********
 
-!     **********************************************************************
+  do k=1,nbox
+     temperatura = xtemp(k)
+     if (abs(xtemp(k)-thist(1)).le.0.01d0) then
+        temperatura=thist(1)
+     elseif (abs(xtemp(k)-thist(nhist)).le.0.01d0) then
+        temperatura=thist(nhist)
+     elseif (xtemp(k).lt.thist(1)) then
+        temperatura=thist(1)
+        write (*,*) ' WARNING intershphunt/ Too low atmosph Tk:'
+        write (*,*) ' WARNING      k,xtemp = ', k,xtemp(k)
+        write (*,*) ' Minimum Tk in histogram used : ', thist(1)
+     elseif (xtemp(k).gt.thist(nhist)) then
+        temperatura=thist(nhist)
+        write (*,*) ' WARNING intershphunt/ Very high atmosph Tk:'
+        write (*,*) ' WARNING      k,xtemp = ', k,xtemp(k)
+        write (*,*) ' Max Tk in histogram used : ', thist(nhist)
+     endif
+     call huntdp ( thist,nhist, temperatura, i )
+     if ( i.eq.0 .or. i.eq.nhist ) then
+        write (*,*) ' HUNT/ Limits input grid:',  &
+             thist(1),thist(nhist)
+        write (*,*) ' HUNT/ location in grid:', xtemp(k)
+        stop ' INTERSHP/ Interpolation error. T out of Histogram.'
+     endif
+     factor = 1.d0 /  (thist(i+1)-thist(i))
+     alsx(k) = (( xls1(i,k)*(thist(i+1)-xtemp(k)) +  &
+          xls1(i+1,k)*(xtemp(k)-thist(i)) )) * factor
+     adx(k)  = (( xld1(i,k)*(thist(i+1)-xtemp(k)) +  &
+          xld1(i+1,k)*(xtemp(k)-thist(i)) )) * factor
+  end do
 
-      subroutine interstrhunt (i, stx, ts, sx, xtemp )
-
-!     **********************************************************************
-
-      use GITM_planet
-!     use ModNLTE
-
-!     include 'nlte_paramdef.h'
-!     include 'nlte_commons.h'
-
-      implicit none
-
-!     arguments
-      real*8  ::	stx     ! output, total band strength
-      real*8  ::	ts      ! input, temp for stx
-      real*8  ::        sx(nbox_max) ! output, strength for each box
-      real*8  ::	xtemp(nbox_max) ! input, temp for sx
-      integer  :: 	i
-
-!     local variables
-      integer :: 	k
-      real*8  ::        factor
-      real*8  ::        temperatura
-
-!     ***********
-
-      do 1, k=1,nbox
-         temperatura = xtemp(k)
-         if (abs(xtemp(k)-thist(1)).le.0.01d0) then
-            temperatura=thist(1)
-         elseif (abs(xtemp(k)-thist(nhist)).le.0.01d0) then
-            temperatura=thist(nhist)
-         elseif (xtemp(k).lt.thist(1)) then
-            temperatura=thist(1)
-            write (*,*) ' WARNING interstrhunt/ Too low atmosph Tk:'
-	    write (*,*) ' WARNING     k,xtemp(k) = ', k,xtemp(k)
-	    write (*,*) ' Minimum Tk in histogram used : ', thist(1)
-         elseif (xtemp(k).gt.thist(nhist)) then
-            temperatura=thist(nhist)
-            write (*,*) ' WARNING interstrhunt/ Very high atmosph Tk:'
-	    write (*,*) ' WARNING     k,xtemp(k) = ', k,xtemp(k)
-	    write (*,*) ' Max Tk in histogram used : ', thist(nhist)
-         endif
-         call huntdp ( thist,nhist, temperatura, i )
-         if ( i.eq.0 .or. i.eq.nhist ) then
-	    write(*,*)'HUNT/ Limits input grid:',  &
-                thist(1),thist(nhist)
-	    write(*,*)'HUNT/ location in grid:',xtemp(k)
-            stop 'INTERSTR/1/ Interpolation error. T out of Histogram.'
-         endif
-         factor = 1.d0 /  (thist(i+1)-thist(i))
-         sx(k) = ( sk1(i,k)   * (thist(i+1)-xtemp(k))  &
-              + sk1(i+1,k) * (xtemp(k)-thist(i))  ) * factor
- 1    continue
-
-
-      temperatura = ts
-      if (abs(ts-thist(1)).le.0.01d0) then
-         temperatura=thist(1)
-      elseif (abs(ts-thist(nhist)).le.0.01d0) then
-         temperatura=thist(nhist)
-      elseif (ts.lt.thist(1)) then
-         temperatura=thist(1)
-         write (*,*) ' WARNING interstrhunt/ Too low atmosph Tk:'
-         write (*,*) ' WARNING            ts = ', temperatura
-         write (*,*) ' Minimum Tk in histogram used : ', thist(1)
-      elseif (ts.gt.thist(nhist)) then
-         temperatura=thist(nhist)
-         write (*,*) ' WARNING interstrhunt/ Very high atmosph Tk:'
-         write (*,*) ' WARNING            ts = ', temperatura
-         write (*,*) ' Max Tk in histogram used : ', thist(nhist)
-      endif
-      call huntdp ( thist,nhist, temperatura, i )
-      if ( i.eq.0 .or. i.eq.nhist ) then
-         write (*,*) ' HUNT/ Limits input grid:',  &
-              thist(1),thist(nhist)
-         write (*,*) ' HUNT/ location in grid:', ts
-         stop ' INTERSTR/2/ Interpolat error. T out of Histogram.'
-      endif
-      factor = 1.d0 /  (thist(i+1)-thist(i))
-      stx = 0.d0
-      do k=1,nbox
-         stx = stx + no(k) * ( sk1(i,k)*(thist(i+1)-ts) +  &
-              sk1(i+1,k)*(ts-thist(i)) ) * factor
-      end do
-
-      end subroutine interstrhunt
+end subroutine intershphunt
 
 !     **********************************************************************
 
-      subroutine intzhunt (k, h, aco2,ap,amr,at, con)
+subroutine interstrhunt (i, stx, ts, sx, xtemp )
 
-!     k lleva la posicion de la ultima llamada a intz , necesario para
-!     que esto represente una aceleracion real.
+  !     **********************************************************************
+
+  use GITM_planet
+  !     use ModNLTE
+
+  !     include 'nlte_paramdef.h'
+  !     include 'nlte_commons.h'
+
+  implicit none
+
+  !     arguments
+  real*8  ::	stx     ! output, total band strength
+  real*8  ::	ts      ! input, temp for stx
+  real*8  ::        sx(nbox_max) ! output, strength for each box
+  real*8  ::	xtemp(nbox_max) ! input, temp for sx
+  integer  :: 	i
+
+  !     local variables
+  integer :: 	k
+  real*8  ::        factor
+  real*8  ::        temperatura
+
+  !     ***********
+
+  do k=1,nbox
+     temperatura = xtemp(k)
+     if (abs(xtemp(k)-thist(1)).le.0.01d0) then
+        temperatura=thist(1)
+     elseif (abs(xtemp(k)-thist(nhist)).le.0.01d0) then
+        temperatura=thist(nhist)
+     elseif (xtemp(k).lt.thist(1)) then
+        temperatura=thist(1)
+        write (*,*) ' WARNING interstrhunt/ Too low atmosph Tk:'
+        write (*,*) ' WARNING     k,xtemp(k) = ', k,xtemp(k)
+        write (*,*) ' Minimum Tk in histogram used : ', thist(1)
+     elseif (xtemp(k).gt.thist(nhist)) then
+        temperatura=thist(nhist)
+        write (*,*) ' WARNING interstrhunt/ Very high atmosph Tk:'
+        write (*,*) ' WARNING     k,xtemp(k) = ', k,xtemp(k)
+        write (*,*) ' Max Tk in histogram used : ', thist(nhist)
+     endif
+     call huntdp ( thist,nhist, temperatura, i )
+     if ( i.eq.0 .or. i.eq.nhist ) then
+        write(*,*)'HUNT/ Limits input grid:',  &
+             thist(1),thist(nhist)
+        write(*,*)'HUNT/ location in grid:',xtemp(k)
+        stop 'INTERSTR/1/ Interpolation error. T out of Histogram.'
+     endif
+     factor = 1.d0 /  (thist(i+1)-thist(i))
+     sx(k) = ( sk1(i,k)   * (thist(i+1)-xtemp(k))  &
+          + sk1(i+1,k) * (xtemp(k)-thist(i))  ) * factor
+  end do
+
+
+  temperatura = ts
+  if (abs(ts-thist(1)).le.0.01d0) then
+     temperatura=thist(1)
+  elseif (abs(ts-thist(nhist)).le.0.01d0) then
+     temperatura=thist(nhist)
+  elseif (ts.lt.thist(1)) then
+     temperatura=thist(1)
+     write (*,*) ' WARNING interstrhunt/ Too low atmosph Tk:'
+     write (*,*) ' WARNING            ts = ', temperatura
+     write (*,*) ' Minimum Tk in histogram used : ', thist(1)
+  elseif (ts.gt.thist(nhist)) then
+     temperatura=thist(nhist)
+     write (*,*) ' WARNING interstrhunt/ Very high atmosph Tk:'
+     write (*,*) ' WARNING            ts = ', temperatura
+     write (*,*) ' Max Tk in histogram used : ', thist(nhist)
+  endif
+  call huntdp ( thist,nhist, temperatura, i )
+  if ( i.eq.0 .or. i.eq.nhist ) then
+     write (*,*) ' HUNT/ Limits input grid:',  &
+          thist(1),thist(nhist)
+     write (*,*) ' HUNT/ location in grid:', ts
+     stop ' INTERSTR/2/ Interpolat error. T out of Histogram.'
+  endif
+  factor = 1.d0 /  (thist(i+1)-thist(i))
+  stx = 0.d0
+  do k=1,nbox
+     stx = stx + no(k) * ( sk1(i,k)*(thist(i+1)-ts) +  &
+          sk1(i+1,k)*(ts-thist(i)) ) * factor
+  end do
+
+end subroutine interstrhunt
+
 !     **********************************************************************
 
-      use GITM_planet
-!     use ModNLTE
+subroutine intzhunt (k, h, aco2,ap,amr,at, con)
 
-!     include 'nlte_paramdef.h'
-!     include 'nlte_commons.h'
+  !     k lleva la posicion de la ultima llamada a intz , necesario para
+  !     que esto represente una aceleracion real.
+  !     **********************************************************************
 
-      implicit none
+  use GITM_planet
+  !     use ModNLTE
 
-!     arguments
-      real  ::   	h       ! i
-      real*8  ::	con(nzy) ! i
-      real*8  ::	aco2, ap, at, amr ! o
-      integer  ::	k       ! i
+  !     include 'nlte_paramdef.h'
+  !     include 'nlte_commons.h'
 
-!     local variables
-      real  ::          factor
+  implicit none
 
-!     ************
+  !     arguments
+  real  ::   	h       ! i
+  real*8  ::	con(nzy) ! i
+  real*8  ::	aco2, ap, at, amr ! o
+  integer  ::	k       ! i
 
-      call hunt ( zy,nzy, h, k )
-      factor =  (h-zy(k)) /  (zy(k+1)-zy(k))
-      ap = dble( exp( log(py(k)) + log(py(k+1)/py(k)) * factor ) )
-      aco2 = dlog(con(k)) + dlog( con(k+1)/con(k) ) * dble(factor)
-      aco2 = exp( aco2 )
-      at = dble( ty(k) + (ty(k+1)-ty(k)) * factor )
-      amr = dble( mr(k) + (mr(k+1)-mr(k)) * factor )
+  !     local variables
+  real  ::          factor
 
-      end subroutine intzhunt
+  !     ************
+
+  call hunt ( zy,nzy, h, k )
+  factor =  (h-zy(k)) /  (zy(k+1)-zy(k))
+  ap = dble( exp( log(py(k)) + log(py(k+1)/py(k)) * factor ) )
+  aco2 = dlog(con(k)) + dlog( con(k+1)/con(k) ) * dble(factor)
+  aco2 = exp( aco2 )
+  at = dble( ty(k) + (ty(k+1)-ty(k)) * factor )
+  amr = dble( mr(k) + (mr(k+1)-mr(k)) * factor )
+
+end subroutine intzhunt
 
 !     **********************************************************************
 
-      subroutine intzhunt_cts (k,h,nzy_cts_real,aco2,ap,amr,at,con)
+subroutine intzhunt_cts (k,h,nzy_cts_real,aco2,ap,amr,at,con)
 
-!     k lleva la posicion de la ultima llamada a intz , necesario para
-!     que esto represente una aceleracion real.
-!     **********************************************************************
+  !     k lleva la posicion de la ultima llamada a intz , necesario para
+  !     que esto represente una aceleracion real.
+  !     **********************************************************************
 
-      use GITM_planet
-!     use ModNLTE
+  use GITM_planet
+  !     use ModNLTE
 
-!     include 'nlte_paramdef.h'
-!     include 'nlte_commons.h'
+  !     include 'nlte_paramdef.h'
+  !     include 'nlte_commons.h'
 
-      implicit none
+  implicit none
 
-!     arguments
-      real  ::		h       ! i
-      real*8  ::	con(nzy_cts) ! i
-      real*8  ::	aco2, ap, at, amr ! o
-      integer  ::	k       ! i
-      integer  ::       nzy_cts_real ! i
+  !     arguments
+  real  ::		h       ! i
+  real*8  ::	con(nzy_cts) ! i
+  real*8  ::	aco2, ap, at, amr ! o
+  integer  ::	k       ! i
+  integer  ::       nzy_cts_real ! i
 
-!     local variables
-      real  ::          factor
+  !     local variables
+  real  ::          factor
 
-!     ************
+  !     ************
 
-      call hunt_cts ( zy_cts,nzy_cts, nzy_cts_real, h, k )
-      factor =  (h-zy_cts(k)) /  (zy_cts(k+1)-zy_cts(k))
-      ap = dble( exp( log(py_cts(k)) +  &
-           log(py_cts(k+1)/py_cts(k)) * factor ) )
-      aco2 = dlog(con(k)) + dlog( con(k+1)/con(k) ) * dble(factor)
-      aco2 = exp( aco2 )
-      at = dble( ty_cts(k) + (ty_cts(k+1)-ty_cts(k)) * factor )
-      amr = dble( mr_cts(k) + (mr_cts(k+1)-mr_cts(k)) * factor )
+  call hunt_cts ( zy_cts,nzy_cts, nzy_cts_real, h, k )
+  factor =  (h-zy_cts(k)) /  (zy_cts(k+1)-zy_cts(k))
+  ap = dble( exp( log(py_cts(k)) +  &
+       log(py_cts(k+1)/py_cts(k)) * factor ) )
+  aco2 = dlog(con(k)) + dlog( con(k+1)/con(k) ) * dble(factor)
+  aco2 = exp( aco2 )
+  at = dble( ty_cts(k) + (ty_cts(k+1)-ty_cts(k)) * factor )
+  amr = dble( mr_cts(k) + (mr_cts(k+1)-mr_cts(k)) * factor )
 
 
-      end subroutine intzhunt_cts
+end subroutine intzhunt_cts
 
 
 !     **********************************************************************
 
 !     real*8 function we_clean  ( y,pl, xalsa, xalda )
-      real*8 function we_clean  ( y,pl2, xalsa, xalda )
+real*8 function we_clean  ( y,pl2, xalsa, xalda )
 
-!     **********************************************************************
+  !     **********************************************************************
 
-      use GITM_planet
-      use ModConstants, only : pi
-!     use ModNLTE
+  use GITM_planet
+  use ModConstants, only : pi
+  !     use ModNLTE
 
-!     include 'nlte_paramdef.h'
-!     include 'nlte_commons.h'
+  !     include 'nlte_paramdef.h'
+  !     include 'nlte_commons.h'
 
-      implicit none
+  implicit none
 
-!     arguments
-      real*8  ::	  y         ! I. path's absorber amount * strength
-!     real*8  ::          pl        ! I. path's partial pressure of CO2
-      real*8  ::          pl2        ! I. path's partial pressure of CO2
-      real*8  ::          xalsa     ! I.  Self lorentz linewidth for 1 isot & 1 box
-      real*8  ::          xalda     ! I.  Doppler linewidth        "           "
+  !     arguments
+  real*8  ::	  y         ! I. path's absorber amount * strength
+  !     real*8  ::          pl        ! I. path's partial pressure of CO2
+  real*8  ::          pl2        ! I. path's partial pressure of CO2
+  real*8  ::          xalsa     ! I.  Self lorentz linewidth for 1 isot & 1 box
+  real*8  ::          xalda     ! I.  Doppler linewidth        "           "
 
-!     local variables
-      integer  :: 	i
-      real*8   ::	x,wl,wd,wvoigt
-      real*8   ::	cn(0:7),dn(0:7)
-      real*8   ::       factor, denom
-!     real*8   ::       pi, pi2, sqrtpi
-      real*8   ::       pi2, sqrtpi
+  !     local variables
+  integer  :: 	i
+  real*8   ::	x,wl,wd,wvoigt
+  real*8   ::	cn(0:7),dn(0:7)
+  real*8   ::       factor, denom
+  !     real*8   ::       pi, pi2, sqrtpi
+  real*8   ::       pi2, sqrtpi
 
-!     data blocks
-      data cn/9.99998291698d-1,-3.53508187098d-1,9.60267807976d-2,  &
-           -2.04969011013d-2,3.43927368627d-3,-4.27593051557d-4,  &
-           3.42209457833d-5,-1.28380804108d-6/
-      data dn/1.99999898289,5.774919878d-1,-5.05367549898d-1,  &
-           8.21896973657d-1,-2.5222672453,6.1007027481,  &
-           -8.51001627836,4.6535116765/
+  !     data blocks
+  data cn/9.99998291698d-1,-3.53508187098d-1,9.60267807976d-2,  &
+       -2.04969011013d-2,3.43927368627d-3,-4.27593051557d-4,  &
+       3.42209457833d-5,-1.28380804108d-6/
+  data dn/1.99999898289,5.774919878d-1,-5.05367549898d-1,  &
+       8.21896973657d-1,-2.5222672453,6.1007027481,  &
+       -8.51001627836,4.6535116765/
 
-!     ***********
+  !     ***********
 
-!     pi = 3.141592
-      pi2= 6.28318531
-      sqrtpi = 1.77245385
+  !     pi = 3.141592
+  pi2= 6.28318531
+  sqrtpi = 1.77245385
 
-!     x=y / ( pi2 * xalsa*pl )
-      x=y / ( pi2 * xalsa*pl2 )
+  !     x=y / ( pi2 * xalsa*pl )
+  x=y / ( pi2 * xalsa*pl2 )
 
 
-!     Lorentz
-      wl=y/sqrt(1.0d0+pi*x/2.0d0)
+  !     Lorentz
+  wl=y/sqrt(1.0d0+pi*x/2.0d0)
 
-!     Doppler
-      x = y / (xalda*sqrtpi)
-      if (x .lt. 5.0d0) then
-         wd = cn(0)
-         factor = 1.d0
-         do i=1,7
-            factor = factor * x
-	    wd = wd + cn(i) * factor
-         end do
-         wd = xalda * x * sqrtpi * wd
-      else
-         wd = dn(0)
-         factor = 1.d0 / log(x)
-         denom = 1.d0
-         do i=1,7
-            denom = denom * factor
-	    wd = wd + dn(i) * denom
-         end do
-         wd = xalda * sqrt(log(x)) * wd
-      end if
+  !     Doppler
+  x = y / (xalda*sqrtpi)
+  if (x .lt. 5.0d0) then
+     wd = cn(0)
+     factor = 1.d0
+     do i=1,7
+        factor = factor * x
+        wd = wd + cn(i) * factor
+     end do
+     wd = xalda * x * sqrtpi * wd
+  else
+     wd = dn(0)
+     factor = 1.d0 / log(x)
+     denom = 1.d0
+     do i=1,7
+        denom = denom * factor
+        wd = wd + dn(i) * denom
+     end do
+     wd = xalda * sqrt(log(x)) * wd
+  end if
 
-!     Voigt
-      wvoigt = wl*wl + wd*wd - (wd*wl/y)*(wd*wl/y)
+  !     Voigt
+  wvoigt = wl*wl + wd*wd - (wd*wl/y)*(wd*wl/y)
 
-      if ( wvoigt .lt. 0.0d0 ) then
-       write (*,*) ' Subroutine WE/ Error in Voift EQS calculation'
-       write (*,*) '  WL, WD, X, Y = ', wl, wd, x, y
-       stop '  ERROR : Imaginary EQW. Revise spectral data. '
-      endif
+  if ( wvoigt .lt. 0.0d0 ) then
+     write (*,*) ' Subroutine WE/ Error in Voift EQS calculation'
+     write (*,*) '  WL, WD, X, Y = ', wl, wd, x, y
+     stop '  ERROR : Imaginary EQW. Revise spectral data. '
+  endif
 
-      we_clean = sqrt( wvoigt )
+  we_clean = sqrt( wvoigt )
 
-      end function we_clean
-
-!     ***********************************************************************
-
-      subroutine mztf_correccion (coninf, con, ib )
+end function we_clean
 
 !     ***********************************************************************
 
-      use GITM_planet
-!     use ModNLTE
+subroutine mztf_correccion (coninf, con, ib )
 
-!     include 'nlte_paramdef.h'
-!     include 'nlte_commons.h'
+  !     ***********************************************************************
 
-      implicit none
+  use GITM_planet
+  !     use ModNLTE
 
-!     arguments
-      integer  ::	ib
-      real*8  ::	con(nzy), coninf
+  !     include 'nlte_paramdef.h'
+  !     include 'nlte_commons.h'
 
-!     local variables
-      integer  :: 	i, isot
-      real*8   ::	tvt0(nzy), tvtbs(nzy), zld(nl),zyd(nzy)
-      real*8  ::        xqv, xes, xlower, xfactor
+  implicit none
 
-!     *********
+  !     arguments
+  integer  ::	ib
+  real*8  ::	con(nzy), coninf
 
-      isot = 1
-      nu11 = dble( nu(1,1) )
+  !     local variables
+  integer  :: 	i, isot
+  real*8   ::	tvt0(nzy), tvtbs(nzy), zld(nl),zyd(nzy)
+  real*8  ::        xqv, xes, xlower, xfactor
 
-      do i=1,nzy
-         zyd(i) = dble(zy(i))
-      enddo
-      do i=1,nl
-         zld(i) = dble( zl(i) )
-      end do
+  !     *********
 
-!     tvtbs
-      call interhuntdp (tvtbs,zyd,nzy, v626t1,zld,nl, 1 )
+  isot = 1
+  nu11 = dble( nu(1,1) )
 
-!     tvt0
-      if (ib.eq.2 .or. ib.eq.3 .or. ib.eq.4) then
-         call interhuntdp (tvt0,zyd,nzy, v626t1,zld,nl, 1 )
-      else
-         do i=1,nzy
-            tvt0(i) = dble( ty(i) )
-         end do
-      end if
+  do i=1,nzy
+     zyd(i) = dble(zy(i))
+  enddo
+  do i=1,nl
+     zld(i) = dble( zl(i) )
+  end do
 
-!     factor
-      do i=1,nzy
+  !     tvtbs
+  call interhuntdp (tvtbs,zyd,nzy, v626t1,zld,nl, 1 )
 
-         xlower = exp( ee*dble(elow(isot,ib)) *  &
-              ( 1.d0/dble(ty(i))-1.d0/tvt0(i) ) )
-         xes = 1.0d0
-         xqv = ( 1.d0-exp( -ee*nu11/tvtbs(i) ) ) /  &
-              (1.d0-exp( -ee*nu11/dble(ty(i)) ))
-         xfactor = xlower * xqv**2.d0 * xes
+  !     tvt0
+  if (ib.eq.2 .or. ib.eq.3 .or. ib.eq.4) then
+     call interhuntdp (tvt0,zyd,nzy, v626t1,zld,nl, 1 )
+  else
+     do i=1,nzy
+        tvt0(i) = dble( ty(i) )
+     end do
+  end if
 
-         con(i) = con(i) * xfactor
-         if (i.eq.nzy) coninf = coninf * xfactor
+  !     factor
+  do i=1,nzy
 
-      end do
+     xlower = exp( ee*dble(elow(isot,ib)) *  &
+          ( 1.d0/dble(ty(i))-1.d0/tvt0(i) ) )
+     xes = 1.0d0
+     xqv = ( 1.d0-exp( -ee*nu11/tvtbs(i) ) ) /  &
+          (1.d0-exp( -ee*nu11/dble(ty(i)) ))
+     xfactor = xlower * xqv**2.d0 * xes
 
-      end subroutine mztf_correccion
+     con(i) = con(i) * xfactor
+     if (i.eq.nzy) coninf = coninf * xfactor
+
+  end do
+
+end subroutine mztf_correccion
 
 !    ***********************************************************************
 
-      subroutine mzescape_normaliz ( taustar, istyle )
+subroutine mzescape_normaliz ( taustar, istyle )
+
+  !     ***********************************************************************
+
+  use GITM_planet
+  !     use ModNLTE
+
+  !     include 'nlte_paramdef.h'
+  !     include 'nlte_commons.h'
+
+  implicit none
+
+  !     arguments
+  real*8  :: 	taustar(nl) ! o
+  integer  ::       istyle    ! i
+
+  !     local variables and constants
+  integer  :: 	i, imaximum
+  real*8   ::       maximum
+
+  !     ***************
+
+  taustar(nl) = taustar(nl-1)
+
+  if ( istyle .eq. 1 ) then
+     imaximum = nl
+     maximum = taustar(nl)
+     do i=1,nl-1
+        if (taustar(i).gt.maximum) taustar(i) = taustar(nl)
+     enddo
+  elseif ( istyle .eq. 2 ) then
+     imaximum = nl
+     maximum = taustar(nl)
+     do i=nl-1,1,-1
+        if (taustar(i).gt.maximum) then
+           maximum = taustar(i)
+           imaximum = i
+        endif
+     enddo
+     do i=imaximum,nl
+        if (taustar(i).lt.maximum) taustar(i) = maximum
+     enddo
+  endif
+
+  do i=1,nl
+     taustar(i) = taustar(i) / maximum
+  enddo
+
+end subroutine mzescape_normaliz
 
 !     ***********************************************************************
 
-      use GITM_planet
-!     use ModNLTE
+subroutine mzescape_normaliz_02 ( taustar, nn, istyle )
 
-!     include 'nlte_paramdef.h'
-!     include 'nlte_commons.h'
+  !     ***********************************************************************
 
-      implicit none
+  use GITM_planet
+  !     use ModNLTE
 
-!     arguments
-      real*8  :: 	taustar(nl) ! o
-      integer  ::       istyle    ! i
+  !     include 'nlte_paramdef.h'
+  !     include 'nlte_commons.h'
 
-!     local variables and constants
-      integer  :: 	i, imaximum
-      real*8   ::       maximum
+  implicit none
 
-!     ***************
+  !     arguments
+  integer ::        nn        ! i
+  real*8  :: 	taustar(nn) ! i,o
+  integer ::        istyle    ! i
 
-      taustar(nl) = taustar(nl-1)
+  !     local variables and constants
+  integer  :: 	i, imaximum
+  real*8   ::       maximum
 
-      if ( istyle .eq. 1 ) then
-         imaximum = nl
-         maximum = taustar(nl)
-         do i=1,nl-1
-	    if (taustar(i).gt.maximum) taustar(i) = taustar(nl)
-         enddo
-      elseif ( istyle .eq. 2 ) then
-         imaximum = nl
-         maximum = taustar(nl)
-         do i=nl-1,1,-1
-	    if (taustar(i).gt.maximum) then
-	       maximum = taustar(i)
-	       imaximum = i
-	    endif
-         enddo
-         do i=imaximum,nl
-	    if (taustar(i).lt.maximum) taustar(i) = maximum
-         enddo
-      endif
+  !     ***************
 
-      do i=1,nl
-         taustar(i) = taustar(i) / maximum
-      enddo
+  taustar(nn) = taustar(nn-1)
 
-      end subroutine mzescape_normaliz
+  if ( istyle .eq. 1 ) then
+     imaximum = nn
+     maximum = taustar(nn)
+     do i=1,nn-1
+        if (taustar(i).gt.maximum) taustar(i) = taustar(nn)
+     enddo
+  elseif ( istyle .eq. 2 ) then
+     imaximum = nn
+     maximum = taustar(nn)
+     do i=nn-1,1,-1
+        if (taustar(i).gt.maximum) then
+           maximum = taustar(i)
+           imaximum = i
+        endif
+     enddo
+     do i=imaximum,nn
+        if (taustar(i).lt.maximum) taustar(i) = maximum
+     enddo
+  endif
 
-!     ***********************************************************************
+  do i=1,nn
+     taustar(i) = taustar(i) / maximum
+  enddo
 
-      subroutine mzescape_normaliz_02 ( taustar, nn, istyle )
-
-!     ***********************************************************************
-
-      use GITM_planet
-!     use ModNLTE
-
-!     include 'nlte_paramdef.h'
-!     include 'nlte_commons.h'
-
-      implicit none
-
-!     arguments
-      integer ::        nn        ! i
-      real*8  :: 	taustar(nn) ! i,o
-      integer ::        istyle    ! i
-
-!     local variables and constants
-      integer  :: 	i, imaximum
-      real*8   ::       maximum
-
-!     ***************
-
-      taustar(nn) = taustar(nn-1)
-
-      if ( istyle .eq. 1 ) then
-         imaximum = nn
-         maximum = taustar(nn)
-         do i=1,nn-1
-	    if (taustar(i).gt.maximum) taustar(i) = taustar(nn)
-         enddo
-      elseif ( istyle .eq. 2 ) then
-         imaximum = nn
-         maximum = taustar(nn)
-         do i=nn-1,1,-1
-	    if (taustar(i).gt.maximum) then
-	       maximum = taustar(i)
-	       imaximum = i
-	    endif
-         enddo
-         do i=imaximum,nn
-	    if (taustar(i).lt.maximum) taustar(i) = maximum
-         enddo
-      endif
-
-      do i=1,nn
-         taustar(i) = taustar(i) / maximum
-      enddo
-
-      end subroutine mzescape_normaliz_02
+end subroutine mzescape_normaliz_02
 
 
 !***********************************************************************
 !     *** interdp_ESCTVCISO_dlvr11.f ***
 !***********************************************************************
 
-      subroutine interdp_ESCTVCISO
+subroutine interdp_ESCTVCISO
 
-!***********************************************************************
+  !***********************************************************************
 
-      use GITM_planet
-!     use ModNLTE
+  use GITM_planet
+  !     use ModNLTE
 
-!     include 'nlte_paramdef.h'
-!     include 'nlte_commons.h'
+  !     include 'nlte_paramdef.h'
+  !     include 'nlte_commons.h'
 
-      implicit none
+  implicit none
 
-!     local variables
-      integer  ::    i
-      real*8   ::    lnpnb(nl)
+  !     local variables
+  integer  ::    i
+  real*8   ::    lnpnb(nl)
 
-!***********************************************************************
+  !***********************************************************************
 
-!     Use pressure in the NLTE grid but in log and in nb
-      do i=1,nl
-         lnpnb(i) = log( dble( pl(i) * 1013.25 * 1.e6) )
-      enddo
+  !     Use pressure in the NLTE grid but in log and in nb
+  do i=1,nl
+     lnpnb(i) = log( dble( pl(i) * 1013.25 * 1.e6) )
+  enddo
 
-!     Interpolations
+  !     Interpolations
 
-      call interhuntdp3veces  &
-           ( taustar21,taustar31,taustar41,    lnpnb, nl,  &
-           tstar21tab,tstar31tab,tstar41tab, lnpnbtab, nztabul, &
-           1 )
+  call interhuntdp3veces  &
+       ( taustar21,taustar31,taustar41,    lnpnb, nl,  &
+       tstar21tab,tstar31tab,tstar41tab, lnpnbtab, nztabul, &
+       1 )
 
-      call interhuntdp3veces ( vc210,vc310,vc410, lnpnb, nl, &
-           vc210tab,vc310tab,vc410tab, lnpnbtab, nztabul, 2 )
+  call interhuntdp3veces ( vc210,vc310,vc410, lnpnb, nl, &
+       vc210tab,vc310tab,vc410tab, lnpnbtab, nztabul, 2 )
 
-      end subroutine interdp_ESCTVCISO
+end subroutine interdp_ESCTVCISO
 
 
 ! ***********************************************************************
 !     *** hunt_cts.f ***
 ! ***********************************************************************
 
-      SUBROUTINE hunt_cts(xx,n,n_cts,x,jlo)
-!
-!     La dif con hunt es el uso de un indice superior (n_cts) mas bajito que (n)
-!
-!     Arguments
-      INTEGER :: jlo               ! O
-      INTEGER :: n                 ! I
-      INTEGER :: n_cts             ! I
-      REAL  :: xx(n)               ! I
-      REAL  :: x                   ! I
+SUBROUTINE hunt_cts(xx,n,n_cts,x,jlo)
+  !
+  !     La dif con hunt es el uso de un indice superior (n_cts) mas bajito que (n)
+  !
+  !     Arguments
+  INTEGER :: jlo               ! O
+  INTEGER :: n                 ! I
+  INTEGER :: n_cts             ! I
+  REAL  :: xx(n)               ! I
+  REAL  :: x                   ! I
 
-!     Local variables
-      INTEGER  :: inc,jhi,jm
-      LOGICAL :: ascnd
-!
-      ascnd=xx(n_cts).ge.xx(1)
-      if(jlo.le.0.or.jlo.gt.n_cts)then
-         jlo=0
-         jhi=n_cts+1
-         goto 3
-      endif
-      inc=1
-      if(x.ge.xx(jlo).eqv.ascnd)then
- 1       jhi=jlo+inc
-!     write (*,*) jlo
-         if(jhi.gt.n_cts)then
-            jhi=n_cts+1
-!     write (*,*) jhi-1
-         else if(x.ge.xx(jhi).eqv.ascnd)then
-            jlo=jhi
-            inc=inc+inc
-!     write (*,*) jlo
-            goto 1
-         endif
-      else
-         jhi=jlo
- 2       jlo=jhi-inc
-!     write (*,*) jlo
-         if(jlo.lt.1)then
-            jlo=0
-         else if(x.lt.xx(jlo).eqv.ascnd)then
-            jhi=jlo
-            inc=inc+inc
-            goto 2
-         endif
-      endif
- 3    if(jhi-jlo.eq.1)then
-         if(x.eq.xx(n_cts))jlo=n_cts-1
-         if(x.eq.xx(1))jlo=1
-!     write (*,*) jlo
-         return
-      endif
-      jm=(jhi+jlo)/2
-      if(x.ge.xx(jm).eqv.ascnd)then
-         jlo=jm
-      else
-         jhi=jm
-      endif
-!     write (*,*) jhi-1
-      goto 3
-!
-      END SUBROUTINE hunt_cts
+  !     Local variables
+  INTEGER  :: inc,jhi,jm
+  LOGICAL :: ascnd
+  !
+  ascnd=xx(n_cts).ge.xx(1)
+  if(jlo.le.0.or.jlo.gt.n_cts)then
+     jlo=0
+     jhi=n_cts+1
+     goto 3
+  endif
+  inc=1
+  if(x.ge.xx(jlo).eqv.ascnd)then
+1    jhi=jlo+inc
+     !     write (*,*) jlo
+     if(jhi.gt.n_cts)then
+        jhi=n_cts+1
+        !     write (*,*) jhi-1
+     else if(x.ge.xx(jhi).eqv.ascnd)then
+        jlo=jhi
+        inc=inc+inc
+        !     write (*,*) jlo
+        goto 1
+     endif
+  else
+     jhi=jlo
+2    jlo=jhi-inc
+     !     write (*,*) jlo
+     if(jlo.lt.1)then
+        jlo=0
+     else if(x.lt.xx(jlo).eqv.ascnd)then
+        jhi=jlo
+        inc=inc+inc
+        goto 2
+     endif
+  endif
+3 if(jhi-jlo.eq.1)then
+     if(x.eq.xx(n_cts))jlo=n_cts-1
+     if(x.eq.xx(1))jlo=1
+     !     write (*,*) jlo
+     return
+  endif
+  jm=(jhi+jlo)/2
+  if(x.ge.xx(jm).eqv.ascnd)then
+     jlo=jm
+  else
+     jhi=jm
+  endif
+  !     write (*,*) jhi-1
+  goto 3
+  !
+END SUBROUTINE hunt_cts
 
 
 ! *****************************************************
 !     *** huntdp.f ***
 ! *****************************************************
 
-      SUBROUTINE huntdp(xx,n,x,jlo)
-!
-!     Arguments
-      INTEGER :: jlo  ! O
-      INTEGER :: n    ! I
-      REAL*8  :: xx(n)             ! I
-      REAL*8  :: x                 ! I
+SUBROUTINE huntdp(xx,n,x,jlo)
+  !
+  !     Arguments
+  INTEGER :: jlo  ! O
+  INTEGER :: n    ! I
+  REAL*8  :: xx(n)             ! I
+  REAL*8  :: x                 ! I
 
-!     Local variables
-      INTEGER :: inc,jhi,jm
-      LOGICAL :: ascnd
-!
-      ascnd=xx(n).ge.xx(1)
-      if(jlo.le.0.or.jlo.gt.n)then
-         jlo=0
-         jhi=n+1
-         goto 3
-      endif
-      inc=1
-      if(x.ge.xx(jlo).eqv.ascnd)then
- 1       jhi=jlo+inc
-         if(jhi.gt.n)then
-            jhi=n+1
-         else if(x.ge.xx(jhi).eqv.ascnd)then
-            jlo=jhi
-            inc=inc+inc
-            goto 1
-         endif
-      else
-         jhi=jlo
- 2       jlo=jhi-inc
-         if(jlo.lt.1)then
-            jlo=0
-         else if(x.lt.xx(jlo).eqv.ascnd)then
-            jhi=jlo
-            inc=inc+inc
-            goto 2
-         endif
-      endif
- 3    if(jhi-jlo.eq.1)then
-         if(x.eq.xx(n))jlo=n-1
-         if(x.eq.xx(1))jlo=1
-         return
-      endif
-      jm=(jhi+jlo)/2
-      if(x.ge.xx(jm).eqv.ascnd)then
-         jlo=jm
-      else
-         jhi=jm
-      endif
-      goto 3
+  !     Local variables
+  INTEGER :: inc,jhi,jm
+  LOGICAL :: ascnd
+  !
+  ascnd=xx(n).ge.xx(1)
+  if(jlo.le.0.or.jlo.gt.n)then
+     jlo=0
+     jhi=n+1
+     goto 3
+  endif
+  inc=1
+  if(x.ge.xx(jlo).eqv.ascnd)then
+1    jhi=jlo+inc
+     if(jhi.gt.n)then
+        jhi=n+1
+     else if(x.ge.xx(jhi).eqv.ascnd)then
+        jlo=jhi
+        inc=inc+inc
+        goto 1
+     endif
+  else
+     jhi=jlo
+2    jlo=jhi-inc
+     if(jlo.lt.1)then
+        jlo=0
+     else if(x.lt.xx(jlo).eqv.ascnd)then
+        jhi=jlo
+        inc=inc+inc
+        goto 2
+     endif
+  endif
+3 if(jhi-jlo.eq.1)then
+     if(x.eq.xx(n))jlo=n-1
+     if(x.eq.xx(1))jlo=1
+     return
+  endif
+  jm=(jhi+jlo)/2
+  if(x.ge.xx(jm).eqv.ascnd)then
+     jlo=jm
+  else
+     jhi=jm
+  endif
+  goto 3
 
-      END SUBROUTINE huntdp
+END SUBROUTINE huntdp
 
 ! *****************************************************
 !     *** hunt.f ***
 ! *****************************************************
 
-      SUBROUTINE hunt(xx,n,x,jlo)
+SUBROUTINE hunt(xx,n,x,jlo)
 
-!     Arguments
-      INTEGER :: jlo               ! O
-      INTEGER :: n                 ! I
-      REAL  ::   xx(n)               ! I
-      REAL  ::   x                   ! I
+  !     Arguments
+  INTEGER :: jlo               ! O
+  INTEGER :: n                 ! I
+  REAL  ::   xx(n)               ! I
+  REAL  ::   x                   ! I
 
-!     Local variables
-      INTEGER :: inc,jhi,jm
-      LOGICAL :: ascnd
-!
+  !     Local variables
+  INTEGER :: inc,jhi,jm
+  LOGICAL :: ascnd
+  !
 
-      ascnd=xx(n).ge.xx(1)
-      if(jlo.le.0.or.jlo.gt.n)then
-         jlo=0
-         jhi=n+1
-         goto 3
-      endif
-      inc=1
-      if(x.ge.xx(jlo).eqv.ascnd)then
- 1       jhi=jlo+inc
-!     write (*,*) jlo
-         if(jhi.gt.n)then
-            jhi=n+1
-!     write (*,*) jhi-1
-         else if(x.ge.xx(jhi).eqv.ascnd)then
-            jlo=jhi
-            inc=inc+inc
-!     write (*,*) jlo
-            goto 1
-         endif
-      else
-         jhi=jlo
- 2       jlo=jhi-inc
-!     write (*,*) jlo
-         if(jlo.lt.1)then
-            jlo=0
-         else if(x.lt.xx(jlo).eqv.ascnd)then
-            jhi=jlo
-            inc=inc+inc
-            goto 2
-         endif
-      endif
- 3    if(jhi-jlo.eq.1)then
-         if(x.eq.xx(n))jlo=n-1
-         if(x.eq.xx(1))jlo=1
-!     write (*,*) jlo
-         return
-      endif
-      jm=(jhi+jlo)/2
-      if(x.ge.xx(jm).eqv.ascnd)then
-         jlo=jm
-      else
-         jhi=jm
-      endif
-!     write (*,*) jhi-1
-      goto 3
+  ascnd=xx(n).ge.xx(1)
+  if(jlo.le.0.or.jlo.gt.n)then
+     jlo=0
+     jhi=n+1
+     goto 3
+  endif
+  inc=1
+  if(x.ge.xx(jlo).eqv.ascnd)then
+1    jhi=jlo+inc
+     !     write (*,*) jlo
+     if(jhi.gt.n)then
+        jhi=n+1
+        !     write (*,*) jhi-1
+     else if(x.ge.xx(jhi).eqv.ascnd)then
+        jlo=jhi
+        inc=inc+inc
+        !     write (*,*) jlo
+        goto 1
+     endif
+  else
+     jhi=jlo
+2    jlo=jhi-inc
+     !     write (*,*) jlo
+     if(jlo.lt.1)then
+        jlo=0
+     else if(x.lt.xx(jlo).eqv.ascnd)then
+        jhi=jlo
+        inc=inc+inc
+        goto 2
+     endif
+  endif
+3 if(jhi-jlo.eq.1)then
+     if(x.eq.xx(n))jlo=n-1
+     if(x.eq.xx(1))jlo=1
+     !     write (*,*) jlo
+     return
+  endif
+  jm=(jhi+jlo)/2
+  if(x.ge.xx(jm).eqv.ascnd)then
+     jlo=jm
+  else
+     jhi=jm
+  endif
+  !     write (*,*) jhi-1
+  goto 3
 
-      END SUBROUTINE hunt
+END SUBROUTINE hunt
 
 ! **************************************************************************
 !     *** interdp_limits.f ***
 ! **************************************************************************
 
-      subroutine interdp_limits ( yy, zz, m,   i1,i2,  &
-           y,  z, n,   j1,j2,  opt)
+subroutine interdp_limits ( yy, zz, m,   i1,i2,  &
+     y,  z, n,   j1,j2,  opt)
 
-! **************************************************************************
-!     Interpolation soubroutine.
-!     Returns values between indexes i1 & i2, donde  1 =< i1 =< i2 =< m
-!     Solo usan los indices de los inputs entre j1,j2, 1 =< j1 =< j2 =< n
-!     Input values: y(n) , z(n)  (solo se usarann los valores entre j1,j2)
-!     zz(m) (solo se necesita entre i1,i2)
-!     Output values: yy(m) (solo se calculan entre i1,i2)
-!     Options:    opt=1 -> lineal ,,  opt=2 -> logarithmic
-!     Difference with interdp:
-!     here interpolation proceeds between indexes i1,i2 only
-!     if i1=1 & i2=m, both subroutines are exactly the same
-!     thus previous calls to interdp or interdp2 could be easily replaced
-!     JAN 98 	MALV 		Version for mz1d
-!     ***********************************************************************
+  ! **************************************************************************
+  !     Interpolation soubroutine.
+  !     Returns values between indexes i1 & i2, donde  1 =< i1 =< i2 =< m
+  !     Solo usan los indices de los inputs entre j1,j2, 1 =< j1 =< j2 =< n
+  !     Input values: y(n) , z(n)  (solo se usarann los valores entre j1,j2)
+  !     zz(m) (solo se necesita entre i1,i2)
+  !     Output values: yy(m) (solo se calculan entre i1,i2)
+  !     Options:    opt=1 -> lineal ,,  opt=2 -> logarithmic
+  !     Difference with interdp:
+  !     here interpolation proceeds between indexes i1,i2 only
+  !     if i1=1 & i2=m, both subroutines are exactly the same
+  !     thus previous calls to interdp or interdp2 could be easily replaced
+  !     JAN 98 	MALV 		Version for mz1d
+  !     ***********************************************************************
 
-      implicit none
+  implicit none
 
-!     Arguments
-      integer 	:: n,m             ! I. Dimensions
-      integer 	:: i1, i2, j1, j2, opt ! I
-      real*8    :: zz(m)   ! I
-      real*8    :: yy(m)   ! O
-      real*8    :: z(n),y(n) ! I
+  !     Arguments
+  integer 	:: n,m             ! I. Dimensions
+  integer 	:: i1, i2, j1, j2, opt ! I
+  real*8    :: zz(m)   ! I
+  real*8    :: yy(m)   ! O
+  real*8    :: z(n),y(n) ! I
 
-!     Local variables
-      integer  :: 	i,j
-      real*8   ::	zmin,zzmin,zmax,zzmax
+  !     Local variables
+  integer  :: 	i,j
+  real*8   ::	zmin,zzmin,zmax,zzmax
 
-!     *******************************
+  !     *******************************
 
-!     write (*,*) ' d interpolating '
-!     call mindp_limits (z,n,zmin, j1,j2)
-!     call mindp_limits (zz,m,zzmin, i1,i2)
-!     call maxdp_limits (z,n,zmax, j1,j2)
-!     call maxdp_limits (zz,m,zzmax, i1,i2)
-      zmin=minval(z(j1:j2))
-      zzmin=minval(zz(i1:i2))
-      zmax=maxval(z(j1:j2))
-      zzmax=maxval(zz(i1:i2))
+  !     write (*,*) ' d interpolating '
+  !     call mindp_limits (z,n,zmin, j1,j2)
+  !     call mindp_limits (zz,m,zzmin, i1,i2)
+  !     call maxdp_limits (z,n,zmax, j1,j2)
+  !     call maxdp_limits (zz,m,zzmax, i1,i2)
+  zmin=minval(z(j1:j2))
+  zzmin=minval(zz(i1:i2))
+  zmax=maxval(z(j1:j2))
+  zzmax=maxval(zz(i1:i2))
 
-! *********************************************************************
-!  Throwing error for equal quantities (to 15 significant digits)
-!  (test by turning off check): S.Bougher (12/13/2017)
-!     if(zzmin.lt.zmin)then
-!        write (*,*) 'from d interp: new variable out of limits'
-!        write (*,*) zzmin,'must be .ge. ',zmin
-!        stop
-! *********************************************************************
-!     elseif(zzmax.gt.zmax)then
-!     type *,'from interp: new variable out of limits'
-!     type *,zzmax, 'must be .le. ',zmax
-!     stop
-!     end if
-! *********************************************************************
+  ! *********************************************************************
+  !  Throwing error for equal quantities (to 15 significant digits)
+  !  (test by turning off check): S.Bougher (12/13/2017)
+  !     if(zzmin.lt.zmin)then
+  !        write (*,*) 'from d interp: new variable out of limits'
+  !        write (*,*) zzmin,'must be .ge. ',zmin
+  !        stop
+  ! *********************************************************************
+  !     elseif(zzmax.gt.zmax)then
+  !     type *,'from interp: new variable out of limits'
+  !     type *,zzmax, 'must be .le. ',zmax
+  !     stop
+  !     end if
+  ! *********************************************************************
 
-      do 1,i=i1,i2
+  do i=i1,i2
 
-         do 2,j=j1,j2-1
-            if(zz(i).ge.z(j).and.zz(i).lt.z(j+1)) goto 3
- 2       continue
+     do j=j1,j2-1
+        if(zz(i).ge.z(j).and.zz(i).lt.z(j+1)) goto 3
+     end do
 
-!     in this case (zz(i2).eq.z(j2)) and j leaves the loop with j=j2-1+1=j2
-         if(opt.eq.1)then
-            yy(i)=y(j2-1)+(y(j2)-y(j2-1))*(zz(i)-z(j2-1))/  &
-                 (z(j2)-z(j2-1))
-         elseif(opt.eq.2)then
-            if(y(j2).eq.0.0d0.or.y(j2-1).eq.0.0d0)then
-               yy(i)=0.0d0
-            else
-               yy(i)=exp(log(y(j2-1))+log(y(j2)/y(j2-1))*  &
-                    (zz(i)-z(j2-1))/(z(j2)-z(j2-1)))
-            end if
-         else
-            write (*,*) ' d interp : opt must be 1 or 2, opt= ',opt
-         end if
-         goto 1
- 3       continue
-         if(opt.eq.1)then
-            yy(i)=y(j)+(y(j+1)-y(j))*(zz(i)-z(j))/(z(j+1)-z(j))
-!     type *, ' '
-!     type *, ' z(j),z(j+1) =', z(j),z(j+1)
-!     type *, ' t(j),t(j+1) =', y(j),y(j+1)
-!     type *, ' zz, tt =  ', zz(i), yy(i)
-         elseif(opt.eq.2)then
-            if(y(j+1).eq.0.0d0.or.y(j).eq.0.0d0)then
-               yy(i)=0.0d0
-            else
-               yy(i)=exp(log(y(j))+log(y(j+1)/y(j))*  &
-                    (zz(i)-z(j))/(z(j+1)-z(j)))
-            end if
-         else
-            write (*,*) ' interp : opt must be 1 or 2, opt= ',opt
-         end if
- 1    continue
+     !     in this case (zz(i2).eq.z(j2)) and j leaves the loop with j=j2-1+1=j2
+     if(opt.eq.1)then
+        yy(i)=y(j2-1)+(y(j2)-y(j2-1))*(zz(i)-z(j2-1))/  &
+             (z(j2)-z(j2-1))
+     elseif(opt.eq.2)then
+        if(y(j2).eq.0.0d0.or.y(j2-1).eq.0.0d0)then
+           yy(i)=0.0d0
+        else
+           yy(i)=exp(log(y(j2-1))+log(y(j2)/y(j2-1))*  &
+                (zz(i)-z(j2-1))/(z(j2)-z(j2-1)))
+        end if
+     else
+        write (*,*) ' d interp : opt must be 1 or 2, opt= ',opt
+     end if
+     CYCLE
+3    continue
+     if(opt.eq.1)then
+        yy(i)=y(j)+(y(j+1)-y(j))*(zz(i)-z(j))/(z(j+1)-z(j))
+        !     type *, ' '
+        !     type *, ' z(j),z(j+1) =', z(j),z(j+1)
+        !     type *, ' t(j),t(j+1) =', y(j),y(j+1)
+        !     type *, ' zz, tt =  ', zz(i), yy(i)
+     elseif(opt.eq.2)then
+        if(y(j+1).eq.0.0d0.or.y(j).eq.0.0d0)then
+           yy(i)=0.0d0
+        else
+           yy(i)=exp(log(y(j))+log(y(j+1)/y(j))*  &
+                (zz(i)-z(j))/(z(j+1)-z(j)))
+        end if
+     else
+        write (*,*) ' interp : opt must be 1 or 2, opt= ',opt
+     end if
+  end do
 
-      end subroutine interdp_limits
+end subroutine interdp_limits
 
 ! ***************************************************************************
 !     *** interhunt2veces.f ***
 ! ***************************************************************************
 
-      subroutine interhunt2veces ( y1,y2,  zz,m,  &
-          x1,x2,  z,n,  opt)
+subroutine interhunt2veces ( y1,y2,  zz,m,  &
+     x1,x2,  z,n,  opt)
 
-!     interpolation soubroutine basada en Numerical Recipes HUNT.FOR
-!     input values: y(n) at z(n)
-!     output values: yy(m) at zz(m)
-!     options: 1 -> lineal
-!     2 -> logarithmic
-!     ***********************************************************************
+  !     interpolation soubroutine basada en Numerical Recipes HUNT.FOR
+  !     input values: y(n) at z(n)
+  !     output values: yy(m) at zz(m)
+  !     options: 1 -> lineal
+  !     2 -> logarithmic
+  !     ***********************************************************************
 
-      implicit none
+  implicit none
 
-!     Arguments
-      integer	:: n,m,opt         ! I
-      real	:: zz(m),z(n)      ! I
-      real      :: y1(m),y2(m)       ! O
-      real      :: x1(n),x2(n)       ! I
+  !     Arguments
+  integer	:: n,m,opt         ! I
+  real	:: zz(m),z(n)      ! I
+  real      :: y1(m),y2(m)       ! O
+  real      :: x1(n),x2(n)       ! I
 
 
-!     Local variables
-      integer :: i, j
-      real    :: factor
-      real    :: zaux
+  !     Local variables
+  integer :: i, j
+  real    :: factor
+  real    :: zaux
 
 !!!!
 
-      j = 1                     ! initial first guess (=n/2 is anothr pssblty)
+  j = 1                     ! initial first guess (=n/2 is anothr pssblty)
 
-      do 1,i=1,m                !
+  do i=1,m                !
 
-                                ! Busca indice j donde ocurre q zz(i) esta entre [z(j),z(j+1)]
-         zaux = zz(i)
-         if (abs(zaux-z(1)).le.0.01) then
-            zaux=z(1)
-         elseif (abs(zaux-z(n)).le.0.01) then
-            zaux=z(n)
-         endif
-         call hunt ( z,n, zaux, j )
-         if ( j.eq.0 .or. j.eq.n ) then
-	    write (*,*) ' HUNT/ Limits input grid:', z(1),z(n)
-	    write (*,*) ' HUNT/ location in new grid:', zz(i)
-            stop ' interhunt2/ Interpolat error. zz out of limits.'
-         endif
+     ! Busca indice j donde ocurre q zz(i) esta entre [z(j),z(j+1)]
+     zaux = zz(i)
+     if (abs(zaux-z(1)).le.0.01) then
+        zaux=z(1)
+     elseif (abs(zaux-z(n)).le.0.01) then
+        zaux=z(n)
+     endif
+     call hunt ( z,n, zaux, j )
+     if ( j.eq.0 .or. j.eq.n ) then
+        write (*,*) ' HUNT/ Limits input grid:', z(1),z(n)
+        write (*,*) ' HUNT/ location in new grid:', zz(i)
+        stop ' interhunt2/ Interpolat error. zz out of limits.'
+     endif
 
-                                ! Perform interpolation
-         factor = (zz(i)-z(j))/(z(j+1)-z(j))
-         if (opt.eq.1) then
-	    y1(i) = x1(j) + (x1(j+1)-x1(j)) * factor
-	    y2(i) = x2(j) + (x2(j+1)-x2(j)) * factor
-         else
-	    y1(i) = exp( log(x1(j)) + log(x1(j+1)/x1(j)) * factor )
-	    y2(i) = exp( log(x2(j)) + log(x2(j+1)/x2(j)) * factor )
-         end if
+     ! Perform interpolation
+     factor = (zz(i)-z(j))/(z(j+1)-z(j))
+     if (opt.eq.1) then
+        y1(i) = x1(j) + (x1(j+1)-x1(j)) * factor
+        y2(i) = x2(j) + (x2(j+1)-x2(j)) * factor
+     else
+        y1(i) = exp( log(x1(j)) + log(x1(j+1)/x1(j)) * factor )
+        y2(i) = exp( log(x2(j)) + log(x2(j+1)/x2(j)) * factor )
+     end if
+  end do
 
- 1    continue
-
-      end subroutine interhunt2veces
+end subroutine interhunt2veces
 
 ! ***************************************************************************
 !     *** interhunt5veces.f ***
 ! ***************************************************************************
 
-      subroutine interhunt5veces ( y1,y2,y3,y4,y5,  zz,m,  &
-           x1,x2,x3,x4,x5,  z,n,  opt)
+subroutine interhunt5veces ( y1,y2,y3,y4,y5,  zz,m,  &
+     x1,x2,x3,x4,x5,  z,n,  opt)
 
-! ***************************************************************************
-!     interpolation soubroutine basada en Numerical Recipes HUNT.FOR
-!     input values: y(n) at z(n)
-!     output values: yy(m) at zz(m)
-!     options: 1 -> lineal
-!     2 -> logarithmic
-!     ***********************************************************************
+  ! ***************************************************************************
+  !     interpolation soubroutine basada en Numerical Recipes HUNT.FOR
+  !     input values: y(n) at z(n)
+  !     output values: yy(m) at zz(m)
+  !     options: 1 -> lineal
+  !     2 -> logarithmic
+  !     ***********************************************************************
 
-      implicit none
-!     Arguments
-      integer	:: n,m,opt         ! I
-      real	:: zz(m),z(n)      ! I
-      real      :: y1(m),y2(m),y3(m),y4(m),y5(m) ! O
-      real      :: x1(n),x2(n),x3(n),x4(n),x5(n) ! I
+  implicit none
+  !     Arguments
+  integer	:: n,m,opt         ! I
+  real	:: zz(m),z(n)      ! I
+  real      :: y1(m),y2(m),y3(m),y4(m),y5(m) ! O
+  real      :: x1(n),x2(n),x3(n),x4(n),x5(n) ! I
 
 
-!     Local variables
-      integer :: i, j
-      real    :: factor
-      real    :: zaux
+  !     Local variables
+  integer :: i, j
+  real    :: factor
+  real    :: zaux
 
 !!!!
 
-      j = 1                     ! initial first guess (=n/2 is anothr pssblty)
+  j = 1                     ! initial first guess (=n/2 is anothr pssblty)
 
-      do 1,i=1,m                !
+  do i=1,m
 
-                                ! Busca indice j donde ocurre q zz(i) esta entre [z(j),z(j+1)]
-         zaux = zz(i)
-         if (abs(zaux-z(1)).le.0.01) then
-            zaux=z(1)
-         elseif (abs(zaux-z(n)).le.0.01) then
-            zaux=z(n)
-         endif
-         call hunt ( z,n, zaux, j )
-         if ( j.eq.0 .or. j.eq.n ) then
-	    write (*,*) ' HUNT/ Limits input grid:', z(1),z(n)
-	    write (*,*) ' HUNT/ location in new grid:', zz(i)
-            stop ' interhunt5/ Interpolat error. zz out of limits.'
-         endif
+     ! Busca indice j donde ocurre q zz(i) esta entre [z(j),z(j+1)]
+     zaux = zz(i)
+     if (abs(zaux-z(1)).le.0.01) then
+        zaux=z(1)
+     elseif (abs(zaux-z(n)).le.0.01) then
+        zaux=z(n)
+     endif
+     call hunt ( z,n, zaux, j )
+     if ( j.eq.0 .or. j.eq.n ) then
+        write (*,*) ' HUNT/ Limits input grid:', z(1),z(n)
+        write (*,*) ' HUNT/ location in new grid:', zz(i)
+        stop ' interhunt5/ Interpolat error. zz out of limits.'
+     endif
 
-                                ! Perform interpolation
-         factor = (zz(i)-z(j))/(z(j+1)-z(j))
-         if (opt.eq.1) then
-	    y1(i) = x1(j) + (x1(j+1)-x1(j)) * factor
-	    y2(i) = x2(j) + (x2(j+1)-x2(j)) * factor
-	    y3(i) = x3(j) + (x3(j+1)-x3(j)) * factor
-	    y4(i) = x4(j) + (x4(j+1)-x4(j)) * factor
-	    y5(i) = x5(j) + (x5(j+1)-x5(j)) * factor
-         else
-	    y1(i) = exp( log(x1(j)) + log(x1(j+1)/x1(j)) * factor )
-	    y2(i) = exp( log(x2(j)) + log(x2(j+1)/x2(j)) * factor )
-	    y3(i) = exp( log(x3(j)) + log(x3(j+1)/x3(j)) * factor )
-	    y4(i) = exp( log(x4(j)) + log(x4(j+1)/x4(j)) * factor )
-	    y5(i) = exp( log(x5(j)) + log(x5(j+1)/x5(j)) * factor )
-         end if
+     ! Perform interpolation
+     factor = (zz(i)-z(j))/(z(j+1)-z(j))
+     if (opt.eq.1) then
+        y1(i) = x1(j) + (x1(j+1)-x1(j)) * factor
+        y2(i) = x2(j) + (x2(j+1)-x2(j)) * factor
+        y3(i) = x3(j) + (x3(j+1)-x3(j)) * factor
+        y4(i) = x4(j) + (x4(j+1)-x4(j)) * factor
+        y5(i) = x5(j) + (x5(j+1)-x5(j)) * factor
+     else
+        y1(i) = exp( log(x1(j)) + log(x1(j+1)/x1(j)) * factor )
+        y2(i) = exp( log(x2(j)) + log(x2(j+1)/x2(j)) * factor )
+        y3(i) = exp( log(x3(j)) + log(x3(j+1)/x3(j)) * factor )
+        y4(i) = exp( log(x4(j)) + log(x4(j+1)/x4(j)) * factor )
+        y5(i) = exp( log(x5(j)) + log(x5(j+1)/x5(j)) * factor )
+     end if
+  end do
 
- 1    continue
-
-      end subroutine interhunt5veces
+end subroutine interhunt5veces
 
 ! ***************************************************************************
 !     *** interhuntdp3veces.f ***
 
 ! ***************************************************************************
 
-      subroutine interhuntdp3veces ( y1,y2,y3, zz,m,  &
-          x1,x2,x3,  z,n,  opt)
+subroutine interhuntdp3veces ( y1,y2,y3, zz,m,  &
+     x1,x2,x3,  z,n,  opt)
 
-! ***************************************************************************
-!     interpolation soubroutine basada en Numerical Recipes HUNT.FOR
-!     input values: x(n) at z(n)
-!     output values: y(m) at zz(m)
-!     options: opt = 1 -> lineal
-!     opt=/=1 -> logarithmic
-!     ***********************************************************************
-!     Arguments
-      integer	:: n,m,opt         ! I
-      real*8	:: zz(m),z(n)      ! I
-      real*8    :: y1(m),y2(m),y3(m) ! O
-      real*8    :: x1(n),x2(n),x3(n) ! I
+  ! ***************************************************************************
+  !     interpolation soubroutine basada en Numerical Recipes HUNT.FOR
+  !     input values: x(n) at z(n)
+  !     output values: y(m) at zz(m)
+  !     options: opt = 1 -> lineal
+  !     opt=/=1 -> logarithmic
+  !     ***********************************************************************
+  !     Arguments
+  integer	:: n,m,opt         ! I
+  real*8	:: zz(m),z(n)      ! I
+  real*8    :: y1(m),y2(m),y3(m) ! O
+  real*8    :: x1(n),x2(n),x3(n) ! I
 
 
-!     Local variables
-      integer ::  i, j
-      real*8  ::  factor
-      real*8  ::  zaux
+  !     Local variables
+  integer ::  i, j
+  real*8  ::  factor
+  real*8  ::  zaux
 
 !!!!
 
-      j = 1                     ! initial first guess (=n/2 is anothr pssblty)
+  j = 1                     ! initial first guess (=n/2 is anothr pssblty)
 
-      do 1,i=1,m                !
+  do i=1,m                !
 
-                                ! Busca indice j donde ocurre q zz(i) esta entre [z(j),z(j+1)]
-         zaux = zz(i)
-         if (abs(zaux-z(1)).le.0.01d0) then
-            zaux=z(1)
-         elseif (abs(zaux-z(n)).le.0.01d0) then
-            zaux=z(n)
-         endif
-         call huntdp ( z,n, zaux, j )
-         if ( j.eq.0 .or. j.eq.n ) then
-	    write (*,*) ' HUNT/ Limits input grid:', z(1),z(n)
-	    write (*,*) ' HUNT/ location in new grid:', zz(i)
-            stop ' INTERHUNTDP3/ Interpolat error. zz out of limits.'
-         endif
+     ! Busca indice j donde ocurre q zz(i) esta entre [z(j),z(j+1)]
+     zaux = zz(i)
+     if (abs(zaux-z(1)).le.0.01d0) then
+        zaux=z(1)
+     elseif (abs(zaux-z(n)).le.0.01d0) then
+        zaux=z(n)
+     endif
+     call huntdp ( z,n, zaux, j )
+     if ( j.eq.0 .or. j.eq.n ) then
+        write (*,*) ' HUNT/ Limits input grid:', z(1),z(n)
+        write (*,*) ' HUNT/ location in new grid:', zz(i)
+        stop ' INTERHUNTDP3/ Interpolat error. zz out of limits.'
+     endif
 
-                                ! Perform interpolation
-         factor = (zz(i)-z(j))/(z(j+1)-z(j))
-         if (opt.eq.1) then
-	    y1(i) = x1(j) + (x1(j+1)-x1(j)) * factor
-	    y2(i) = x2(j) + (x2(j+1)-x2(j)) * factor
-	    y3(i) = x3(j) + (x3(j+1)-x3(j)) * factor
-         else
-	    y1(i) = dexp( dlog(x1(j)) + dlog(x1(j+1)/x1(j)) * factor )
-	    y2(i) = dexp( dlog(x2(j)) + dlog(x2(j+1)/x2(j)) * factor )
-	    y3(i) = dexp( dlog(x3(j)) + dlog(x3(j+1)/x3(j)) * factor )
-         end if
+     ! Perform interpolation
+     factor = (zz(i)-z(j))/(z(j+1)-z(j))
+     if (opt.eq.1) then
+        y1(i) = x1(j) + (x1(j+1)-x1(j)) * factor
+        y2(i) = x2(j) + (x2(j+1)-x2(j)) * factor
+        y3(i) = x3(j) + (x3(j+1)-x3(j)) * factor
+     else
+        y1(i) = dexp( dlog(x1(j)) + dlog(x1(j+1)/x1(j)) * factor )
+        y2(i) = dexp( dlog(x2(j)) + dlog(x2(j+1)/x2(j)) * factor )
+        y3(i) = dexp( dlog(x3(j)) + dlog(x3(j+1)/x3(j)) * factor )
+     end if
+  end do
 
- 1    continue
-
-      end subroutine interhuntdp3veces
+end subroutine interhuntdp3veces
 
 ! ***************************************************************************
 !     *** interhuntdp4veces.f ***
 ! ***************************************************************************
 
-      subroutine interhuntdp4veces ( y1,y2,y3,y4, zz,m,  &
-           x1,x2,x3,x4,  z,n,  opt)
+subroutine interhuntdp4veces ( y1,y2,y3,y4, zz,m,  &
+     x1,x2,x3,x4,  z,n,  opt)
 
-! ***************************************************************************
-!     interpolation soubroutine basada en Numerical Recipes HUNT.FOR
-!     input values: x1(n),x2(n),x3(n),x4(n) at z(n)
-!     output values: y1(m),y2(m),y3(m),y4(m) at zz(m)
-!     options: 1 -> lineal
-!     2 -> logarithmic
-!     ***********************************************************************
+  ! ***************************************************************************
+  !     interpolation soubroutine basada en Numerical Recipes HUNT.FOR
+  !     input values: x1(n),x2(n),x3(n),x4(n) at z(n)
+  !     output values: y1(m),y2(m),y3(m),y4(m) at zz(m)
+  !     options: 1 -> lineal
+  !     2 -> logarithmic
+  !     ***********************************************************************
 
-      implicit none
+  implicit none
 
-!     Arguments
-      integer	:: n,m,opt         ! I
-      real*8	:: zz(m),z(n)      ! I
-      real*8    :: y1(m),y2(m),y3(m),y4(m) ! O
-      real*8    :: x1(n),x2(n),x3(n),x4(n) ! I
+  !     Arguments
+  integer	:: n,m,opt         ! I
+  real*8	:: zz(m),z(n)      ! I
+  real*8    :: y1(m),y2(m),y3(m),y4(m) ! O
+  real*8    :: x1(n),x2(n),x3(n),x4(n) ! I
 
 
-!     Local variables
-      integer :: i, j
-      real*8  ::   factor
-      real*8  ::  zaux
+  !     Local variables
+  integer :: i, j
+  real*8  ::   factor
+  real*8  ::  zaux
 
 !!!!
 
-      j = 1                     ! initial first guess (=n/2 is anothr pssblty)
+  j = 1                     ! initial first guess (=n/2 is anothr pssblty)
 
-      do 1,i=1,m                !
+  do i=1,m
 
-                                ! Caza del indice j donde ocurre que zz(i) esta entre [z(j),z(j+1)]
-         zaux = zz(i)
-         if (abs(zaux-z(1)).le.0.01d0) then
-            zaux=z(1)
-         elseif (abs(zaux-z(n)).le.0.01d0) then
-            zaux=z(n)
-         endif
-         call huntdp ( z,n, zaux, j )
-         if ( j.eq.0 .or. j.eq.n ) then
-	    write (*,*) ' HUNT/ Limits input grid:', z(1),z(n)
-	    write (*,*) ' HUNT/ location in new grid:', zz(i)
-            stop ' INTERHUNTDP4/ Interpolat error. zz out of limits.'
-         endif
+     ! Caza del indice j donde ocurre que zz(i) esta entre [z(j),z(j+1)]
+     zaux = zz(i)
+     if (abs(zaux-z(1)).le.0.01d0) then
+        zaux=z(1)
+     elseif (abs(zaux-z(n)).le.0.01d0) then
+        zaux=z(n)
+     endif
+     call huntdp ( z,n, zaux, j )
+     if ( j.eq.0 .or. j.eq.n ) then
+        write (*,*) ' HUNT/ Limits input grid:', z(1),z(n)
+        write (*,*) ' HUNT/ location in new grid:', zz(i)
+        stop ' INTERHUNTDP4/ Interpolat error. zz out of limits.'
+     endif
 
-                                ! Perform interpolation
-         factor = (zz(i)-z(j))/(z(j+1)-z(j))
-         if (opt.eq.1) then
-	    y1(i) = x1(j) + (x1(j+1)-x1(j)) * factor
-	    y2(i) = x2(j) + (x2(j+1)-x2(j)) * factor
-	    y3(i) = x3(j) + (x3(j+1)-x3(j)) * factor
-	    y4(i) = x4(j) + (x4(j+1)-x4(j)) * factor
-         else
-	    y1(i) = dexp( dlog(x1(j)) + dlog(x1(j+1)/x1(j)) * factor )
-	    y2(i) = dexp( dlog(x2(j)) + dlog(x2(j+1)/x2(j)) * factor )
-	    y3(i) = dexp( dlog(x3(j)) + dlog(x3(j+1)/x3(j)) * factor )
-	    y4(i) = dexp( dlog(x4(j)) + dlog(x4(j+1)/x4(j)) * factor )
-         end if
+     ! Perform interpolation
+     factor = (zz(i)-z(j))/(z(j+1)-z(j))
+     if (opt.eq.1) then
+        y1(i) = x1(j) + (x1(j+1)-x1(j)) * factor
+        y2(i) = x2(j) + (x2(j+1)-x2(j)) * factor
+        y3(i) = x3(j) + (x3(j+1)-x3(j)) * factor
+        y4(i) = x4(j) + (x4(j+1)-x4(j)) * factor
+     else
+        y1(i) = dexp( dlog(x1(j)) + dlog(x1(j+1)/x1(j)) * factor )
+        y2(i) = dexp( dlog(x2(j)) + dlog(x2(j+1)/x2(j)) * factor )
+        y3(i) = dexp( dlog(x3(j)) + dlog(x3(j+1)/x3(j)) * factor )
+        y4(i) = dexp( dlog(x4(j)) + dlog(x4(j+1)/x4(j)) * factor )
+     end if
+  end do
 
- 1    continue
-
-      end subroutine interhuntdp4veces
+end subroutine interhuntdp4veces
 
 ! **************************************************************************
 !     *** interhuntdp.f ***
 ! **************************************************************************
 
-      subroutine interhuntdp ( y1, zz,m, &
-           x1,  z,n,  opt)
+subroutine interhuntdp ( y1, zz,m, &
+     x1,  z,n,  opt)
 
-! **************************************************************************
-!     interpolation soubroutine basada en Numerical Recipes HUNT.FOR
-!     input values: x1(n) at z(n)
-!     output values: y1(m) at zz(m)
-!     options: 1 -> lineal
-!     2 -> logarithmic
-!     ***********************************************************************
+  ! **************************************************************************
+  !     interpolation soubroutine basada en Numerical Recipes HUNT.FOR
+  !     input values: x1(n) at z(n)
+  !     output values: y1(m) at zz(m)
+  !     options: 1 -> lineal
+  !     2 -> logarithmic
+  !     ***********************************************************************
 
-      implicit none
+  implicit none
 
-!     Arguments
-      integer	:: n,m,opt         ! I
-      real*8	:: zz(m),z(n)      ! I
-      real*8    :: y1(m)           ! O
-      real*8    :: x1(n)           ! I
+  !     Arguments
+  integer	:: n,m,opt         ! I
+  real*8	:: zz(m),z(n)      ! I
+  real*8    :: y1(m)           ! O
+  real*8    :: x1(n)           ! I
 
 
-!     Local variables
-      integer :: i, j
-      real*8  :: factor
-      real*8  :: zaux
+  !     Local variables
+  integer :: i, j
+  real*8  :: factor
+  real*8  :: zaux
 
 !!!!
 
-      j = 1                     ! initial first guess (=n/2 is anothr pssblty)
+  j = 1                     ! initial first guess (=n/2 is anothr pssblty)
 
-      do 1,i=1,m                !
+  do i=1,m                !
 
-                                ! Caza del indice j donde ocurre que zz(i) esta entre [z(j),z(j+1)]
-         zaux = zz(i)
-         if (abs(zaux-z(1)).le.0.01d0) then
-            zaux=z(1)
-         elseif (abs(zaux-z(n)).le.0.01d0) then
-            zaux=z(n)
-         endif
-         call huntdp ( z,n, zaux, j )
-         if ( j.eq.0 .or. j.eq.n ) then
-	    write (*,*) ' HUNT/ Limits input grid:', z(1),z(n)
-	    write (*,*) ' HUNT/ location in new grid:', zz(i)
-            stop ' INTERHUNT/ Interpolat error. zz out of limits.'
-         endif
+     ! Caza del indice j donde ocurre que zz(i) esta entre [z(j),z(j+1)]
+     zaux = zz(i)
+     if (abs(zaux-z(1)).le.0.01d0) then
+        zaux=z(1)
+     elseif (abs(zaux-z(n)).le.0.01d0) then
+        zaux=z(n)
+     endif
+     call huntdp ( z,n, zaux, j )
+     if ( j.eq.0 .or. j.eq.n ) then
+        write (*,*) ' HUNT/ Limits input grid:', z(1),z(n)
+        write (*,*) ' HUNT/ location in new grid:', zz(i)
+        stop ' INTERHUNT/ Interpolat error. zz out of limits.'
+     endif
 
-                                ! Perform interpolation
-         factor = (zz(i)-z(j))/(z(j+1)-z(j))
-         if (opt.eq.1) then
-	    y1(i) = x1(j) + (x1(j+1)-x1(j)) * factor
-         else
-	    y1(i) = dexp( dlog(x1(j)) + dlog(x1(j+1)/x1(j)) * factor )
-         end if
+     ! Perform interpolation
+     factor = (zz(i)-z(j))/(z(j+1)-z(j))
+     if (opt.eq.1) then
+        y1(i) = x1(j) + (x1(j+1)-x1(j)) * factor
+     else
+        y1(i) = dexp( dlog(x1(j)) + dlog(x1(j+1)/x1(j)) * factor )
+     end if
+  end do
 
- 1    continue
-
-      end subroutine interhuntdp
+end subroutine interhuntdp
 
 
 ! **********************************************************************
 !     *** interhunt.f ***
 ! **********************************************************************
 
-      subroutine interhunt ( y1, zz,m,  &
-           x1,  z,n,  opt)
+subroutine interhunt ( y1, zz,m,  &
+     x1,  z,n,  opt)
 
-!***********************************************************************
-!     interpolation soubroutine basada en Numerical Recipes HUNT.FOR
-!     input values: x1(n) at z(n)
-!     output values: y1(m) at zz(m)
-!     options: 1 -> lineal
-!     2 -> logarithmic
-!***********************************************************************
+  !***********************************************************************
+  !     interpolation soubroutine basada en Numerical Recipes HUNT.FOR
+  !     input values: x1(n) at z(n)
+  !     output values: y1(m) at zz(m)
+  !     options: 1 -> lineal
+  !     2 -> logarithmic
+  !***********************************************************************
 
-      implicit none
+  implicit none
 
-!     Arguments
-      integer	:: n,m,opt         ! I
-      real	:: zz(m),z(n)      ! I
-      real    :: y1(m)             ! O
-      real    :: x1(n)             ! I
+  !     Arguments
+  integer	:: n,m,opt         ! I
+  real	:: zz(m),z(n)      ! I
+  real    :: y1(m)             ! O
+  real    :: x1(n)             ! I
 
 
-!     Local variables
-      integer :: i, j
-      real    :: factor
-      real    :: zaux
+  !     Local variables
+  integer :: i, j
+  real    :: factor
+  real    :: zaux
 
 !!!!
 
-      j = 1                     ! initial first guess (=n/2 is anothr pssblty)
+  j = 1                     ! initial first guess (=n/2 is anothr pssblty)
 
-      do 1,i=1,m                !
+  do i=1,m                !
 
-                                ! Busca indice j donde ocurre q zz(i) esta entre [z(j),z(j+1)]
-         zaux = zz(i)
-         if (abs(zaux-z(1)).le.0.01) then
-            zaux=z(1)
-         elseif (abs(zaux-z(n)).le.0.01) then
-            zaux=z(n)
-         endif
-         call hunt ( z,n, zaux, j )
-         if ( j.eq.0 .or. j.eq.n ) then
-	    write (*,*) ' HUNT/ Limits input grid:', z(1),z(n)
-	    write (*,*) ' HUNT/ location in new grid:', zz(i)
-            stop ' interhunt/ Interpolat error. z out of limits.'
-         endif
+     ! Busca indice j donde ocurre q zz(i) esta entre [z(j),z(j+1)]
+     zaux = zz(i)
+     if (abs(zaux-z(1)).le.0.01) then
+        zaux=z(1)
+     elseif (abs(zaux-z(n)).le.0.01) then
+        zaux=z(n)
+     endif
+     call hunt ( z,n, zaux, j )
+     if ( j.eq.0 .or. j.eq.n ) then
+        write (*,*) ' HUNT/ Limits input grid:', z(1),z(n)
+        write (*,*) ' HUNT/ location in new grid:', zz(i)
+        stop ' interhunt/ Interpolat error. z out of limits.'
+     endif
 
-                                ! Perform interpolation
-         factor = (zz(i)-z(j))/(z(j+1)-z(j))
-         if (opt.eq.1) then
-	    y1(i) = x1(j) + (x1(j+1)-x1(j)) * factor
-         else
-	    y1(i) = exp( log(x1(j)) + log(x1(j+1)/x1(j)) * factor )
-         end if
+     ! Perform interpolation
+     factor = (zz(i)-z(j))/(z(j+1)-z(j))
+     if (opt.eq.1) then
+        y1(i) = x1(j) + (x1(j+1)-x1(j)) * factor
+     else
+        y1(i) = exp( log(x1(j)) + log(x1(j+1)/x1(j)) * factor )
+     end if
 
+  end do
 
- 1    continue
-
-      end subroutine interhunt
+end subroutine interhunt
 
 
 ! **********************************************************************
 !     *** interhuntlimits2veces.f ***
 ! **********************************************************************
 
-      subroutine interhuntlimits2veces  &
-           ( y1,y2, zz,m, limite1,limite2, &
-           x1,x2,  z,n, opt)
+subroutine interhuntlimits2veces  &
+     ( y1,y2, zz,m, limite1,limite2, &
+     x1,x2,  z,n, opt)
 
-! **********************************************************************
-!     Interpolation soubroutine basada en Numerical Recipes HUNT.FOR
-!     Input values:  x1,x2(n) at z(n)
-!     Output values:
-!     y1,y2(m) at zz(m)   pero solo entre los indices de zz
-!     siguientes: [limite1,limite2]
-!     Options: 1 -> linear in z and linear in x
-!     2 -> linear in z and logarithmic in x
-!     3 -> logarithmic in z and linear in x
-!    4 -> logarithmic in z and logaritmic in x
-!
-!     NOTAS: Esta subrutina extiende y generaliza la usual
-!     "interhunt5veces" en 2 direcciones:
-!     - la condicion en los limites es que zz(limite1:limite2)
-!     esté dentro de los limites de z (pero quizas no todo zz)
-!     - se han añadido 3 opciones mas al caso de interpolacion
-!     logaritmica, ahora se hace en log de z, de x o de ambos.
-!     Notese que esta subrutina engloba a la interhunt5veces
-!      ( esta es reproducible haciendo  limite1=1  y  limite2=m
-!     y usando una de las 2 primeras opciones  opt=1,2 )
-!***********************************************************************
+  ! **********************************************************************
+  !     Interpolation soubroutine basada en Numerical Recipes HUNT.FOR
+  !     Input values:  x1,x2(n) at z(n)
+  !     Output values:
+  !     y1,y2(m) at zz(m)   pero solo entre los indices de zz
+  !     siguientes: [limite1,limite2]
+  !     Options: 1 -> linear in z and linear in x
+  !     2 -> linear in z and logarithmic in x
+  !     3 -> logarithmic in z and linear in x
+  !    4 -> logarithmic in z and logaritmic in x
+  !
+  !     NOTAS: Esta subrutina extiende y generaliza la usual
+  !     "interhunt5veces" en 2 direcciones:
+  !     - la condicion en los limites es que zz(limite1:limite2)
+  !     esté dentro de los limites de z (pero quizas no todo zz)
+  !     - se han añadido 3 opciones mas al caso de interpolacion
+  !     logaritmica, ahora se hace en log de z, de x o de ambos.
+  !     Notese que esta subrutina engloba a la interhunt5veces
+  !      ( esta es reproducible haciendo  limite1=1  y  limite2=m
+  !     y usando una de las 2 primeras opciones  opt=1,2 )
+  !***********************************************************************
 
-      implicit none
+  implicit none
 
-!     Arguments
-      integer	:: n,m,opt, limite1,limite2 ! I
-      real	:: zz(m),z(n)      ! I
-      real    :: y1(m),y2(m)       ! O
-      real    :: x1(n),x2(n)       ! I
+  !     Arguments
+  integer	:: n,m,opt, limite1,limite2 ! I
+  real	:: zz(m),z(n)      ! I
+  real    :: y1(m),y2(m)       ! O
+  real    :: x1(n),x2(n)       ! I
 
 
-!     Local variables
-      integer :: i, j
-      real    :: factor
-      real    :: zaux
+  !     Local variables
+  integer :: i, j
+  real    :: factor
+  real    :: zaux
 
 !!!!
 
-      j = 1                     ! initial first guess (=n/2 is anothr pssblty)
+  j = 1                     ! initial first guess (=n/2 is anothr pssblty)
 
-      do 1,i=limite1,limite2
+  do i=limite1,limite2
 
-                                ! Busca indice j donde ocurre q zz(i) esta entre [z(j),z(j+1)]
-         zaux = zz(i)
-         if (abs(zaux-z(1)).le.0.01) then
-            zaux=z(1)
-         elseif (abs(zaux-z(n)).le.0.01) then
-            zaux=z(n)
-         endif
-         call hunt ( z,n, zaux, j )
-         if ( j.eq.0 .or. j.eq.n ) then
-	    write (*,*) ' HUNT/ Limits input grid:', z(1),z(n)
-	    write (*,*) ' HUNT/ location in new grid:', zz(i)
-            stop ' interhuntlimits/ Interpolat error. z out of limits.'
-         endif
+     ! Busca indice j donde ocurre q zz(i) esta entre [z(j),z(j+1)]
+     zaux = zz(i)
+     if (abs(zaux-z(1)).le.0.01) then
+        zaux=z(1)
+     elseif (abs(zaux-z(n)).le.0.01) then
+        zaux=z(n)
+     endif
+     call hunt ( z,n, zaux, j )
+     if ( j.eq.0 .or. j.eq.n ) then
+        write (*,*) ' HUNT/ Limits input grid:', z(1),z(n)
+        write (*,*) ' HUNT/ location in new grid:', zz(i)
+        stop ' interhuntlimits/ Interpolat error. z out of limits.'
+     endif
 
-                                ! Perform interpolation
-         if (opt.eq.1) then
-	    factor = (zz(i)-z(j))/(z(j+1)-z(j))
-	    y1(i) = x1(j) + (x1(j+1)-x1(j)) * factor
-	    y2(i) = x2(j) + (x2(j+1)-x2(j)) * factor
+     ! Perform interpolation
+     if (opt.eq.1) then
+        factor = (zz(i)-z(j))/(z(j+1)-z(j))
+        y1(i) = x1(j) + (x1(j+1)-x1(j)) * factor
+        y2(i) = x2(j) + (x2(j+1)-x2(j)) * factor
 
-         elseif (opt.eq.2) then
-	    factor = (zz(i)-z(j))/(z(j+1)-z(j))
-	    y1(i) = exp( log(x1(j)) + log(x1(j+1)/x1(j)) * factor )
-	    y2(i) = exp( log(x2(j)) + log(x2(j+1)/x2(j)) * factor )
-         elseif (opt.eq.3) then
-	    factor = (log(zz(i))-log(z(j)))/(log(z(j+1))-log(z(j)))
-	    y1(i) = x1(j) + (x1(j+1)-x1(j)) * factor
-	    y2(i) = x2(j) + (x2(j+1)-x2(j)) * factor
-         elseif (opt.eq.4) then
-	    factor = (log(zz(i))-log(z(j)))/(log(z(j+1))-log(z(j)))
-	    y1(i) = exp( log(x1(j)) + log(x1(j+1)/x1(j)) * factor )
-	    y2(i) = exp( log(x2(j)) + log(x2(j+1)/x2(j)) * factor )
-         end if
+     elseif (opt.eq.2) then
+        factor = (zz(i)-z(j))/(z(j+1)-z(j))
+        y1(i) = exp( log(x1(j)) + log(x1(j+1)/x1(j)) * factor )
+        y2(i) = exp( log(x2(j)) + log(x2(j+1)/x2(j)) * factor )
+     elseif (opt.eq.3) then
+        factor = (log(zz(i))-log(z(j)))/(log(z(j+1))-log(z(j)))
+        y1(i) = x1(j) + (x1(j+1)-x1(j)) * factor
+        y2(i) = x2(j) + (x2(j+1)-x2(j)) * factor
+     elseif (opt.eq.4) then
+        factor = (log(zz(i))-log(z(j)))/(log(z(j+1))-log(z(j)))
+        y1(i) = exp( log(x1(j)) + log(x1(j+1)/x1(j)) * factor )
+        y2(i) = exp( log(x2(j)) + log(x2(j+1)/x2(j)) * factor )
+     end if
 
+  end do
 
- 1    continue
-
-      end subroutine interhuntlimits2veces
+end subroutine interhuntlimits2veces
 
 ! **********************************************************************
 !     *** interhuntlimits5veces.f ***
 ! **********************************************************************
 
-      subroutine interhuntlimits5veces  &
-           ( y1,y2,y3,y4,y5, zz,m, limite1,limite2,  &
-           x1,x2,x3,x4,x5,  z,n, opt)
+subroutine interhuntlimits5veces  &
+     ( y1,y2,y3,y4,y5, zz,m, limite1,limite2,  &
+     x1,x2,x3,x4,x5,  z,n, opt)
 
-! **********************************************************************
-!     Interpolation soubroutine basada en Numerical Recipes HUNT.FOR
-!     Input values:  x1,x2,..,x5(n) at z(n)
-!     Output values:
-!     y1,y2,...,y5(m) at zz(m)   pero solo entre los indices de zz
-!     siguientes: [limite1,limite2]
-!     Options: 1 -> linear in z and linear in x
-!     2 -> linear in z and logarithmic in x
-!     3 -> logarithmic in z and linear in x
-!     4 -> logarithmic in z and logaritmic in x
-!
-!     NOTAS: Esta subrutina extiende y generaliza la usual
-!     "interhunt5veces" en 2 direcciones:
-!     - la condicion en los limites es que zz(limite1:limite2)
-!     esté dentro de los limites de z (pero quizas no todo zz)
-!     - se han añadido 3 opciones mas al caso de interpolacion
-!     logaritmica, ahora se hace en log de z, de x o de ambos.
-!     Notese que esta subrutina engloba a la interhunt5veces
-!     ( esta es reproducible haciendo  limite1=1  y  limite2=m
-!     y usando una de las 2 primeras opciones  opt=1,2 )
-!***********************************************************************
+  ! **********************************************************************
+  !     Interpolation soubroutine basada en Numerical Recipes HUNT.FOR
+  !     Input values:  x1,x2,..,x5(n) at z(n)
+  !     Output values:
+  !     y1,y2,...,y5(m) at zz(m)   pero solo entre los indices de zz
+  !     siguientes: [limite1,limite2]
+  !     Options: 1 -> linear in z and linear in x
+  !     2 -> linear in z and logarithmic in x
+  !     3 -> logarithmic in z and linear in x
+  !     4 -> logarithmic in z and logaritmic in x
+  !
+  !     NOTAS: Esta subrutina extiende y generaliza la usual
+  !     "interhunt5veces" en 2 direcciones:
+  !     - la condicion en los limites es que zz(limite1:limite2)
+  !     esté dentro de los limites de z (pero quizas no todo zz)
+  !     - se han añadido 3 opciones mas al caso de interpolacion
+  !     logaritmica, ahora se hace en log de z, de x o de ambos.
+  !     Notese que esta subrutina engloba a la interhunt5veces
+  !     ( esta es reproducible haciendo  limite1=1  y  limite2=m
+  !     y usando una de las 2 primeras opciones  opt=1,2 )
+  !***********************************************************************
 
-      implicit none
+  implicit none
 
-!     Arguments
-      integer	:: n,m,opt, limite1,limite2 ! I
-      real	:: zz(m),z(n)      ! I
-      real      :: y1(m),y2(m),y3(m),y4(m),y5(m) ! O
-      real      :: x1(n),x2(n),x3(n),x4(n),x5(n) ! I
+  !     Arguments
+  integer	:: n,m,opt, limite1,limite2 ! I
+  real	:: zz(m),z(n)      ! I
+  real      :: y1(m),y2(m),y3(m),y4(m),y5(m) ! O
+  real      :: x1(n),x2(n),x3(n),x4(n),x5(n) ! I
 
 
-!     Local variables
-      integer :: i, j
-      real    :: factor
-      real    :: zaux
+  !     Local variables
+  integer :: i, j
+  real    :: factor
+  real    :: zaux
 
 !!!!
 
-      j = 1                     ! initial first guess (=n/2 is anothr pssblty)
+  j = 1                     ! initial first guess (=n/2 is anothr pssblty)
 
-      do 1,i=limite1,limite2
+  do i=limite1,limite2
 
-                                ! Busca indice j donde ocurre q zz(i) esta entre [z(j),z(j+1)]
-         zaux = zz(i)
-         if (abs(zaux-z(1)).le.0.01) then
-            zaux=z(1)
-         elseif (abs(zaux-z(n)).le.0.01) then
-            zaux=z(n)
-         endif
-         call hunt ( z,n, zaux, j )
-         if ( j.eq.0 .or. j.eq.n ) then
-	    write (*,*) ' HUNT/ Limits input grid:', z(1),z(n)
-	    write (*,*) ' HUNT/ location in new grid:', zz(i)
-            stop ' interhuntlimits/ Interpolat error. z out of limits.'
-         endif
+     ! Busca indice j donde ocurre q zz(i) esta entre [z(j),z(j+1)]
+     zaux = zz(i)
+     if (abs(zaux-z(1)).le.0.01) then
+        zaux=z(1)
+     elseif (abs(zaux-z(n)).le.0.01) then
+        zaux=z(n)
+     endif
+     call hunt ( z,n, zaux, j )
+     if ( j.eq.0 .or. j.eq.n ) then
+        write (*,*) ' HUNT/ Limits input grid:', z(1),z(n)
+        write (*,*) ' HUNT/ location in new grid:', zz(i)
+        stop ' interhuntlimits/ Interpolat error. z out of limits.'
+     endif
 
-                                ! Perform interpolation
-         if (opt.eq.1) then
-	    factor = (zz(i)-z(j))/(z(j+1)-z(j))
-	    y1(i) = x1(j) + (x1(j+1)-x1(j)) * factor
-	    y2(i) = x2(j) + (x2(j+1)-x2(j)) * factor
-	    y3(i) = x3(j) + (x3(j+1)-x3(j)) * factor
-	    y4(i) = x4(j) + (x4(j+1)-x4(j)) * factor
-	    y5(i) = x5(j) + (x5(j+1)-x5(j)) * factor
-         elseif (opt.eq.2) then
-	    factor = (zz(i)-z(j))/(z(j+1)-z(j))
-	    y1(i) = exp( log(x1(j)) + log(x1(j+1)/x1(j)) * factor )
-	    y2(i) = exp( log(x2(j)) + log(x2(j+1)/x2(j)) * factor )
-	    y3(i) = exp( log(x3(j)) + log(x3(j+1)/x3(j)) * factor )
-	    y4(i) = exp( log(x4(j)) + log(x4(j+1)/x4(j)) * factor )
-	    y5(i) = exp( log(x5(j)) + log(x5(j+1)/x5(j)) * factor )
-         elseif (opt.eq.3) then
-	    factor = (log(zz(i))-log(z(j)))/(log(z(j+1))-log(z(j)))
-	    y1(i) = x1(j) + (x1(j+1)-x1(j)) * factor
-	    y2(i) = x2(j) + (x2(j+1)-x2(j)) * factor
-	    y3(i) = x3(j) + (x3(j+1)-x3(j)) * factor
-	    y4(i) = x4(j) + (x4(j+1)-x4(j)) * factor
-	    y5(i) = x5(j) + (x5(j+1)-x5(j)) * factor
-         elseif (opt.eq.4) then
-	    factor = (log(zz(i))-log(z(j)))/(log(z(j+1))-log(z(j)))
-	    y1(i) = exp( log(x1(j)) + log(x1(j+1)/x1(j)) * factor )
-	    y2(i) = exp( log(x2(j)) + log(x2(j+1)/x2(j)) * factor )
-	    y3(i) = exp( log(x3(j)) + log(x3(j+1)/x3(j)) * factor )
-	    y4(i) = exp( log(x4(j)) + log(x4(j+1)/x4(j)) * factor )
-	    y5(i) = exp( log(x5(j)) + log(x5(j+1)/x5(j)) * factor )
-         end if
+     ! Perform interpolation
+     if (opt.eq.1) then
+        factor = (zz(i)-z(j))/(z(j+1)-z(j))
+        y1(i) = x1(j) + (x1(j+1)-x1(j)) * factor
+        y2(i) = x2(j) + (x2(j+1)-x2(j)) * factor
+        y3(i) = x3(j) + (x3(j+1)-x3(j)) * factor
+        y4(i) = x4(j) + (x4(j+1)-x4(j)) * factor
+        y5(i) = x5(j) + (x5(j+1)-x5(j)) * factor
+     elseif (opt.eq.2) then
+        factor = (zz(i)-z(j))/(z(j+1)-z(j))
+        y1(i) = exp( log(x1(j)) + log(x1(j+1)/x1(j)) * factor )
+        y2(i) = exp( log(x2(j)) + log(x2(j+1)/x2(j)) * factor )
+        y3(i) = exp( log(x3(j)) + log(x3(j+1)/x3(j)) * factor )
+        y4(i) = exp( log(x4(j)) + log(x4(j+1)/x4(j)) * factor )
+        y5(i) = exp( log(x5(j)) + log(x5(j+1)/x5(j)) * factor )
+     elseif (opt.eq.3) then
+        factor = (log(zz(i))-log(z(j)))/(log(z(j+1))-log(z(j)))
+        y1(i) = x1(j) + (x1(j+1)-x1(j)) * factor
+        y2(i) = x2(j) + (x2(j+1)-x2(j)) * factor
+        y3(i) = x3(j) + (x3(j+1)-x3(j)) * factor
+        y4(i) = x4(j) + (x4(j+1)-x4(j)) * factor
+        y5(i) = x5(j) + (x5(j+1)-x5(j)) * factor
+     elseif (opt.eq.4) then
+        factor = (log(zz(i))-log(z(j)))/(log(z(j+1))-log(z(j)))
+        y1(i) = exp( log(x1(j)) + log(x1(j+1)/x1(j)) * factor )
+        y2(i) = exp( log(x2(j)) + log(x2(j+1)/x2(j)) * factor )
+        y3(i) = exp( log(x3(j)) + log(x3(j+1)/x3(j)) * factor )
+        y4(i) = exp( log(x4(j)) + log(x4(j+1)/x4(j)) * factor )
+        y5(i) = exp( log(x5(j)) + log(x5(j+1)/x5(j)) * factor )
+     end if
 
+  end do
 
- 1    continue
-
-      end subroutine interhuntlimits5veces
+end subroutine interhuntlimits5veces
 
 ! **********************************************************************
 !     *** interhuntlimits.f ***
 ! **********************************************************************
 
-      subroutine interhuntlimits ( y, zz,m, limite1,limite2,  &
-           x,  z,n, opt)
+subroutine interhuntlimits ( y, zz,m, limite1,limite2,  &
+     x,  z,n, opt)
 
-! **********************************************************************
-!     Interpolation soubroutine basada en Numerical Recipes HUNT.FOR
-!     Input values:  x(n) at z(n)
-!     Output values: y(m) at zz(m)   pero solo entre los indices de zz
-!     siguientes: [limite1,limite2]
-!     Options: 1 -> linear in z and linear in x
-!     2 -> linear in z and logarithmic in x
-!     3 -> logarithmic in z and linear in x
-!     4 -> logarithmic in z and logaritmic in x
-!
-!     NOTAS: Esta subrutina extiende y generaliza la usual  "interhunt"
-!     en 2 direcciones:
-!     - la condicion en los limites es que zz(limite1:limite2)
-!     esté dentro de los limites de z (pero quizas no todo zz)
-!     - se han añadido 3 opciones mas al caso de interpolacion
-!     logaritmica, ahora se hace en log de z, de x o de ambos.
-!     Notese que esta subrutina engloba a la usual interhunt
-!     ( esta es reproducible haciendo  limite1=1  y  limite2=m
-!     y usando una de las 2 primeras opciones  opt=1,2 )
-!***********************************************************************
+  ! **********************************************************************
+  !     Interpolation soubroutine basada en Numerical Recipes HUNT.FOR
+  !     Input values:  x(n) at z(n)
+  !     Output values: y(m) at zz(m)   pero solo entre los indices de zz
+  !     siguientes: [limite1,limite2]
+  !     Options: 1 -> linear in z and linear in x
+  !     2 -> linear in z and logarithmic in x
+  !     3 -> logarithmic in z and linear in x
+  !     4 -> logarithmic in z and logaritmic in x
+  !
+  !     NOTAS: Esta subrutina extiende y generaliza la usual  "interhunt"
+  !     en 2 direcciones:
+  !     - la condicion en los limites es que zz(limite1:limite2)
+  !     esté dentro de los limites de z (pero quizas no todo zz)
+  !     - se han añadido 3 opciones mas al caso de interpolacion
+  !     logaritmica, ahora se hace en log de z, de x o de ambos.
+  !     Notese que esta subrutina engloba a la usual interhunt
+  !     ( esta es reproducible haciendo  limite1=1  y  limite2=m
+  !     y usando una de las 2 primeras opciones  opt=1,2 )
+  !***********************************************************************
 
-      implicit none
+  implicit none
 
-!     Arguments
-      integer	:: n,m,opt, limite1,limite2 ! I
-      real	:: zz(m),z(n)      ! I
-      real      :: y(m)              ! O
-      real      :: x(n)              ! I
+  !     Arguments
+  integer	:: n,m,opt, limite1,limite2 ! I
+  real	:: zz(m),z(n)      ! I
+  real      :: y(m)              ! O
+  real      :: x(n)              ! I
 
 
-!     Local variables
-      integer :: i, j
-      real    :: factor
-      real    :: zaux
+  !     Local variables
+  integer :: i, j
+  real    :: factor
+  real    :: zaux
 
 !!!!
 
-      j = 1                     ! initial first guess (=n/2 is anothr pssblty)
+  j = 1                     ! initial first guess (=n/2 is anothr pssblty)
 
-      do 1,i=limite1,limite2
+  do i=limite1,limite2
 
-                                ! Busca indice j donde ocurre q zz(i) esta entre [z(j),z(j+1)]
-         zaux = zz(i)
-         if (abs(zaux-z(1)).le.0.01) then
-            zaux=z(1)
-         elseif (abs(zaux-z(n)).le.0.01) then
-            zaux=z(n)
-         endif
-         call hunt ( z,n, zaux, j )
-         if ( j.eq.0 .or. j.eq.n ) then
-	    write (*,*) ' HUNT/ Limits input grid:', z(1),z(n)
-	    write (*,*) ' HUNT/ location in new grid:', zz(i)
-            stop ' interhuntlimits/ Interpolat error. z out of limits.'
-         endif
+     ! Busca indice j donde ocurre q zz(i) esta entre [z(j),z(j+1)]
+     zaux = zz(i)
+     if (abs(zaux-z(1)).le.0.01) then
+        zaux=z(1)
+     elseif (abs(zaux-z(n)).le.0.01) then
+        zaux=z(n)
+     endif
+     call hunt ( z,n, zaux, j )
+     if ( j.eq.0 .or. j.eq.n ) then
+        write (*,*) ' HUNT/ Limits input grid:', z(1),z(n)
+        write (*,*) ' HUNT/ location in new grid:', zz(i)
+        stop ' interhuntlimits/ Interpolat error. z out of limits.'
+     endif
 
-                                ! Perform interpolation
-         if (opt.eq.1) then
-	    factor = (zz(i)-z(j))/(z(j+1)-z(j))
-	    y(i) = x(j) + (x(j+1)-x(j)) * factor
-         elseif (opt.eq.2) then
-	    factor = (zz(i)-z(j))/(z(j+1)-z(j))
-	    y(i) = exp( log(x(j)) + log(x(j+1)/x(j)) * factor )
-         elseif (opt.eq.3) then
-	    factor = (log(zz(i))-log(z(j)))/(log(z(j+1))-log(z(j)))
-	    y(i) = x(j) + (x(j+1)-x(j)) * factor
-         elseif (opt.eq.4) then
-	    factor = (log(zz(i))-log(z(j)))/(log(z(j+1))-log(z(j)))
-	    y(i) = exp( log(x(j)) + log(x(j+1)/x(j)) * factor )
-         end if
+     ! Perform interpolation
+     if (opt.eq.1) then
+        factor = (zz(i)-z(j))/(z(j+1)-z(j))
+        y(i) = x(j) + (x(j+1)-x(j)) * factor
+     elseif (opt.eq.2) then
+        factor = (zz(i)-z(j))/(z(j+1)-z(j))
+        y(i) = exp( log(x(j)) + log(x(j+1)/x(j)) * factor )
+     elseif (opt.eq.3) then
+        factor = (log(zz(i))-log(z(j)))/(log(z(j+1))-log(z(j)))
+        y(i) = x(j) + (x(j+1)-x(j)) * factor
+     elseif (opt.eq.4) then
+        factor = (log(zz(i))-log(z(j)))/(log(z(j+1))-log(z(j)))
+        y(i) = exp( log(x(j)) + log(x(j+1)/x(j)) * factor )
+     end if
 
+  end do
 
- 1    continue
-
-      end subroutine interhuntlimits
+end subroutine interhuntlimits
 
 ! ***************************************************************
 !     *** lubksb_dp.f ***
 ! ***************************************************************
 
-      subroutine lubksb_dp(a,n,np,indx,b)
+subroutine lubksb_dp(a,n,np,indx,b)
 
-      implicit none
+  implicit none
 
-      integer,intent(in) :: n,np
-      real*8,intent(in) :: a(np,np)
-      integer,intent(in) :: indx(n)
-      real*8,intent(out) :: b(n)
+  integer,intent(in) :: n,np
+  real*8,intent(in) :: a(np,np)
+  integer,intent(in) :: indx(n)
+  real*8,intent(out) :: b(n)
 
-      real*8 :: sum
-      integer :: ii, ll, i, j
+  real*8 :: sum
+  integer :: ii, ll, i, j
 
-      ii=0
-      do 12 i=1,n
-         ll=indx(i)
-         sum=b(ll)
-         b(ll)=b(i)
-         if (ii.ne.0)then
-            do 11 j=ii,i-1
-               sum=sum-a(i,j)*b(j)
- 11         continue
-         else if (sum.ne.0.0) then
-            ii=i
-         endif
-         b(i)=sum
- 12   continue
-      do 14 i=n,1,-1
-         sum=b(i)
-         if(i.lt.n)then
-            do 13 j=i+1,n
-               sum=sum-a(i,j)*b(j)
- 13         continue
-         endif
-         b(i)=sum/a(i,i)
- 14   continue
-      end subroutine lubksb_dp
+  ii=0
+  do i=1,n
+     ll=indx(i)
+     sum=b(ll)
+     b(ll)=b(i)
+     if (ii.ne.0)then
+        do j=ii,i-1
+           sum=sum-a(i,j)*b(j)
+        end do
+     else if (sum.ne.0.0) then
+        ii=i
+     endif
+     b(i)=sum
+  end do
+  do i=n,1,-1
+     sum=b(i)
+     if(i.lt.n)then
+        do j=i+1,n
+           sum=sum-a(i,j)*b(j)
+        end do
+     endif
+     b(i)=sum/a(i,i)
+  end do
+end subroutine lubksb_dp
 
 ! ***************************************************
 !     *** ludcmp_dp.f ***
 ! ***************************************************
 
-      subroutine ludcmp_dp(a,n,np,indx,d)
+subroutine ludcmp_dp(a,n,np,indx,d)
 
-      implicit none
+  implicit none
 
-      integer,intent(in) :: n, np
-      real*8,intent(inout) :: a(np,np)
-      real*8,intent(out) :: d
-      integer,intent(out) :: indx(n)
+  integer,intent(in) :: n, np
+  real*8,intent(inout) :: a(np,np)
+  real*8,intent(out) :: d
+  integer,intent(out) :: indx(n)
 
-      integer :: i, j, k, imax
-      real*8, parameter :: tiny=1.0d-20
-      integer,parameter :: nmax=100
-      real*8 :: vv(nmax), aamax, sum, dum
+  integer :: i, j, k, imax
+  real*8, parameter :: tiny=1.0d-20
+  integer,parameter :: nmax=100
+  real*8 :: vv(nmax), aamax, sum, dum
 
-      d=1.0d0
-      do 12 i=1,n
-         aamax=0.0d0
-         do 11 j=1,n
-            if (abs(a(i,j)).gt.aamax) aamax=abs(a(i,j))
- 11      continue
-         if (aamax.eq.0.0) then
-            write(*,*) 'ludcmp_dp: singular matrix!'
-            stop
-         endif
-         vv(i)=1.0d0/aamax
- 12   continue
-      do 19 j=1,n
-         if (j.gt.1) then
-            do 14 i=1,j-1
-               sum=a(i,j)
-               if (i.gt.1)then
-                  do 13 k=1,i-1
-                     sum=sum-a(i,k)*a(k,j)
- 13               continue
-                  a(i,j)=sum
-               endif
- 14         continue
-         endif
-         aamax=0.0d0
-         do 16 i=j,n
-            sum=a(i,j)
-            if (j.gt.1)then
-               do 15 k=1,j-1
-                  sum=sum-a(i,k)*a(k,j)
- 15            continue
-               a(i,j)=sum
-            endif
-            dum=vv(i)*abs(sum)
-            if (dum.ge.aamax) then
-               imax=i
-               aamax=dum
-            endif
- 16      continue
-         if (j.ne.imax)then
-            do 17 k=1,n
-               dum=a(imax,k)
-               a(imax,k)=a(j,k)
-               a(j,k)=dum
- 17         continue
-            d=-d
-            vv(imax)=vv(j)
-         endif
-         indx(j)=imax
-         if(j.ne.n)then
-            if(a(j,j).eq.0.0)a(j,j)=tiny
-            dum=1.0d0/a(j,j)
-            do 18 i=j+1,n
-               a(i,j)=a(i,j)*dum
- 18         continue
-         endif
- 19   continue
-      if(a(n,n).eq.0.0)a(n,n)=tiny
+  d=1.0d0
+  do i=1,n
+     aamax=0.0d0
+     do j=1,n
+        if (abs(a(i,j)).gt.aamax) aamax=abs(a(i,j))
+     end do
+     if (aamax.eq.0.0) then
+        write(*,*) 'ludcmp_dp: singular matrix!'
+        stop
+     endif
+     vv(i)=1.0d0/aamax
+  end do
+  do j=1,n
+     if (j.gt.1) then
+        do i=1,j-1
+           sum=a(i,j)
+           if (i.gt.1)then
+              do k=1,i-1
+                 sum=sum-a(i,k)*a(k,j)
+              end do
+              a(i,j)=sum
+           endif
+        end do
+     endif
+     aamax=0.0d0
+     do i=j,n
+        sum=a(i,j)
+        if (j.gt.1)then
+           do k=1,j-1
+              sum=sum-a(i,k)*a(k,j)
+           end do
+           a(i,j)=sum
+        endif
+        dum=vv(i)*abs(sum)
+        if (dum.ge.aamax) then
+           imax=i
+           aamax=dum
+        endif
+     end do
+     if (j.ne.imax)then
+        do k=1,n
+           dum=a(imax,k)
+           a(imax,k)=a(j,k)
+           a(j,k)=dum
+        end do
+        d=-d
+        vv(imax)=vv(j)
+     endif
+     indx(j)=imax
+     if(j.ne.n)then
+        if(a(j,j).eq.0.0)a(j,j)=tiny
+        dum=1.0d0/a(j,j)
+        do i=j+1,n
+           a(i,j)=a(i,j)*dum
+        end do
+     endif
+  end do
+  if(a(n,n).eq.0.0)a(n,n)=tiny
 
-      end subroutine ludcmp_dp
+end subroutine ludcmp_dp
 
 
 !cccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -9262,429 +9236,429 @@ subroutine ERRORS (ierr,varerr)
 !     MALV , Sep 2007
 !cccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
-      subroutine LUdec(xx,aa,bb,m,n)
+subroutine LUdec(xx,aa,bb,m,n)
 
-      implicit none
+  implicit none
 
-!     Arguments
-      integer,intent(in) ::     m, n
-      real*8,intent(in) ::      aa(m,m), bb(m)
-      real*8,intent(out) ::     xx(m)
-
-
-!     Local variables
-      real*8      :: a(n,n), b(n), x(n), d
-      integer     :: i, j, indx(n)
+  !     Arguments
+  integer,intent(in) ::     m, n
+  real*8,intent(in) ::      aa(m,m), bb(m)
+  real*8,intent(out) ::     xx(m)
 
 
-!     Subrutinas utilizadas
-!     ludcmp_dp, lubksb_dp
+  !     Local variables
+  real*8      :: a(n,n), b(n), x(n), d
+  integer     :: i, j, indx(n)
+
+
+  !     Subrutinas utilizadas
+  !     ludcmp_dp, lubksb_dp
 
 !!!!!!!!!!!!!!!Comienza el programa !!!!!!!!!!!!!!
 
-      do i=1,n
-         b(i) = bb(i+1)
-         do j=1,n
-            a(i,j) = aa(i+1,j+1)
-         enddo
-      enddo
+  do i=1,n
+     b(i) = bb(i+1)
+     do j=1,n
+        a(i,j) = aa(i+1,j+1)
+     enddo
+  enddo
 
-                                ! Descomposicion de auxm1
-      call ludcmp_dp ( a, n, n, indx, d)
+  ! Descomposicion de auxm1
+  call ludcmp_dp ( a, n, n, indx, d)
 
-                                ! Sustituciones foward y backwards para hallar la solucion
-      do i=1,n
-         x(i) = b(i)
-      enddo
-      call lubksb_dp( a, n, n, indx, x )
+  ! Sustituciones foward y backwards para hallar la solucion
+  do i=1,n
+     x(i) = b(i)
+  enddo
+  call lubksb_dp( a, n, n, indx, x )
 
-      do i=1,n
-         xx(i+1) = x(i)
-      enddo
+  do i=1,n
+     xx(i+1) = x(i)
+  enddo
 
-      end subroutine LUdec
+end subroutine LUdec
 
 ! ***************************************************************************
 !     *** mat_oper.f ***
 ! ***************************************************************************
-      subroutine unit(a,n)
-!     store the unit value in the diagonal of a
-! ***************************************************************************
-      implicit none
-      integer :: n
-      real*8 :: a(n,n)
-      integer :: i,j,k
-      do 1,i=2,n-1
-         do 2,j=2,n-1
-	    if(i.eq.j) then
-               a(i,j) = 1.d0
-	    else
-               a(i,j)=0.0d0
-	    end if
- 2       continue
- 1    continue
-      do k=1,n
-         a(n,k) = 0.0d0
-         a(1,k) = 0.0d0
-         a(k,1) = 0.0d0
-         a(k,n) = 0.0d0
-      end do
-      end subroutine unit
+subroutine unit(a,n)
+  !     store the unit value in the diagonal of a
+  ! ***************************************************************************
+  implicit none
+  integer :: n
+  real*8 :: a(n,n)
+  integer :: i,j,k
+  do i=2,n-1
+     do j=2,n-1
+        if(i.eq.j) then
+           a(i,j) = 1.d0
+        else
+           a(i,j)=0.0d0
+        end if
+     end do
+  end do
+  do k=1,n
+     a(n,k) = 0.0d0
+     a(1,k) = 0.0d0
+     a(k,1) = 0.0d0
+     a(k,n) = 0.0d0
+  end do
+end subroutine unit
 
 !     ***********************************************************************
-      subroutine diago(a,v,n)
-!     store the vector v in the diagonal elements of the square matrix a
-!     ***********************************************************************
-      implicit none
+subroutine diago(a,v,n)
+  !     store the vector v in the diagonal elements of the square matrix a
+  !     ***********************************************************************
+  implicit none
 
-      integer :: n,i,j,k
-      real*8 :: a(n,n),v(n)
+  integer :: n,i,j,k
+  real*8 :: a(n,n),v(n)
 
-      do 1,i=2,n-1
-         do 2,j=2,n-1
-	    if(i.eq.j) then
-               a(i,j) = v(i)
-	    else
-               a(i,j)=0.0d0
-	    end if
- 2       continue
- 1    continue
-      do k=1,n
-         a(n,k) = 0.0d0
-         a(1,k) = 0.0d0
-         a(k,1) = 0.0d0
-         a(k,n) = 0.0d0
-      end do
+  do i=2,n-1
+     do j=2,n-1
+        if(i.eq.j) then
+           a(i,j) = v(i)
+        else
+           a(i,j)=0.0d0
+        end if
+     end do
+  end do
+  do k=1,n
+     a(n,k) = 0.0d0
+     a(1,k) = 0.0d0
+     a(k,1) = 0.0d0
+     a(k,n) = 0.0d0
+  end do
 
-      end subroutine diago
-
-!     ***********************************************************************
-      subroutine invdiag(a,b,n)
-!     inverse of a diagonal matrix
-!     ***********************************************************************
-      implicit none
-
-      integer :: n,i,j,k
-      real*8 :: a(n,n),b(n,n)
-
-      do 1,i=2,n-1
-         do 2,j=2,n-1
-	    if (i.eq.j) then
-               a(i,j) = 1.d0/b(i,i)
-	    else
-               a(i,j)=0.0d0
-	    end if
- 2       continue
- 1    continue
-      do k=1,n
-         a(n,k) = 0.0d0
-         a(1,k) = 0.0d0
-         a(k,1) = 0.0d0
-         a(k,n) = 0.0d0
-      end do
-
-      end subroutine invdiag
+end subroutine diago
 
 !     ***********************************************************************
-      subroutine samem (a,m,n)
+subroutine invdiag(a,b,n)
+  !     inverse of a diagonal matrix
+  !     ***********************************************************************
+  implicit none
 
-!     store the matrix m in the matrix a
-!     ***********************************************************************
+  integer :: n,i,j,k
+  real*8 :: a(n,n),b(n,n)
 
-      implicit none
+  do i=2,n-1
+     do j=2,n-1
+        if (i.eq.j) then
+           a(i,j) = 1.d0/b(i,i)
+        else
+           a(i,j)=0.0d0
+        end if
+     end do
+  end do
+  do k=1,n
+     a(n,k) = 0.0d0
+     a(1,k) = 0.0d0
+     a(k,1) = 0.0d0
+     a(k,n) = 0.0d0
+  end do
 
-      integer :: n
-      real*8 :: a(n,n),m(n,n)
-      integer :: i,j,k
-
-      do 1,i=2,n-1
-         do 2,j=2,n-1
-            a(i,j) = m(i,j)
- 2       continue
- 1    continue
-      do k=1,n
-         a(n,k) = 0.0d0
-         a(1,k) = 0.0d0
-         a(k,1) = 0.0d0
-         a(k,n) = 0.0d0
-      end do
-
-      end subroutine samem
-
-!     ***********************************************************************
-      subroutine mulmv(a,b,c,n)
-
-!     do a(i)=b(i,j)*c(j). a, b, and c must be distint
-!     ***********************************************************************
-
-      implicit none
-
-      integer :: n,i,j
-      real*8 :: a(n),b(n,n),c(n),sum
-
-      do 1,i=2,n-1
-         sum=0.0d0
-         do 2,j=2,n-1
-	    sum = sum + b(i,j) * c(j)
- 2       continue
-         a(i)=sum
- 1    continue
-      a(1) = 0.0d0
-      a(n) = 0.0d0
-
-      end subroutine mulmv
+end subroutine invdiag
 
 !     ***********************************************************************
-      subroutine trucodiag(a,b,c,d,e,n)
+subroutine samem (a,m,n)
 
-!     inputs: matrices b,c,d,e
-!     output: matriz diagonal a
-!     Operacion a realizar:  a = b * c^(-1) * d + e
-!     La matriz c va a ser invertida
-!     Todas las matrices de entrada son diagonales excepto b
-!     Aprovechamos esa condicion para invertir c, acelerar el calculo, y
-!     ademas, para forzar que a sea diagonal
-!     ***********************************************************************
+  !     store the matrix m in the matrix a
+  !     ***********************************************************************
 
-      implicit none
+  implicit none
 
-      integer :: n
-      real*8 :: a(n,n),b(n,n),c(n,n),d(n,n),e(n,n), sum
-      integer :: i,j,k
-        do 1,i=2,n-1
-         sum=0.0d0
-         do 2,j=2,n-1
-	    sum=sum+ b(i,j) * d(j,j)/c(j,j)
- 2       continue
-         a(i,i) = sum + e(i,i)
- 1    continue
-      do k=1,n
-         a(n,k) = 0.0d0
-         a(1,k) = 0.0d0
-         a(k,1) = 0.0d0
-         a(k,n) = 0.0d0
-      end do
+  integer :: n
+  real*8 :: a(n,n),m(n,n)
+  integer :: i,j,k
 
-      end subroutine trucodiag
+  do i=2,n-1
+     do j=2,n-1
+        a(i,j) = m(i,j)
+     end do
+  end do
+  do k=1,n
+     a(n,k) = 0.0d0
+     a(1,k) = 0.0d0
+     a(k,1) = 0.0d0
+     a(k,n) = 0.0d0
+  end do
+
+end subroutine samem
 
 !     ***********************************************************************
-      subroutine trucommvv(v,b,c,u,w,n)
+subroutine mulmv(a,b,c,n)
 
-!     inputs: matrices b,c , vectores u,w
-!     output: vector v
-!     Operacion a realizar:  v = b * c^(-1) * u + w
-!     La matriz c va a ser invertida
-!     c es diagonal, b no
-!     Aprovechamos esa condicion para invertir c, y acelerar el calculo
-!     ***********************************************************************
+  !     do a(i)=b(i,j)*c(j). a, b, and c must be distint
+  !     ***********************************************************************
 
-      implicit none
+  implicit none
 
-      integer :: n
-      real*8 :: v(n),b(n,n),c(n,n),u(n),w(n), sum
-      integer :: i,j
-      do 1,i=2,n-1
-         sum=0.0d0
-         do 2,j=2,n-1
-	    sum=sum+ b(i,j) * u(j)/c(j,j)
- 2       continue
-         v(i) = sum + w(i)
- 1    continue
-      v(1) = 0.d0
-      v(n) = 0.d0
+  integer :: n,i,j
+  real*8 :: a(n),b(n,n),c(n),sum
 
-      end subroutine trucommvv
+  do i=2,n-1
+     sum=0.0d0
+     do j=2,n-1
+        sum = sum + b(i,j) * c(j)
+     end do
+     a(i)=sum
+  end do
+  a(1) = 0.0d0
+  a(n) = 0.0d0
+
+end subroutine mulmv
 
 !     ***********************************************************************
-      subroutine sypvmv(v,u,c,w,n)
+subroutine trucodiag(a,b,c,d,e,n)
 
-!     inputs: matriz diagonal c , vectores u,w
-!     output: vector v
-!     Operacion a realizar:  v = u + c * w
-!     ***********************************************************************
+  !     inputs: matrices b,c,d,e
+  !     output: matriz diagonal a
+  !     Operacion a realizar:  a = b * c^(-1) * d + e
+  !     La matriz c va a ser invertida
+  !     Todas las matrices de entrada son diagonales excepto b
+  !     Aprovechamos esa condicion para invertir c, acelerar el calculo, y
+  !     ademas, para forzar que a sea diagonal
+  !     ***********************************************************************
 
-      implicit none
+  implicit none
 
-      integer :: n
-      real*8 :: v(n),u(n),c(n,n),w(n)
-      integer :: i
-      do 1,i=2,n-1
-         v(i)= u(i) + c(i,i) * w(i)
- 1    continue
-      v(1) = 0.0d0
-      v(n) = 0.0d0
+  integer :: n
+  real*8 :: a(n,n),b(n,n),c(n,n),d(n,n),e(n,n), sum
+  integer :: i,j,k
+  do i=2,n-1
+     sum=0.0d0
+     do j=2,n-1
+        sum=sum+ b(i,j) * d(j,j)/c(j,j)
+     end do
+     a(i,i) = sum + e(i,i)
+  end do
+  do k=1,n
+     a(n,k) = 0.0d0
+     a(1,k) = 0.0d0
+     a(k,1) = 0.0d0
+     a(k,n) = 0.0d0
+  end do
 
-      end subroutine sypvmv
-
-!     ***********************************************************************
-      subroutine sumvv(a,b,c,n)
-
-!     a(i)=b(i)+c(i)
-!     ***********************************************************************
-      implicit none
-
-      integer :: n,i
-      real*8 :: a(n),b(n),c(n)
-
-      do 1,i=2,n-1
-         a(i)= b(i) + c(i)
- 1    continue
-      a(1) = 0.0d0
-      a(n) = 0.0d0
-
-      end subroutine sumvv
+end subroutine trucodiag
 
 !     ***********************************************************************
-      subroutine sypvvv(a,b,c,d,n)
+subroutine trucommvv(v,b,c,u,w,n)
 
-!     a(i)=b(i)+c(i)*d(i)
-!     ***********************************************************************
-      implicit none
+  !     inputs: matrices b,c , vectores u,w
+  !     output: vector v
+  !     Operacion a realizar:  v = b * c^(-1) * u + w
+  !     La matriz c va a ser invertida
+  !     c es diagonal, b no
+  !     Aprovechamos esa condicion para invertir c, y acelerar el calculo
+  !     ***********************************************************************
 
-      integer :: n
-      real*8 :: a(n),b(n),c(n),d(n)
-      integer :: i
-      do 1,i=2,n-1
-         a(i)= b(i) + c(i) * d(i)
- 1    continue
-      a(1) = 0.0d0
-      a(n) = 0.0d0
+  implicit none
 
-      end subroutine sypvvv
+  integer :: n
+  real*8 :: v(n),b(n,n),c(n,n),u(n),w(n), sum
+  integer :: i,j
+  do i=2,n-1
+     sum=0.0d0
+     do j=2,n-1
+        sum=sum+ b(i,j) * u(j)/c(j,j)
+     end do
+     v(i) = sum + w(i)
+  end do
+  v(1) = 0.d0
+  v(n) = 0.d0
 
-!     ***********************************************************************
-      subroutine zero4m(a,b,c,d,n)
-
-!     a(i,j) = b(i,j) = c(i,j) = d(i,j) = 0.0
-!     ***********************************************************************
-      implicit none
-
-      integer :: n
-      real*8 :: a(n,n), b(n,n), c(n,n), d(n,n)
-
-      a(1:n,1:n)=0.d0
-      b(1:n,1:n)=0.d0
-      c(1:n,1:n)=0.d0
-      d(1:n,1:n)=0.d0
-!      do 1,i=1,n
-!         do 2,j=1,n
-!	    a(i,j) = 0.0d0
-!	    b(i,j) = 0.0d0
-!	    c(i,j) = 0.0d0
-!	    d(i,j) = 0.0d0
-! 2       continue
-! 1    continue
-
-      end subroutine zero4m
+end subroutine trucommvv
 
 !     ***********************************************************************
-      subroutine zero3m(a,b,c,n)
+subroutine sypvmv(v,u,c,w,n)
 
-!     a(i,j) = b(i,j) = c(i,j) = 0.0
-!     **********************************************************************
-      implicit none
+  !     inputs: matriz diagonal c , vectores u,w
+  !     output: vector v
+  !     Operacion a realizar:  v = u + c * w
+  !     ***********************************************************************
 
-      integer :: n
-      real*8 :: a(n,n), b(n,n), c(n,n)
+  implicit none
 
-      a(1:n,1:n)=0.d0
-      b(1:n,1:n)=0.d0
-      c(1:n,1:n)=0.d0
-!      do 1,i=1,n
-!         do 2,j=1,n
-!	    a(i,j) = 0.0d0
-!	    b(i,j) = 0.0d0
-!	    c(i,j) = 0.0d0
-! 2       continue
-! 1    continue
+  integer :: n
+  real*8 :: v(n),u(n),c(n,n),w(n)
+  integer :: i
+  do i=2,n-1
+     v(i)= u(i) + c(i,i) * w(i)
+  end do
+  v(1) = 0.0d0
+  v(n) = 0.0d0
 
-      end subroutine zero3m
-
+end subroutine sypvmv
 
 !     ***********************************************************************
-      subroutine zero2m(a,b,n)
+subroutine sumvv(a,b,c,n)
 
-!     a(i,j) = b(i,j) = 0.0
-!     ***********************************************************************
-      implicit none
+  !     a(i)=b(i)+c(i)
+  !     ***********************************************************************
+  implicit none
 
-      integer :: n
-      real*8 :: a(n,n), b(n,n)
+  integer :: n,i
+  real*8 :: a(n),b(n),c(n)
 
-      a(1:n,1:n)=0.d0
-      b(1:n,1:n)=0.d0
-!      do 1,i=1,n
-!         do 2,j=1,n
-!	    a(i,j) = 0.0d0
-!	    b(i,j) = 0.0d0
-! 2       continue
-! 1    continue
+  do i=2,n-1
+     a(i)= b(i) + c(i)
+  end do
+  a(1) = 0.0d0
+  a(n) = 0.0d0
 
-      end subroutine zero2m
+end subroutine sumvv
 
 !     ***********************************************************************
-      subroutine zero4v(a,b,c,d,n)
+subroutine sypvvv(a,b,c,d,n)
 
-!     a(i) = b(i) = c(i) = d(i,j) = 0.0
+  !     a(i)=b(i)+c(i)*d(i)
+  !     ***********************************************************************
+  implicit none
+
+  integer :: n
+  real*8 :: a(n),b(n),c(n),d(n)
+  integer :: i
+  do i=2,n-1
+     a(i)= b(i) + c(i) * d(i)
+  end do
+  a(1) = 0.0d0
+  a(n) = 0.0d0
+
+end subroutine sypvvv
+
 !     ***********************************************************************
-      implicit none
+subroutine zero4m(a,b,c,d,n)
 
-      integer :: n
-      real*8 :: a(n), b(n), c(n), d(n)
+  !     a(i,j) = b(i,j) = c(i,j) = d(i,j) = 0.0
+  !     ***********************************************************************
+  implicit none
 
-      a(1:n)=0.d0
-      b(1:n)=0.d0
-      c(1:n)=0.d0
-      d(1:n)=0.d0
-!      do 1,i=1,n
-!         a(i) = 0.0d0
-!         b(i) = 0.0d0
-!         c(i) = 0.0d0
-!         d(i) = 0.0d0
-! 1    continue
+  integer :: n
+  real*8 :: a(n,n), b(n,n), c(n,n), d(n,n)
 
-      end subroutine zero4v
+  a(1:n,1:n)=0.d0
+  b(1:n,1:n)=0.d0
+  c(1:n,1:n)=0.d0
+  d(1:n,1:n)=0.d0
+  !      do 1,i=1,n
+  !         do 2,j=1,n
+  !	    a(i,j) = 0.0d0
+  !	    b(i,j) = 0.0d0
+  !	    c(i,j) = 0.0d0
+  !	    d(i,j) = 0.0d0
+  ! 2       continue
+  ! 1    continue
+
+end subroutine zero4m
+
+!     ***********************************************************************
+subroutine zero3m(a,b,c,n)
+
+  !     a(i,j) = b(i,j) = c(i,j) = 0.0
+  !     **********************************************************************
+  implicit none
+
+  integer :: n
+  real*8 :: a(n,n), b(n,n), c(n,n)
+
+  a(1:n,1:n)=0.d0
+  b(1:n,1:n)=0.d0
+  c(1:n,1:n)=0.d0
+  !      do 1,i=1,n
+  !         do 2,j=1,n
+  !	    a(i,j) = 0.0d0
+  !	    b(i,j) = 0.0d0
+  !	    c(i,j) = 0.0d0
+  ! 2       continue
+  ! 1    continue
+
+end subroutine zero3m
 
 
 !     ***********************************************************************
-      subroutine zero3v(a,b,c,n)
+subroutine zero2m(a,b,n)
 
-!     a(i) = b(i) = c(i) = 0.0
+  !     a(i,j) = b(i,j) = 0.0
+  !     ***********************************************************************
+  implicit none
+
+  integer :: n
+  real*8 :: a(n,n), b(n,n)
+
+  a(1:n,1:n)=0.d0
+  b(1:n,1:n)=0.d0
+  !      do 1,i=1,n
+  !         do 2,j=1,n
+  !	    a(i,j) = 0.0d0
+  !	    b(i,j) = 0.0d0
+  ! 2       continue
+  ! 1    continue
+
+end subroutine zero2m
+
 !     ***********************************************************************
-      implicit none
+subroutine zero4v(a,b,c,d,n)
 
-      integer :: n
-      real*8 :: a(n), b(n), c(n)
+  !     a(i) = b(i) = c(i) = d(i,j) = 0.0
+  !     ***********************************************************************
+  implicit none
 
-      a(1:n)=0.d0
-      b(1:n)=0.d0
-      c(1:n)=0.d0
-!      do 1,i=1,n
-!         a(i) = 0.0d0
-!         b(i) = 0.0d0
-!         c(i) = 0.0d0
-! 1    continue
+  integer :: n
+  real*8 :: a(n), b(n), c(n), d(n)
 
-      end subroutine zero3v
+  a(1:n)=0.d0
+  b(1:n)=0.d0
+  c(1:n)=0.d0
+  d(1:n)=0.d0
+  !      do 1,i=1,n
+  !         a(i) = 0.0d0
+  !         b(i) = 0.0d0
+  !         c(i) = 0.0d0
+  !         d(i) = 0.0d0
+  ! 1    continue
+
+end subroutine zero4v
+
 
 !     ***********************************************************************
-      subroutine zero2v(a,b,n)
+subroutine zero3v(a,b,c,n)
 
-!     a(i) = b(i) = 0.0
+  !     a(i) = b(i) = c(i) = 0.0
+  !     ***********************************************************************
+  implicit none
+
+  integer :: n
+  real*8 :: a(n), b(n), c(n)
+
+  a(1:n)=0.d0
+  b(1:n)=0.d0
+  c(1:n)=0.d0
+  !      do 1,i=1,n
+  !         a(i) = 0.0d0
+  !         b(i) = 0.0d0
+  !         c(i) = 0.0d0
+  ! 1    continue
+
+end subroutine zero3v
+
 !     ***********************************************************************
-      implicit none
+subroutine zero2v(a,b,n)
 
-      integer :: n
-      real*8 :: a(n), b(n)
+  !     a(i) = b(i) = 0.0
+  !     ***********************************************************************
+  implicit none
 
-      a(1:n)=0.d0
-      b(1:n)=0.d0
-!      do 1,i=1,n
-!         a(i) = 0.0d0
-!         b(i) = 0.0d0
-! 1    continue
+  integer :: n
+  real*8 :: a(n), b(n)
 
-      end subroutine zero2v
+  a(1:n)=0.d0
+  b(1:n)=0.d0
+  !      do 1,i=1,n
+  !         a(i) = 0.0d0
+  !         b(i) = 0.0d0
+  ! 1    continue
+
+end subroutine zero2v
 
 
 !****************************************************************************
@@ -9693,210 +9667,210 @@ subroutine ERRORS (ierr,varerr)
 !
 !*****************************************************************************
 !
-      subroutine suaviza ( x, n, ismooth, y )
+subroutine suaviza ( x, n, ismooth, y )
 
-!*****************************************************************************
-!     x - input and return values
-!     y - auxiliary vector
-!     ismooth = 0  --> no smoothing is performed
-!     ismooth = 1  --> weak smoothing (5 points, centred weighted)
-!     ismooth = 2  --> normal smoothing (3 points, evenly weighted)
-!     ismooth = 3  --> strong smoothing (5 points, evenly weighted)
-!     august 1991
-!*****************************************************************************
+  !*****************************************************************************
+  !     x - input and return values
+  !     y - auxiliary vector
+  !     ismooth = 0  --> no smoothing is performed
+  !     ismooth = 1  --> weak smoothing (5 points, centred weighted)
+  !     ismooth = 2  --> normal smoothing (3 points, evenly weighted)
+  !     ismooth = 3  --> strong smoothing (5 points, evenly weighted)
+  !     august 1991
+  !*****************************************************************************
 
-      implicit none
+  implicit none
 
-      integer	:: n, imax, imin, i, ismooth
-      real*8	:: x(n), y(n)
-!*****************************************************************************
+  integer	:: n, imax, imin, i, ismooth
+  real*8	:: x(n), y(n)
+  !*****************************************************************************
 
-      imin=1
-      imax=n
+  imin=1
+  imax=n
 
-      if (ismooth.eq.0) then
+  if (ismooth.eq.0) then
 
-         return
+     return
 
-      elseif (ismooth.eq.1) then ! 5 points, with central weighting
+  elseif (ismooth.eq.1) then ! 5 points, with central weighting
 
-         do i=imin,imax
-	    if(i.eq.imin)then
-               y(i)=x(imin)
-	    elseif(i.eq.imax)then
-               y(i)=x(imax-1)+(x(imax-1)-x(imax-3))/2.d0
-	    elseif(i.gt.(imin+1) .and. i.lt.(imax-1) )then
-               y(i) = ( x(i+2)/4.d0 + x(i+1)/2.d0 + 2.d0*x(i)/3.d0 +  &
-                    x(i-1)/2.d0 + x(i-2)/4.d0 )* 6.d0/13.d0
-	    else
-               y(i)=(x(i+1)/2.d0+x(i)+x(i-1)/2.d0)/2.d0
-	    end if
-         end do
+     do i=imin,imax
+        if(i.eq.imin)then
+           y(i)=x(imin)
+        elseif(i.eq.imax)then
+           y(i)=x(imax-1)+(x(imax-1)-x(imax-3))/2.d0
+        elseif(i.gt.(imin+1) .and. i.lt.(imax-1) )then
+           y(i) = ( x(i+2)/4.d0 + x(i+1)/2.d0 + 2.d0*x(i)/3.d0 +  &
+                x(i-1)/2.d0 + x(i-2)/4.d0 )* 6.d0/13.d0
+        else
+           y(i)=(x(i+1)/2.d0+x(i)+x(i-1)/2.d0)/2.d0
+        end if
+     end do
 
-      elseif (ismooth.eq.2) then ! 3 points, evenly spaced
+  elseif (ismooth.eq.2) then ! 3 points, evenly spaced
 
-         do i=imin,imax
-	    if(i.eq.imin)then
-               y(i)=x(imin)
-	    elseif(i.eq.imax)then
-               y(i)=x(imax-1)+(x(imax-1)-x(imax-3))/2.d0
-	    else
-               y(i) = ( x(i+1)+x(i)+x(i-1) )/3.d0
-	    end if
-         end do
+     do i=imin,imax
+        if(i.eq.imin)then
+           y(i)=x(imin)
+        elseif(i.eq.imax)then
+           y(i)=x(imax-1)+(x(imax-1)-x(imax-3))/2.d0
+        else
+           y(i) = ( x(i+1)+x(i)+x(i-1) )/3.d0
+        end if
+     end do
 
-      elseif (ismooth.eq.3) then ! 5 points, evenly spaced
+  elseif (ismooth.eq.3) then ! 5 points, evenly spaced
 
-         do i=imin,imax
-	    if(i.eq.imin)then
-               y(i) = x(imin)
-	    elseif(i.eq.(imin+1) .or. i.eq.(imax-1))then
-               y(i) = ( x(i+1)+x(i)+x(i-1) )/3.d0
-	    elseif(i.eq.imax)then
-               y(i) = ( x(imax-1) + x(imax-1) + x(imax-2) ) / 3.d0
-	    else
-               y(i) = ( x(i+2)+x(i+1)+x(i)+x(i-1)+x(i-2) )/5.d0
-	    end if
-         end do
+     do i=imin,imax
+        if(i.eq.imin)then
+           y(i) = x(imin)
+        elseif(i.eq.(imin+1) .or. i.eq.(imax-1))then
+           y(i) = ( x(i+1)+x(i)+x(i-1) )/3.d0
+        elseif(i.eq.imax)then
+           y(i) = ( x(imax-1) + x(imax-1) + x(imax-2) ) / 3.d0
+        else
+           y(i) = ( x(i+2)+x(i+1)+x(i)+x(i-1)+x(i-2) )/5.d0
+        end if
+     end do
 
-      else
+  else
 
-         write (*,*) ' Error in suaviza.f   Wrong ismooth value.'
-         stop
+     write (*,*) ' Error in suaviza.f   Wrong ismooth value.'
+     stop
 
-      endif
+  endif
 
-!     rehago el cambio, para devolver x(i)
-      do i=imin,imax
-         x(i)=y(i)
-      end do
+  !     rehago el cambio, para devolver x(i)
+  do i=imin,imax
+     x(i)=y(i)
+  end do
 
-      end subroutine suaviza
-
-!     ***********************************************************************
-
-      subroutine mulmmf90(a,b,c,n)
-
-!     ***********************************************************************
-      implicit none
-
-      integer :: n
-      real*8 :: a(n,n), b(n,n), c(n,n)
-
-      a=matmul(b,c)
-      a(1,:)=0.d0
-      a(:,1)=0.d0
-      a(n,:)=0.d0
-      a(:,n)=0.d0
-
-      end subroutine mulmmf90
+end subroutine suaviza
 
 !     ***********************************************************************
 
-      subroutine resmmf90(a,b,c,n)
+subroutine mulmmf90(a,b,c,n)
+
+  !     ***********************************************************************
+  implicit none
+
+  integer :: n
+  real*8 :: a(n,n), b(n,n), c(n,n)
+
+  a=matmul(b,c)
+  a(1,:)=0.d0
+  a(:,1)=0.d0
+  a(n,:)=0.d0
+  a(:,n)=0.d0
+
+end subroutine mulmmf90
 
 !     ***********************************************************************
-      implicit none
 
-      integer :: n
-      real*8 :: a(n,n), b(n,n), c(n,n)
+subroutine resmmf90(a,b,c,n)
 
-      a=b-c
-      a(1,:)=0.d0
-      a(:,1)=0.d0
-      a(n,:)=0.d0
-      a(:,n)=0.d0
+  !     ***********************************************************************
+  implicit none
 
-      end subroutine resmmf90
+  integer :: n
+  real*8 :: a(n,n), b(n,n), c(n,n)
+
+  a=b-c
+  a(1,:)=0.d0
+  a(:,1)=0.d0
+  a(n,:)=0.d0
+  a(:,n)=0.d0
+
+end subroutine resmmf90
 
 
 !*******************************************************************
 
-      subroutine gethist_03 (ihist)
+subroutine gethist_03 (ihist)
 
-!*******************************************************************
+  !*******************************************************************
 
-      use GITM_planet
-!     use ModNLTE
+  use GITM_planet
+  !     use ModNLTE
 
-!     include 'nlte_paramdef.h'
-!     include 'nlte_commons.h'
+  !     include 'nlte_paramdef.h'
+  !     include 'nlte_commons.h'
 
-      implicit none
+  implicit none
 
-!     arguments
-      integer  ::         ihist
+  !     arguments
+  integer  ::         ihist
 
-!     local variables
-      integer  ::         j, r
+  !     local variables
+  integer  ::         j, r
 
-!     ***************
+  !     ***************
 
-      nbox = nbox_stored(ihist)
-      do j=1,mm_stored(ihist)
-         thist(j) = thist_stored(ihist,j)
-         do r=1,nbox_stored(ihist)
-	    no(r) = no_stored(ihist,r)
-            sk1(j,r) = sk1_stored(ihist,j,r)
-            xls1(j,r) = xls1_stored(ihist,j,r)
-            xld1(j,r) = xld1_stored(ihist,j,r)
-         enddo
-      enddo
+  nbox = nbox_stored(ihist)
+  do j=1,mm_stored(ihist)
+     thist(j) = thist_stored(ihist,j)
+     do r=1,nbox_stored(ihist)
+        no(r) = no_stored(ihist,r)
+        sk1(j,r) = sk1_stored(ihist,j,r)
+        xls1(j,r) = xls1_stored(ihist,j,r)
+        xld1(j,r) = xld1_stored(ihist,j,r)
+     enddo
+  enddo
 
-      end subroutine gethist_03
+end subroutine gethist_03
 
-
-!     *******************************************************************
-
-      subroutine rhist_03 (ihist)
 
 !     *******************************************************************
 
-      use GITM_planet
-!     use ModNLTE
+subroutine rhist_03 (ihist)
 
-!     include 'nlte_paramdef.h'
-!     include 'nlte_commons.h'
+  !     *******************************************************************
 
-      implicit none
+  use GITM_planet
+  !     use ModNLTE
 
-!     arguments
-      integer   ::         ihist
+  !     include 'nlte_paramdef.h'
+  !     include 'nlte_commons.h'
 
-!     local variables
-      integer  ::      j, r
-      real*8   ::      xx
+  implicit none
 
-!     ***************
+  !     arguments
+  integer   ::         ihist
 
-      open(unit=3,file=hisfile,status='old')
+  !     local variables
+  integer  ::      j, r
+  real*8   ::      xx
 
-      read(3,*)
-      read(3,*)
-      read(3,*) mm_stored(ihist)
-      read(3,*)
-      read(3,*) nbox_stored(ihist)
-      read(3,*)
+  !     ***************
 
-      if ( nbox_stored(ihist) .gt. nbox_max ) then
-         write (*,*) ' nbox too large in input file ', hisfile
-         stop ' Check maximum number nbox_max in mz1d.par '
-      endif
+  open(unit=3,file=hisfile,status='old')
 
-      do j=mm_stored(ihist),1,-1
-         read(3,*) thist_stored(ihist,j)
-         do r=1,nbox_stored(ihist)
-	    read(3,*) no_stored(ihist,r),  &
-                 sk1_stored(ihist,j,r),    &
-                 xls1_stored(ihist,j,r),   &
-                 xx, xld1_stored(ihist,j,r)
-         enddo
+  read(3,*)
+  read(3,*)
+  read(3,*) mm_stored(ihist)
+  read(3,*)
+  read(3,*) nbox_stored(ihist)
+  read(3,*)
 
-      enddo
+  if ( nbox_stored(ihist) .gt. nbox_max ) then
+     write (*,*) ' nbox too large in input file ', hisfile
+     stop ' Check maximum number nbox_max in mz1d.par '
+  endif
 
-      close(unit=3)
+  do j=mm_stored(ihist),1,-1
+     read(3,*) thist_stored(ihist,j)
+     do r=1,nbox_stored(ihist)
+        read(3,*) no_stored(ihist,r),  &
+             sk1_stored(ihist,j,r),    &
+             xls1_stored(ihist,j,r),   &
+             xx, xld1_stored(ihist,j,r)
+     enddo
 
-      end subroutine rhist_03
+  enddo
+
+  close(unit=3)
+
+end subroutine rhist_03
 
 !  **************************************************************
 
@@ -9917,30 +9891,30 @@ subroutine interpolateField(nMagLons,nMagLats,nMagAlts,MagFieldLon,MagFieldLat,M
   real, intent(in) :: MagFieldLon(nMagLons),MagFieldLat(nMagLats),MagFieldAlt(nMagAlts)
   real, intent(in) :: MagField(nMagAlts,nMagLons,nMagLats,MaxDim)
 
-    do iBlock = 1, nBlocks
-       do iLon = 1, nLons
-          do iLat = 1, nLats
-            do ialt = 1, nAlts 
+  do iBlock = 1, nBlocks
+     do iLon = 1, nLons
+        do iLat = 1, nLats
+           do ialt = 1, nAlts 
 
-               LonFind = Longitude(iLon,iBlock)*180/pi
-               LatFind = latitude(iLat,iBlock)*180/pi
-               AltFind = Altitude_GB(ilon,ilat,ialt,iBlock)/1000
+              LonFind = Longitude(iLon,iBlock)*180/pi
+              LatFind = latitude(iLat,iBlock)*180/pi
+              AltFind = Altitude_GB(ilon,ilat,ialt,iBlock)/1000
 
-               if (altFind <= minval(MagFieldAlt) .or. altFind > maxval(MagFieldAlt)) then
+              if (altFind <= minval(MagFieldAlt) .or. altFind > maxval(MagFieldAlt)) then
                  B0(iLon,iLat,iAlt,:,iBlock)=0
 
 
-               else
-                   do Magdim =1, Maxdim
+              else
+                 do Magdim =1, Maxdim
 
-                     if (LonFind < MagFieldLon(1)) then
-                      !In between 0 deg and first lon
-                      iiLon = 1
-                      iiLon2 = 1
+                    if (LonFind < MagFieldLon(1)) then
+                       !In between 0 deg and first lon
+                       iiLon = 1
+                       iiLon2 = 1
 
-                      BLon = 0
+                       BLon = 0
 
-                      else
+                    else
                        do jLon = 1, nMagLons-1
 
 
@@ -9953,15 +9927,15 @@ subroutine interpolateField(nMagLons,nMagLats,nMagAlts,MagFieldLon,MagFieldLat,M
 
                           endif
 
-                        enddo
-                      end if
+                       enddo
+                    end if
 
-                      if (LatFind < MagFieldLat(1)) then
-                        !In between -90 and first lat, using 1st lat
-                        iiLat = 1
-                        BLat = 0
+                    if (LatFind < MagFieldLat(1)) then
+                       !In between -90 and first lat, using 1st lat
+                       iiLat = 1
+                       BLat = 0
 
-                      else
+                    else
                        do jLat = 1, nMagLats-1
 
                           if (MagFieldlat(jlat) <= LatFind .and. &
@@ -9971,8 +9945,8 @@ subroutine interpolateField(nMagLons,nMagLats,nMagAlts,MagFieldLon,MagFieldLat,M
                                   (MagFieldLat(jlat+1)-MagFieldLat(jlat))
 
                           endif
-                        enddo
-                      end if
+                       enddo
+                    end if
 
 
 
@@ -9980,63 +9954,62 @@ subroutine interpolateField(nMagLons,nMagLats,nMagAlts,MagFieldLon,MagFieldLat,M
                     do jAlt=1, nMagAlts-1
 
 
-                    if (MagFieldAlt(jAlt)<= AltFind .and. &
-                         MagFieldAlt(jAlt+1) > AltFind) then
-                       iiAlt=jAlt
-                       BAlt =  (AltFind-MagFieldAlt(jAlt))/&
-                            (MagFieldAlt(jAlt+1)-MagFieldLat(jAlt))
+                       if (MagFieldAlt(jAlt)<= AltFind .and. &
+                            MagFieldAlt(jAlt+1) > AltFind) then
+                          iiAlt=jAlt
+                          BAlt =  (AltFind-MagFieldAlt(jAlt))/&
+                               (MagFieldAlt(jAlt+1)-MagFieldLat(jAlt))
 
 
-                          endif
+                       endif
 
                     enddo
 
                     c00=MagField(iialt,iilon,iilat,Magdim)*(1-Blon) + &
-                          MagField(iialt,iilon2,iilat,Magdim)*Blon
-                     c10=MagField(iialt,iilon,iilat+1,Magdim)*(1-Blon)+ &
-                          MagField(iialt,iilon2,iilat+1,Magdim)*Blon
-                     c01=MagField(iialt+1,iilon,iilat,Magdim)*(1-Blon)+ &
-                          MagField(iialt+1,iilon2,iilat, Magdim)*Blon
+                         MagField(iialt,iilon2,iilat,Magdim)*Blon
+                    c10=MagField(iialt,iilon,iilat+1,Magdim)*(1-Blon)+ &
+                         MagField(iialt,iilon2,iilat+1,Magdim)*Blon
+                    c01=MagField(iialt+1,iilon,iilat,Magdim)*(1-Blon)+ &
+                         MagField(iialt+1,iilon2,iilat, Magdim)*Blon
                     c11=MagField(iialt+1,iilon,iilat+1,Magdim)*(1-Blon)+ &
-                          Magfield(iialt+1,iilon2,iilat+1,Magdim)*Blon
-                     c0= c00*(1-Blat)+c10*Blat
-                     c1= c01*(1-Blat)+c11*Blat
-                     c= c0*(1-Balt)+c1*Balt
-                     B0(iLon,iLat,iAlt,Magdim,iBlock)=c
+                         Magfield(iialt+1,iilon2,iilat+1,Magdim)*Blon
+                    c0= c00*(1-Blat)+c10*Blat
+                    c1= c01*(1-Blat)+c11*Blat
+                    c= c0*(1-Balt)+c1*Balt
+                    B0(iLon,iLat,iAlt,Magdim,iBlock)=c
 
-               enddo
+                 enddo
 
-               if (abs(magfieldlon(iilon) - lonfind) < abs(magfieldlon(iilon+1)-lonfind)) then
-                  itypelon = iilon
-               else
-                  itypelon = iilon + 1
-               end if
-               if (abs(magfieldlat(iilat) - latfind) < abs(magfieldlat(iilat+1))-latfind) then
-                  itypelat = iilat
-               else
-                  itypelat = iilat + 1
-               end if
-               if (abs(magfieldalt(iialt) - altfind) < abs(magfieldalt(iialt+1))-altfind) then
-                  itypealt = iialt
-               else
-                  itypealt = iialt + 1
-               end if
-               FieldType(ilon,ilat,ialt,iBlock) = typeField(itypealt,itypelon,itypelat)
+                 if (abs(magfieldlon(iilon) - lonfind) < abs(magfieldlon(iilon+1)-lonfind)) then
+                    itypelon = iilon
+                 else
+                    itypelon = iilon + 1
+                 end if
+                 if (abs(magfieldlat(iilat) - latfind) < abs(magfieldlat(iilat+1))-latfind) then
+                    itypelat = iilat
+                 else
+                    itypelat = iilat + 1
+                 end if
+                 if (abs(magfieldalt(iialt) - altfind) < abs(magfieldalt(iialt+1))-altfind) then
+                    itypealt = iialt
+                 else
+                    itypealt = iialt + 1
+                 end if
+                 FieldType(ilon,ilat,ialt,iBlock) = typeField(itypealt,itypelon,itypelat)
 
 
-             endif
-          enddo
-       enddo
-    enddo
-     
-  B0(:,:,:,iMag_,iBlock) = sqrt(B0(:,:,:,1,iBlock)**2+B0(:,:,:,2,iBlock)**2+B0(:,:,:,3,iBlock)**2)
-  userdata3D(:,:,:,3,iblock)=B0(:,:,:,iMag_,iBlock)
-  userdata3D(:,:,:,4,iblock)=FieldType(:,:,:,iBlock)
+              endif
+           enddo
+        enddo
+     enddo
 
-enddo
+     B0(:,:,:,iMag_,iBlock) = sqrt(B0(:,:,:,1,iBlock)**2+B0(:,:,:,2,iBlock)**2+B0(:,:,:,3,iBlock)**2)
+     userdata3D(:,:,:,3,iblock)=B0(:,:,:,iMag_,iBlock)
+     userdata3D(:,:,:,4,iblock)=FieldType(:,:,:,iBlock)
 
-endsubroutine interpolateField
+  enddo
 
+end subroutine interpolateField
 
 subroutine ReadMagField
 
@@ -10058,9 +10031,9 @@ subroutine ReadMagField
   integer, dimension(MagLons,Maglats,MagAlts) :: typeFieldDummy
 
 
-  !!!! Longitude: [1:360], Latitude: [-89,90]
-  !!!! Unsure if these should be centered. Need to compare
-  !!!! datafile with actual to determine.
+!!!! Longitude: [1:360], Latitude: [-89,90]
+!!!! Unsure if these should be centered. Need to compare
+!!!! datafile with actual to determine.
 
   do i=1,MagAlts
      MagFieldAlt(i)=80+(2.5*(i-1))
@@ -10093,98 +10066,98 @@ end subroutine ReadMagField
 
 subroutine ReadMHDField
 
-use ModGITM
-use ModInputs
-use ModTime, only : currentTime
+  use ModGITM
+  use ModInputs
+  use ModTime, only : currentTime
 
-implicit None
+  implicit None
 
-integer, parameter :: nMagLons=120, nMagLats=61, nMagAlts=21, Maxdim=3
+  integer, parameter :: nMagLons=120, nMagLats=61, nMagAlts=21, Maxdim=3
 
-real, dimension(nMagAlts,nMagLons,nMagLats, Maxdim) :: MagField
-real, dimension(nMagAlts,nMagLons,nMagLats, Maxdim,2) :: inMagField
-integer, dimension(nMagAlts,nMagLons,nMagLats,2) :: inFieldType
-integer, dimension(nMagAlts,nMagLons,nMagLats) :: typeField
+  real, dimension(nMagAlts,nMagLons,nMagLats, Maxdim) :: MagField
+  real, dimension(nMagAlts,nMagLons,nMagLats, Maxdim,2) :: inMagField
+  integer, dimension(nMagAlts,nMagLons,nMagLats,2) :: inFieldType
+  integer, dimension(nMagAlts,nMagLons,nMagLats) :: typeField
 
-integer ::  i,j,k, ifile,btype
-integer :: iError, started
-real :: ctime
-real, dimension(nMagLons) :: MagFieldLon
-real, dimension(nMagLats) :: MagFieldLat
-real, dimension(nMagAlts) :: MagFieldAlt
-real ,dimension(2) :: realtime
-real :: lon,lat,alt,btotalup,btotalnorth,btotaleast,biup,bieast,binorth
-character (len=100) :: firstMHDfile, secondMHDfile
+  integer ::  i,j,k, ifile,btype
+  integer :: iError, started
+  real :: ctime
+  real, dimension(nMagLons) :: MagFieldLon
+  real, dimension(nMagLats) :: MagFieldLat
+  real, dimension(nMagAlts) :: MagFieldAlt
+  real ,dimension(2) :: realtime
+  real :: lon,lat,alt,btotalup,btotalnorth,btotaleast,biup,bieast,binorth
+  character (len=100) :: firstMHDfile, secondMHDfile
 
-real, dimension(9) :: temp
-character    (len=20)                           :: cline
+  real, dimension(9) :: temp
+  character    (len=20)                           :: cline
 
 
-if (iDebugLevel > 2 ) write(*,*) "Reading MHD Field"
+  if (iDebugLevel > 2 ) write(*,*) "Reading MHD Field"
 
-! Since the field is time dependent, we need to get the B field at
-! 2 different times and interpolate to the current time
+  ! Since the field is time dependent, we need to get the B field at
+  ! 2 different times and interpolate to the current time
 
-call getMHDFiles(firstMHDfile,secondMHDfile,realtime(1),realtime(2))
+  call getMHDFiles(firstMHDfile,secondMHDfile,realtime(1),realtime(2))
 
-do ifile = 1, 2
-  if (ifile == 1) then
-    cMHDFile = firstMHDfile
-  else
-    cMHDFile = secondMHDfile
-  end if
+  do ifile = 1, 2
+     if (ifile == 1) then
+        cMHDFile = firstMHDfile
+     else
+        cMHDFile = secondMHDfile
+     end if
 
-  open(unit=iInputUnit_, file=cMHDFile, action='read')
+     open(unit=iInputUnit_, file=cMHDFile, action='read')
 
-  iError = 0
-  started = 0
-  do while (started == 0)
+     iError = 0
+     started = 0
+     do while (started == 0)
         read(iInputUnit_,'(a)',iostat=iError) cLine
         if (cline(1:1) .eq. '#') started = 1
+     end do
+
+
+     do i = 1, nMagLons
+        do j = 1, nMagLats
+           do k = 1, nMagAlts
+              read(iInputUnit_,*,iostat=iError) lon,lat,alt,btotalup,btotalnorth,btotaleast, btype
+              ! read(iInputUnit_,*,iostat=iError) lon,lat,alt,btotalup,btotalnorth,btotaleast,biup,binorth,bieast
+              if (j==1 .and. k==1) MagFieldLon(i) = lon*180/Pi
+              if (i == 1 .and. k ==1) MagFieldLat(j) = lat*180/Pi
+              if (i==1 .and. j==1) MagFieldAlt(k) = alt
+
+              ! if (crustalFieldOnly) then
+              !   inMagField(k,i,j,1,ifile) = btotalnorth-binorth
+              !   inMagField(k,i,j,2,ifile) = btotaleast-bieast
+              !   inMagField(k,i,j,3,ifile) = btotalup-biup
+              ! else
+              inMagField(k,i,j,1,ifile) = btotalnorth
+              inMagField(k,i,j,2,ifile) = btotaleast
+              inMagField(k,i,j,3,ifile) = btotalup
+              inFieldType(k,i,j,ifile) = btype
+              ! endif
+
+           enddo
+        end do
+     end do
+
+     close(iInputUnit_)
+
   end do
 
+  !Interpolate the field between time 1 and time 2
+  ctime = (currentTime - realtime(1))/(realtime(2)-realtime(1))
+  Magfield = inMagfield(:,:,:,:,1)*(1-ctime)+inMagfield(:,:,:,:,2)*ctime
 
-  do i = 1, nMagLons
-    do j = 1, nMagLats
-        do k = 1, nMagAlts
-          read(iInputUnit_,*,iostat=iError) lon,lat,alt,btotalup,btotalnorth,btotaleast, btype
-          ! read(iInputUnit_,*,iostat=iError) lon,lat,alt,btotalup,btotalnorth,btotaleast,biup,binorth,bieast
-          if (j==1 .and. k==1) MagFieldLon(i) = lon*180/Pi
-          if (i == 1 .and. k ==1) MagFieldLat(j) = lat*180/Pi
-          if (i==1 .and. j==1) MagFieldAlt(k) = alt
+  if (currentTime - realtime(1) < realtime(2) - currentTime) then
+     typeField = inFieldType(:,:,:,1)
+  else
+     typeField = inFieldType(:,:,:,2)
+  ENDIF
 
-          ! if (crustalFieldOnly) then
-          !   inMagField(k,i,j,1,ifile) = btotalnorth-binorth
-          !   inMagField(k,i,j,2,ifile) = btotaleast-bieast
-          !   inMagField(k,i,j,3,ifile) = btotalup-biup
-          ! else
-          inMagField(k,i,j,1,ifile) = btotalnorth
-          inMagField(k,i,j,2,ifile) = btotaleast
-          inMagField(k,i,j,3,ifile) = btotalup
-          inFieldType(k,i,j,ifile) = btype
-          ! endif
-
-        enddo
-      end do
-    end do
-
-  close(iInputUnit_)
-
-end do
-
-!Interpolate the field between time 1 and time 2
-ctime = (currentTime - realtime(1))/(realtime(2)-realtime(1))
-Magfield = inMagfield(:,:,:,:,1)*(1-ctime)+inMagfield(:,:,:,:,2)*ctime
-
-if (currentTime - realtime(1) < realtime(2) - currentTime) then
-  typeField = inFieldType(:,:,:,1)
-else
-  typeField = inFieldType(:,:,:,2)
-ENDIF
-
-call interpolateField(nMagLons,nMagLats,nMagAlts,MagFieldLon,MagFieldLat,MagFieldAlt,MagField,TypeField)
-maxMagFieldAlt = maxval(MagFieldAlt)
-minMagFieldAlt = minval(MagFieldAlt)
+  call interpolateField(nMagLons,nMagLats,nMagAlts,MagFieldLon,MagFieldLat,MagFieldAlt,MagField,TypeField)
+  maxMagFieldAlt = maxval(MagFieldAlt)
+  minMagFieldAlt = minval(MagFieldAlt)
 
 
 end subroutine ReadMHDField
@@ -10218,56 +10191,56 @@ subroutine ReadLillisModel
   write(*,*) "==> Now Reading Mars Empirical Ionization Model"
   open(unit=42, file='DataIn/nemlillis_v3.dat', action='read')
 
-  !!! The impact ionization grid is currently fixed
+!!! The impact ionization grid is currently fixed
   !Read Header
   read(42,*) ctempLarge
   read(42,*) ctempLarge
 
   do i = 1, nReactions_EIM
-    do j = 1, nBTypes_EIM
-      do k = 1, nAlts_EIM
-        do l = 1, nSW_EIM
-          do m = 1, nBmags_EIM
-             do n = 1, nBelvs_EIM
-               
-              read(42,*,IOSTAT=iError) species, process, btype, altlow,altmid,althigh, &
-                swlow,swmid,swhigh,bmaglow,bmagmid,bmaghigh,elvlow,elvmid, &
-                elvhigh,EIM_IZ(i,j,k,l,m,n)
+     do j = 1, nBTypes_EIM
+        do k = 1, nAlts_EIM
+           do l = 1, nSW_EIM
+              do m = 1, nBmags_EIM
+                 do n = 1, nBelvs_EIM
 
-                if (i == 1 .and. j == 1 .and. k == 1 .and. l ==  1 .and. m == 1) &
-                  EIMBelvs(n) = elvmid
+                    read(42,*,IOSTAT=iError) species, process, btype, altlow,altmid,althigh, &
+                         swlow,swmid,swhigh,bmaglow,bmagmid,bmaghigh,elvlow,elvmid, &
+                         elvhigh,EIM_IZ(i,j,k,l,m,n)
 
-                if (iError /= 0) then
-                    call stop_gitm("Error reading impact ionization data")
-                  endif
+                    if (i == 1 .and. j == 1 .and. k == 1 .and. l ==  1 .and. m == 1) &
+                         EIMBelvs(n) = elvmid
 
+                    if (iError /= 0) then
+                       call stop_gitm("Error reading impact ionization data")
+                    endif
+
+                 end do
+                 if (i == 1 .and. j == 1 .and. k == 1 .and. l == 1 ) &
+                      EIMBmag(m) = bmagmid
               end do
-              if (i == 1 .and. j == 1 .and. k == 1 .and. l == 1 ) &
-                EIMBmag(m) = bmagmid
-           end do
 
-            if (i == 1 .and. j == 1 .and. k == 1) EIMSolarwindpressure(l) = swmid
-          end do
-          if (i == 1 .and. j == 1) EIMAltitude(:,k) = (/altlow,althigh/)
+              if (i == 1 .and. j == 1 .and. k == 1) EIMSolarwindpressure(l) = swmid
+           end do
+           if (i == 1 .and. j == 1) EIMAltitude(:,k) = (/altlow,althigh/)
         end do
         if (i == 1) EIMType(j) = int(btype)
-      end do
-    end do
+     end do
+  end do
 
-    EIMAltitude = EIMAltitude * 1000. !Convert to m
+  EIMAltitude = EIMAltitude * 1000. !Convert to m
 
   close(42)
 
-  !!!Solar wind pressure should be constant (for now) so interpolate the IZ to input pressure.
+!!!Solar wind pressure should be constant (for now) so interpolate the IZ to input pressure.
   if (solarWindPressure < minval(EIMsolarwindpressure)) then
-    write(*,*) "Solar wind pressure is less than minimum value for &
-      electron ionization grid. Setting to min value."
-    solarWindPressure = minval(EIMsolarwindpressure)
+     write(*,*) "Solar wind pressure is less than minimum value for &
+          electron ionization grid. Setting to min value."
+     solarWindPressure = minval(EIMsolarwindpressure)
   endif
   if (solarWindPressure > maxval(EIMsolarwindpressure)) then
-    write(*,*) "Solar wind pressure is greater than maximum value for &
-      electron ionization grid. Setting to max value."
-    solarWindPressure = maxval(EIMsolarwindpressure)
+     write(*,*) "Solar wind pressure is greater than maximum value for &
+          electron ionization grid. Setting to max value."
+     solarWindPressure = maxval(EIMsolarwindpressure)
   endif
 
   tempswp = EIMSolarwindpressure
@@ -10280,11 +10253,11 @@ subroutine ReadLillisModel
   SWPhigh = EIMSolarwindpressure(iswphigh)
   invSWdiff = 1/(SWPhigh-SWPlow)
 
-   V1 = EIM_IZ(:,:,:,iswplow,:,:)
-   V2 = EIM_IZ(:,:,:,iswphigh,:,:)
+  V1 = EIM_IZ(:,:,:,iswplow,:,:)
+  V2 = EIM_IZ(:,:,:,iswphigh,:,:)
 
-   EIM_IonizationFrequency = V1 + (solarwindpressure-SWPlow)*invSWdiff* &
-     (V2 - V1)
+  EIM_IonizationFrequency = V1 + (solarwindpressure-SWPlow)*invSWdiff* &
+       (V2 - V1)
 
 
 end subroutine ReadLillisModel
@@ -10295,7 +10268,7 @@ subroutine interpolateEIM(altitude,Bz,Bmag,MagFieldType,c)
   ! to a point.
 
   use ModGITM, only: EIMAltitude,EIMBMag,EIMBElvs,EIM_IonizationFrequency, &
-    nReactions_EIM,nBmags_EIM,nBelvs_EIM,nAlts_EIM, EIMType,iproc
+       nReactions_EIM,nBmags_EIM,nBelvs_EIM,nAlts_EIM, EIMType,iproc
   use ModConstants, only: Pi
 
 
@@ -10322,14 +10295,14 @@ subroutine interpolateEIM(altitude,Bz,Bmag,MagFieldType,c)
 
   typeindex = maxloc(merge(1.,0.,EIMType == MagFieldType),dim=1)
 
-  !!! Interpolate to BMagnitude
+!!! Interpolate to BMagnitude
 
   where(Bmag - tempBMag .lt. -0.00001) tempBMag = -1.0e9
   imaglow =  maxloc(tempBMag,1)
   if (imaglow == nBmags_EIM) imaglow = imaglow - 1
   imaghigh = imaglow + 1
 
-  !!! Interpolate to BMagnitude
+!!! Interpolate to BMagnitude
   where(BelevationAngle - tempBElev .lt. -0.00001) tempBElev = -1.0e9
   ielvlow =  maxloc(tempBElev,1)
   if (ielvlow == nBelvs_EIM) ielvlow = ielvlow - 1
@@ -10356,23 +10329,23 @@ subroutine interpolateEIM(altitude,Bz,Bmag,MagFieldType,c)
   R2 = c01*(vmhigh-Bmag)*invmagdiff+c11*(Bmag-vmlow)*invmagdiff
 
   c0 = R1 * (vehigh - BelevationAngle) * invelvdiff + &
-    R2 * (BelevationAngle - velow) * invelvdiff
+       R2 * (BelevationAngle - velow) * invelvdiff
 
 
-  !!! Interpolate to altitude- Bins are overlapping and it is possible
-  !!! that our altitude is located in as many as 3 bins. So we take a
-  !!! weighted average.
+!!! Interpolate to altitude- Bins are overlapping and it is possible
+!!! that our altitude is located in as many as 3 bins. So we take a
+!!! weighted average.
 
   ialtlow = 1
   ialthigh = 1
 
   do ialt = nAlts_EIM, 1, -1
-    if (EIMaltitude(1,ialt) <= altitude .and. EIMAltitude(2,ialt) > altitude) &
-     ialtlow = ialt
+     if (EIMaltitude(1,ialt) <= altitude .and. EIMAltitude(2,ialt) > altitude) &
+          ialtlow = ialt
   end do
   do ialt = 1, nAlts_EIM
-    if (EIMaltitude(1,ialt) < altitude .and. EIMAltitude(2,ialt) >= altitude) &
-     ialthigh = ialt
+     if (EIMaltitude(1,ialt) < altitude .and. EIMAltitude(2,ialt) >= altitude) &
+          ialthigh = ialt
   end do
 
 
@@ -10380,7 +10353,7 @@ subroutine interpolateEIM(altitude,Bz,Bmag,MagFieldType,c)
   c = 0.0
   naltbins = 1+ (ialthigh - ialtlow)
   distances(ialtlow:ialthigh) = &
-    abs((EIMAltitude(2,ialtlow:ialthigh)+EIMaltitude(1,ialtlow:ialthigh))/2.-altitude)
+       abs((EIMAltitude(2,ialtlow:ialthigh)+EIMaltitude(1,ialtlow:ialthigh))/2.-altitude)
 
 
   ! Perform the interpolation. c is the ionization frequency for each 
@@ -10389,86 +10362,87 @@ subroutine interpolateEIM(altitude,Bz,Bmag,MagFieldType,c)
   select case (naltbins)
 
   case (3)
-    w1 = distances(ialtlow+1)*distances(ialtlow+2) / &
-    (distances(ialtlow)*distances(ialtlow+1) + distances(ialtlow)*distances(ialtlow+2) + &
-    distances(ialtlow+1)*distances(ialtlow+2))
-    w2 = distances(ialtlow)*distances(ialtlow+2) / &
-    (distances(ialtlow)*distances(ialtlow+1) + distances(ialtlow)*distances(ialtlow+2) + &
-    distances(ialtlow+1)*distances(ialtlow+2))
-    w3 = distances(ialtlow)*distances(ialtlow+1) / &
-    (distances(ialtlow)*distances(ialtlow+1) + distances(ialtlow)*distances(ialtlow+2) + &
-    distances(ialtlow+1)*distances(ialtlow+2))
+     w1 = distances(ialtlow+1)*distances(ialtlow+2) / &
+          (distances(ialtlow)*distances(ialtlow+1) + distances(ialtlow)*distances(ialtlow+2) + &
+          distances(ialtlow+1)*distances(ialtlow+2))
+     w2 = distances(ialtlow)*distances(ialtlow+2) / &
+          (distances(ialtlow)*distances(ialtlow+1) + distances(ialtlow)*distances(ialtlow+2) + &
+          distances(ialtlow+1)*distances(ialtlow+2))
+     w3 = distances(ialtlow)*distances(ialtlow+1) / &
+          (distances(ialtlow)*distances(ialtlow+1) + distances(ialtlow)*distances(ialtlow+2) + &
+          distances(ialtlow+1)*distances(ialtlow+2))
 
-    c = c0(:,ialtlow)*w1+c0(:,ialtlow+1)*w2+c0(:,ialtlow+2)*w3
+     c = c0(:,ialtlow)*w1+c0(:,ialtlow+1)*w2+c0(:,ialtlow+2)*w3
 
   case (2)
 
-    w1 = distances(ialtlow+1)/(distances(ialtlow) + distances(ialtlow+1))
-    w2 = distances(ialtlow)/(distances(ialtlow) + distances(ialtlow+1))
+     w1 = distances(ialtlow+1)/(distances(ialtlow) + distances(ialtlow+1))
+     w2 = distances(ialtlow)/(distances(ialtlow) + distances(ialtlow+1))
 
-    c = c0(:,ialtlow)*w1+c0(:,ialtlow+1)*w2
+     c = c0(:,ialtlow)*w1+c0(:,ialtlow+1)*w2
 
   case DEFAULT
-    ! should only apply to naltbins = 1, but just in case
+     ! should only apply to naltbins = 1, but just in case
 
-    c = c0(:,ialtlow)
+     c = c0(:,ialtlow)
 
 
-end select
+  end select
 
 end subroutine interpolateEIM
+
 subroutine getMHDFiles(firstfile,secondfile,timereal1,timereal2)
 
-use ModInputs, only: nMHDFiles, MHDFiles, iCharLen_
-use ModTime, only: CurrentTime
-use ModGITM, only: iproc
-implicit None
+  use ModInputs, only: nMHDFiles, MHDFiles, iCharLen_
+  use ModTime, only: CurrentTime
+  use ModGITM, only: iproc
+  implicit None
 
-integer :: iFile, year, mon, day, hour, minu, sec, pos
-real, intent(out) :: timereal1, timereal2
-real :: tr1, tr2
-character (len=100), intent(out) :: firstfile,secondfile
-character (len=100) :: file1, file2
-
-
-firstfile = 'blank'
-secondfile = 'blank'
-
-do ifile = 1, nMHDFiles -1
-  file1 = MHDFiles(ifile)
-  pos = index(file1,'.dat') - 15
-
-  read(file1(pos:pos+3),*) year
-  read(file1(pos+4:pos+5),*) mon
-  read(file1(pos+6:pos+7),*) day
-  read(file1(pos+9:pos+10),*) hour
-  read(file1(pos+11:pos+12),*) minu
-  read(file1(pos+13:pos+14),*) sec
-  call time_int_to_real([year,mon,day,hour,minu,sec,0],tr1)
-
-  file2 = MHDFiles(ifile+1)
-  pos = index(file2,'.dat') - 15
-  read(file2(pos:pos+3),*) year
-  read(file2(pos+4:pos+5),*) mon
-  read(file2(pos+6:pos+7),*) day
-  read(file2(pos+9:pos+10),*) hour
-  read(file2(pos+11:pos+12),*) minu
-  read(file2(pos+13:pos+14),*) sec
-
-  call time_int_to_real([year,mon,day,hour,minu,sec,0],tr2)
+  integer :: iFile, year, mon, day, hour, minu, sec, pos
+  real, intent(out) :: timereal1, timereal2
+  real :: tr1, tr2
+  character (len=100), intent(out) :: firstfile,secondfile
+  character (len=100) :: file1, file2
 
 
-  if (tr1 <= CurrentTime .and. tr2 > CurrentTime) then
-    firstfile = file1
-    secondfile = file2
-    timereal1 = tr1
-    timereal2 = tr2
-  end if
+  firstfile = 'blank'
+  secondfile = 'blank'
 
-end do
+  do ifile = 1, nMHDFiles -1
+     file1 = MHDFiles(ifile)
+     pos = index(file1,'.dat') - 15
 
-if (firstfile == "blank" .or. secondfile == "blank") then
-  call stop_gitm("Missing MHD file for this time period. Stopping in getMHDFiles.")
-endif
+     read(file1(pos:pos+3),*) year
+     read(file1(pos+4:pos+5),*) mon
+     read(file1(pos+6:pos+7),*) day
+     read(file1(pos+9:pos+10),*) hour
+     read(file1(pos+11:pos+12),*) minu
+     read(file1(pos+13:pos+14),*) sec
+     call time_int_to_real([year,mon,day,hour,minu,sec,0],tr1)
+
+     file2 = MHDFiles(ifile+1)
+     pos = index(file2,'.dat') - 15
+     read(file2(pos:pos+3),*) year
+     read(file2(pos+4:pos+5),*) mon
+     read(file2(pos+6:pos+7),*) day
+     read(file2(pos+9:pos+10),*) hour
+     read(file2(pos+11:pos+12),*) minu
+     read(file2(pos+13:pos+14),*) sec
+
+     call time_int_to_real([year,mon,day,hour,minu,sec,0],tr2)
+
+
+     if (tr1 <= CurrentTime .and. tr2 > CurrentTime) then
+        firstfile = file1
+        secondfile = file2
+        timereal1 = tr1
+        timereal2 = tr2
+     end if
+
+  end do
+
+  if (firstfile == "blank" .or. secondfile == "blank") then
+     call stop_gitm("Missing MHD file for this time period. Stopping in getMHDFiles.")
+  endif
 
 end subroutine getMHDFiles
