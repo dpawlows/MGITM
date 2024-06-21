@@ -9114,13 +9114,12 @@ subroutine lubksb_dp(a,n,np,indx,b)
   integer,intent(in) :: n,np
   real*8,intent(in) :: a(np,np)
   integer,intent(in) :: indx(n)
-  real*8,intent(out) :: b(n)
+  real*8,intent(inout) :: b(n)
 
   real*8 :: sum
   integer :: ii, ll, i, j
 
   ii=0
-  b = 0 ! to be checked if needs to be zero
   do i=1,n
      ll=indx(i)
      sum=b(ll)
