@@ -240,6 +240,10 @@ contains
     allocate(EIM_IonizationFrequency(nReactions_EIM,nBTypes_EIM,nAlts_EIM,nBmags_EIM,nBelvs_EIM))
     allocate(impactIonizationFrequency(nLons,nLats,nAlts,nReactions_EIM,nBlocks))
     allocate(FieldType(nLons,nLats,nAlts,nBlocks))
+
+    HemisphericPowerNorth = 0.0
+    HemisphericPowerSouth = 0.0
+    
   end subroutine init_mod_gitm
   !=========================================================================
   subroutine clean_mod_gitm
