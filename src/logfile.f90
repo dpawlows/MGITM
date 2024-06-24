@@ -125,11 +125,16 @@ subroutine logfile(dir)
 
      write(iLogFileUnit_,'(a)') " "
      write(iLogFileUnit_,'(a)') "#START"
-     write(iLogFileUnit_,'(a)') &
-          "   iStep yyyy mm dd hh mm ss  ms      dt "// &
-          "min(T) max(T) mean(T) min(VV) max(VV) mean(VV) F107 F107A "// &
-          "By Bz Vx HP HPn HPs"
-
+     if(IsMars)then
+        write(iLogFileUnit_,'(a)') &
+             "   iStep yyyy mm dd hh mm ss  ms      dt "// &
+             "min(T) max(T) mean(T) min(VV) max(VV) mean(VV) F107 F107A"
+     else
+        write(iLogFileUnit_,'(a)') &
+             "   iStep yyyy mm dd hh mm ss  ms      dt "// &
+             "min(T) max(T) mean(T) min(VV) max(VV) mean(VV) F107 F107A "// &
+             "By Bz Vx HP HPn HPs"
+     end if
 
   endif
 
@@ -185,10 +190,10 @@ subroutine logfile(dir)
      call get_hpi(CurrentTime,Hpi,iError)
 
      if(IsMars)then
-        write(iLogFileUnit_,"(i8,i5,5i3,i4,f8.4,6f13.5,5f9.1)") &
+        write(iLogFileUnit_,"(i8,i5,5i3,i4,f8.4,6f13.5,2f9.1)") &
              iStep, iTimeArray, dt, minTemp, maxTemp, AverageTemp, &
              minVertVel, maxVertVel, AverageVertVel,&
-             f107,f107A,By,Bz,Vx
+             f107,f107A
      else
         write(iLogFileUnit_,"(i8,i5,5i3,i4,f8.4,6f13.5,8f9.1)") &
              iStep, iTimeArray, dt, minTemp, maxTemp, AverageTemp, &
