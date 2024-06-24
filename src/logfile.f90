@@ -92,7 +92,7 @@ subroutine logfile(dir)
 
      write(iLogFileUnit_,'(a)') "GITM2 log file"
      write(iLogFileUnit_,'(a,L2)') "## Inputs from UAM.in" 
-      write(iLogFileUnit_,'(a,L2)') "# Resart=", dorestart
+     write(iLogFileUnit_,'(a,L2)') "# Resart=", dorestart
      write(iLogFileUnit_,'(4(a,f9.3))') "# Eddy coef: ", EddyDiffusionCoef, &
           " Eddy P0: ",EddyDiffusionPressure0,&
           " Eddy P1: ",EddyDiffusionPressure1,&
@@ -104,32 +104,32 @@ subroutine logfile(dir)
      else
         write(iLogFileUnit_,'(a,L2)') "# EUV Data: ",useEUVdata
      endif
-      write(iLogFileUnit_,'(a,a15)') "# AMIE: ", cAmieFileNorth,cAmieFileSouth
-      write(iLogFileUnit_,'(3(a,L2))') "# Solar Heating: ",useSolarHeating ,&
+     write(iLogFileUnit_,'(a,a15)') "# AMIE: ", cAmieFileNorth,cAmieFileSouth
+     write(iLogFileUnit_,'(3(a,L2))') "# Solar Heating: ",useSolarHeating ,&
           " Joule Heating: ",useJouleHeating ,&
           " Auroral Heating: ", useAuroralHeating
-       write(iLogFileUnit_,'(2(a,L2))') "# NO Cooling: ", useNOCooling, &
+     write(iLogFileUnit_,'(2(a,L2))') "# NO Cooling: ", useNOCooling, &
           " O Cooling: ", useOCooling
-       write(iLogFileUnit_,'(3(a,L2))') "# Conduction: ",useConduction ,&
+     write(iLogFileUnit_,'(3(a,L2))') "# Conduction: ",useConduction ,&
           " Turbulent Conduction: ", useTurbulentCond,&
           " Updated Turbulent Conduction: ",useUpdatedTurbulentCond
-       write(iLogFileUnit_,'(3(a,L2))') "# Pressure Grad: ",usePressureGradient ,&
+     write(iLogFileUnit_,'(3(a,L2))') "# Pressure Grad: ",usePressureGradient ,&
           " Ion Drag: ", useIonDrag,&
           " Neutral Drag: ", useNeutralDrag
-       write(iLogFileUnit_,'(3(a,L2))') "# Viscosity: ", useViscosity,&
+     write(iLogFileUnit_,'(3(a,L2))') "# Viscosity: ", useViscosity,&
           " Coriolis: ", useCoriolis,&
           " Gravity: ",useGravity 
-       write(iLogFileUnit_,'(3(a,L2))') "# Ion Chemistry: ",useIonChemistry ,&
+     write(iLogFileUnit_,'(3(a,L2))') "# Ion Chemistry: ",useIonChemistry ,&
           " Ion Advection: ",useIonAdvection ,&
           " Neutral Chemistry: ", useNeutralChemistry
-          
-       write(iLogFileUnit_,'(a)') " "
-       write(iLogFileUnit_,'(a)') "#START"
-       write(iLogFileUnit_,'(a)') &
-            "   iStep yyyy mm dd hh mm ss  ms      dt "// &
-            "min(T) max(T) mean(T) min(VV) max(VV) mean(VV) F107 F107A "// &
-            "By Bz Vx HP HPn HPs"
-          
+
+     write(iLogFileUnit_,'(a)') " "
+     write(iLogFileUnit_,'(a)') "#START"
+     write(iLogFileUnit_,'(a)') &
+          "   iStep yyyy mm dd hh mm ss  ms      dt "// &
+          "min(T) max(T) mean(T) min(VV) max(VV) mean(VV) F107 F107A "// &
+          "By Bz Vx HP HPn HPs"
+
 
   endif
 
@@ -184,12 +184,18 @@ subroutine logfile(dir)
      call get_sw_v(CurrentTime, Vx, iError)
      call get_hpi(CurrentTime,Hpi,iError)
 
-     write(iLogFileUnit_,"(i8,i5,5i3,i4,f8.4,6f13.5,8f9.1)") &
-          iStep, iTimeArray, dt, minTemp, maxTemp, AverageTemp, &
-          minVertVel, maxVertVel, AverageVertVel,&
-          f107,f107A,By,Bz,Vx, Hpi, HPn/1.0e9, &
-          HPs/1.0e9
-
+     if(IsMars)then
+        write(iLogFileUnit_,"(i8,i5,5i3,i4,f8.4,6f13.5,5f9.1)") &
+             iStep, iTimeArray, dt, minTemp, maxTemp, AverageTemp, &
+             minVertVel, maxVertVel, AverageVertVel,&
+             f107,f107A,By,Bz,Vx
+     else
+        write(iLogFileUnit_,"(i8,i5,5i3,i4,f8.4,6f13.5,8f9.1)") &
+             iStep, iTimeArray, dt, minTemp, maxTemp, AverageTemp, &
+             minVertVel, maxVertVel, AverageVertVel,&
+             f107,f107A,By,Bz,Vx, Hpi, HPn/1.0e9, &
+             HPs/1.0e9
+     end if
      call flush_unit(iLogFileUnit_)
   endif
 
