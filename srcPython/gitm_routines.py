@@ -8,7 +8,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.dates as dates
 from pylab import cm
-
+import re 
 
 #-----------------------------------------------------------------------------
 #
@@ -232,7 +232,28 @@ def read_gitm_one_file(file_to_read, vars_to_read=-1):
 
     return data
 
+def extract_year(filename,pattern):
+    match = re.search(pattern, filename)
+    if match:
+        year = int(match.group(2)[:2])  # Extract the first two digits as the year
+        if year < 50:
+            # For years less than 50, assume 20xx
+            year += 2000
+        else:
+            # For years greater than or equal to 50, assume 19xx
+            year += 1900
+        return year
+    else:
+        return None
 
+def extract_timestamp(filename,pattern):
+    match = re.search(pattern, filename)
+    if match:
+        timestamp = datetime.strptime(str(extract_year(filename,pattern))+match.group(2)[2:]+ match.group(3),\
+            '%Y%m%d%H%M%S')
+        return timestamp
+    else:
+        return None
 #-----------------------------------------------------------------------------
 #
 #-----------------------------------------------------------------------------
@@ -249,23 +270,23 @@ name_dict = {"Altitude":"Altitude",
                      "Heating Efficiency":"Heating Efficiency",
                      "Heat Balance Total":"Heat Balance Total",
                      "Latitude":"Latitude", "Longitude":"Longitude",
-                     "N!D2!N":"N$_2$ Mass Density",
-                     "N!D2!U+!N":"N$_2$$^+$ Mass Density",
-                     "N!U+!N":"N$^+$ Mass Density",
-                     "N(!U2!ND)":"N($^2$D) Mass Density",
-                     "N(!U2!NP)":"N($^2$P) Mass Density",
-                     "N(!U4!NS)":"N($^4$S) Mass Density",
+                     "[N!D2!N]":"[N$_2$]",
+                     "[N!D2!U+!N]":"[N$_2$$^+$]",
+                     "[N!U+!N]":"[N$^+$]",
+                     "[N(!U2!ND)]":"[N($^2$D)]",
+                     "[N(!U2!NP)]":"[N($^2$P)]",
+                     "[N(!U4!NS)]":"[N($^4$S)]",
                      "N2 Mixing Ratio":"N$_2$ Mixing Ratio",
-                     "NO":"NO Mass Density", "NO!U+!N":"NO$^+$ Mass Density",
-                     "O!D2!N":"O$_2$ Mass Density",
-                     "O(!U1!ND)":"O($^1$D) Mass Density",
-                     "O!D2!U+!N":"O$_2$$^+$ Mass Density",
-                     "O(!U2!ND)!":"O($^2$D) Mass Density",
-                     "O(!U2!ND)!U+!N":"O($^2$D) Mass Density",
-                     "O(!U2!NP)!U+!N":"O($^2$P)$^+$ Mass Density",
-                     "O(!U2!NP)!U+!N":"O($^2$P) Mass Density",
-                     "O(!U3!NP)":"O($^3$P) Mass Density",
-                     "O_4SP_!U+!N":"O($^4$SP)$^+$ Mass Density",
+                     "[NO]":"[NO]", "[NO!U+!N]":"[NO$^+$]",
+                     "[O!D2!N]":"[O$_2$] ",
+                     "[O(!U1!ND)]":"[O($^1$D)] ",
+                     "[O!D2!U+!N]":"[O$_2$$^+$]",
+                     "[O(!U2!ND)!]":"[O($^2$D)] ",
+                     "[O(!U2!ND)!U+!N]":"[O($^2$D)] ",
+                     "[O(!U2!NP)!U+!N]":"[O($^2$P)$^+$] ",
+                     "[O(!U2!NP)!U+!N]":"[O($^2$P)] ",
+                     "[O(!U3!NP)]":"[O($^3$P)] ",
+                     "[O_4SP_!U+!N]":"[O($^4$SP)$^+$] ",
                      "RadCooling":"Radiative Cooling", "Rho":"Neutral Density",
                      "Temperature":"T$_n$", "V!Di!N (east)":"v$_{east}$",
                      "V!Di!N(north)":"v$_{north}$", "V!Di!N(up)":"v$_{up}$",
