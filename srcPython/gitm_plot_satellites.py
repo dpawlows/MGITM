@@ -146,6 +146,7 @@ for file in filelist:
 alts = data[2][0,0]/1000. #Assumes the altitude grid doesn't change with file
 df = pd.DataFrame(alldata)
 
+colors = ['blue','green','orange','red','yellow']
 if not args['average']:
     for ifile in range(len(alldata)):
         for pvar in args["var"].split(','):
@@ -156,8 +157,9 @@ if not args['average']:
                 minv = min(pdata)
             if max(pdata) > maxv:
                 maxv = max(pdata)
-
-            line, = pp.plot(pdata,alts,color='steelblue')
+            
+            ivar = args["var"].index(pvar)
+            line, = pp.plot(pdata,alts,color=colors[ivar])
     line.set_label('MGITM')
 else: 
     meandata = df.mean()
