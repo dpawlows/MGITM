@@ -28,7 +28,8 @@ subroutine UA_calc_electrodynamics(UAi_nMLTs, UAi_nLats)
   use ModMPI
   use ModTime
 !  use ModMagTrace
-
+  use ModUtilities, ONLY: CON_stop
+  
   implicit none
 
   integer, intent(out) :: UAi_nMLTs, UAi_nLats

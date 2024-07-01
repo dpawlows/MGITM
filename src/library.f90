@@ -32,6 +32,7 @@ subroutine stop_gitm(str)
   use ModGITM
   use ModInputs, only: IsFramework
   use ModMpi
+  use ModUtilities, ONLY: CON_stop
   implicit none
 
   character (len=*), intent(in) :: str
