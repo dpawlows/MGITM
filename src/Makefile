@@ -88,6 +88,7 @@ OBJECTS = \
 	write_output.o\
 	gradient.o\
 	tides.o\
+	get_location.o\
 	user.o
 
 OBJECTS_EXE = main.o ${OBJECTS} ${MODULES}
