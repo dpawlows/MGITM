@@ -69,6 +69,7 @@ subroutine logfile(dir)
   use ModIndices
   use ModIndicesInterfaces
   use ModUtilities, ONLY: flush_unit
+  use ModIoUnit, ONLY: io_unit_new
 
   implicit none
 
@@ -83,7 +84,7 @@ subroutine logfile(dir)
   if (.not. IsOpenLogFile .and. iProc == 0) then
 
      IsOpenLogFile = .true.
-     call CON_io_unit_new(iLogFileUnit_)
+     iLogFileUnit_ = io_unit_new()
 
      write(cIter,"(i8.8)") iStep
 
