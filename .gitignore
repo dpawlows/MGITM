@@ -32,3 +32,5 @@ srcData/UAM.in
 srcGlow/libGLOW.a
 srcSphereAB/libSphere.a
 srcPython/__pycache__
+share
+util
