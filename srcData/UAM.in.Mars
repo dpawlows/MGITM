@@ -21,11 +21,10 @@ F
 F		use stretched grid
 
 # -------------------------------------------------------------------------
-#DIFFUSION
-T
-100.0		Eddy Diffusion Coefficient (Should be about 37.5 for 1-D runs)
-0.020		Total Eddy Diffusion applied at alts below this pressures level
-0.003		No Eddy Diffusion at altitudes above this pressure level
+#EDDYDIFFUSION
+minmax      EddyDiffusionMethod (constant, minmax, or yoshida)
+1500	    kEddyMax
+500		    kEddyMin (Ignored for all methods except minmax)
 
 #THERMALDIFFUSION
 2.22e-4		Thermal conductivity (code use kappa = number * T**0.75)

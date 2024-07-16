@@ -203,7 +203,12 @@ module ModInputs
   logical :: UseTurbulentCond = .false.
   logical :: UseUpdatedTurbulentCond = .false.
   real :: EddyScaling = 1.0
+  
+  character (len=iCharLen_), dimension(3) :: EddyDiffusionTypes(3)
+  character (len=iCharLen_) :: EddyDiffusionMethod
 
+  real :: kEddyMin, kEddyMax !kMax is used as kConstant for the constant method
+  
 !! WAVE DRAG FORCINGS
   logical :: UseStressHeating  = .false.
 

@@ -515,6 +515,34 @@ subroutine set_inputs
               write(*,*) "EddyDiffusionPressure1 (real)"
            endif
 
+        case ("#EDDYDIFFUSION")
+         EddyDiffusionTypes = [character(len=iCharLen_) :: "yoshida","minmax","constant"]
+         call read_in_string(EddyDiffusionMethod, iError)
+         if ( ANY (EddyDiffusionTypes == EddyDiffusionMethod)) then
+      
+            call read_in_real(kEddyMax, iError)
+            if (EddyDiffusionMethod == 'minmax') then
+               ! only needed for the minmax method
+               call read_in_real(kEddyMin, iError)
+            endif
+
+            if (iError /= 0) then
+               write(*,*) "Incorrect format for #EDDYDIFFUSION:"
+               write(*,*) "#EDDYDIFFUSION"
+               write(*,*) "EddyDiffusionMethod (string) (constant, minmax, or yoshida)"
+               write(*,*) "kMax (real)"
+               write(*,*) "kMin (real, for minmax only)"
+            endif
+         else
+            write(*,*) 'EddyDiffusionMethod is not recongnized for #EDDYDIFFUSION:'
+            write(*,*) "#EDDYDIFFUSION"
+            write(*,*) "EddyDiffusionMethod (string) (constant, minmax, or yoshida)"
+            write(*,*) "kMax (real)"
+            write(*,*) "kMin (real, for minmax only)"
+            ierror = 1
+         endif
+         
+         
         case ("#FORCING")
            call read_in_logical(UsePressureGradient, iError)
            call read_in_logical(UseIonDrag, iError)

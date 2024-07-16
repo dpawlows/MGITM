@@ -746,7 +746,7 @@ subroutine calc_eddy_diffusion_coefficient(iBlock)
   use ModSizeGITM
   use ModGITM, only: pressure, NDensity
   use ModInputs, only: EddyDiffusionPressure0,EddyDiffusionPressure1, &
-       EddyDiffusionCoef
+       EddyDiffusionCoef,EddyDiffusionMethod,KEddyMax,KEddyMin
   use ModSources, only: KappaEddyDiffusion
 
   implicit none
@@ -758,93 +758,77 @@ subroutine calc_eddy_diffusion_coefficient(iBlock)
   real :: NEddyMax(nLons,nLats)
   real :: EddyProfile(nLons,nLats,-1:nAlts+2)
 
-  real :: KMax
-  real :: KMin
-
   KappaEddyDiffusion(:,:,:,iBlock) = 0.0
-  ! KStandard
-  !    KMax = 1000.0
-  !    KMin = 500.0
 
-  ! KHigh
-  !     KMax = 2000.
-  !     KMin = 500.0
+   if (EddyDiffusionMethod == 'yoshida') then
+      ! Default max KEddy is 4000
+      KappaEddyDiffusion(:,:,:,iBlock) = &
+         8.0e13*(1e-4) / sqrt(NDensity(:,:,:,iBlock))
+   
+      KappaEddyDiffusion(:,:,:,iBlock) = min( KEddyMax, KappaEddyDiffusion(:,:,:,iBlock))
 
-  ! KModerate
-  KMax = 1500.0
-  KMin = 500.0
+   else if (EddyDiffusionMethod == 'minmax') then 
+      
 
-  ! KModerate2
-  !     KMax = 1700.0
-  !     KMin = 500.0
+      PEddyMax = 1.26e-04  ! Pascals (SI Units)
 
-  ! \
-  ! First, find the altitude level corresponding to the asymptotic
-  ! upper bound for Eddy Diffusion.
-  ! Call this upper limit, NEddyMax
+      do iLat = 1, nLats
+         do iLon = 1, nLons
 
-  ! This upper limit is set to 1.26e-09 bars
-  ! conversion to pascals -> 1 bar = 1e+05 pascals
-  ! Thus, PEddyMax -> 1.26e-04 pascals
+            First = 0
 
+            do iAlt = 1, nAlts
 
-  PEddyMax = 1.26e-04  ! Pascals (SI Units)
+               if (Pressure(iLon,iLat,iAlt,iBlock) > PEddyMax) then
+                  cycle
+               else
+                  if (First == 0) then
+                     NEddyMax(iLon,iLat) = NDensity(iLon,iLat,iAlt,iBlock)
+                     First = 1
+                  endif
+               endif
 
-  do iLat = 1, nLats
-     do iLon = 1, nLons
+            enddo
 
-        First = 0
-
-        do iAlt = 1, nAlts
-
-           if (Pressure(iLon,iLat,iAlt,iBlock) > PEddyMax) then
-              cycle
-           else
-              if (First == 0) then
-                 NEddyMax(iLon,iLat) = NDensity(iLon,iLat,iAlt,iBlock)
-                 First = 1
-              endif
-           endif
-
-        enddo
-
-     enddo
-  enddo
-
-  ! Now we have all the trigger densities as a function of Longitude and Latitude
-
-  ! Next, extend the profile downward as 1/sqrt(N) and put a lower bound of 100 m^2/s
-
-  do iAlt = -1, nAlts+2
-     do iLat = 1, nLats
-        do iLon = 1, nLons
-
-           ! Krasnopolsky et al. [2005] Helium modeling
-           !              KappaEddyDiffusion(iLon,iLat,iAlt,iBlock) =  &
-           !                   (1.0e-04)*(1.8e+13)/sqrt( (1.0e-06)*NDensity(iLon,iLat,iAlt,iBlock))
-
-           KappaEddyDiffusion(iLon,iLat,iAlt,iBlock) =  &
-                KMax* sqrt( NEddyMax(iLon,iLat) / NDensity(iLon,iLat,iAlt,iBlock))
-           !
-           !! \
-           !! This gives an upper bound of Kmax
-           KappaEddyDiffusion(iLon,iLat,iAlt,iBlock) = &
-                min(KMax, KappaEddyDiffusion(iLon,iLat,iAlt,iBlock) )
-
-           KappaEddyDiffusion(iLon,iLat,iAlt,iBlock) = &
-                max(KMin, KappaEddyDiffusion(iLon,iLat,iAlt,iBlock) )
-           !
-           !! This gives an lower bound of Kmin
-           !             KappaEddyDiffusion(iLon,iLat,iAlt,iBlock) = &
-           !                  max(100.0e+02, KappaEddyDiffusion(iLon,iLat,iAlt,iBlock) )
-           !
-
-        enddo
-     enddo
-
-  enddo
+         enddo
+      enddo
 
 
+
+      ! Now we have all the trigger densities as a function of Longitude and Latitude
+
+      ! Next, extend the profile downward as 1/sqrt(N) and put a lower bound of 100 m^2/s
+
+      do iAlt = -1, nAlts+2
+         do iLat = 1, nLats
+            do iLon = 1, nLons
+
+               ! Krasnopolsky et al. [2005] Helium modeling
+               !              KappaEddyDiffusion(iLon,iLat,iAlt,iBlock) =  &
+               !                   (1.0e-04)*(1.8e+13)/sqrt( (1.0e-06)*NDensity(iLon,iLat,iAlt,iBlock))
+
+               KappaEddyDiffusion(iLon,iLat,iAlt,iBlock) =  &
+                     KEddyMax* sqrt( NEddyMax(iLon,iLat) / NDensity(iLon,iLat,iAlt,iBlock))
+               !
+               !! \
+               !! This gives an upper bound of KEddyMax
+               KappaEddyDiffusion(iLon,iLat,iAlt,iBlock) = &
+                     min(KEddyMax, KappaEddyDiffusion(iLon,iLat,iAlt,iBlock) )
+
+               KappaEddyDiffusion(iLon,iLat,iAlt,iBlock) = &
+                     max(KEddyMin, KappaEddyDiffusion(iLon,iLat,iAlt,iBlock) )
+             
+            enddo
+         enddo
+
+      enddo
+
+      else
+         KappaEddyDiffusion = KEddyMax
+   endif
+
+   write(*,*) KappaEddyDiffusion(1,1,:,1)
+stop
 end subroutine calc_eddy_diffusion_coefficient
 
 
