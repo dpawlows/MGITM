@@ -26,7 +26,7 @@ Module ModChemistry
     real :: rtN2P_e, rtNOP_e, rtCO2P_e, rtO2P_e  ! DR rates
     real :: te, ti, tn
     real :: rtCO2_N2P, rtO_N2P, rtN2_OP, rtN4S_O, rtN4S_NO,  &
-          rtN2D_O2                             ! Bi-molecular
+          rtN2D_O2, rtO2_C                             ! Bi-molecular
   real :: rtO_O_CO2, rtO_CO_CO2, rtO_O2_CO2, rtO_N4S_CO2  ! Tri-molecular
 
 ! 11-Reactions and Rates taken from vtgcm  [May 2008] (T-independent)
@@ -86,6 +86,7 @@ subroutine calc_reaction_rates(iLon,iLat,iAlt,iBlock)
            rtN2D_O2 = 9.7e-12*exp(-185./tn)*1.0e-6
            rtN4S_O = 1.9e-17*rt300tn*(1.-0.57/tn**0.5)*1.e-06
            rtN4S_NO = 2.5e-10*rttn300*exp(-600./tn)*1.e-06
+           rtO2_C = 4.9e-11*(tn/298)**-0.32*1.e-06        !Geppert et al. 2000
 !\
 ! Reaction Rates with Neutral Temp, tn: cm^6/s -> m^6/s
 ! real :: rtO_O_CO2, rtO_CO_CO2, rtO_O2_CO2, rtO_N4S_CO2  ! Ter-molecular
@@ -245,26 +246,60 @@ subroutine calc_chemical_sources(iLon,iLat,iAlt,iBlock,IonSources, &
 
               Reaction = EuvDissRateS(iLon,iLat,iAlt,iCO2_,iBlock)*Neutrals(iCO2_)
 
-             NeutralLosses(iCO2_) = NeutralLosses(iCO2_) + Reaction
+              NeutralLosses(iCO2_) = NeutralLosses(iCO2_) + Reaction
               NeutralSources(iO_) = NeutralSources(iO_) + Reaction
+              NeutralSources(iCO_) = NeutralSources(iCO_) + Reaction
+
+
+              ! ----------------------------------------------------------
+              ! CO2 + hv ==> O2 + C
+              ! ----------------------------------------------------------
+              ! Several different pathways
+              Reaction = EuvDissRateS(iLon,iLat,iAlt,iCO2_,iBlock)*Neutrals(iCO2_)
+
+              NeutralLosses(iCO2_) = NeutralLosses(iCO2_) + Reaction
+              NeutralSources(iO2_) = NeutralSources(iO2_) + Reaction
+              NeutralSources(iCO_) = NeutralSources(iC_) + Reaction
+
+
+              ! ----------------------------------------------------------
+              ! CO2 + hv ==> 2O + C
+              ! ----------------------------------------------------------
+              Reaction = EuvDissRateS(iLon,iLat,iAlt,iCO2_,iBlock)*Neutrals(iCO2_)
+
+              NeutralLosses(iCO2_) = NeutralLosses(iCO2_) + Reaction
+              NeutralSources(iO_) = NeutralSources(iO_) + Reaction * 2
               NeutralSources(iCO_) = NeutralSources(iCO_) + Reaction
 
               ! ----------------------------------------------------------
               ! CO2 impact ionization
-                ! ! ----------------------------------------------------------
+              ! ----------------------------------------------------------
 
-                if (UseEmpiricalIonization) then
+              if (UseEmpiricalIonization) then
 
-                  Reaction = &
-                    (impactIonizationFrequency(iLon,iLat,iAlt,iImpactCO2_X2PI_G,iBlock) + &
-                    impactIonizationFrequency(iLon,iLat,iAlt,iImpactCO2_B2Sig,iBlock) + &
-                    impactIonizationFrequency(iLon,iLat,iAlt,iImpactCO2_A2PI_U,iBlock)) &
-                    *Neutrals(iCO2_)
-                  IonSources(iCO2P_) = IonSources(iCO2P_) + Reaction
-                  NeutralLosses(iCO2_) = NeutralLosses(iCO2_) + Reaction
-                  reactionrate(24) = reaction
+                Reaction = &
+                  (impactIonizationFrequency(iLon,iLat,iAlt,iImpactCO2_X2PI_G,iBlock) + &
+                  impactIonizationFrequency(iLon,iLat,iAlt,iImpactCO2_B2Sig,iBlock) + &
+                  impactIonizationFrequency(iLon,iLat,iAlt,iImpactCO2_A2PI_U,iBlock)) &
+                  *Neutrals(iCO2_)
+                IonSources(iCO2P_) = IonSources(iCO2P_) + Reaction
+                NeutralLosses(iCO2_) = NeutralLosses(iCO2_) + Reaction
+                reactionrate(24) = reaction
 
-                endif
+              endif
+
+!\
+! CO Photochemistry:-----------------------------------------------------+
+!/
+              ! ----------------------------------------------------------
+              ! CO + hv ==> O + C
+              !         ==> O(1D) + C(1D)
+              ! ----------------------------------------------------------
+
+
+
+
+              
 
 
 !\
@@ -553,6 +588,16 @@ subroutine calc_chemical_sources(iLon,iLat,iAlt,iBlock,IonSources, &
                IonLosses(iOP_) = IonLosses(iOP_) + Reaction
                NeutralSources(iO_) = NeutralSources(iO_) + Reaction
                IonSources(iO2P_) = IonSources(iO2P_) + Reaction
+
+              ! ----------------------------------------------------------
+              ! O2 + C ==> CO + O(4S)
+              ! ----------------------------------------------------------
+              
+              reaction = rtO2_C * Neutrals(iO2_)*Neutrals(iC_)
+              NeutralLosses(iO2_) = NeutralLosses(iO2_) + Reaction 
+              NeutralLosses(iC_) = NeutralLosses(iC_) + Reaction 
+              NeutralSources(iCO_) = NeutralSources(iCO_) + Reaction 
+              NeutralSources(iO_) = NeutralSources(iO_) + Reaction 
 
 !\
 !-----------End Bi-Molecular Ion-Neutral and Neutral-NeutralChemistry-------------------+

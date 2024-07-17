@@ -22,7 +22,7 @@ module ModEUV
 
   real, allocatable :: EuvIonRateS(:,:,:,:,:)
 
-  real, allocatable :: EuvDissRateS(:,:,:,:,:)
+  real, allocatable :: EuvDissRateS(:,:,:,:,:,:)
 
   real, allocatable :: Chapman(:,:,:,:,:)
 
@@ -1117,7 +1117,8 @@ contains
     allocate(EuvIonRate(nLons, nLats, nAlts, nBlocks))
     allocate(EuvTotal(nLons, nLats, nAlts, nBlocks))
     allocate(EuvIonRateS(nLons, nLats, nAlts, nIons,nBlocks))
-    allocate(EuvDissRateS(nLons, nLats, nAlts, nSpeciesTotal,nBlocks))
+!    allocate(EuvDissRateS(nLons, nLats, nAlts, nSpeciesTotal,nBlocks))
+    allocate(EuvDissRateS(nLons, nLats, nAlts, nSpeciesTotal,nPhotoPathwaysMax,nBlocks))
     allocate(Chapman(nLons, nLats, nAlts, nSpecies,nBlocks))
     allocate(CO2_Abs_Fac(nLons,nLats,nAlts,Num_Wavelengths_High,nBlocks))
   end subroutine init_mod_euv

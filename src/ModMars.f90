@@ -23,7 +23,8 @@ module GITM_planet
   integer, parameter :: iH_ =  9
   integer, parameter :: iN2D_ =  10
   integer, parameter :: iNO_ =  11
-  integer, parameter :: nSpeciesTotal = iNO_
+  integer, parameter :: iC_  = 12
+  integer, parameter :: nSpeciesTotal = iC_
 
 ! Major Ions (5):  Most Important to MWACM code
 ! Modified (05/21/08) : SWB :   Add N2+ to major ions list
@@ -124,6 +125,28 @@ module GITM_planet
   integer, parameter :: i8446_ = 10
   integer, parameter :: i3726_ = 11
 
+! Photochemistry pathways
+! Some species have multiple photodissociation / photoionization pathways
+
+! CO2
+iPDCO2_CO_O  = 1
+iPDCO2_O2_C_ = 2
+iPDCO2_2O_C  = 3
+nPDReactions(iCO2_) = iPDCO2_2O_C 
+
+!CO
+iPDCO_C_O = 1
+nPDReactions(iCO_) = iPDCO_C_O
+
+!N2
+iPDN2_N4S_N2D = 1
+nPDReaction(iN2_) = iPDN2_N4S_N2D
+
+!O2
+iPDO2_O_O = 1
+nPDReactions(iO2_) = iPDO2_O_O
+
+nPhotoPathwaysMax = maxval(nPDReactions)
 
 !  real :: KappaTemp0 = 2.22e-4
 
