@@ -8,7 +8,7 @@ ABDIR   = srcSphereAB
 MAINDIR = src
 GLDIR   = srcGlow
 
-PLANET=earth
+PLANET=Mars
 
 src/ModSize.f90:
 	cp src/ModSize.f90.orig src/ModSize.f90
@@ -99,6 +99,7 @@ rundir:
 		ln -s ${BINDIR}/GITM.exe . ; \
 		touch core ; chmod 444 core ; \
 		ln -s UA/* .; \
+		cp DataIn/UAM.in.${PLANET} UAM.in ; \
 	fi);
 
 dist:
