@@ -207,7 +207,8 @@ module ModInputs
   character (len=iCharLen_), dimension(3) :: EddyDiffusionTypes(3)
   character (len=iCharLen_) :: EddyDiffusionMethod
 
-  real :: kEddyMin, kEddyMax !kMax is used as kConstant for the constant method
+  !kMax is used as kConstant for the constant method
+  real :: kEddyMin = 0.0, kEddyMax = 0.0
   
 !! WAVE DRAG FORCINGS
   logical :: UseStressHeating  = .false.

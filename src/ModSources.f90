@@ -160,6 +160,7 @@ contains
 
     ChemicalHeatingS = 0.0
     AuroralHeating = 0.0
+    KappaEddyDiffusion = 0.0
     
   end subroutine init_mod_sources
   !=========================================================================
