@@ -827,8 +827,6 @@ subroutine calc_eddy_diffusion_coefficient(iBlock)
          KappaEddyDiffusion = KEddyMax
    endif
 
-   write(*,*) KappaEddyDiffusion(1,1,:,1)
-stop
 end subroutine calc_eddy_diffusion_coefficient
 
 
