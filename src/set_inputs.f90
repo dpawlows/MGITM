@@ -490,30 +490,30 @@ subroutine set_inputs
               write(*,*) "UseStressHeating              (logical)"
            endif
 
-        case ("#DIFFUSION")
-           call read_in_logical(UseDiffusion, iError)
-           if (UseDiffusion .and. iError == 0) then
-              call read_in_real(EddyDiffusionCoef,iError)
-              call read_in_real(EddyDiffusionPressure0,iError)
-              call read_in_real(EddyDiffusionPressure1,iError)
-           endif
+!        case ("#DIFFUSION")
+!           call read_in_logical(UseDiffusion, iError)
+!           if (UseDiffusion .and. iError == 0) then
+!              call read_in_real(EddyDiffusionCoef,iError)
+!              call read_in_real(EddyDiffusionPressure0,iError)
+!              call read_in_real(EddyDiffusionPressure1,iError)
+!           endif
 
-           if (EddyDiffusionPressure0 < EddyDiffusionPressure1) then
-              write(*,*) "If you use eddy diffusion, you must specify two pressure"
-              write(*,*) "levels - under the first, the eddy diffusion is constant."
-              write(*,*) "Between the first and the second, there is a linear drop-off."
-              write(*,*) "Therefore The first pressure must be larger than the second!"
-              iError = 1
-           endif
-
-           if (iError /= 0) then
-              write(*,*) 'Incorrect format for #DIFFUSION:'
-              write(*,*) '#DIFFUSION'
-              write(*,*) "UseDiffusion (logical)"
-              write(*,*) "EddyDiffusionCoef (real)"
-              write(*,*) "EddyDiffusionPressure0 (real)"
-              write(*,*) "EddyDiffusionPressure1 (real)"
-           endif
+!           if (EddyDiffusionPressure0 < EddyDiffusionPressure1) then
+!              write(*,*) "If you use eddy diffusion, you must specify two pressure"
+!              write(*,*) "levels - under the first, the eddy diffusion is constant."
+!              write(*,*) "Between the first and the second, there is a linear drop-off."
+!              write(*,*) "Therefore The first pressure must be larger than the second!"
+!              iError = 1
+!           endif
+!
+!           if (iError /= 0) then
+!              write(*,*) 'Incorrect format for #DIFFUSION:'
+!              write(*,*) '#DIFFUSION'
+!              write(*,*) "UseDiffusion (logical)"
+!              write(*,*) "EddyDiffusionCoef (real)"
+!              write(*,*) "EddyDiffusionPressure0 (real)"
+!              write(*,*) "EddyDiffusionPressure1 (real)"
+!           endif
 
         case ("#EDDYDIFFUSION")
          EddyDiffusionTypes = [character(len=iCharLen_) :: "yoshida","minmax","constant"]

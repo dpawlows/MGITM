@@ -745,8 +745,7 @@ subroutine calc_eddy_diffusion_coefficient(iBlock)
 
   use ModSizeGITM
   use ModGITM, only: pressure, NDensity
-  use ModInputs, only: EddyDiffusionPressure0,EddyDiffusionPressure1, &
-       EddyDiffusionCoef,EddyDiffusionMethod,KEddyMax,KEddyMin
+  use ModInputs, only: EddyDiffusionMethod,KEddyMax,KEddyMin
   use ModSources, only: KappaEddyDiffusion
 
   implicit none
@@ -761,7 +760,7 @@ subroutine calc_eddy_diffusion_coefficient(iBlock)
   KappaEddyDiffusion(:,:,:,iBlock) = 0.0
 
    if (EddyDiffusionMethod == 'yoshida') then
-      ! Default max KEddy is 4000
+      ! Default max KEddy is 1500
       KappaEddyDiffusion(:,:,:,iBlock) = &
          8.0e13*(1e-4) / sqrt(NDensity(:,:,:,iBlock))
    

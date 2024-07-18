@@ -205,18 +205,15 @@ module ModInputs
   real :: EddyScaling = 1.0
   
   character (len=iCharLen_), dimension(3) :: EddyDiffusionTypes(3)
-  character (len=iCharLen_) :: EddyDiffusionMethod
+  character (len=iCharLen_) :: EddyDiffusionMethod = 'minmax'
 
   !kMax is used as kConstant for the constant method
-  real :: kEddyMin = 0.0, kEddyMax = 0.0
+  real :: kEddyMin = 500, kEddyMax = 1500
   
 !! WAVE DRAG FORCINGS
   logical :: UseStressHeating  = .false.
 
   real :: KappaTemp0 = 5.6e-4
-  real :: EddyDiffusionCoef = 0.0
-  real :: EddyDiffusionPressure0 = 0.0
-  real :: EddyDiffusionPressure1 = 0.0
   real :: Kappa1DCorrectionFactor = 45.0
   real :: Kappa1DCorrectionPower  = 1.75
   logical :: UseKappa1DCorrection = .false.

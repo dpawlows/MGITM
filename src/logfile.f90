@@ -94,10 +94,11 @@ subroutine logfile(dir)
      write(iLogFileUnit_,'(a)') "GITM2 log file"
      write(iLogFileUnit_,'(a,L2)') "## Inputs from UAM.in" 
      write(iLogFileUnit_,'(a,L2)') "# Resart=", dorestart
-     write(iLogFileUnit_,'(4(a,f9.3))') "# Eddy coef: ", EddyDiffusionCoef, &
-          " Eddy P0: ",EddyDiffusionPressure0,&
-          " Eddy P1: ",EddyDiffusionPressure1,&
-          " Eddy Scaling: ",EddyScaling
+     write(iLogFileUnit_,'(2(a))') "# Eddy Method=", EddyDiffusionMethod
+!     write(iLogFileUnit_,'(4(a,f9.3))') "# Eddy coef: ", EddyDiffusion, &
+!          " Eddy P0: ",EddyDiffusionPressure0,&
+!          " Eddy P1: ",EddyDiffusionPressure1,&
+!          " Eddy Scaling: ",EddyScaling
      write(iLogFileUnit_,'(2(a,L2))') "# Statistical Models Only: ",usestatisticalmodelsonly,&
           " Apex: ",useApex
      if (useEUVdata) then
