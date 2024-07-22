@@ -36,7 +36,7 @@ module GITM_planet
   integer, parameter  :: ie_    = 6
   integer, parameter  :: nIons  = ie_
   integer, parameter  :: nIonsAdvect = 3
-  integer, parameter  :: nSpeciesAll = 16 !Ions plus neutrals
+  integer, parameter  :: nSpeciesAll = nSpeciesTotal + iNOP_ !Ions plus neutrals
 
   character (len=20) :: cSpecies(nSpeciesTotal)
   character (len=20) :: cIons(nIons)
@@ -128,25 +128,21 @@ module GITM_planet
 ! Photochemistry pathways
 ! Some species have multiple photodissociation / photoionization pathways
 
+  
 ! CO2
-iPDCO2_CO_O  = 1
-iPDCO2_O2_C_ = 2
-iPDCO2_2O_C  = 3
-nPDReactions(iCO2_) = iPDCO2_2O_C 
-
+  integer, parameter :: iPDCO2_CO_O  = 1
+  integer, parameter :: iPDCO2_O2_C = 5
+  integer, parameter :: iPDCO2_2O_C  = 6
 !CO
-iPDCO_C_O = 1
-nPDReactions(iCO_) = iPDCO_C_O
+  integer, parameter :: iPDCO_C_O = 2
 
 !N2
-iPDN2_N4S_N2D = 1
-nPDReaction(iN2_) = iPDN2_N4S_N2D
+  integer, parameter :: iPDN2_N4S_N2D = 3
 
 !O2
-iPDO2_O_O = 1
-nPDReactions(iO2_) = iPDO2_O_O
+  integer, parameter :: iPDO2_O_O = 4
 
-nPhotoPathwaysMax = maxval(nPDReactions)
+  integer, parameter :: nPhotoPathways = iPDCO2_2O_C
 
 !  real :: KappaTemp0 = 2.22e-4
 
@@ -881,8 +877,9 @@ contains
 
     !   Mass = AMU * mean molecular weight  (unlike TGCM codes)
 
+    Mass(iC_)    = 12.011 * AMU
     Mass(iO_)    = 15.9994 * AMU
-    Mass(iCO_)   = 12.011 * AMU + Mass(iO_)
+    Mass(iCO_)   = Mass(iC_) + Mass(iO_)
     Mass(iCO2_)  = Mass(iCO_) + Mass(iO_)
     Mass(iN4S_)    = 14.00674 * AMU
     Mass(iN2D_)    = Mass(iN4S_)
@@ -893,6 +890,7 @@ contains
     Mass(iAr_)   = 39.948 * AMU
     Mass(iHe_)   = 4.0026 * AMU
     Mass(iH_)    = 1.0079 * AMU
+ 
 
     cSpecies(iO_)    = "O"
     cSpecies(iO2_)   = "O!D2!N"
@@ -905,6 +903,8 @@ contains
     cSpecies(iH_)    = "H"
     cSpecies(iHe_)   = "He"
     cSpecies(iN2D_)   = "N(2D)"
+    cSpecies(iC_)   = "C"
+
 
     cIons(iO2P_)   = "O!D2!U+!N"
     cIons(iCO2P_)   = "CO!D2!U+!N"
@@ -1218,7 +1218,7 @@ contains
       REAL :: BWNI(L_NSPECTI+1)
 
       real :: a, b, x(12), w(12), ans, y, bpa, bma, T
-      real :: c1, c2, wn1, wn2, PI
+      real :: c1, c2, wn1, wn2
       integer :: n, nw, nt, m
 
 !C  C1 and C2 values from Goody and Yung (2nd edition)  MKS units
@@ -1226,7 +1226,6 @@ contains
 
       data c1 / 3.741832D-16 /     ! W m^-2
       data c2 / 1.438786D-2  /     ! m K
-      data PI / 3.14159265358979D0 /
 
       data x / -0.981560634246719D0,  -0.904117256370475D0,&
                -0.769902674194305D0,  -0.587317954286617D0,&
@@ -1362,7 +1361,7 @@ contains
       real :: qsi1(L_NSPECTI)
       real :: gi1(L_NSPECTI)
 
-      integer :: nt, np, nw, ng
+      integer :: nt, nw, ng
 
 
 !C----------------------------------------------------------------------C

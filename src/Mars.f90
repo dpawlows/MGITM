@@ -41,7 +41,7 @@ subroutine fill_photo(photoion, photoabs, photodis)
 
   real, intent(out) :: photoion(Num_WaveLengths_High, nIons-1)
   real, intent(out) :: photoabs(Num_WaveLengths_High, nSpeciesTotal)
-  real, intent(out) :: photodis(Num_WaveLengths_High, nSpeciesTotal)
+  real, intent(out) :: photodis(Num_WaveLengths_High, nPhotoPathways)
 
 
   integer :: i, iSpecies, iIon, NWH
@@ -85,9 +85,33 @@ subroutine fill_photo(photoion, photoabs, photodis)
   !  Need:  CO2, O2, and N2 dissociations (only)
   ! ---------------------------------------------------------------------
 
-  photodis(1:NWH,iCO2_)  = PhotoAbs_CO2(1:NWH)-PhotoIon_CO2(1:NWH)
-  photodis(1:NWH,iN2_)   = PhotoAbs_N2(1:NWH)-PhotoIon_N2(1:NWH)
-  photodis(1:NWH,iO2_)   = PhotoAbs_O2(1:NWH)-PhotoIon_O2(1:NWH)
+  ! Normally photodissociation is just photoabsorption - photoionization. However, 
+  ! CO2 and CO both branch. We only do CO2 branching for now. So, we will just use 
+  ! photodissociation rates directly from the literature.
+
+  ! In order to accomodate this, photodis and euvdissrates are indexed based on their products, not 
+  ! the reactants,
+   
+
+
+  ! CO2 -> CO + O
+  photodis(:,iPDCO2_CO_O)  = PhotoAbs_CO2 - PhotoIon_CO2
+!  photodis(:,iCO2_)  = PhotoAbs_CO2 - PhotoIon_CO2
+
+  ! CO2 -> O2 + C
+  !photodis(:,iPDCO2_O2_C)  = PhotoDis_CO2_O2_C
+  ! CO2 -> 2O + C
+  !photodis(:,iPDCO2_2O_C)  = PhotoDis_CO2_2O_C
+
+  ! CO -> C + O
+  !photodis(:,iPDCO_C_O) = PhotoDis_CO_C_O
+  ! N2 -> N + N
+  photodis(:,iPDN2_N4S_N2D)   = PhotoAbs_N2 - PhotoIon_N2
+!  photodis(:,iN2_)   = PhotoAbs_N2 - PhotoIon_N2
+
+  ! O2 -> O + O
+  photodis(:,iPDO2_O_O)   = PhotoAbs_O2 - PhotoIon_O2
+!  photodis(:,iO2_)   = PhotoAbs_O2 - PhotoIon_O2
 
 end subroutine fill_photo
 

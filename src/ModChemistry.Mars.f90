@@ -210,7 +210,8 @@ subroutine calc_chemical_sources(iLon,iLat,iAlt,iBlock,IonSources, &
               ! ----------------------------------------------------------
               !rr=EuvDissRateS(iLon,iLat,iAlt,iN2_,iBlock) + PEDissRateS(iLon,iLat,iAlt,iN2_,iBlock)
               !rr=EuvDissRateS(iLon,iLat,iAlt,iN2_,iBlock)
-              rr=EuvDissRateS(iLon,iLat,iAlt,iN2_,iBlock)*3.0
+              rr=EuvDissRateS(iLon,iLat,iAlt,iPDN2_N4S_N2D,iBlock)*3.0
+!              rr=EuvDissRateS(iLon,iLat,iAlt,iN2_,iBlock)*3.0
 
               Reaction = rr * Neutrals(iN2_)
 
@@ -244,7 +245,7 @@ subroutine calc_chemical_sources(iLon,iLat,iAlt,iBlock,IonSources, &
               ! CO2 + hv ==> CO + O
               ! ----------------------------------------------------------
 
-              Reaction = EuvDissRateS(iLon,iLat,iAlt,iCO2_,iBlock)*Neutrals(iCO2_)
+              Reaction = EuvDissRateS(iLon,iLat,iAlt,iPDCO2_CO_O,iBlock)*Neutrals(iCO2_)
 
               NeutralLosses(iCO2_) = NeutralLosses(iCO2_) + Reaction
               NeutralSources(iO_) = NeutralSources(iO_) + Reaction
@@ -255,21 +256,22 @@ subroutine calc_chemical_sources(iLon,iLat,iAlt,iBlock,IonSources, &
               ! CO2 + hv ==> O2 + C
               ! ----------------------------------------------------------
               ! Several different pathways
-              Reaction = EuvDissRateS(iLon,iLat,iAlt,iCO2_,iBlock)*Neutrals(iCO2_)
-
+              Reaction = EuvDissRateS(iLon,iLat,iAlt,iPDCO2_O2_C,iBlock)*Neutrals(iCO2_)
+              Reaction = 0.0
               NeutralLosses(iCO2_) = NeutralLosses(iCO2_) + Reaction
               NeutralSources(iO2_) = NeutralSources(iO2_) + Reaction
-              NeutralSources(iCO_) = NeutralSources(iC_) + Reaction
+              NeutralSources(iC_) = NeutralSources(iC_) + Reaction
 
 
               ! ----------------------------------------------------------
               ! CO2 + hv ==> 2O + C
               ! ----------------------------------------------------------
-              Reaction = EuvDissRateS(iLon,iLat,iAlt,iCO2_,iBlock)*Neutrals(iCO2_)
+              Reaction = EuvDissRateS(iLon,iLat,iAlt,iPDCO2_2O_C,iBlock)*Neutrals(iCO2_)
+              Reaction = 0.0
 
               NeutralLosses(iCO2_) = NeutralLosses(iCO2_) + Reaction
               NeutralSources(iO_) = NeutralSources(iO_) + Reaction * 2
-              NeutralSources(iCO_) = NeutralSources(iCO_) + Reaction
+              NeutralSources(iC_) = NeutralSources(iC_) + Reaction
 
               ! ----------------------------------------------------------
               ! CO2 impact ionization
@@ -295,11 +297,13 @@ subroutine calc_chemical_sources(iLon,iLat,iAlt,iBlock,IonSources, &
               ! CO + hv ==> O + C
               !         ==> O(1D) + C(1D)
               ! ----------------------------------------------------------
-
-
-
-
+              Reaction = EuvDissRateS(iLon,iLat,iAlt,iPDCO_C_O,iBlock)*Neutrals(iCO_)
               
+              Reaction = 0.0
+              NeutralLosses(iCO_) = NeutralLosses(iCO_) + Reaction
+              NeutralSources(iO_) = NeutralSources(iO_) + Reaction
+              NeutralSources(iC_) = NeutralSources(iC_) + Reaction
+
 
 
 !\
@@ -319,7 +323,7 @@ subroutine calc_chemical_sources(iLon,iLat,iAlt,iBlock,IonSources, &
               ! O2 + hv ==> O + O
               ! ----------------------------------------------------------
 
-              Reaction = EuvDissRateS(iLon,iLat,iAlt,iO2_,iBlock)*Neutrals(iO2_)
+              Reaction = EuvDissRateS(iLon,iLat,iAlt,iPDO2_O_O,iBlock)*Neutrals(iO2_)
 
               NeutralLosses(iO2_) = NeutralLosses(iO2_) + Reaction
               NeutralSources(iO_) = NeutralSources(iO_) + 2.*Reaction
@@ -594,6 +598,7 @@ subroutine calc_chemical_sources(iLon,iLat,iAlt,iBlock,IonSources, &
               ! ----------------------------------------------------------
               
               reaction = rtO2_C * Neutrals(iO2_)*Neutrals(iC_)
+              reaction = 0
               NeutralLosses(iO2_) = NeutralLosses(iO2_) + Reaction 
               NeutralLosses(iC_) = NeutralLosses(iC_) + Reaction 
               NeutralSources(iCO_) = NeutralSources(iCO_) + Reaction 

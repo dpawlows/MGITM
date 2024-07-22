@@ -19,7 +19,7 @@ subroutine euv_ionization_heat(iBlock)
 
   integer, intent(in) :: iBlock
 
-  integer :: iAlt, iWave, iSpecies, iIon, iError, iLon,iLat,whichdim
+  integer :: iAlt, iWave, iSpecies, iIon, iError, iLon,iLat,whichdim, iPathway
 ! integer :: iAlt, iWave, iSpecies, iIon, iError, iLon,iLat
   real, dimension(nLons,nLats) :: Tau, Intensity
   real, dimension(nLons,nLats,nalts) :: secondaryRate
@@ -68,7 +68,8 @@ subroutine euv_ionization_heat(iBlock)
 
   photoion(1:Num_Wavelengths_High,1:nIons-1) = 0.0
   photoabs(1:Num_Wavelengths_High,1:nSpeciesTotal)= 0.0
-  photodis(1:Num_Wavelengths_High,1:nSpeciesTotal) = 0.0
+  photodis(1:Num_Wavelengths_High,1:nPhotoPathways) = 0.0
+!  photodis(1:Num_Wavelengths_High,1:nSpeciesTotal) = 0.0
 
   ! This transfers the specific photo absorption and ionization cross
   ! sections into general variables, so we can use loops...
@@ -107,12 +108,18 @@ subroutine euv_ionization_heat(iBlock)
                 Intensity*PhotoIon(iWave,iIon)
         enddo
 
-       do iSpecies = 1, nSpeciesTotal
-           EuvDissRateS(:,:,iAlt,iSpecies,iBlock) = &
-                EuvDissRateS(:,:,iAlt,iSpecies,iBlock) + &
-                Intensity*PhotoDis(iWave,iSpecies)
+       ! There are multiple photodissociation pathways for certain species, so they are numbered 
+       ! differently
+!       do iSpecies = 1, nSpecies
+!                EuvDissRateS(:,:,iAlt,iSpecies,iBlock) = &
+!                EuvDissRateS(:,:,iAlt,iSpecies,iBlock) + &
+!                Intensity*PhotoDis(iWave,iSpecies)
+!        enddo
+         do iPathway = 1, nPhotoPathways
+                EuvDissRateS(:,:,iAlt,iPathway,iBlock) = &
+                EuvDissRateS(:,:,iAlt,iPathway,iBlock) + &
+                Intensity*PhotoDis(iWave,iPathway)
         enddo
-
         do iSpecies = 1, nSpecies
            EHeat = EHeat + &
                 Intensity*PhotonEnergy(iWave)* &

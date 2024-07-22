@@ -22,7 +22,7 @@ module ModEUV
 
   real, allocatable :: EuvIonRateS(:,:,:,:,:)
 
-  real, allocatable :: EuvDissRateS(:,:,:,:,:,:)
+  real, allocatable :: EuvDissRateS(:,:,:,:,:)
 
   real, allocatable :: Chapman(:,:,:,:,:)
 
@@ -81,6 +81,7 @@ module ModEUV
        TCHR0, TCHR1, TCHR2, TCOR0, TCOR1, TCOR2, WAR1, WAR2,        &
        Solar_Flux, PhotonEnergy,                                    &
        PhotoAbs_CO2, PhotoAbs_CO2_295, PhotoAbs_CO2_195,            &
+       PhotoDis_CO2_2O_C, PhotoDis_CO2_O2_C,  PhotoDis_CO_C_O,      &
        PhotoAbs_CO, PhotoIon_CO2, PhotoIon_CO=0.0,                  &
        PhotoAbs_CH4, PhotoAbs_H2, PhotoAbs_HCN,                     &
        PhotoIon_CH4, PhotoIon_H2, PhotoIon_HCN,                     &
@@ -299,8 +300,45 @@ module ModEUV
 !       0.358e-18, 0.358e-18, 0.358e-18, 0.358e-18, 0.358e-18/
 
 ! sigeuv(1,*):
+
+data PhotoDis_CO2_O2_C /                                              &
+     0.00, 0.00, 0.00, 0.00, 0.00, 0.00,                              &
+     0.00, 0.00, 0.00, 0.00, 0.00, 0.00,                              &
+     0.00, 0.00, 5.92E-19, 1.71E-18, 0.00, 0.00,                      &
+     2.51E-18, 0.00, 3.60E-18, 7.84E-19, 1.74E-19, 2.37E-19,          &
+     0.00, 0.00, 0.00, 0.00, 0.00, 0.00,                              &
+     0.00, 0.00, 0.00, 0.00, 0.00, 0.00,                              &
+     0.00, 0.00, 0.00, 0.00, 0.00, 0.00,                              &
+     0.00, 0.00, 0.00, 0.00, 0.00, 0.00,                              &
+     0.00, 0.00, 0.00, 0.00, 0.00, 0.00,                              &
+     0.00, 0.00, 0.00, 0.00, 0.00/                           
+
+data PhotoDis_CO2_2O_C  /                                             &
+     0.00, 0.00, 0.00, 0.00, 0.00, 0.00,                              &
+     0.00, 0.00, 0.00, 0.00, 0.00, 0.00,                              &
+     0.00, 0.00, 0.00, 0.00, 0.00, 0.00,                              &
+     0.00, 0.00, 0.00, 0.00, 0.00, 0.00,                              &
+     0.00, 0.00, 0.00, 0.00, 0.00, 0.00,                              &
+     0.00, 0.00, 0.00, 0.00, 0.00, 0.00,                              &
+     0.00, 1.58E-19, 0.00, 1.87E-19, 0.00, 0.00,                      &
+     0.00, 0.00, 0.00, 0.00, 0.00, 0.00,                              &
+     0.00, 0.00, 0.00, 0.00, 0.00, 0.00,                              &
+     0.00, 0.00, 0.00, 0.00, 0.00 /
+
+data PhotoDis_CO_C_O /                                                &
+     0.00, 0.00, 0.00, 0.00, 0.00, 0.00,                              &
+     0.00, 0.00, 0.00, 0.00, 0.00, 0.00,                              &
+     0.00, 0.00, 1.38E-17, 1.60E-18, 0.00, 0.00,                      &
+     2.34E-17, 0.00, 5.52E-17, 2.51E-17, 8.10E-18, 1.21E-17,          &
+     0.00, 0.00, 0.00, 0.00, 0.00, 0.00,                              &
+     2.29E-19, 0.00, 0.00, 5.12E-19, 0.00, 0.00,                      &
+     2.81e-21, 0.00, 0.00, 0.00, 0.00, 0.00,                          &
+     0.00, 0.00, 0.00, 0.00, 0.00, 0.00,                              &
+     0.00, 0.00, 0.00, 0.00, 0.00, 0.00,                              &
+     0.00, 0.00, 0.00, 0.00, 0.00 /
+  
   data PhotoAbs_O2 /                                                  &
-        0.50e-18, 1.50e-18, 3.40e-18, 6.00e-18,10.00e-18,13.00e-18, &
+       0.50e-18, 1.50e-18,  3.40e-18, 6.00e-18,10.00e-18,13.00e-18, &
        15.00e-18,12.00e-18, 2.20e-18, 0.30e-18, 3.00e-18, 0.01e-18, &
         0.30e-18, 0.10e-18, 1.00e-18, 1.10e-18, 1.00e-18, 1.60e-18, &
        16.53e-18, 4.00e-18,15.54e-18, 9.85e-18,20.87e-18,27.09e-18, &
@@ -1118,7 +1156,8 @@ contains
     allocate(EuvTotal(nLons, nLats, nAlts, nBlocks))
     allocate(EuvIonRateS(nLons, nLats, nAlts, nIons,nBlocks))
 !    allocate(EuvDissRateS(nLons, nLats, nAlts, nSpeciesTotal,nBlocks))
-    allocate(EuvDissRateS(nLons, nLats, nAlts, nSpeciesTotal,nPhotoPathwaysMax,nBlocks))
+    allocate(EuvDissRateS(nLons, nLats, nAlts, nPhotoPathways,nBlocks))
+
     allocate(Chapman(nLons, nLats, nAlts, nSpecies,nBlocks))
     allocate(CO2_Abs_Fac(nLons,nLats,nAlts,Num_Wavelengths_High,nBlocks))
   end subroutine init_mod_euv
