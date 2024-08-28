@@ -14,7 +14,7 @@ In order to run M-GITM, you should have the following packages installed:
 - perl
 
 Additionally, you need a fortran compiler. On personal computers, it is common to run using 
-- gfortran-9
+- gfortran
 
 While on NASA computers, 
 - ifort
