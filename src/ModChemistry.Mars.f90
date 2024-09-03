@@ -13,7 +13,7 @@ Module ModChemistry
 
   use ModSizeGitm
   use ModGITM
-  use ModPlanet
+  use GITM_planet
   use ModRates
   use ModEUV
   use ModInputs, only: iDebugLevel, UseIonChemistry, UseNeutralChemistry,f107,f107a, UseEmpiricalIonization
@@ -419,7 +419,7 @@ subroutine calc_chemical_sources(iLon,iLat,iAlt,iBlock,IonSources, &
 
                 ChemicalHeatingSub = &
                    ChemicalHeatingSub + Reaction * 1.21
-             endif
+               endif
              
              
             
