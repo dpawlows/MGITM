@@ -19,7 +19,6 @@ Module ModChemistry
   use ModInputs, only: iDebugLevel, UseIonChemistry, UseNeutralChemistry,f107,f107a, UseEmpiricalIonization
   use ModConstants
   use ModSources, only: ChemicalHeatingS, IonPrecipIonRates,AuroralIonRates
-
   implicit None
 
     real :: Ions(nIons),Neutrals(nSpeciesTotal), eDensity
