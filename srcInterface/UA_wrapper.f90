@@ -301,7 +301,7 @@ contains
     use ModGITM,  ONLY: iProc, Temperature, NDensityS
     use ModSizeGitm, ONLY: nLons, nLats, nAlts
     use ModEUV, ONLY: EuvIonRateS
-    use ModInterpolateScalar, ONLY: bilinear_scalar, trilinear_scalar
+    use ModInterpolate, ONLY: bilinear, trilinear
     use ModCoordTransform, ONLY: xyz_to_rlonlat
     use GITM_planet, ONLY: rBody, iCO2_, iO_, iCO2P_, iOP_
     use ModConst, ONLY: cBoltzmann, cProtonMass
@@ -391,7 +391,7 @@ contains
           ! Extrapolate using isothermal stratified atmosphere
 
           ! Neutral temperature, does not depend on height
-          Tnu = bilinear_scalar(Temperature(:,:,nAlts,iBlock), &
+          Tnu = bilinear(Temperature(:,:,nAlts,iBlock), &
                -1, nLons+2, -1, nLats+2, &
                DoExtrapolate=.false., iCell_D=iCell_D(:2), Dist_D=Dist_D(:2))
 
@@ -406,55 +406,55 @@ contains
 
           ! N_CO2
           Data_VI(2,iPoint) = &
-               bilinear_scalar(NDensityS(:,:,nAlts,iCO2_,iBlock), &
+               bilinear(NDensityS(:,:,nAlts,iCO2_,iBlock), &
                -1, nLons+2, -1, nLats+2, &
                DoExtrapolate=.false., iCell_D=iCell_D(:2), Dist_D=Dist_D(:2)) &
                *exp(-dH/HCO2)
 
           ! N_O
-          Data_VI(3,iPoint) = bilinear_scalar(NDensityS(:,:,nAlts,iO_,iBlock),&
+          Data_VI(3,iPoint) = bilinear(NDensityS(:,:,nAlts,iO_,iBlock),&
                -1, nLons+2, -1, nLats+2, &
                DoExtrapolate=.false., iCell_D=iCell_D(:2), Dist_D=Dist_D(:2)) &
                *exp(-dH/HO)
 
           ! EUVIonRate_CO2->CO2+
           Data_VI(4,iPoint) = &
-               max(bilinear_scalar(EuvIonRateS(:,:,nAlts,iCO2P_,iBlock),&
+               max(bilinear(EuvIonRateS(:,:,nAlts,iCO2P_,iBlock),&
                1, nLons, 1, nLats, &
                DoExtrapolate=.true., iCell_D=iCell_D(:2), Dist_D=Dist_D(:2)), &
                Tiny)
 
           ! EUVIonRate_O->O+
           Data_VI(5,iPoint) = &
-	       max(bilinear_scalar(EuvIonRateS(:,:,nAlts,iOP_,iBlock), &
+	       max(bilinear(EuvIonRateS(:,:,nAlts,iOP_,iBlock), &
                1, nLons, 1, nLats, &
 	       DoExtrapolate=.true., iCell_D=iCell_D(:2), Dist_D=Dist_D(:2)), &
                Tiny)
        else
           ! Neutral temperature
-          Data_VI(1,iPoint) = trilinear_scalar(Temperature(:,:,:,iBlock), &
+          Data_VI(1,iPoint) = trilinear(Temperature(:,:,:,iBlock), &
                -1, nLons+2, -1, nLats+2, -1, nAlts+2, &
                DoExtrapolate=.false., iCell_D=iCell_D, Dist_D=Dist_D)
 
           ! N_CO2
-          Data_VI(2,iPoint) = trilinear_scalar(NDensityS(:,:,:,iCO2_,iBlock), &
+          Data_VI(2,iPoint) = trilinear(NDensityS(:,:,:,iCO2_,iBlock), &
                -1, nLons+2, -1, nLats+2, -1, nAlts+2, &
                DoExtrapolate=.false., iCell_D=iCell_D, Dist_D=Dist_D)
 
           ! N_O
-          Data_VI(3,iPoint) = trilinear_scalar(NDensityS(:,:,:,iO_,iBlock), &
+          Data_VI(3,iPoint) = trilinear(NDensityS(:,:,:,iO_,iBlock), &
                -1, nLons+2, -1, nLats+2, -1, nAlts+2, &
                DoExtrapolate=.false., iCell_D=iCell_D, Dist_D=Dist_D)
 
           ! EUVIonRate_CO2->CO2+
           Data_VI(4,iPoint) = &
-               trilinear_scalar(EuvIonRateS(:,:,:,iCO2P_,iBlock),&
+               trilinear(EuvIonRateS(:,:,:,iCO2P_,iBlock),&
                1, nLons, 1, nLats, 1, nAlts, &
                DoExtrapolate=.true., iCell_D=iCell_D, Dist_D=Dist_D)
 
           ! EUVIonRate_O->O+
           Data_VI(5,iPoint) = &
-               trilinear_scalar(EuvIonRateS(:,:,:,iOP_,iBlock), &
+               trilinear(EuvIonRateS(:,:,:,iOP_,iBlock), &
                1, nLons, 1, nLats, 1, nAlts, &
                DoExtrapolate=.true., iCell_D=iCell_D, Dist_D=Dist_D)
        end if
