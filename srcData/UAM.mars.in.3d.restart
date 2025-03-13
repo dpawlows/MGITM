@@ -5,7 +5,7 @@
 F		usebarriers - forces the code to stop and wait more often
 
 #RESTART
-F
+T
 
 # -----------------------------------------------------------------------
 #GRID
@@ -31,20 +31,12 @@ minmax      EddyDiffusionMethod (constant, minmax, or yoshida)
 2.22e-4		Thermal conductivity (code use kappa = number * T**0.75)
 # -------------------------------------------------------------------------
 
-#TIMESTART
-2017		year
-11		month
-21		day
-00		hour
-00		minute
-00		second
-
 #TIMEEND
 2017		year
 11		month
 21		day
 00		hour
-02		minute
+03		minute
 00		second
 
 #CPUTIMEMAX
