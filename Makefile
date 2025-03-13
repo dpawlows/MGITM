@@ -97,6 +97,7 @@ rundir:
 	@(if [ "$(STANDALONE)" != "NO" ]; then \
 		cd ${RUNDIR} ; \
 		ln -s ${BINDIR}/GITM.exe . ; \
+		cp ${SCRIPTDIR}/Restart.pl . ; \
 		touch core ; chmod 444 core ; \
 		ln -s UA/* .; \
 		cp DataIn/UAM.in.${PLANET} UAM.in ; \
