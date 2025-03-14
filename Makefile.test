@@ -26,12 +26,12 @@ NP = 4
 REFDIR = run_test_ref
 
 test_help:
-	@echo "    test                       (run all tests)"
-	@echo "    test KEEP=y                (run tests and keep run directories)"
-	@echo "    test MPIRUN=               (run tests serially)"
-	@echo "    test NPFLAG=-n NP=3        (run tests with ${PARALLEL} -n 3)"
-	@echo "    test PARALLEL='ibrun'      (run tests with ibrun)"
-	@echo "    test_gitm_mars_3d          (run Mars GITM test)"
+	@echo " -j test                    (run all tests on default ${NP} cores)"
+	@echo " -j test MPIRUN=            (run tests serially)"
+	@echo " -j test NP=2               (run tests on 2 cores. Only 1,2,4 work)"
+	@echo " -j test PARALLEL='ibrun'   (run tests with ibrun)"
+	@echo " test_gitm_mars_3d_run      (run first part of test)"
+	@echo " test_gitm_mars_3d_restart  (run restart part of test)"
 
 test_rundir:
 	rm -rf ${TESTDIR}
@@ -40,8 +40,8 @@ test_rundir:
 ### MARS GITM TEST ###
 
 test_gitm_mars:
-	make test_gitm_mars_1d
-	make test_gitm_mars_3d
+	-@($(MAKE) test_gitm_mars_1d TESTDIR=run_test_mars_1d)
+	-@($(MAKE) test_gitm_mars_3d TESTDIR=run_test_mars_3d)
 
 #### 3D Mars test ####
 
@@ -51,11 +51,14 @@ test_gitm_mars_3d:
 	@echo "test_gitm_mars_3d_rundir..." >> test_gitm_mars_3d.diff
 	$(MAKE) test_gitm_mars_3d_rundir
 	@echo "test_gitm_mars_3d_run..." >> test_gitm_mars_3d.diff
-	$(MAKE) test_gitm_mars_3d_run
-	$(MAKE) test_gitm_mars_3d_restart
+	if [ ${NP} -eq 1 -o ${NP} -eq 2 ]; then \
+		$(MAKE) test_gitm_mars_3d_run; \
+	else \
+		$(MAKE) test_gitm_mars_3d_run NP=4; \
+	fi
+	$(MAKE) test_gitm_mars_3d_restart NP=4
 	@echo "test_gitm_mars_3d_check..." >> test_gitm_mars_3d.diff
 	$(MAKE) test_gitm_mars_3d_check
-	@if([ "${KEEP}" ]); then rm -rf run_$@; mv ${TESTDIR} run_$@; fi
 
 test_gitm_mars_3d_compile:
 	./Config.pl -Mars
@@ -91,7 +94,6 @@ test_gitm_mars_1d:
 	$(MAKE) test_gitm_mars_1d_run
 	@echo "test_gitm_mars_1d_check..." >> test_gitm_mars_1d.diff
 	$(MAKE) test_gitm_mars_1d_check
-	@if([ "${KEEP}" ]); then rm -rf run_$@; mv ${TESTDIR} run_$@; fi
 
 test_gitm_mars_1d_compile:
 	./Config.pl -Mars
@@ -127,7 +129,6 @@ test_gitm_earth_1d:
 	$(MAKE) test_gitm_earth_1d_run
 	@echo "test_gitm_earth_1d_check..." >> test_gitm_earth_1d.diff
 	$(MAKE) test_gitm_earth_1d_check
-	@if([ "${KEEP}" ]); then rm -rf run_$@; mv ${TESTDIR} run_$@; fi
 
 test_gitm_earth_eclipse:
 	@echo "test_gitm_earth_eclipse_compile..." > test_gitm_earth_eclipse.diff
@@ -138,7 +139,6 @@ test_gitm_earth_eclipse:
 	$(MAKE) test_gitm_earth_eclipse_run
 	@echo "test_gitm_earth_eclipse_check..." >> test_gitm_earth_eclipse.diff
 	$(MAKE) test_gitm_earth_eclipse_check
-	@if([ "${KEEP}" ]); then rm -rf run_$@; mv ${TESTDIR} run_$@; fi
 
 test_gitm_earth_3d:
 	@echo "test_gitm_earth_3d_compile..." > test_gitm_earth_3d.diff
@@ -149,7 +149,6 @@ test_gitm_earth_3d:
 	$(MAKE) test_gitm_earth_3d_run
 	@echo "test_gitm_earth_3d_check..." >> test_gitm_earth_3d.diff
 	$(MAKE) test_gitm_earth_3d_check
-	@if([ "${KEEP}" ]); then rm -rf run_$@; mv ${TESTDIR} run_$@; fi
 
 # ----------------------------------------------------
 # 1D tests
