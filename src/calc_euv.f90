@@ -120,6 +120,8 @@ subroutine euv_ionization_heat(iBlock)
                 EuvDissRateS(:,:,iAlt,iPathway,iBlock) + &
                 Intensity*PhotoDis(iWave,iPathway)
         enddo
+
+        
         do iSpecies = 1, nSpecies
            EHeat = EHeat + &
                 Intensity*PhotonEnergy(iWave)* &
@@ -138,10 +140,10 @@ subroutine euv_ionization_heat(iBlock)
               eEUVHeating(iLon,iLat,iAlt,iBlock) =0.0
            endif
         enddo
-     enddo
-
-    enddo
-
+     enddo  
+!   write(*,*) altitude_gb(1,1,ialt,1),EuvDissRateS(:,:,iAlt,iPDCO2_O2_C,1),EuvDissRateS(:,:,iAlt,iPDCO2_2O_C,1)
+    enddo         
+!stop
   !\
   ! Add Secondary Ionization if specified to use it.
   !/

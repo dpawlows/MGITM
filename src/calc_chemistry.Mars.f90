@@ -310,7 +310,13 @@ subroutine calc_chemistry(iBlock)
               enddo
 
               totalsteps = totalsteps + niters
-              UserData3D(ilon,ilat,ialt,1,iblock) = reactionrate(24)
+              UserData1D(1,1,ialt,1) = reactionrate(1)
+              UserData1D(1,1,ialt,2) = reactionrate(2)
+              UserData1D(1,1,ialt,3) = reactionrate(3)
+!              if (ialt == 70) then
+!               write(*,*) reactionrate(1),reactionrate(2),reactionrate(3)
+!               stop
+!               endif
               ! if (iproc == 6 .and. ilon == 16 .and. ilat == 1) then
               !   write(*,*) ialt,totalsteps, IDensityS(ilon,ilat,ialt,1,1),altitude_GB(ilon,ilat,ialt,1),&
               !    NDensityS(ilon,ilat,ialt,iCO2_,1)
@@ -329,7 +335,7 @@ subroutine calc_chemistry(iBlock)
            ! endif
 
 
-        enddo
+        enddo  
      enddo
   enddo
 

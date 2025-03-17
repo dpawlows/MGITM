@@ -99,12 +99,12 @@ subroutine fill_photo(photoion, photoabs, photodis)
 !  photodis(:,iCO2_)  = PhotoAbs_CO2 - PhotoIon_CO2
 
   ! CO2 -> O2 + C
-  photodis(:,iPDCO2_O2_C)  = PhotoDis_CO2_O2_C
+  photodis(:,iPDCO2_O2_C)  = PhotoDis_CO2_O2_C*1.0e-4
   ! CO2 -> 2O + C
-  photodis(:,iPDCO2_2O_C)  = PhotoDis_CO2_2O_C
+  photodis(:,iPDCO2_2O_C)  = PhotoDis_CO2_2O_C*1.0e-4
 
   ! CO -> C + O
-  photodis(:,iPDCO_C_O) = PhotoDis_CO_C_O
+  photodis(:,iPDCO_C_O) = PhotoDis_CO_C_O*1.0e-4
   ! N2 -> N + N
   photodis(:,iPDN2_N4S_N2D)   = PhotoAbs_N2 - PhotoIon_N2
 !  photodis(:,iN2_)   = PhotoAbs_N2 - PhotoIon_N2

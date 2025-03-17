@@ -1,4 +1,3 @@
-
 module ModUserGITM
 
   use ModGITM, only: nBlocksmax,nLons,nLats,nAlts
