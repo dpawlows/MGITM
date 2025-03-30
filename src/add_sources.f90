@@ -66,17 +66,20 @@ endif
      !! To turn off GWIHeat, GWDHeat, turn UseGravityWave=.false. in UAM.in
      !! All Temperature equation source terms in <T>/s units
 
-  
-     Temperature(1:nLons, 1:nLats, 1:nAlts, iBlock) = &
-          Temperature(1:nLons, 1:nLats, 1:nAlts, iBlock) + Dt * ( &
-          LowAtmosRadRate(1:nLons, 1:nLats, 1:nAlts, iBlock) &
-          /TempUnit(1:nLons,1:nLats,1:nAlts)&
-           - RadCooling(1:nLons, 1:nLats, 1:nAlts, iBlock) &
-           + EuvHeating(1:nLons, 1:nLats, 1:nAlts, iBlock) &
-           + AuroralHeating + JouleHeating  &
-           + GW_net_heating(1:nLons,1:nLats,1:nAlts,iBlock) &
-             /TempUnit(1:nLons,1:nLats,1:nAlts)) + &
-          Conduction + ChemicalHeatingRate
+     do iLon = 1, nLons; do iLat = 1, nLats; do iAlt = 1, nAlts
+        Temperature(iLon,iLat,iAlt,iBlock) = &
+             Temperature(iLon,iLat,iAlt,iBlock) &
+             + Dt*( &
+             LowAtmosRadRate(iLon,iLat,iAlt,iBlock)/TempUnit(iLon,iLat,iAlt) &
+             - RadCooling(iLon,iLat,iAlt,iBlock) &
+             + EuvHeating(iLon,iLat,iAlt,iBlock) &
+             + AuroralHeating(iLon,iLat,iAlt) &
+             + JouleHeating(iLon,iLat,iAlt)  &
+             + GW_net_heating(iLon,iLat,iAlt,iBlock)/TempUnit(iLon,iLat,iAlt) &
+             ) &
+             + Conduction(iLon,iLat,iAlt) &
+             + ChemicalHeatingRate(iLon,iLat,iAlt)
+     end do; end do; end do
 
      !-----------------------------------------------------------------
      ! This is an example of a user output:
