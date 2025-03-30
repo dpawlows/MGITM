@@ -139,6 +139,7 @@ contains
     allocate(RadCoolingErgs(nLons, nLats, nAlts,nBlocks))
     allocate(EuvHeatingErgs(nLons, nLats, nAlts,nBlocks))
     allocate(LowAtmosRadRate(nLons, nLats, nAlts,nBlocks))
+    LowAtmosRadRate = 0.0
     allocate(QnirTOT(nLons, nLats, nAlts,nBlocks))
     allocate(QnirLTE(nLons, nLats, nAlts,nBlocks))
     allocate(CirLTE(nLons, nLats, nAlts,nBlocks))
