@@ -3,6 +3,7 @@ run_test
 *.diff
 *#*#
 *.o
+*.a
 *.mod
 Makefile.conf
 Makefile.def
