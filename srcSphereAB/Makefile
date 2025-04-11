@@ -2,6 +2,9 @@ SHELL = /bin/sh
 
 include ../srcMake/Makefile.conf
 
+# Nothing should be done parallel in this Makefile 
+.NOTPARALLEL:
+
 #
 #  Makefile for AB2D code:
 #

@@ -1,6 +1,9 @@
 include ../Makefile.def
 include ../Makefile.conf
 
+# Nothing should be done parallel in this Makefile                              
+.NOTPARALLEL:
+
 MODULES = Mod_GLOW.o\
 	ModCIMPIT.o\
 	ModCXPARS.o

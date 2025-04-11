@@ -4,6 +4,9 @@ default : GITM
 include Makefile.def
 include Makefile.test
 
+# Nothing should be done parallel in this Makefile 
+.NOTPARALLEL:
+
 ABDIR   = srcSphereAB
 MAINDIR = src
 GLDIR   = srcGlow
@@ -54,10 +57,10 @@ POST:
 MGITM = ${MYDIR}
 
 LIB:
-	cd $(ABDIR)     ; make                                         LIB
-	cd $(GLDIR)     ; make LIBPREV=${MGITM}/${ABDIR}/libSphere.a   LIBADD
-	cd $(MAINDIR)   ; make LIBPREV=${MGITM}/${GLDIR}/libUPTOGL.a   libGITM.a
-	cd srcInterface ; make LIBPREV=${MGITM}/${MAINDIR}/libUA.a     LIB
+	cd $(ABDIR);      make LIB
+	cd $(GLDIR);      make    LIBPREV=${MGITM}/${ABDIR}/libSphere.a LIBADD
+	cd $(MAINDIR);    ${MAKE} LIBPREV=${MGITM}/${GLDIR}/libUPTOGL.a libGITM.a
+	cd srcInterface ; ${MAKE} LIBPREV=${MGITM}/${MAINDIR}/libUA.a   LIB
 
 nompirun:
 	make GITM
