@@ -8,8 +8,8 @@ subroutine set_inputs
   use GITM_planet
   use ModSatellites
 
-! EUVData logicals  (December 2017):  S. Bougher and D. Pawlowski
-! SecondaryIonization logicals  (Spring 2018):  S. Bougher and D. Pawlowski
+  ! EUVData logicals  (December 2017):  S. Bougher and D. Pawlowski
+  ! SecondaryIonization logicals  (Spring 2018):  S. Bougher and D. Pawlowski
 
   implicit none
 
@@ -41,12 +41,15 @@ subroutine set_inputs
   do while (.not. IsDone)
 
      cLine = cInputText(iLine)
+     ! If in framework, echo lines to stdout:
+     if (IsFramework .and. iProc == 0 .and. len_trim(cLine) > 0) &
+          write(*, '(a)') "UA: "//trim(cline)
 
      if (cLine(1:1) == "#") then
 
         ! Remove anything after a space or TAB
-        i=index(cLine,' '); if(i>0)cLine(i:len(cLine))=' '
-        i=index(cLine,char(9)); if(i>0)cLine(i:len(cLine))=' '
+        i = index(cLine,' '); if(i>0)cLine(i:len(cLine))=' '
+        i = index(cLine,char(9)); if(i>0)cLine(i:len(cLine))=' '
 
         if (iDebugLevel > 3) write(*,*) "====> cLine : ",cLine(1:40)
 
@@ -490,59 +493,59 @@ subroutine set_inputs
               write(*,*) "UseStressHeating              (logical)"
            endif
 
-!        case ("#DIFFUSION")
-!           call read_in_logical(UseDiffusion, iError)
-!           if (UseDiffusion .and. iError == 0) then
-!              call read_in_real(EddyDiffusionCoef,iError)
-!              call read_in_real(EddyDiffusionPressure0,iError)
-!              call read_in_real(EddyDiffusionPressure1,iError)
-!           endif
+           !        case ("#DIFFUSION")
+           !           call read_in_logical(UseDiffusion, iError)
+           !           if (UseDiffusion .and. iError == 0) then
+           !              call read_in_real(EddyDiffusionCoef,iError)
+           !              call read_in_real(EddyDiffusionPressure0,iError)
+           !              call read_in_real(EddyDiffusionPressure1,iError)
+           !           endif
 
-!           if (EddyDiffusionPressure0 < EddyDiffusionPressure1) then
-!              write(*,*) "If you use eddy diffusion, you must specify two pressure"
-!              write(*,*) "levels - under the first, the eddy diffusion is constant."
-!              write(*,*) "Between the first and the second, there is a linear drop-off."
-!              write(*,*) "Therefore The first pressure must be larger than the second!"
-!              iError = 1
-!           endif
-!
-!           if (iError /= 0) then
-!              write(*,*) 'Incorrect format for #DIFFUSION:'
-!              write(*,*) '#DIFFUSION'
-!              write(*,*) "UseDiffusion (logical)"
-!              write(*,*) "EddyDiffusionCoef (real)"
-!              write(*,*) "EddyDiffusionPressure0 (real)"
-!              write(*,*) "EddyDiffusionPressure1 (real)"
-!           endif
+           !           if (EddyDiffusionPressure0 < EddyDiffusionPressure1) then
+           !              write(*,*) "If you use eddy diffusion, you must specify two pressure"
+           !              write(*,*) "levels - under the first, the eddy diffusion is constant."
+           !              write(*,*) "Between the first and the second, there is a linear drop-off."
+           !              write(*,*) "Therefore The first pressure must be larger than the second!"
+           !              iError = 1
+           !           endif
+           !
+           !           if (iError /= 0) then
+           !              write(*,*) 'Incorrect format for #DIFFUSION:'
+           !              write(*,*) '#DIFFUSION'
+           !              write(*,*) "UseDiffusion (logical)"
+           !              write(*,*) "EddyDiffusionCoef (real)"
+           !              write(*,*) "EddyDiffusionPressure0 (real)"
+           !              write(*,*) "EddyDiffusionPressure1 (real)"
+           !           endif
 
         case ("#EDDYDIFFUSION")
-         EddyDiffusionTypes = [character(len=iCharLen_) :: "yoshida","minmax","constant"]
-         call read_in_string(EddyDiffusionMethod, iError)
-         if ( ANY (EddyDiffusionTypes == EddyDiffusionMethod)) then
-      
-            call read_in_real(kEddyMax, iError)
-            if (EddyDiffusionMethod == 'minmax') then
-               ! only needed for the minmax method
-               call read_in_real(kEddyMin, iError)
-            endif
+           EddyDiffusionTypes = [character(len=iCharLen_) :: "yoshida","minmax","constant"]
+           call read_in_string(EddyDiffusionMethod, iError)
+           if ( ANY (EddyDiffusionTypes == EddyDiffusionMethod)) then
 
-            if (iError /= 0) then
-               write(*,*) "Incorrect format for #EDDYDIFFUSION:"
-               write(*,*) "#EDDYDIFFUSION"
-               write(*,*) "EddyDiffusionMethod (string) (constant, minmax, or yoshida)"
-               write(*,*) "kMax (real)"
-               write(*,*) "kMin (real, for minmax only)"
-            endif
-         else
-            write(*,*) 'EddyDiffusionMethod is not recongnized for #EDDYDIFFUSION:'
-            write(*,*) "#EDDYDIFFUSION"
-            write(*,*) "EddyDiffusionMethod (string) (constant, minmax, or yoshida)"
-            write(*,*) "kMax (real)"
-            write(*,*) "kMin (real, for minmax only)"
-            ierror = 1
-         endif
-         
-         
+              call read_in_real(kEddyMax, iError)
+              if (EddyDiffusionMethod == 'minmax') then
+                 ! only needed for the minmax method
+                 call read_in_real(kEddyMin, iError)
+              endif
+
+              if (iError /= 0) then
+                 write(*,*) "Incorrect format for #EDDYDIFFUSION:"
+                 write(*,*) "#EDDYDIFFUSION"
+                 write(*,*) "EddyDiffusionMethod (string) (constant, minmax, or yoshida)"
+                 write(*,*) "kMax (real)"
+                 write(*,*) "kMin (real, for minmax only)"
+              endif
+           else
+              write(*,*) 'EddyDiffusionMethod is not recongnized for #EDDYDIFFUSION:'
+              write(*,*) "#EDDYDIFFUSION"
+              write(*,*) "EddyDiffusionMethod (string) (constant, minmax, or yoshida)"
+              write(*,*) "kMax (real)"
+              write(*,*) "kMin (real, for minmax only)"
+              ierror = 1
+           endif
+
+
         case ("#FORCING")
            call read_in_logical(UsePressureGradient, iError)
            call read_in_logical(UseIonDrag, iError)
@@ -592,57 +595,57 @@ subroutine set_inputs
               write(*,*) "UseDynamo              (logical)"
               IsDone = .true.
            endif
-!           case ("#USESECONDARYION")
-!
-!          call read_in_logical(UseSecondaryIonization,iError)
-!          call read_in_string(SecondaryIonFile, iError)
-!           if (iError /= 0) then
-!             write(*,*) 'Incorrect format for #USESECONDARYION:'
-!             write(*,*) '#USESECONDARYION'
-!             write(*,*) "UseSecondaryIon               (logical)"
-!             write(*,*) "filename                            (string)"
-!          endif
+           !           case ("#USESECONDARYION")
+           !
+           !          call read_in_logical(UseSecondaryIonization,iError)
+           !          call read_in_string(SecondaryIonFile, iError)
+           !           if (iError /= 0) then
+           !             write(*,*) 'Incorrect format for #USESECONDARYION:'
+           !             write(*,*) '#USESECONDARYION'
+           !             write(*,*) "UseSecondaryIon               (logical)"
+           !             write(*,*) "filename                            (string)"
+           !          endif
 
-!       case ("#USEWVALUE")
-!          call read_in_logical(UseWValue,iError)
-!          call read_in_real(WValue,iError)
-!          if (iError /= 0) then
-!             write(*,*) 'Incorrect format for #USEWFACTOR:'
-!             write(*,*) '#USEWFACTOR'
-!             write(*,*) 'UseWFactor              (logical)'
-!             write(*,*) 'W Value                 (real)'
-!          endif
+           !       case ("#USEWVALUE")
+           !          call read_in_logical(UseWValue,iError)
+           !          call read_in_real(WValue,iError)
+           !          if (iError /= 0) then
+           !             write(*,*) 'Incorrect format for #USEWFACTOR:'
+           !             write(*,*) '#USEWFACTOR'
+           !             write(*,*) 'UseWFactor              (logical)'
+           !             write(*,*) 'W Value                 (real)'
+           !          endif
 
         case ("#CRUSTAL")
-          call read_in_logical(UseCrustalField,iError)
+           call read_in_logical(UseCrustalField,iError)
 
-          if (iError /= 0) then
-             write(*,*) 'Incorrect format for #CRUSTAL:'
-             write(*,*) '#CRUSTAL'
-             write(*,*) 'UseCrustalField   (logical)'
-          endif
+           if (iError /= 0) then
+              write(*,*) 'Incorrect format for #CRUSTAL:'
+              write(*,*) '#CRUSTAL'
+              write(*,*) 'UseCrustalField   (logical)'
+           endif
 
-          if (UseMHDField .and. UseCrustalField) then
-            UseCrustalField = .false. !Don't use both
-            write(*,*) "Setting UseCrustalField to false as both can't be used"
-          endif
+           if (UseMHDField .and. UseCrustalField) then
+              UseCrustalField = .false. !Don't use both
+              write(*,*) "Setting UseCrustalField to false as both can't be used"
+           endif
 
         case ("#MHDFIELD")
-          call read_in_logical(UseMHDField,iError)
-          call read_in_string(cMHDFilelist,iError)
-          ! call read_in_logical(crustalFieldOnly,iError)
-          if (iError /= 0) then
-             write(*,*) 'Incorrect format for #MHDFIELD:'
-             write(*,*) '#MHDFIELD'
-             write(*,*) 'UseMHDField   (logical)'
-             write(*,*) 'cMHDFileList   (string)'
-             ! write(*,*) 'crustalField Only   (logical)'
-          endif
+           call read_in_logical(UseMHDField,iError)
+           call read_in_string(cMHDFilelist,iError)
+           ! call read_in_logical(crustalFieldOnly,iError)
+           if (iError /= 0) then
+              write(*,*) 'Incorrect format for #MHDFIELD:'
+              write(*,*) '#MHDFIELD'
+              write(*,*) 'UseMHDField   (logical)'
+              write(*,*) 'cMHDFileList   (string)'
+              ! write(*,*) 'crustalField Only   (logical)'
+           endif
 
-          if (UseMHDField .and. UseCrustalField) then
-            UseCrustalField = .false. !Don't use both
-            write(*,*) "Setting UseCrustalField to false as both can't be used"
-          endif
+           if (UseMHDField .and. UseCrustalField) then
+              UseCrustalField = .false. !Don't use both
+              write(*,*) "Setting UseCrustalField to false as both can't be used"
+           endif
 
         case ("#CHEMISTRY")
 
@@ -650,80 +653,80 @@ subroutine set_inputs
            call read_in_logical(UseIonAdvection, iError)
            call read_in_logical(UseNeutralChemistry, iError)
 
-!           call read_in_string(sNeutralChemistry, iError)
-!           call read_in_string(sIonChemistry, iError)
-!
-!           iInputIonChemType = -1
-!           iInputNeutralChemType = -1
-!
-!           do i = 1, nChemTypes_
-!              if (sNeutralChemistry == sChemType(i)) iInputNeutralChemType = i
-!              if (sIonChemistry == sChemType(i)) iInputIonChemType = i
-!           enddo
-!
-!           if (iInputNeutralChemType < 1) then
-!              write(*,*) "Error in #CHEMISTRY for Neutrals"
-!              write(*,*) "Input type : ", sNeutralChemistry
-!              write(*,*) "Acceptable types :"
-!              do i = 1, nChemTypes_
-!                 write(*,*) sChemType(i)
-!              enddo
-!              IsDone = .true.
-!           endif
-!
-!           if (iInputIonChemType < 1) then
-!              write(*,*) "Error in #CHEMISTRY for Ions"
-!              write(*,*) "Input type : ", sIonChemistry
-!              write(*,*) "Acceptable types :"
-!              do i = 1, nChemTypes_
-!                 write(*,*) sChemType(i)
-!              enddo
-!              IsDone = .true.
-!           endif
+           !           call read_in_string(sNeutralChemistry, iError)
+           !           call read_in_string(sIonChemistry, iError)
+           !
+           !           iInputIonChemType = -1
+           !           iInputNeutralChemType = -1
+           !
+           !           do i = 1, nChemTypes_
+           !              if (sNeutralChemistry == sChemType(i)) iInputNeutralChemType = i
+           !              if (sIonChemistry == sChemType(i)) iInputIonChemType = i
+           !           enddo
+           !
+           !           if (iInputNeutralChemType < 1) then
+           !              write(*,*) "Error in #CHEMISTRY for Neutrals"
+           !              write(*,*) "Input type : ", sNeutralChemistry
+           !              write(*,*) "Acceptable types :"
+           !              do i = 1, nChemTypes_
+           !                 write(*,*) sChemType(i)
+           !              enddo
+           !              IsDone = .true.
+           !           endif
+           !
+           !           if (iInputIonChemType < 1) then
+           !              write(*,*) "Error in #CHEMISTRY for Ions"
+           !              write(*,*) "Input type : ", sIonChemistry
+           !              write(*,*) "Acceptable types :"
+           !              do i = 1, nChemTypes_
+           !                 write(*,*) sChemType(i)
+           !              enddo
+           !              IsDone = .true.
+           !           endif
 
 
-      case ("#USELILLIS")
-          call read_in_logical(UseEmpiricalIonization,iError)
-          call read_in_real(solarWindPressure,iError)
+        case ("#USELILLIS")
+           call read_in_logical(UseEmpiricalIonization,iError)
+           call read_in_real(solarWindPressure,iError)
 
-          if (iError /= 0) then
-             write(*,*) 'Incorrect format for #CRUSTAL:'
-             write(*,*) '#USELILLIS'
-             write(*,*) 'UseEmpiricalIonization   (logical)'
-             write(*,*) 'solarWindPressure        (real)'
-             write(*,*) 'Field Type (optional, default = 4) (int)'
-          endif
-          call read_in_int(DefaultFieldType,iErrorIgnore)
-          
-      case ("#DIPOLE")
+           if (iError /= 0) then
+              write(*,*) 'Incorrect format for #CRUSTAL:'
+              write(*,*) '#USELILLIS'
+              write(*,*) 'UseEmpiricalIonization   (logical)'
+              write(*,*) 'solarWindPressure        (real)'
+              write(*,*) 'Field Type (optional, default = 4) (int)'
+           endif
+           call read_in_int(DefaultFieldType,iErrorIgnore)
 
-         call read_in_real(MagneticPoleRotation, iError)
-         call read_in_real(MagneticPoleTilt    , iError)
-         call read_in_real(xDipoleCenter       , iError)
-         call read_in_real(yDipoleCenter       , iError)
-         call read_in_real(zDipoleCenter       , iError)
+        case ("#DIPOLE")
 
-         if (iError /= 0) then
-            write(*,*) 'Incorrect format for #DIPOLE:'
-            write(*,*) '#DIPOLE'
-            write(*,*) 'MagneticPoleRotation   (real)'
-            write(*,*) 'MagneticPoleTilt       (real)'
-            write(*,*) 'xDipoleCenter          (real)'
-            write(*,*) 'yDipoleCenter          (real)'
-            write(*,*) 'zDipoleCenter          (real)'
-            IsDone = .true.
+           call read_in_real(MagneticPoleRotation, iError)
+           call read_in_real(MagneticPoleTilt    , iError)
+           call read_in_real(xDipoleCenter       , iError)
+           call read_in_real(yDipoleCenter       , iError)
+           call read_in_real(zDipoleCenter       , iError)
 
-         else
+           if (iError /= 0) then
+              write(*,*) 'Incorrect format for #DIPOLE:'
+              write(*,*) '#DIPOLE'
+              write(*,*) 'MagneticPoleRotation   (real)'
+              write(*,*) 'MagneticPoleTilt       (real)'
+              write(*,*) 'xDipoleCenter          (real)'
+              write(*,*) 'yDipoleCenter          (real)'
+              write(*,*) 'zDipoleCenter          (real)'
+              IsDone = .true.
 
-            MagneticPoleRotation = MagneticPoleRotation * pi / 180.0
-            MagneticPoleTilt     = MagneticPoleTilt     * pi / 180.0
-            xDipoleCenter = xDipoleCenter * 1000.0
-            yDipoleCenter = yDipoleCenter * 1000.0
-            zDipoleCenter = zDipoleCenter * 1000.0
+           else
 
-         endif
+              MagneticPoleRotation = MagneticPoleRotation * pi / 180.0
+              MagneticPoleTilt     = MagneticPoleTilt     * pi / 180.0
+              xDipoleCenter = xDipoleCenter * 1000.0
+              yDipoleCenter = yDipoleCenter * 1000.0
+              zDipoleCenter = zDipoleCenter * 1000.0
 
-      case ("#APEX")
+           endif
+
+        case ("#APEX")
 
            if (IsFramework .and. UseApex) then
               if (iDebugLevel >= 0) then
@@ -976,7 +979,6 @@ subroutine set_inputs
               AltMax = AltMax * 1000.0
            endif
 
-! --------------------------------------------------------------------------------
         case ("#EUV_DATA")
 
            call read_in_logical(UseEUVData, iError)
@@ -992,25 +994,23 @@ subroutine set_inputs
                  write(*,*) 'UseEUVData            (logical)'
                  write(*,*) 'UseFluxAtPlanet            (logical)'
                  write(*,*) 'cEUVFile              (string)'
-             endif
+              endif
 
            endif
-!
-! --------------------------------------------------------------------------------
-!       case ("#EUV_DATA")
-!          call read_in_logical(UseEUVData, iError)
-!          call read_in_logical(UseFluxAtPlanet, iError)
-!          call read_in_string(cEUVFile, iError)
-!          call Set_Euv(iError)
-!             if (iError /= 0) then
-!                write(*,*) 'Incorrect format for #EUV_DATA:'
-!                write(*,*) '#EUV_DATA'
-!                write(*,*) 'UseEUVData            (logical)'
-!                write(*,*) 'UseFluxAtPlanet       (logical)'
-!                write(*,*) 'cEUVFile              (string)'
-!                IsDone = .true.
-!             endif
-! --------------------------------------------------------------------------------
+           !
+           !       case ("#EUV_DATA")
+           !          call read_in_logical(UseEUVData, iError)
+           !          call read_in_logical(UseFluxAtPlanet, iError)
+           !          call read_in_string(cEUVFile, iError)
+           !          call Set_Euv(iError)
+           !             if (iError /= 0) then
+           !                write(*,*) 'Incorrect format for #EUV_DATA:'
+           !                write(*,*) '#EUV_DATA'
+           !                write(*,*) 'UseEUVData            (logical)'
+           !                write(*,*) 'UseFluxAtPlanet       (logical)'
+           !                write(*,*) 'cEUVFile              (string)'
+           !                IsDone = .true.
+           !             endif
 
         case ("#GLOW")
            call read_in_logical(UseGlow, iError)
@@ -1095,11 +1095,11 @@ subroutine set_inputs
 
         if (iError /= 0) IsDone = .true.
 
-    endif
+     endif
 
-    iLine = iLine + 1
+     iLine = iLine + 1
 
-    if (iLine >= nInputLines) IsDone = .true.
+     if (iLine >= nInputLines) IsDone = .true.
 
   enddo
 
@@ -1111,7 +1111,7 @@ subroutine set_inputs
      call stop_gitm("Must Stop!!")
   endif
 
-!  KappaTemp0 = 3.6e-4
+  !  KappaTemp0 = 3.6e-4
 
 contains
 
