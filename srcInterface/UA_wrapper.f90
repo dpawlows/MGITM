@@ -36,7 +36,7 @@ contains
   subroutine UA_set_param(CompInfo, TypeAction)
 
     use ModInputs, only: cInputText
-    use ModReadParam, only: read_text, i_line_read, n_line_read
+    use ModReadParam, only: read_text
 
     use ModTime, ONLY: StartTime, tSimulation, CurrentTime
     use ModInputs, only: iStartTime, IsFramework, iOutputUnit_, set_defaults, &
@@ -73,7 +73,7 @@ contains
        if(iProc==0)then
           call check_dir("UA/DataIn")
           call check_dir("UA/data")
-          call check_dir("UA/RestartOUT")
+          call check_dir("UA/restartOUT")
        end if
 
        IsFramework = .true.
@@ -82,9 +82,8 @@ contains
        call set_defaults
 
     case('READ')
-       nInputLines = i_line_read()
-       call read_text(cInputText)
-       nInputLines = n_line_read() + 1  - nInputLines
+       call read_text(cInputText, nInputLines)
+       nInputLines = nInputLines + 1
        cInputText(nInputLines) = "#END"
 
        call set_inputs
