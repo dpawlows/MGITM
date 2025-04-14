@@ -36,7 +36,7 @@ contains
   subroutine UA_set_param(CompInfo, TypeAction)
 
     use ModInputs, only: cInputText
-    use ModReadParam, only: read_text, n_line_read
+    use ModReadParam, only: read_text, i_line_read, n_line_read
 
     use ModTime, ONLY: StartTime, tSimulation, CurrentTime
     use ModInputs, only: iStartTime, IsFramework, iOutputUnit_, set_defaults, &
@@ -82,14 +82,15 @@ contains
        call set_defaults
 
     case('READ')
+       nInputLines = i_line_read()
        call read_text(cInputText)
-       cInputText(n_line_read()+1) = "#END"
-       nInputLines=n_line_read()+1
+       nInputLines = n_line_read() + 1  - nInputLines
+       cInputText(nInputLines) = "#END"
 
        call set_inputs
 
-    case('FILEOUT')
-       call get(CompInfo,iUnitOut=iOutputUnit_)
+    case('STDOUT', 'FILEOUT', 'CHECK')
+       ! Nothing to do?
 
     case('GRID')
        call UA_set_grid
