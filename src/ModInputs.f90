@@ -12,11 +12,12 @@ module ModInputs
   use ModConstants
   use GITM_planet, only : nSpecies, Rotation_Period
   use ModIoUnit, only : UnitTmp_
-  use ModKind, only:    Real8_
+  use ModKind, only: Real8_
+  use ModReadParam, only: lStringLine
 
   implicit none
 
-  integer, parameter        :: iCharLen_     = 100
+  integer, parameter        :: iCharLen_     = lStringLine
 
   integer                   :: iOutputUnit_  = UnitTmp_
   integer                   :: iInputUnit_   = UnitTmp_
