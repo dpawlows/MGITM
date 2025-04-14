@@ -356,7 +356,7 @@ subroutine init_topography
   real :: rlat, rlon,latfind,lonfind
 
 
-  open(unit=iInputUnit_, file='DataIn/Mars_MOLA_topo.dat', action='read', status="old")
+  open(unit=iInputUnit_, file='UA/DataIn/Mars_MOLA_topo.dat', action='read', status="old")
   if (iDebugLevel > 4) write(*,*) "=====> Reading Topography"
 
   do iLat = 1, nMOLALats
@@ -10030,7 +10030,7 @@ subroutine ReadMagField
   enddo
 
   write(*,*) "==> Now Reading Mars Magnetic Field"
-  open(unit=42, form="unformatted", file='DataIn/CrustalField.dat', action='read')
+  open(unit=42, form="unformatted", file='UA/DataIn/CrustalField.dat', action='read')
 
 
   read(42) MagField
@@ -10170,7 +10170,7 @@ subroutine ReadLillisModel
   EIMReactions(iImpactCO2_A2PI_U)  = 'iImpactCO2_A2PI_U'
 
   write(*,*) "==> Now Reading Mars Empirical Ionization Model"
-  open(unit=42, file='DataIn/nemlillis_v3.dat', action='read')
+  open(unit=42, file='UA/DataIn/nemlillis_v3.dat', action='read')
 
 !!! The impact ionization grid is currently fixed
   !Read Header

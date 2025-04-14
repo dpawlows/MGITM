@@ -115,7 +115,7 @@ subroutine init_msis
   initialEDensity = 0.0
   initialAlt = 0.0
 
-  open(iInputUnit_,file='DataIn/MarsInitialIonosphere.txt')
+  open(iInputUnit_,file='UA/DataIn/MarsInitialIonosphere.txt')
   do while (.not. Done)
      read(iInputUnit_,*) cLine
      if (cline .eq. '#START')  Done = .True.
