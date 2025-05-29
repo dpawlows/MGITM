@@ -179,7 +179,7 @@ F   UseDynamo              (logical)
 
 #CHEMISTRY
 T		UseIonChemistry
-T		UseIonAdvection
+F		UseIonAdvection
 T		UseNeutralChemistry
 
 #STRETCH
