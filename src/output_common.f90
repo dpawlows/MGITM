@@ -288,6 +288,12 @@ cTime = cTimeSave
      nvars_to_write = nVarsUser3d
      call output_3duser(iBlock, iOutputUnit_)
 
+   case ('1DUSR')
+
+     if (iBlock == 1) call set_nVarsUser1d
+     nvars_to_write = nVarsUser1d
+     call output_1duser(iBlock, iOutputUnit_)
+
   case ('2DGEL')
 
      nvars_to_write = 13
