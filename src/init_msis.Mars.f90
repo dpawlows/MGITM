@@ -302,7 +302,9 @@ subroutine init_msis
      !    IDensityS(:,:,:,iCO2P_,iBlock) = 1.0e0
      IDensityS(:,:,:,iOP_,iBlock) = 1.0e0
      IDensityS(:,:,:,iN2P_,iBlock) = 1.0e0
-     IDensityS(:,:,:,iNOP_,iBlock) = 1.0e0
+     IDensityS(:,:,:,iCOP_,iBlock) = 1.0e0
+     IDensityS(:,:,:,iCP_,iBlock) = 1.0e0
+
      write(*,*) '============> init_msis.Mars.f90 Major Diagnostics:  Begin'
      !     Temperature(:,:,:,iBlock) = 175.
      !\

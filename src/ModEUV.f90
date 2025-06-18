@@ -87,7 +87,9 @@ module ModEUV
        PhotoIon_CH4, PhotoIon_H2, PhotoIon_HCN,                     &
        BranchingRatio_CO2_to_CO2Plus,BranchingRatio_CO2_to_OPlus,   &
        BranchingRatio_CO2_to_COPlus,BranchingRatio_N2_to_N2Plus,    &
-!!
+       PhotoIon_CO2_COP_OP,PhotoIon_CO2_CP_OP,PhotoIon_CO2_CP_OP_O, &
+       PhotoIon_CO_C_OP, PhotoIon_CO2_COP_O,                                           &
+  
 !! NOTA BENE NOTA BENE:  JMB
 !! Please Note that these QuantunYields
 !! Are Relative to the TOTAL ABSORPTION COEFFICIENT
@@ -437,6 +439,23 @@ data PhotoDis_CO_C_O /                                                &
        0.40e-18, 0.20e-18, 0.08e-18, 0.01e-18, 0.00e-18, 0.00e-18,   &
        0.00e-18, 0.00e-18, 0.00e-18, 0.00e-18, 0.00e-18/
 
+   data PhotoIon_CO2_COP_O / &
+   59 * 0.0 /
+
+   data PhotoIon_CO2_COP_OP / &
+   59 * 0.0 /
+
+   data PhotoIon_CO2_CP_OP / &
+   59 * 0.0 /
+
+   data PhotoIon_CO2_CP_OP_O / &
+   59 * 0.0 /
+
+   data PhotoIon_CO_C_OP / &
+   59 * 0.0 /
+
+
+
 ! -------------------------------------------------------------------
 ! Num_WaveLengths_LOW  = 37
 ! -------------------------------------------------------------------
@@ -744,7 +763,7 @@ data PhotoDis_CO_C_O /                                                &
        0.00e+00, 0.00e+00/
 
 !
-!------ F74113 reference spectrum (doubled below 150-250 A, tripled <150)
+!------ F74113 reference spectrum (doubled below 150-250 A, tr4led <150)
 !------ Will be multiplied by 1.0E9 later
 !
 

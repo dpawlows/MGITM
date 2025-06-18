@@ -39,7 +39,7 @@ subroutine fill_photo(photoion, photoabs, photodis)
 
   implicit none
 
-  real, intent(out) :: photoion(Num_WaveLengths_High, nIons-1)
+  real, intent(out) :: photoion(Num_WaveLengths_High, nPhotoIonPathways)
   real, intent(out) :: photoabs(Num_WaveLengths_High, nSpeciesTotal)
   real, intent(out) :: photodis(Num_WaveLengths_High, nPhotoPathways)
 
@@ -57,13 +57,13 @@ subroutine fill_photo(photoion, photoabs, photodis)
 
   NWH = Num_WaveLengths_High
 
-  photoabs               = 0.0
-  photoabs(:,iCO2_)  = PhotoAbs_CO2
-  photoabs(:,iCO_)    = PhotoAbs_CO
-  photoabs(:,iO_)      = PhotoAbs_O
-  photoabs(:,iN2_)    = PhotoAbs_N2
-  photoabs(:,iO2_)    = PhotoAbs_O2
-  photoabs(58,iCO2_) = 0.0! timing fix (DP: Nov. 2011)
+  photoabs              = 0.0
+  photoabs(:,iCO2_)     = PhotoAbs_CO2
+  photoabs(:,iCO_)      = PhotoAbs_CO
+  photoabs(:,iO_)       = PhotoAbs_O
+  photoabs(:,iN2_)      = PhotoAbs_N2
+  photoabs(:,iO2_)      = PhotoAbs_O2
+  photoabs(58,iCO2_)    = 0.0! timing fix (DP: Nov. 2011)
 
   ! ---------------------------------------------------------------------
   !  Specific Photoionization Cross Sections (nIons-1)
@@ -71,14 +71,22 @@ subroutine fill_photo(photoion, photoabs, photodis)
   !  Need:  O+, O2+, CO2+, N2+ Productions
   ! ---------------------------------------------------------------------
 
-  photoion(1:NWH,iOP_)        = PhotoIon_OPlus4S(1:NWH)*sfop
-  photoion(1:NWH,iO2P_)      = PhotoIon_O2(1:NWH)
-  photoion(1:NWH,iCO2P_)    = PhotoIon_CO2(1:NWH)* &
-       BranchingRatio_CO2_to_CO2Plus(1:NWH)*sfco2p
-  photoion(1:NWH,iN2P_)      = PhotoIon_N2(1:NWH)*  &
-       BranchingRatio_N2_to_N2Plus(1:NWH)*sfn2p
-  photoion(1:NWH,iNOP_)     = PhotoIon_CO2(1:NWH)* &
-       BranchingRatio_CO2_to_OPlus(1:NWH)*sfco2p
+  photoion                       = 0.0
+  photoion(:,iPIO_OP)        = PhotoIon_OPlus4S*sfop
+  photoion(:,iPIO2_O2P)      = PhotoIon_O2
+  photoion(:,iPICO2_CO2P)    = PhotoIon_CO2* &
+       BranchingRatio_CO2_to_CO2Plus(:)*sfco2p
+  photoion(:,iPIN2_N2P)      = PhotoIon_N2*  &
+       BranchingRatio_N2_to_N2Plus(:)*sfn2p
+  photoion(:,iPICO2_OP_CO)     = PhotoIon_CO2* &
+       BranchingRatio_CO2_to_OPlus*sfco2p
+
+   photoion(:,iPICO2_COP_O)    = PhotoIon_CO2_COP_O  !! instead of BranchingRatio_CO2_to_COPlus
+   photoion(:,iPICO2_COP_OP)   = PhotoIon_CO2_COP_OP
+   photoion(:,iPICO2_CP_O2)    = PhotoIon_CO2_CP_OP
+   photoion(:,iPICO2_CP_OP_O)  = PhotoIon_CO2_CP_OP_O
+   photoion(:,iPICO_C_OP)      = PhotoIon_CO_C_OP
+
 
   ! ---------------------------------------------------------------------
   !  Specific PhotoiDissociations (Absorption-Total_Ionization) (nSpecies)
@@ -93,9 +101,10 @@ subroutine fill_photo(photoion, photoabs, photodis)
   ! the reactants,
    
 
-
+!!!!! What am I going to do about the reactions that have photoion in them?? Actually, 
+!! N2 and O2 are fine as those are unchanged. However, CO2 photoion has several branches now.
   ! CO2 -> CO + O
-  photodis(:,iPDCO2_CO_O)  = PhotoAbs_CO2 - PhotoIon_CO2
+  photodis(:,iPDCO2_CO_O)  = PhotoAbs_CO2 - sum(PhotoIon(:,iPICO2_CO2P:iPICO2_OP_CO),dim=2)
 !  photodis(:,iCO2_)  = PhotoAbs_CO2 - PhotoIon_CO2
 
   ! CO2 -> O2 + C
@@ -106,11 +115,11 @@ subroutine fill_photo(photoion, photoabs, photodis)
   ! CO -> C + O
   photodis(:,iPDCO_C_O) = PhotoDis_CO_C_O*1.0e-4
   ! N2 -> N + N
-  photodis(:,iPDN2_N4S_N2D)   = PhotoAbs_N2 - PhotoIon_N2
+  photodis(:,iPDN2_N4S_N2D)   = PhotoAbs_N2 - photoion(:,iPIN2_N2P)
 !  photodis(:,iN2_)   = PhotoAbs_N2 - PhotoIon_N2
 
   ! O2 -> O + O
-  photodis(:,iPDO2_O_O)   = PhotoAbs_O2 - PhotoIon_O2
+  photodis(:,iPDO2_O_O)   = PhotoAbs_O2 - PhotoIon(:,iPIO2_O2P)
 !  photodis(:,iO2_)   = PhotoAbs_O2 - PhotoIon_O2
 
 end subroutine fill_photo

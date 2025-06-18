@@ -28,15 +28,18 @@ module GITM_planet
 
 ! Major Ions (5):  Most Important to MWACM code
 ! Modified (05/21/08) : SWB :   Add N2+ to major ions list
+! DJP (7/21/2025): Added CO+ and C+
   integer, parameter  :: iOP_  = 1
   integer, parameter  :: iO2P_  = 2
   integer, parameter  :: iCO2P_ = 3
   integer, parameter  :: iN2P_  = 4
   integer, parameter  :: iNOP_  = 5
-  integer, parameter  :: ie_    = 6
+  integer, parameter  :: iCOP_  = 6
+  integer, parameter  :: iCP_  = 7
+  integer, parameter  :: ie_    = 8
   integer, parameter  :: nIons  = ie_
   integer, parameter  :: nIonsAdvect = 3
-  integer, parameter  :: nSpeciesAll = nSpeciesTotal + iNOP_ !Ions plus neutrals
+  integer, parameter  :: nSpeciesAll = nSpeciesTotal + iCP_ !Ions plus neutrals
 
   character (len=20) :: cSpecies(nSpeciesTotal)
   character (len=20) :: cIons(nIons)
@@ -128,7 +131,7 @@ module GITM_planet
 ! Photochemistry pathways
 ! Some species have multiple photodissociation / photoionization pathways
 
-  
+!!! Neutrals  
 ! CO2
   integer, parameter :: iPDCO2_CO_O  = 1
   integer, parameter :: iPDCO2_O2_C = 5
@@ -142,7 +145,32 @@ module GITM_planet
 !O2
   integer, parameter :: iPDO2_O_O = 4
 
+!Total
   integer, parameter :: nPhotoPathways = iPDCO2_2O_C
+
+!!! Ions
+!CO2
+  integer, parameter :: iPICO2_CO2P = 1
+  integer, parameter :: iPICO2_COP_O = 2
+  integer, parameter :: iPICO2_COP_OP = 3
+  integer, parameter :: iPICO2_CP_O2 = 4
+  integer, parameter :: iPICO2_CP_OP_O = 5
+  integer, parameter :: iPICO2_OP_CO = 6
+
+!CO
+  integer, parameter :: iPICO_C_OP = 7
+
+!O2 
+  integer, parameter :: iPIO2_O2P = 8
+
+!O
+  integer, parameter :: iPIO_OP = 9
+
+!N2
+  integer, parameter :: iPIN2_N2P = 10
+
+!Total
+  integer, parameter :: nPhotoIonPathways = iPIN2_N2P
 
 !  real :: KappaTemp0 = 2.22e-4
 
