@@ -1535,9 +1535,7 @@ subroutine output_1dall(iiLon, iiLat, iBlock, rLon, rLat, iUnit)
          Dt*RadCooling(1,1,iiAlt,iBlock)*TempUnit(1,1,iiAlt) + &
          Conduction(1,1,iiAlt)*TempUnit(1,1,iiAlt)
 
-        Vars(iOff+5) = HeatingEfficiency_CB(1,1,iiAlt,iBlock)
-
-        ioff = iOff + 5
+        ioff = iOff + 4
 
      write(iOutputUnit_) Vars
 
