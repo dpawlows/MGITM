@@ -20,15 +20,15 @@ subroutine euv_ionization_heat(iBlock)
   integer, intent(in) :: iBlock
 
   integer :: iAlt, iWave, iSpecies, iIon, iError, iLon,iLat,whichdim, iPathway
-! integer :: iAlt, iWave, iSpecies, iIon, iError, iLon,iLat
+
   real, dimension(nLons,nLats) :: Tau, Intensity
   real, dimension(nLons,nLats,nalts) :: secondaryRate
 
   logical :: IsFirstTime(nBlocksMax) = .true.
 
-  real :: photoion(Num_WaveLengths_High, nIons-1)
+  real :: photoion(Num_WaveLengths_High, nPhotoIonPathways)
   real :: photoabs(Num_WaveLengths_High, nSpeciesTotal)
-  real :: photodis(Num_WaveLengths_High, nSpeciesTotal)
+  real :: photodis(Num_WaveLengths_High, nPhotoPathways)
 
   real :: NeutralDensity(nLons, nLats, nSpecies)
   real :: ChapmanLittle(nLons, nLats, nSpecies)
@@ -66,10 +66,9 @@ subroutine euv_ionization_heat(iBlock)
   EuvDissRateS(:,:,:,:,iBlock) = 0.0
   SIR(:,:,:,:,iBlock) = 0.0
 
-  photoion(1:Num_Wavelengths_High,1:nIons-1) = 0.0
+  photoion(1:Num_Wavelengths_High,1:nPhotoIonPathways) = 0.0
   photoabs(1:Num_Wavelengths_High,1:nSpeciesTotal)= 0.0
   photodis(1:Num_Wavelengths_High,1:nPhotoPathways) = 0.0
-!  photodis(1:Num_Wavelengths_High,1:nSpeciesTotal) = 0.0
 
   ! This transfers the specific photo absorption and ionization cross
   ! sections into general variables, so we can use loops...
@@ -92,29 +91,21 @@ subroutine euv_ionization_heat(iBlock)
 
         Intensity = Flux_of_EUV(iWave) * exp(-1.0*Tau)
 
-!  SIR code
-        do iIon = 1, nIons-1
-         if (iIon .eq. iCO2P_) then
- 
-          if (UseWValue) then
+      ! There are multiple photodissociation and photoionization pathways for 
+      ! certain species, so they are numbered separately from the source species 
+
+        do iPathway = 1, nPhotoIonPathways
+
+          if (iPathway .eq. iPICO2_CO2P .and. UseWValue) then
            SIR(:,:,iAlt,iWave,iBlock) = Intensity * photoelectronfactor(iwave) * &
-              photoion(iWave,iIon)
-!             write(*,*)intensity,photoelectronfactor(iwave),photoion(iwave,iion),iwave
-         endif
-       endif
+              photoion(iWave,iPathway)
+          endif
 
-           EuvIonRateS(:,:,iAlt,iIon,iBlock) = &
-                EuvIonRateS(:,:,iAlt,iIon,iBlock) + &
-                Intensity*PhotoIon(iWave,iIon)
+           EuvIonRateS(:,:,iAlt,iPathway,iBlock) = &
+                EuvIonRateS(:,:,iAlt,iPathway,iBlock) + &
+                Intensity*PhotoIon(iWave,iPathway)
         enddo
-
-       ! There are multiple photodissociation pathways for certain species, so they are numbered 
-       ! differently
-!       do iSpecies = 1, nSpecies
-!                EuvDissRateS(:,:,iAlt,iSpecies,iBlock) = &
-!                EuvDissRateS(:,:,iAlt,iSpecies,iBlock) + &
-!                Intensity*PhotoDis(iWave,iSpecies)
-!        enddo
+        
          do iPathway = 1, nPhotoPathways
                 EuvDissRateS(:,:,iAlt,iPathway,iBlock) = &
                 EuvDissRateS(:,:,iAlt,iPathway,iBlock) + &
@@ -141,7 +132,6 @@ subroutine euv_ionization_heat(iBlock)
            endif
         enddo
      enddo  
-!   write(*,*) altitude_gb(1,1,ialt,1),EuvDissRateS(:,:,iAlt,iPDCO2_O2_C,1),EuvDissRateS(:,:,iAlt,iPDCO2_2O_C,1)
     enddo         
 !stop
   !\
@@ -441,17 +431,16 @@ subroutine calc_scaled_euv
      Flux_of_EUV(NN) = 0.5*(EUV_Flux(N)+Solar_Flux(NN))
   enddo
 
-
+!!! This assumes F107 is measured at 1AU
   Flux_of_EUV = Flux_of_EUV/(SunOrbitEccentricity**2)
-!   write(*,*) SunOrbitEccentricity
-!   stop
+
 
   do N=1,Num_WaveLengths_High
      wvavg(N)=(WAVEL(N)+WAVES(N))/2.
   enddo
 
  if (UseEUVData) then
-
+   flux_of_EUV = 0.0
     call start_timing("new_euv")
     SeeTime(:) = 0
 
@@ -507,19 +496,12 @@ subroutine calc_scaled_euv
     !!need to convert from W/m^2 to photons/m^2/s
 
     do N=1,Num_WaveLengths_High
-       if (UseFluxAtPlanet) then
+       Flux_of_EUV(N) = Timed_Flux(N)*wvavg(N)*1.0e-10/(6.626e-34*2.998e8)
+       if (.not. UseFluxAtPlanet) then
          ! --------------------------------------------------------------------------
-         !!! Don't correct for Orbit Eccentricity!!!
-             Flux_of_EUV(N) = Timed_Flux(N)*wvavg(N)*1.0e-10/(6.626e-34*2.998e8)
-         !!! Rolling correction for Orbit Eccentricity after 31-MAY-2019 (Rold)
-         !!!  using fismdaily.dat6
-         !!! Where Rold = 1.63; Rold**2 = 2.6569
-         !!! Flux_of_EUV(N) = Timed_Flux(N)*wvavg(N)*1.0e-10/(6.626e-34*2.998e8)* &
-         !!!      2.6569/(SunOrbitEccentricity**2)
-         ! --------------------------------------------------------------------------
-       else
-          Flux_of_EUV(N) = Timed_Flux(N)*wvavg(N)*1.0e-10/(6.626e-34*2.998e8) &
-               /(SunOrbitEccentricity**2)
+         !!! Correct for Orbit Eccentricity if the flux was assumed to be at 1 AU
+          Flux_of_EUV(N) = Flux_of_EUV(N)/(SunOrbitEccentricity**2)
+
        endif
 
      enddo
