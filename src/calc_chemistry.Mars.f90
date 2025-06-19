@@ -28,7 +28,7 @@ subroutine calc_chemistry(iBlock)
 
   real :: EmissionTotals(nEmissions), F, r
 
-  logical :: doImplicit = .true.
+  logical :: doImplicit = .false.
   !---------------------------------------------------------------------------
 
   UseNeutralConstituent = .true.
@@ -52,8 +52,7 @@ subroutine calc_chemistry(iBlock)
   !   else
   !      useimplicitchemistry = .true.
   !   endif
-!  neutralsourcestotal = 0.0
-!  neutrallossestotal = 0.0
+
   do iLon = 1, nLons
      do iLat = 1, nLats
 
@@ -73,21 +72,16 @@ subroutine calc_chemistry(iBlock)
            call calc_chemical_sources(iLon,iLat,iAlt,iBlock,IonSources,IonLosses,NeutralSources, &
                 NeutralLosses,ChemicalHeatingSub,Emission)
 
-           !        write(*,*) dtsub
            call calc_dtsub(IonSources,IonLosses,NeutralSources,NeutralLosses,dtSub)
 
-
-
-           !          write(*,*)ialt, "predicted: ",dt/dtsub,dtsub,dt,nimplicitsourcecalls
-           if (.05*Dt/DtSub > nImplicitSourceCalls .and. useImplicitChemistry) then
+          if (.05*Dt/DtSub > nImplicitSourceCalls .and. useImplicitChemistry) then
               doImplicit = .true.
            else
               doImplicit = .false.
            endif
-
-
+ 
            if (doImplicit) then
-              !write(*,*)ialt," implicit"
+ 
               where (SpeciesDensity(:,:,:,:,iBlock) .lt. 0) &
                    SpeciesDensity(:,:,:,:,iBlock) = 0.0
 
@@ -218,21 +212,25 @@ subroutine calc_chemistry(iBlock)
 
                  do iIon = 1, nIons-1
                     if (IonSources(iion) > 100.0*ions(iion) .and. IonLosses(iion) > 100.0 * ions(iion)) then
+
                        F = ions(iion)/IonSources(iion) * 10.0
                        IonLosses(iion) = f * IonLosses(iion)
                        IonSources(iion) = f * IonSources(iion)
                     endif
                  enddo
-
+!                  write(*,*) IonLosses
+!                 write(*,*) IonSources
+!                 stop
                  call calc_dtsub(IonSources,IonLosses,NeutralSources,NeutralLosses,dtSub)
-
+!write(*,*)dtsub
+!stop
                  Ions(nIons) = 0.0
                  do iIon = 1, nIons-1
 
                     if (Ions(iIon) + &
                          (IonSources(iIon) - IonLosses(iIon)) * DtSub < 0.0) then
-!!!!!! Solve Steady-State !!!!!!!
-                       Ions(iIon) = IonSources(iIon)*Ions(iIon)/IonLosses(iIon)
+                        !!!!!! Solve Steady-State !!!!!!!
+                        Ions(iIon) = IonSources(iIon)*Ions(iIon)/IonLosses(iIon)
                     else
                        Ions(iIon) = Ions(iIon) + &
                             (IonSources(iIon) - IonLosses(iIon)) * DtSub
@@ -254,14 +252,6 @@ subroutine calc_chemistry(iBlock)
                          Neutrals(iNeutral) + &
                          (NeutralSources(iNeutral) - NeutralLosses(iNeutral)) * &
                          DtSub
-
-!                    NeutralSourcesTotal(iLon,iLat,iAlt,iNeutral,iBlock) = &
-!                         NeutralSourcesTotal(iLon,iLat,iAlt,iNeutral,iBlock) + &
-!                         NeutralSources(iNeutral) * DtSub
-
-!                    NeutralLossesTotal(iLon,iLat,iAlt,iNeutral,iBlock) = &
-!                         NeutralLossesTotal(iLon,iLat,iAlt,iNeutral,iBlock) + &
-!                         NeutralLosses(iNeutral) * DtSub
 
 
                     if (Neutrals(iNeutral) < 0.0) then
@@ -306,22 +296,12 @@ subroutine calc_chemistry(iBlock)
 
                  nIters = nIters + 1
 
-
               enddo
 
               totalsteps = totalsteps + niters
-              UserData1D(1,1,ialt,1) = reactionrate(1)
-              UserData1D(1,1,ialt,2) = reactionrate(2)
-              UserData1D(1,1,ialt,3) = reactionrate(3)
-!              if (ialt == 70) then
-!               write(*,*) reactionrate(1),reactionrate(2),reactionrate(3)
-!               stop
-!               endif
-              ! if (iproc == 6 .and. ilon == 16 .and. ilat == 1) then
-              !   write(*,*) ialt,totalsteps, IDensityS(ilon,ilat,ialt,1,1),altitude_GB(ilon,ilat,ialt,1),&
-              !    NDensityS(ilon,ilat,ialt,iCO2_,1)
-              ! endif
-
+              UserData1D(1,1,ialt,1:42) = reactionrate(1:42)
+              UserData1D(1,1,ialt,43) = Temperature(1,1,iAlt,iBlock)*&
+                 TempUnit(1,1,iAlt)
               IDensityS(iLon,iLat,iAlt,1:nIons,iBlock) = Ions
               NDensityS(iLon,iLat,iAlt,:,iBlock) = Neutrals
 
@@ -329,12 +309,7 @@ subroutine calc_chemistry(iBlock)
                    Emissions(iLon, iLat, iAlt, :, iBlock) + EmissionTotals
 
 
-           endif
-           ! if (iproc == 6 .and. ilon == 16 .and. ilat == 15) then
-           !   write(*,*) ialt, nIters
-           ! endif
-
-
+           endif 
         enddo  
      enddo
   enddo

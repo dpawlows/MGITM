@@ -1173,7 +1173,7 @@ contains
     allocate(eHeatingEfficiency_CB(nLons, nLats, nAlts, nBlocks))
     allocate(EuvIonRate(nLons, nLats, nAlts, nBlocks))
     allocate(EuvTotal(nLons, nLats, nAlts, nBlocks))
-    allocate(EuvIonRateS(nLons, nLats, nAlts, nIons,nBlocks))
+    allocate(EuvIonRateS(nLons, nLats, nAlts, nPhotoIonPathways,nBlocks))
 !    allocate(EuvDissRateS(nLons, nLats, nAlts, nSpeciesTotal,nBlocks))
     allocate(EuvDissRateS(nLons, nLats, nAlts, nPhotoPathways,nBlocks))
 
