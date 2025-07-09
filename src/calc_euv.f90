@@ -133,7 +133,7 @@ subroutine euv_ionization_heat(iBlock)
         enddo
      enddo  
     enddo         
-!stop
+
   !\
   ! Add Secondary Ionization if specified to use it.
   !/
@@ -167,9 +167,6 @@ subroutine euv_ionization_heat(iBlock)
         EuvTotal(:,:,iAlt,iBlock) = EuvHeating(:,:,iAlt,iBlock) * &
              TempUnit(1:nLons,1:nLats,iAlt) / &
              HeatingEfficiency_CB(:,:,iAlt,iBlock)
-
-
-
 
      enddo
   else
@@ -582,7 +579,11 @@ enddo
      PhotoAbs_CH4     = PhotoAbs_CH4 / 10000.0
      PhotoAbs_CO2      = PhotoAbs_CO2        / 10000.0
      PhotoAbs_CO      = PhotoAbs_CO        / 10000.0
-
+   
+     PhotoDis_CO2_O2_C = PhotoDis_CO2_O2_C / 10000.0
+     PhotoDis_CO2_2O_C = PhotoDis_CO2_2O_C / 10000.0
+     PhotoDis_CO_C_O   = PhotoDis_CO_C_O / 10000.0
+   
      PhotoIon_O2      = PhotoIon_O2        / 10000.0
      PhotoIon_CO2      = PhotoIon_CO2        / 10000.0
      PhotoIon_CO      = PhotoIon_CO        / 10000.0
@@ -591,6 +592,12 @@ enddo
      PhotoIon_N       = PhotoIon_N         / 10000.0
      PhotoIon_OPlus2D = PhotoIon_OPlus2D   / 10000.0
      PhotoIon_OPlus2P = PhotoIon_OPlus2P   / 10000.0
+
+     PhotoIon_CO2_COP_O   = PhotoIon_CO2_COP_O     / 10000.0
+     PhotoIon_CO2_COP_OP  = PhotoIon_CO2_COP_OP    / 10000.0  
+     PhotoIon_CO2_CP_O2   = PhotoIon_CO2_CP_O2     / 10000.0
+     PhotoIon_CO2_CP_OP_O = PhotoIon_CO2_CP_OP_O   / 10000.0
+     PhotoIon_CO_C_OP     = PhotoIon_CO_C_OP       / 10000.0
 
 
 

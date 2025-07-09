@@ -82,10 +82,10 @@ subroutine fill_photo(photoion, photoabs, photodis)
        BranchingRatio_CO2_to_OPlus*sfco2p
 
    photoion(:,iPICO2_COP_O)    = PhotoIon_CO2_COP_O  !! instead of BranchingRatio_CO2_to_COPlus
-   photoion(:,iPICO2_COP_OP)   = PhotoIon_CO2_COP_OP
-   photoion(:,iPICO2_CP_O2)    = PhotoIon_CO2_CP_OP
-   photoion(:,iPICO2_CP_OP_O)  = PhotoIon_CO2_CP_OP_O
-   photoion(:,iPICO_C_OP)      = PhotoIon_CO_C_OP
+   photoion(:,iPICO2_COP_OP)   = PhotoIon_CO2_COP_OP 
+   photoion(:,iPICO2_CP_O2)    = PhotoIon_CO2_CP_O2 
+   photoion(:,iPICO2_CP_OP_O)  = PhotoIon_CO2_CP_OP_O 
+   photoion(:,iPICO_C_OP)      = PhotoIon_CO_C_OP 
 
 
   ! ---------------------------------------------------------------------
@@ -98,29 +98,28 @@ subroutine fill_photo(photoion, photoabs, photodis)
   ! photodissociation rates directly from the literature.
 
   ! In order to accomodate this, photodis and euvdissrates are indexed based on their products, not 
-  ! the reactants,
-   
-
-!!!!! What am I going to do about the reactions that have photoion in them?? Actually, 
-!! N2 and O2 are fine as those are unchanged. However, CO2 photoion has several branches now.
-  ! CO2 -> CO + O
+  ! the reactants. N2 and O2 are fine as those are unchanged. 
+  
+  ! CO2 -> CO + O  calculated
   photodis(:,iPDCO2_CO_O)  = PhotoAbs_CO2 - sum(PhotoIon(:,iPICO2_CO2P:iPICO2_OP_CO),dim=2)
-!  photodis(:,iCO2_)  = PhotoAbs_CO2 - PhotoIon_CO2
 
-  ! CO2 -> O2 + C
-  photodis(:,iPDCO2_O2_C)  = PhotoDis_CO2_O2_C*1.0e-4
-  ! CO2 -> 2O + C
-  photodis(:,iPDCO2_2O_C)  = PhotoDis_CO2_2O_C*1.0e-4
+  ! CO2 -> O2 + C   specified directly
+  photodis(:,iPDCO2_O2_C)  = PhotoDis_CO2_O2_C
+  
+  ! CO2 -> 2O + C   specified directly
+  photodis(:,iPDCO2_2O_C)  = PhotoDis_CO2_2O_C
 
-  ! CO -> C + O
-  photodis(:,iPDCO_C_O) = PhotoDis_CO_C_O*1.0e-4
-  ! N2 -> N + N
+  ! CO -> C + O  specified directly
+  photodis(:,iPDCO_C_O) = PhotoDis_CO_C_O 
+    
+  ! N2 -> N + N   calculated
   photodis(:,iPDN2_N4S_N2D)   = PhotoAbs_N2 - photoion(:,iPIN2_N2P)
-!  photodis(:,iN2_)   = PhotoAbs_N2 - PhotoIon_N2
 
-  ! O2 -> O + O
+  ! O2 -> O + O   calculated
   photodis(:,iPDO2_O_O)   = PhotoAbs_O2 - PhotoIon(:,iPIO2_O2P)
-!  photodis(:,iO2_)   = PhotoAbs_O2 - PhotoIon_O2
+
+! Make sure cross-sections aren't negative!
+where(photodis < 0.0) photodis = 0.0 
 
 end subroutine fill_photo
 

@@ -38,7 +38,7 @@ module GITM_planet
   integer, parameter  :: iCP_  = 7
   integer, parameter  :: ie_    = 8
   integer, parameter  :: nIons  = ie_
-  integer, parameter  :: nIonsAdvect = 3
+  integer, parameter  :: nIonsAdvect = 4
   integer, parameter  :: nSpeciesAll = nSpeciesTotal + iCP_ !Ions plus neutrals
 
   character (len=20) :: cSpecies(nSpeciesTotal)
@@ -134,19 +134,19 @@ module GITM_planet
 !!! Neutrals  
 ! CO2
   integer, parameter :: iPDCO2_CO_O  = 1
-  integer, parameter :: iPDCO2_O2_C = 5
-  integer, parameter :: iPDCO2_2O_C  = 6
+  integer, parameter :: iPDCO2_O2_C = 2
+  integer, parameter :: iPDCO2_2O_C  = 3
 !CO
-  integer, parameter :: iPDCO_C_O = 2
+  integer, parameter :: iPDCO_C_O = 4
 
 !N2
-  integer, parameter :: iPDN2_N4S_N2D = 3
+  integer, parameter :: iPDN2_N4S_N2D = 5
 
 !O2
-  integer, parameter :: iPDO2_O_O = 4
+  integer, parameter :: iPDO2_O_O = 6
 
 !Total
-  integer, parameter :: nPhotoPathways = iPDCO2_2O_C
+  integer, parameter :: nPhotoPathways = iPDO2_O_O
 
 !!! Ions
 !CO2
@@ -939,6 +939,8 @@ contains
     cIons(iNOP_)   = "NO!U+!N"
     cIons(iOP_)    = "O!U+!N"
     cIons(iN2P_)    = "N!D2!U+!N"
+    cIons(iCP_)    = "C!U+!N"
+    cIons(iCOP_)    = "CO!U+!N" 
     cIons(ie_)     = "e-"
 
     Vibration(iCO2_)  = 8.66667  ! This gives Gamma = ~1.3 (experimental value)
