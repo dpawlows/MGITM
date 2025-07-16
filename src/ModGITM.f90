@@ -38,6 +38,7 @@ module ModGITM
   real, dimension(nLons,nLats,nBlocksMax) :: Altzero
 
   real, allocatable :: Rho(:,:,:,:)
+  real, allocatable :: ColumnIntegralRho(:, :, :)
   real, allocatable :: Temperature(:,:,:,:)
   real, allocatable :: VISC_3D(:,:,:,:)
   real, allocatable :: InvScaleHeight(:,:,:,:)
@@ -138,7 +139,6 @@ real, allocatable :: SpeciesDensityOld(:,:,:,:,:)
   real, allocatable :: PhotoEFluxD(:,:,:,:,:)
 
   real, allocatable :: PhotoEFluxTotal(:,:,:,:,:)
-  real, allocatable :: ColumnIntegralRho(:,:,:)
 
   real, dimension(nPhotoBins)                 :: PhotoEBins
   real, dimension(-1:nLons+2, -1:nLats+2, -1:nAlts+2) :: TempUnit
@@ -174,7 +174,7 @@ contains
     allocate(dAltDLon_CB(nLons,nLats,nAlts,nBlocks))
     allocate(dAltDLat_CB(nLons,nLats,nAlts,nBlocks))
     allocate(Rho(-1:nLons+2, -1:nLats+2, -1:nAlts+2, nBlocks))
-    allocate(ColumnIntegralRho(-1:nLons+2, -1:nLats+2, -1:nAlts+2))
+    allocate(ColumnIntegralRho(-1:nLons + 2, -1:nLats + 2, -1:nAlts + 2))
     allocate(Temperature(-1:nLons+2, -1:nLats+2, -1:nAlts+2, nBlocks))
     allocate(VISC_3D(-1:nLons+2, -1:nLats+2, -1:nAlts+2, nBlocks))
     allocate(InvScaleHeight(-1:nLons+2, -1:nLats+2, -1:nAlts+2, nBlocks))
