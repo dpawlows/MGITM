@@ -1,10 +1,10 @@
 
 subroutine euv_ionization_heat(iBlock)
 
-!  Includes EUVData reads and interpolation (solar flare method) from DP : December 2017
-!  Includes secondary ionization rate (W-method only) from DP : Spring 2018 (activated 210615)
-!  Includes 1/R**2 fix when constant FISM-M intrinsic solar fluxes modified by heliocentric
-!           distance (only)
+  !  Includes EUVData reads and interpolation (solar flare method) from DP : December 2017
+  !  Includes secondary ionization rate (W-method only) from DP : Spring 2018 (activated 210615)
+  !  Includes 1/R**2 fix when constant FISM-M intrinsic solar fluxes modified by heliocentric
+  !           distance (only)
 
   use ModGITM
   use ModEUV
@@ -19,8 +19,8 @@ subroutine euv_ionization_heat(iBlock)
 
   integer, intent(in) :: iBlock
 
-  integer :: iAlt, iWave, iSpecies, iIon, iError, iLon,iLat,whichdim
-! integer :: iAlt, iWave, iSpecies, iIon, iError, iLon,iLat
+  integer :: iAlt, iWave, iSpecies, iIon, iError, iLon, iLat
+  ! integer :: iAlt, iWave, iSpecies, iIon, iError, iLon,iLat
   real, dimension(nLons,nLats) :: Tau, Intensity
   real, dimension(nLons,nLats,nalts) :: secondaryRate
 
@@ -42,22 +42,15 @@ subroutine euv_ionization_heat(iBlock)
           floor(tSimulation/dTAurora)) return
   endif
 
-!  SIR code
-  if (is1D) then
-    whichdim = 2
-  else
-    whichdim = 4
-  endif
-
   call report("euv_ionization_heat",2)
   call start_timing("euv_ionization_heat")
 
 
   call chapman_integrals(iBlock)
-    Photoelectronfactor = 1.0
-   if (UseWValue) then
+  Photoelectronfactor = 1.0
+  if (UseWValue) then
      photoelectronfactor = max(max(0.0,((PhotonEnergy/1.6e-19)-13.77)/WValue)-1,0.0)
-   endif
+  endif
 
   EuvIonRate = 0.0
   EuvHeating(:,:,:,iBlock)= 0.0
@@ -91,23 +84,23 @@ subroutine euv_ionization_heat(iBlock)
 
         Intensity = Flux_of_EUV(iWave) * exp(-1.0*Tau)
 
-!  SIR code
+        !  SIR code
         do iIon = 1, nIons-1
-         if (iIon .eq. iCO2P_) then
- 
-          if (UseWValue) then
-           SIR(:,:,iAlt,iWave,iBlock) = Intensity * photoelectronfactor(iwave) * &
-              photoion(iWave,iIon)
-!             write(*,*)intensity,photoelectronfactor(iwave),photoion(iwave,iion),iwave
-         endif
-       endif
+           if (iIon .eq. iCO2P_) then
 
-           EuvIonRateS(:,:,iAlt,iIon,iBlock) = &
-                EuvIonRateS(:,:,iAlt,iIon,iBlock) + &
+              if (UseWValue) then
+                 SIR(:,:,iAlt,iWave,iBlock) = Intensity * photoelectronfactor(iwave) * &
+                      photoion(iWave,iIon)
+                 !             write(*,*)intensity,photoelectronfactor(iwave),photoion(iwave,iion),iwave
+              endif
+           endif
+
+           EuvIonRateS(1:nLons,1:nLats,iAlt,iIon,iBlock) = &
+                EuvIonRateS(1:nLons,1:nLats,iAlt,iIon,iBlock) + &
                 Intensity*PhotoIon(iWave,iIon)
         enddo
 
-       do iSpecies = 1, nSpeciesTotal
+        do iSpecies = 1, nSpeciesTotal
            EuvDissRateS(:,:,iAlt,iSpecies,iBlock) = &
                 EuvDissRateS(:,:,iAlt,iSpecies,iBlock) + &
                 Intensity*PhotoDis(iWave,iSpecies)
@@ -133,25 +126,21 @@ subroutine euv_ionization_heat(iBlock)
         enddo
      enddo
 
-    enddo
+  enddo
 
   !\
   ! Add Secondary Ionization if specified to use it.
   !/
-!  if (UseSecondaryIonization) then
-!
-!      EuvIonRateS(:,:,1:nAlts,iCO2_,iBlock) = &
-!      EuvIonRates(:,:,1:nAlts,iCO2_,iBlock) + SecondaryRate(:,:,:)/NDensityS(:,:,1:nAlts,iCO2_,iBlock)
-!  else
-!  if (UseWValue) then
-!    EuvIonRates(:,:,1:nAlts,iCO2_,iBlock) = &
-!    EuvIonRates(:,:,1:nAlts,iCO2_,iBlock) + sum(SIR(:,:,1:nAlts,:,iblock),whichdim)
-!  endif
-!
-    if (UseWValue) then
-      EuvIonRates(:,:,1:nAlts,iCO2_,iBlock) = &
-      EuvIonRates(:,:,1:nAlts,iCO2_,iBlock) + sum(SIR(:,:,1:nAlts,:,iblock),whichdim)
-    endif
+  !  if (UseSecondaryIonization) then
+  !      EuvIonRateS(1:nLons,1:nLats,1:nAlts,iCO2_,iBlock) = &
+  !      EuvIonRateS(1:nLons,1:nLats,1:nAlts,iCO2_,iBlock) &
+  !      + SecondaryRate(:,:,:)/NDensityS(:,:,1:nAlts,iCO2_,iBlock)
+  !  else
+  if (UseWValue) then
+     EuvIonRates(1:nLons,1:nLats,1:nAlts,iCO2_,iBlock) = &
+          EuvIonRates(1:nLons,1:nLats,1:nAlts,iCO2_,iBlock) &
+          + sum(SIR(1:nLons,1:nLats,1:nAlts,:,iBlock),DIM=4)
+  endif
 
   !\
   ! Zero out EuvHeating if specified not to use it.
@@ -161,9 +150,9 @@ subroutine euv_ionization_heat(iBlock)
 
 
         EuvHeating(:,:,iAlt,iBlock) = EuvHeating(:,:,iAlt,iBlock) / &
-           Rho(1:nLons,1:nLats,iAlt,iBlock) / &
-           cp(1:nLons,1:nLats,iAlt,iBlock) / &
-           TempUnit(1:nLons,1:nLats,iAlt)
+             Rho(1:nLons,1:nLats,iAlt,iBlock) / &
+             cp(1:nLons,1:nLats,iAlt,iBlock) / &
+             TempUnit(1:nLons,1:nLats,iAlt)
 
         EuvTotal(:,:,iAlt,iBlock) = EuvHeating(:,:,iAlt,iBlock) * &
              TempUnit(1:nLons,1:nLats,iAlt) / &
@@ -226,7 +215,7 @@ subroutine calc_euv
      IF(FLXFAC.LT.0.8) FLXFAC=0.8
      EUV_Flux(i) = F74113(II)* FLXFAC * 1.0E9 * 10000.
 
- enddo
+  enddo
 
 end subroutine calc_euv
 
@@ -255,7 +244,7 @@ subroutine calc_scaled_euv
   real (Real8_) :: rtime
   integer, dimension(7) :: Time_Array
 
- !DAVES:
+  !DAVES:
   real :: wvavg(Num_WaveLengths_High),SeeTime(nSeeTimes),tDiff(nSeeTimes)
   real :: y1(Num_WaveLengths_High), y2(Num_WaveLengths_High), x1, x2, x
   real :: m(Num_WaveLengths_High), k(Num_WaveLengths_High)
@@ -305,7 +294,7 @@ subroutine calc_scaled_euv
   enddo
 
   iModelSolar = Tobiska_EUV91
-!  iModelSolar = Hinteregger_Contrast_Ratio
+  !  iModelSolar = Hinteregger_Contrast_Ratio
 
   select case(iModelSolar)
 
@@ -434,84 +423,84 @@ subroutine calc_scaled_euv
 
 
   Flux_of_EUV = Flux_of_EUV/(SunOrbitEccentricity**2)
-!   write(*,*) SunOrbitEccentricity
-!   stop
+  !   write(*,*) SunOrbitEccentricity
+  !   stop
 
   do N=1,Num_WaveLengths_High
      wvavg(N)=(WAVEL(N)+WAVES(N))/2.
   enddo
 
- if (UseEUVData) then
+  if (UseEUVData) then
 
-    call start_timing("new_euv")
-    SeeTime(:) = 0
+     call start_timing("new_euv")
+     SeeTime(:) = 0
 
-    do N = 1, nSeeTimes
-       SeeTime(N) = TimeSee(N)
-    enddo
+     do N = 1, nSeeTimes
+        SeeTime(N) = TimeSee(N)
+     enddo
 
-    tDiff = CurrentTime - SeeTime
+     tDiff = CurrentTime - SeeTime
 
-    where (tDiff .lt. 0) tDiff = 1.e20
-    iMin = minloc(tDiff)
+     where (tDiff .lt. 0) tDiff = 1.e20
+     iMin = minloc(tDiff)
 
-    Timed_Flux = SeeFlux(:,iMin(1))
+     Timed_Flux = SeeFlux(:,iMin(1))
 
-    if (CurrentTime >= FlareTimes(iFlare) .and. &
-         CurrentTime-dt <= FlareTimes(iFlare)) then
+     if (CurrentTime >= FlareTimes(iFlare) .and. &
+          CurrentTime-dt <= FlareTimes(iFlare)) then
 
-       FlareStartIndex = iMin(1)+1
-       FlareEndIndex = iMin(1) + FlareLength
-       Timed_Flux = SeeFlux(:,FlareStartIndex)
-       FlareEndTime = SeeTime(FlareEndIndex)
-       DuringFlare = .true.
-       iFlare = iFlare + 1
+        FlareStartIndex = iMin(1)+1
+        FlareEndIndex = iMin(1) + FlareLength
+        Timed_Flux = SeeFlux(:,FlareStartIndex)
+        FlareEndTime = SeeTime(FlareEndIndex)
+        DuringFlare = .true.
+        iFlare = iFlare + 1
 
-    else
-       if (DuringFlare) then
-          if (Seetime(iMin(1)+1) .lt. FlareTimes(iFlare) .or. FlareTimes(iFlare) .eq. 0) then
-             if (CurrentTime .lt. SeeTime(FlareStartIndex)) then
-                !We may not be to the point where the flare has begun in the SEE data yet...
-                Timed_Flux = SeeFlux(:,FlareStartIndex)
-             else
-                if (CurrentTime .le. FlareEndTime) then
-                   !Exponentially interpolate between last seetime and next seetim
-                   !using y = kexp(-mx)
+     else
+        if (DuringFlare) then
+           if (Seetime(iMin(1)+1) .lt. FlareTimes(iFlare) .or. FlareTimes(iFlare) .eq. 0) then
+              if (CurrentTime .lt. SeeTime(FlareStartIndex)) then
+                 !We may not be to the point where the flare has begun in the SEE data yet...
+                 Timed_Flux = SeeFlux(:,FlareStartIndex)
+              else
+                 if (CurrentTime .le. FlareEndTime) then
+                    !Exponentially interpolate between last seetime and next seetim
+                    !using y = kexp(-mx)
 
-                   y1 = SeeFlux(:,iMin(1))
-                   y2 = SeeFlux(:,iMin(1)+1)
-                   x1 = 0
-                   x2 = SeeTime(iMin(1)+1) - SeeTime(iMin(1))
-                   x = CurrentTime - SeeTime(iMin(1))
+                    y1 = SeeFlux(:,iMin(1))
+                    y2 = SeeFlux(:,iMin(1)+1)
+                    x1 = 0
+                    x2 = SeeTime(iMin(1)+1) - SeeTime(iMin(1))
+                    x = CurrentTime - SeeTime(iMin(1))
 
-                   m = ALOG(y2/y1)/(x1-x2)
-                   k = y1*exp(m*x1)
-                   Timed_Flux = k*exp(-1*m*x)
-                else
-                   DuringFlare = .False.
-                end if
-             end if
-          end if
-       end if
-    end if
+                    m = ALOG(y2/y1)/(x1-x2)
+                    k = y1*exp(m*x1)
+                    Timed_Flux = k*exp(-1*m*x)
+                 else
+                    DuringFlare = .False.
+                 end if
+              end if
+           end if
+        end if
+     end if
 
-    !!need to convert from W/m^2 to photons/m^2/s
+     !!need to convert from W/m^2 to photons/m^2/s
 
-    do N=1,Num_WaveLengths_High
-       if (UseFluxAtPlanet) then
-         ! --------------------------------------------------------------------------
-         !!! Don't correct for Orbit Eccentricity!!!
-             Flux_of_EUV(N) = Timed_Flux(N)*wvavg(N)*1.0e-10/(6.626e-34*2.998e8)
-         !!! Rolling correction for Orbit Eccentricity after 31-MAY-2019 (Rold)
-         !!!  using fismdaily.dat6
-         !!! Where Rold = 1.63; Rold**2 = 2.6569
-         !!! Flux_of_EUV(N) = Timed_Flux(N)*wvavg(N)*1.0e-10/(6.626e-34*2.998e8)* &
-         !!!      2.6569/(SunOrbitEccentricity**2)
-         ! --------------------------------------------------------------------------
-       else
-          Flux_of_EUV(N) = Timed_Flux(N)*wvavg(N)*1.0e-10/(6.626e-34*2.998e8) &
-               /(SunOrbitEccentricity**2)
-       endif
+     do N=1,Num_WaveLengths_High
+        if (UseFluxAtPlanet) then
+           ! --------------------------------------------------------------------------
+!!! Don't correct for Orbit Eccentricity!!!
+           Flux_of_EUV(N) = Timed_Flux(N)*wvavg(N)*1.0e-10/(6.626e-34*2.998e8)
+!!! Rolling correction for Orbit Eccentricity after 31-MAY-2019 (Rold)
+!!!  using fismdaily.dat6
+!!! Where Rold = 1.63; Rold**2 = 2.6569
+!!! Flux_of_EUV(N) = Timed_Flux(N)*wvavg(N)*1.0e-10/(6.626e-34*2.998e8)* &
+!!!      2.6569/(SunOrbitEccentricity**2)
+           ! --------------------------------------------------------------------------
+        else
+           Flux_of_EUV(N) = Timed_Flux(N)*wvavg(N)*1.0e-10/(6.626e-34*2.998e8) &
+                /(SunOrbitEccentricity**2)
+        endif
 
      enddo
      call end_timing("new_euv")
@@ -520,21 +509,21 @@ subroutine calc_scaled_euv
 
   ! Second Spectra, provided by Steve Bougher....
 
-!  do n = 1, nS2WaveLengths
-!     S2PhotonEnergy(N) = 6.626e-34*2.998e8/(S2WaveLengths(n)*1.0e-10)
-!  enddo
+  !  do n = 1, nS2WaveLengths
+  !     S2PhotonEnergy(N) = 6.626e-34*2.998e8/(S2WaveLengths(n)*1.0e-10)
+  !  enddo
 
 end subroutine calc_scaled_euv
 
- !-------------------------------------------------------------------
+!-------------------------------------------------------------------
 ! Subroutine for initializing photoabsorption, photoionization,
 ! and branching ratio quantities.
 !-------------------------------------------------------------------
 
 subroutine init_euv
 
-!  Remove overlay of 37-intervals for 59-intervals since x-sec done explicitly in ModEUV.f90
-!  S. Bougher:  11-09-28
+  !  Remove overlay of 37-intervals for 59-intervals since x-sec done explicitly in ModEUV.f90
+  !  S. Bougher:  11-09-28
 
   use ModEUV
 
@@ -563,58 +552,58 @@ subroutine init_euv
              1. - BranchingRatio_OPlus2D(N) - BranchingRatio_OPlus4S(N)
      endif
 
-!    PhotoAbs_O2(NN)      = Photoabsorption_O2(N)
-!    PhotoAbs_O(NN)       = Photoabsorption_O(N)
-!    PhotoAbs_N2(NN)      = Photoabsorption_N2(N)
-!    PhotoAbs_CO2(NN)     = Photoabsorption_CO2(N)
-!    PhotoAbs_CO(NN)      = Photoabsorption_CO(N)
+     !    PhotoAbs_O2(NN)      = Photoabsorption_O2(N)
+     !    PhotoAbs_O(NN)       = Photoabsorption_O(N)
+     !    PhotoAbs_N2(NN)      = Photoabsorption_N2(N)
+     !    PhotoAbs_CO2(NN)     = Photoabsorption_CO2(N)
+     !    PhotoAbs_CO(NN)      = Photoabsorption_CO(N)
 
-!    PhotoIon_O2(NN)      = Photoionization_O2(N)
-!    PhotoIon_CO2(NN)     = Photoionization_CO2(N)
-!    PhotoIon_CO(NN)      = Photoionization_CO(N)
-!    PhotoIon_OPlus4S(NN) = Photoionization_O(N)*BranchingRatio_OPlus4S(N)
-!    PhotoIon_N2(NN)      = Photoionization_N2(N)
-!    PhotoIon_N(NN)       = Photoionization_N(N)
-!    PhotoIon_OPlus2D(NN) = Photoionization_O(N)*BranchingRatio_OPlus2D(N)
-!    PhotoIon_OPlus2P(NN) = Photoionization_O(N)*BranchingRatio_OPlus2P(N)
+     !    PhotoIon_O2(NN)      = Photoionization_O2(N)
+     !    PhotoIon_CO2(NN)     = Photoionization_CO2(N)
+     !    PhotoIon_CO(NN)      = Photoionization_CO(N)
+     !    PhotoIon_OPlus4S(NN) = Photoionization_O(N)*BranchingRatio_OPlus4S(N)
+     !    PhotoIon_N2(NN)      = Photoionization_N2(N)
+     !    PhotoIon_N(NN)       = Photoionization_N(N)
+     !    PhotoIon_OPlus2D(NN) = Photoionization_O(N)*BranchingRatio_OPlus2D(N)
+     !    PhotoIon_OPlus2P(NN) = Photoionization_O(N)*BranchingRatio_OPlus2P(N)
 
      BranchingRatio_N2(NN) = BranchingRatio_N2_to_NPlus(N)
      BranchingRatio_O2(NN) = BranchingRatio_O2_to_OPlus(N)
 
-enddo
+  enddo
 
   ! Convert everything from /cm2 to /m2
 
-     PhotoAbs_O2      = PhotoAbs_O2  / 10000.0
-     PhotoAbs_O       = PhotoAbs_O   / 10000.0
-     PhotoAbs_N2      = PhotoAbs_N2  / 10000.0
-     PhotoAbs_CH4     = PhotoAbs_CH4 / 10000.0
-     PhotoAbs_CO2      = PhotoAbs_CO2        / 10000.0
-     PhotoAbs_CO      = PhotoAbs_CO        / 10000.0
+  PhotoAbs_O2      = PhotoAbs_O2  / 10000.0
+  PhotoAbs_O       = PhotoAbs_O   / 10000.0
+  PhotoAbs_N2      = PhotoAbs_N2  / 10000.0
+  PhotoAbs_CH4     = PhotoAbs_CH4 / 10000.0
+  PhotoAbs_CO2      = PhotoAbs_CO2        / 10000.0
+  PhotoAbs_CO      = PhotoAbs_CO        / 10000.0
 
-     PhotoIon_O2      = PhotoIon_O2        / 10000.0
-     PhotoIon_CO2      = PhotoIon_CO2        / 10000.0
-     PhotoIon_CO      = PhotoIon_CO        / 10000.0
-     PhotoIon_OPlus4S = PhotoIon_OPlus4S   / 10000.0
-     PhotoIon_N2      = PhotoIon_N2        / 10000.0
-     PhotoIon_N       = PhotoIon_N         / 10000.0
-     PhotoIon_OPlus2D = PhotoIon_OPlus2D   / 10000.0
-     PhotoIon_OPlus2P = PhotoIon_OPlus2P   / 10000.0
+  PhotoIon_O2      = PhotoIon_O2        / 10000.0
+  PhotoIon_CO2      = PhotoIon_CO2        / 10000.0
+  PhotoIon_CO      = PhotoIon_CO        / 10000.0
+  PhotoIon_OPlus4S = PhotoIon_OPlus4S   / 10000.0
+  PhotoIon_N2      = PhotoIon_N2        / 10000.0
+  PhotoIon_N       = PhotoIon_N         / 10000.0
+  PhotoIon_OPlus2D = PhotoIon_OPlus2D   / 10000.0
+  PhotoIon_OPlus2P = PhotoIon_OPlus2P   / 10000.0
 
 
 
-!  do n = 1, nS2WaveLengths
-!
-!     S2PhotoAbsCO  = S2PhotoAbsCO * 1.0e-18 / 10000.0
-!     S2PhotoAbsCO2 = S2PhotoAbsCO2 * 1.0E-18 / 10000.0
-!     S2PhotoAbsN2  = S2PhotoAbsN2 * 1.0E-18 / 10000.0
-!     S2PhotoAbsO2  = S2PhotoAbsO2 * 1.0E-18 / 10000.0
-!     S2PhotoIonN2  = S2PhotoIonN2 * 1.0E-18 / 10000.0
-!     S2PhotoIonCO  = S2PhotoIonCO * 1.0E-18 / 10000.0
-!     S2PhotoIonCO2 = S2PhotoIonCO2 * 1.0E-18 / 10000.0
-!     S2PhotoIonO2  = S2PhotoIonO2 * 1.0E-18 / 10000.0
-!
-!  enddo
+  !  do n = 1, nS2WaveLengths
+  !
+  !     S2PhotoAbsCO  = S2PhotoAbsCO * 1.0e-18 / 10000.0
+  !     S2PhotoAbsCO2 = S2PhotoAbsCO2 * 1.0E-18 / 10000.0
+  !     S2PhotoAbsN2  = S2PhotoAbsN2 * 1.0E-18 / 10000.0
+  !     S2PhotoAbsO2  = S2PhotoAbsO2 * 1.0E-18 / 10000.0
+  !     S2PhotoIonN2  = S2PhotoIonN2 * 1.0E-18 / 10000.0
+  !     S2PhotoIonCO  = S2PhotoIonCO * 1.0E-18 / 10000.0
+  !     S2PhotoIonCO2 = S2PhotoIonCO2 * 1.0E-18 / 10000.0
+  !     S2PhotoIonO2  = S2PhotoIonO2 * 1.0E-18 / 10000.0
+  !
+  !  enddo
 
 end subroutine init_euv
 
@@ -637,12 +626,12 @@ subroutine Set_Euv(ioError)
   cline = ' '
 
 
-! open(unit = iInputUnit_, file=cEUVFile, IOSTAT = iError)
-! open(unit = iInputUnit_, file='UA/DataIn/cEUVFile', IOSTAT = iError)
-! open(unit = iInputUnit_, file='UA/DataIn/fismdaily.dat', IOSTAT = iError)
+  ! open(unit = iInputUnit_, file=cEUVFile, IOSTAT = iError)
+  ! open(unit = iInputUnit_, file='UA/DataIn/cEUVFile', IOSTAT = iError)
+  ! open(unit = iInputUnit_, file='UA/DataIn/fismdaily.dat', IOSTAT = iError)
   open(unit = iInputUnit_, file=cEUVFile, IOSTAT = iError)
 
-   if (iError /= 0) then
+  if (iError /= 0) then
      write(*,*) "Error in opening EUV file  Is this set?"
      write(*,*) "Code : ",iError,cEUVFile
      call stop_gitm("Stopping in calc_euv")
