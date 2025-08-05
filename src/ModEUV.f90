@@ -1116,7 +1116,8 @@ contains
     allocate(eHeatingEfficiency_CB(nLons, nLats, nAlts, nBlocks))
     allocate(EuvIonRate(nLons, nLats, nAlts, nBlocks))
     allocate(EuvTotal(nLons, nLats, nAlts, nBlocks))
-    allocate(EuvIonRateS(nLons, nLats, nAlts, nIons,nBlocks))
+    ! Added ghost cells for coupling with GM:
+    allocate(EuvIonRateS(-1:nLons+2,-1:nLats+2,-1:nAlts+2,nIons,nBlocks))
     allocate(EuvDissRateS(nLons, nLats, nAlts, nSpeciesTotal,nBlocks))
     allocate(Chapman(nLons, nLats, nAlts, nSpecies,nBlocks))
     allocate(CO2_Abs_Fac(nLons,nLats,nAlts,Num_Wavelengths_High,nBlocks))

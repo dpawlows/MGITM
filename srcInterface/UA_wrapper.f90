@@ -404,18 +404,17 @@ contains
                *exp(-dH/HO)
 
           ! EUVIonRate_CO2->CO2+
-          Data_VI(4,iPoint) = &
-               max(bilinear(EuvIonRateS(:,:,nAlts,iCO2P_,iBlock),&
-               1, nLons, 1, nLats, &
-               DoExtrapolate=.true., iCell_D=iCell_D(:2), Dist_D=Dist_D(:2)), &
-               Tiny)
+          Data_VI(4,iPoint) = max(Tiny, &
+               bilinear(EuvIonRateS(:,:,nAlts,iCO2P_,iBlock), &
+               -1, nLons+2, -1, nLats+2, &
+               DoExtrapolate=.true., iCell_D=iCell_D(:2), Dist_D=Dist_D(:2)))
 
           ! EUVIonRate_O->O+
-          Data_VI(5,iPoint) = &
-	       max(bilinear(EuvIonRateS(:,:,nAlts,iOP_,iBlock), &
-               1, nLons, 1, nLats, &
-	       DoExtrapolate=.true., iCell_D=iCell_D(:2), Dist_D=Dist_D(:2)), &
-               Tiny)
+          Data_VI(5,iPoint) = max(Tiny, &
+	       bilinear(EuvIonRateS(:,:,nAlts,iOP_,iBlock), &
+               -1, nLons+2, -1, nLats+2, &
+	       DoExtrapolate=.true., iCell_D=iCell_D(:2), Dist_D=Dist_D(:2)))
+
        else
           ! Neutral temperature
           Data_VI(1,iPoint) = trilinear(Temperature(:,:,:,iBlock), &
@@ -433,15 +432,16 @@ contains
                DoExtrapolate=.false., iCell_D=iCell_D, Dist_D=Dist_D)
 
           ! EUVIonRate_CO2->CO2+
+          write(*,*)'!!! iPoint, iCell_D=', iPoint, iCell_D
           Data_VI(4,iPoint) = &
                trilinear(EuvIonRateS(:,:,:,iCO2P_,iBlock),&
-               1, nLons, 1, nLats, 1, nAlts, &
+               -1, nLons+2, -1, nLats+2, -1, nAlts+2, &
                DoExtrapolate=.true., iCell_D=iCell_D, Dist_D=Dist_D)
 
           ! EUVIonRate_O->O+
           Data_VI(5,iPoint) = &
                trilinear(EuvIonRateS(:,:,:,iOP_,iBlock), &
-               1, nLons, 1, nLats, 1, nAlts, &
+               -1, nLons+2, -1, nLats+2, -1, nAlts+2, &
                DoExtrapolate=.true., iCell_D=iCell_D, Dist_D=Dist_D)
        end if
     end do
