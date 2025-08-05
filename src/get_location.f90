@@ -1,6 +1,7 @@
-!  Copyright (C) 2002 Regents of the University of Michigan, portions used with permission 
+!  Copyright (C) 2002 Regents of the University of Michigan,
+!  portions used with permission
 !  For more information, see http://csem.engin.umich.edu/tools/swmf
-!------------------------------------------------------------------------------
+
 ! $Id: get_location.f90,v 1.4 2013/10/12 04:01:00 kopmanis Exp $
 !
 ! Author: Angeline G. Burrell (AGB), UMichigan, Jan 2013
@@ -44,7 +45,6 @@
 !
 ! Outputs: iiAlt  = Altitude index for AltFind
 !          rAlt   = Altitude interpolation scaling factor
-!------------------------------------------------------------------------------
 
 subroutine LocationIndex(LonFind, LatFind, iiBlock, iiLon, iiLat, rLon, rLat)
 
@@ -53,7 +53,7 @@ subroutine LocationIndex(LonFind, LatFind, iiBlock, iiLon, iiLat, rLon, rLat)
   real, intent(in) :: LonFind, LatFind
   integer, intent(out) :: iiBlock, iiLon, iiLat
   real, intent(out) :: rLon, rLat
-
+  !----------------------------------------------------------------------------
   integer iBlock, iLon, iLat
 
   iiBlock = -1
@@ -76,7 +76,7 @@ subroutine LocationIndex(LonFind, LatFind, iiBlock, iiLon, iiLat, rLon, rLat)
                  iiLon = iLon
                  rLon = 1.0 - (LonFind - Longitude(iLon,iBlock)) / &
                       (Longitude(iLon+1,iBlock) - Longitude(iLon,iBlock))
-                 exit
+                 EXIT
               endif
            enddo
 
@@ -86,27 +86,28 @@ subroutine LocationIndex(LonFind, LatFind, iiBlock, iiLon, iiLat, rLon, rLat)
                  iiLat = iLat
                  rLat = 1.0 - (LatFind - Latitude(iLat,iBlock)) / &
                       (Latitude(iLat+1,iBlock) - Latitude(iLat,iBlock))
-                 exit
+                 EXIT
               endif
            enddo
 
            if(iiLon >= 0 .and. iiLat >= 0) then
-              exit
+              EXIT
            end if
         end if
      end if
   end do
 
 end subroutine LocationIndex
-
-subroutine LocationProcIndex(LonFind, LatFind, AltFind, iiBlock, iiLon, iiLat, iAlt, rLon, rLat, rAlt, iiProc)
+!==============================================================================
+subroutine LocationProcIndex(LonFind, LatFind, AltFind, &
+     iiBlock, iiLon, iiLat, iAlt, rLon, rLat, rAlt, iiProc)
 
   use ModGITM
 
   real, intent(in) :: LonFind, LatFind
   integer, intent(out) :: iiBlock, iiLon, iiLat, iiProc, iAlt
   real, intent(out) :: rLon, rLat, rAlt
-
+  !----------------------------------------------------------------------------
   integer iBlock, iLon, iLat, jAlt
 
   iiProc = -1
@@ -116,7 +117,7 @@ subroutine LocationProcIndex(LonFind, LatFind, AltFind, iiBlock, iiLon, iiLat, i
   iAlt = -1
   rAlt = -1.0
 
-  do iBlock=1,nBlocks
+  do iBlock = 1, nBlocks
 
      if((Longitude(0,iBlock)+Longitude(1,iBlock))/2 <=LonFind .and. &
           (Longitude(nLons,iBlock)+Longitude(nLons+1,iBlock))/2 >LonFind) then
@@ -124,10 +125,9 @@ subroutine LocationProcIndex(LonFind, LatFind, AltFind, iiBlock, iiLon, iiLat, i
         if((Latitude(0,iBlock)+Latitude(1,iBlock))/2 <=LatFind .and. &
              (Latitude(nLats,iBlock)+Latitude(nLats+1,iBlock))/2 >LatFind) then
 
-           !if((Altitude_GB(0,iBlock)+Altitude_GB(1,iBlock))/2 <=AltFind .and. &
-           !    (Altitude_GB(nAlts,iBlock)+Altitude_GB(nAlts+1,iBlock))/2 >AltFind) then
-           if((minval(Altitude_GB) <=AltFind) .and. &
-                (maxval(Altitude_GB) >AltFind)) then
+           ! Allow for altitudes being a function of Lon-Lat
+           if((minval(Altitude_GB(:,:,0,iBlock)) <=AltFind) .and. &
+                (maxval(Altitude_GB(:,:,nAlts+1,iBlock)) >AltFind)) then
 
               iiBlock = iBlock
               iiProc = iProc
@@ -136,9 +136,9 @@ subroutine LocationProcIndex(LonFind, LatFind, AltFind, iiBlock, iiLon, iiLat, i
                  if(Longitude(iLon,iBlock) <= LonFind .and. &
                       Longitude(iLon+1,iBlock) > LonFind) then
                     iiLon = iLon
-                    rLon = 1.0 - (LonFind - Longitude(iLon,iBlock)) / &
+                    rLon = 1 - (LonFind - Longitude(iLon,iBlock)) / &
                          (Longitude(iLon+1,iBlock) - Longitude(iLon,iBlock))
-                    exit
+                    EXIT
                  endif
               enddo
 
@@ -146,9 +146,9 @@ subroutine LocationProcIndex(LonFind, LatFind, AltFind, iiBlock, iiLon, iiLat, i
                  if(Latitude(iLat,iBlock) <= LatFind .and. &
                       Latitude(iLat+1,iBlock) > LatFind) then
                     iiLat = iLat
-                    rLat = 1.0 - (LatFind - Latitude(iLat,iBlock)) / &
+                    rLat = 1 - (LatFind - Latitude(iLat,iBlock)) / &
                          (Latitude(iLat+1,iBlock) - Latitude(iLat,iBlock))
-                    exit
+                    EXIT
                  endif
               enddo
 
@@ -156,23 +156,22 @@ subroutine LocationProcIndex(LonFind, LatFind, AltFind, iiBlock, iiLon, iiLat, i
                  if (Altitude_GB(iLon, iLat, jAlt, iBlock) <= AltFind .and. &
                       Altitude_GB(iLon, iLat, jAlt+1,iBlock) > AltFind) then
                     iAlt = jAlt
-                    rAlt  = 1.0 - (AltFind - Altitude_GB(iLon, iLat, iAlt, iBlock)) &
-                         / (Altitude_GB(iLon, iLat, iAlt+1, iBlock) &
-                         - Altitude_GB(iLon, iLat, iAlt, iBlock))
-                    exit
+                    rAlt  = 1 - &
+                         (AltFind - Altitude_GB(iLon,iLat,iAlt,iBlock)) &
+                         /(Altitude_GB(iLon,iLat,iAlt+1,iBlock) &
+                         - Altitude_GB(iLon,iLat,iAlt,iBlock))
+                    EXIT
                  endif
               enddo
 
-              if(iiLon >= 0 .and. iiLat >= 0 .and. iAlt >= 0) then
-                 exit
-              end if
+              if(iiLon >= 0 .and. iiLat >= 0 .and. iAlt >= 0) EXIT
            end if
         end if
      end if
   end do
 
 end subroutine LocationProcIndex
-
+!==============================================================================
 subroutine BlockLocationIndex(LonFind,LatFind,iBlock,iiLon,iiLat,rLon,rLat)
 
   use ModGITM
@@ -181,7 +180,7 @@ subroutine BlockLocationIndex(LonFind,LatFind,iBlock,iiLon,iiLat,rLon,rLat)
   integer, intent(in) :: iBlock
   integer, intent(out) :: iiLon, iiLat
   real, intent(out) :: rLon, rLat
-
+  !----------------------------------------------------------------------------
   integer iLon, iLat
 
   iiLon = -1
@@ -201,7 +200,7 @@ subroutine BlockLocationIndex(LonFind,LatFind,iBlock,iiLon,iiLat,rLon,rLat)
               iiLon = iLon
               rLon  = 1.0 - (LonFind - Longitude(iLon,iBlock)) / &
                    (Longitude(iLon+1,iBlock) - Longitude(iLon,iBlock))
-              exit
+              EXIT
            endif
         enddo
 
@@ -211,14 +210,14 @@ subroutine BlockLocationIndex(LonFind,LatFind,iBlock,iiLon,iiLat,rLon,rLat)
               iiLat = iLat
               rLat = 1.0 - (LatFind - Latitude(iLat,iBlock)) / &
                    (Latitude(iLat+1,iBlock) - Latitude(iLat,iBlock))
-              exit
+              EXIT
            endif
         enddo
      end if
   end if
 
 end subroutine BlockLocationIndex
-
+!==============================================================================
 subroutine BlockAltIndex(AltFind,iBlock,iLon,iLat,iAlt,rAlt)
 
   use ModGITM
@@ -227,7 +226,7 @@ subroutine BlockAltIndex(AltFind,iBlock,iLon,iLat,iAlt,rAlt)
   integer, intent(in)  :: iBlock, iLon, iLat
   integer, intent(out) :: iAlt
   real, intent(out)    :: rAlt
-
+  !----------------------------------------------------------------------------
   integer jAlt
 
   iAlt = -1
@@ -240,8 +239,9 @@ subroutine BlockAltIndex(AltFind,iBlock,iLon,iLat,iAlt,rAlt)
         rAlt  = 1.0 - (AltFind - Altitude_GB(iLon, iLat, iAlt, iBlock)) &
              / (Altitude_GB(iLon, iLat, iAlt+1, iBlock) &
              - Altitude_GB(iLon, iLat, iAlt, iBlock))
-        exit
+        EXIT
      endif
   enddo
 
 end subroutine BlockAltIndex
+!==============================================================================

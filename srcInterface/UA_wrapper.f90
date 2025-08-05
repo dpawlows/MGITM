@@ -7,7 +7,7 @@ module UA_wrapper
   ! Wrapper for GITM Upper Atmosphere (UA) component
 
   use ModUtilities, ONLY: CON_set_do_test, CON_stop
-  
+
   implicit none
 
   private ! except
@@ -29,9 +29,8 @@ module UA_wrapper
   public :: UA_get_info_for_ie
   public :: UA_get_for_ie
   public :: UA_put_from_ie
-  
-contains
 
+contains
   !============================================================================
   subroutine UA_set_param(CompInfo, TypeAction)
 
@@ -54,8 +53,8 @@ contains
     type(CompInfoType), intent(inout):: CompInfo   ! Information for this comp.
     character(len=*), intent(in)     :: TypeAction ! What to do
 
-    character(len=*), parameter :: NameSub = 'UA_set_param'
-    !-------------------------------------------------------------------------
+    character(len=*), parameter:: NameSub = 'UA_set_param'
+    !--------------------------------------------------------------------------
     write(*,*) "-->Starting UA_set_param..."
     select case(TypeAction)
     case('VERSION')
@@ -100,9 +99,7 @@ contains
     end select
 
   end subroutine UA_set_param
-
   !============================================================================
-
   subroutine UA_set_grid
 
     use CON_Coupler
@@ -113,28 +110,25 @@ contains
     use ModUtilities, ONLY: check_allocate
     use ModGeometry,  ONLY: TypeGeometry
 
-    character(len=*), parameter :: NameSub='UA_set_grid'
+    character(len=*), parameter:: NameSub = 'UA_set_grid'
     !--------------------------------------------------------------------------
-
     if(done_dd_init(UA_))RETURN
-    
+
     ! The 5 coupled variables are
     ! Temperature, N_CO2, N_O, EUVIonRate_O->O+, EUVIonRate_CO2->CO2+
     call set_grid_descriptor( &
          iComp  = UA_, &
          nDim = 3, &
-         nRootBlock_D = (/ 1, nBlocksLon, nBlocksLat /), &
-         nCell_D = (/ nAlts, nLons, nLats /), &
-         XyzMin_D = (/ AltMin, LonStart, LatStart /), &
-         XyzMax_D = (/ AltMax, LonEnd, LatEnd /), &
+         nRootBlock_D = [ 1, nBlocksLon, nBlocksLat ], &
+         nCell_D = [ nAlts, nLons, nLats ], &
+         XyzMin_D = [ AltMin, LonStart, LatStart ], &
+         XyzMax_D = [ AltMax, LonEnd, LatEnd ], &
          TypeCoord = 'GEO', &
-         IsPeriodic_D = (/ .false., .true., .false. /), &
+         IsPeriodic_D = [ .false., .true., .false. ], &
          nVar = nVarCouple)
 
   end subroutine UA_set_grid
-
   !============================================================================
-
   subroutine UA_init_session(iSession, TimeSimulation)
 
     use CON_physics,    ONLY: get_time
@@ -146,7 +140,7 @@ contains
     logical :: IsUninitialized = .true.
     logical :: DoTest, DoTestMe
 
-    character(len=*), parameter :: NameSub='UA_init_session'
+    character(len=*), parameter:: NameSub = 'UA_init_session'
     !--------------------------------------------------------------------------
     call CON_set_do_test(NameSub, DoTest, DoTestMe)
 
@@ -166,11 +160,9 @@ contains
     endif
 
     if(DoTest)write(*,*)NameSub,' finished for session ',iSession
-    
+
   end subroutine UA_init_session
-
   !============================================================================
-
   subroutine UA_run(TimeSimulation, TimeSimulationLimit)
 
     use ModGITM,   ONLY: iProc, Dt
@@ -182,8 +174,8 @@ contains
     real, intent(inout) :: TimeSimulation ! current time of component
 
     logical :: DoTest, DoTestMe
-    
-    character(len=*), parameter :: NameSub='UA_run'
+
+    character(len=*), parameter:: NameSub = 'UA_run'
     !--------------------------------------------------------------------------
     call CON_set_do_test(NameSub, DoTest, DoTestMe)
 
@@ -211,33 +203,28 @@ contains
     TimeSimulation = CurrentTime - StartTime
 
   end subroutine UA_run
-
-  !==========================================================================
-
+  !============================================================================
   subroutine UA_save_restart(TimeSimulation)
 
     use ModInputs
 
     real, intent(in) :: TimeSimulation
 
-    character(len=*), parameter :: NameSub='UA_save_restart'
+    character(len=*), parameter:: NameSub = 'UA_save_restart'
     !--------------------------------------------------------------------------
     call write_restart("UA/restartOUT/")
 
   end subroutine UA_save_restart
-
-  !==========================================================================
-
+  !============================================================================
   subroutine UA_finalize(TimeSimulation)
 
     real, intent(in) :: TimeSimulation
 
-    character(len=*), parameter :: NameSub='UA_finalize'
+    character(len=*), parameter:: NameSub = 'UA_finalize'
     !--------------------------------------------------------------------------
     call finalize_gitm
 
   end subroutine UA_finalize
-
   !============================================================================
   subroutine UA_find_points(nDimIn, nPoint, Xyz_DI, iProc_I)
 
@@ -277,10 +264,9 @@ contains
     integer, intent(out):: iGridOut   ! grid index
     integer, intent(out):: iDecompOut ! decomposition index
 
-    character(len=*), parameter :: NameSub = 'UA_get_grid_info'
-
     ! Return basic grid information useful for model coupling.
     ! The decomposition index increases with load balance and AMR.
+    character(len=*), parameter:: NameSub = 'UA_get_grid_info'
     !--------------------------------------------------------------------------
     if (Is1D) nDimOut = 1
     if (IsFullSphere) nDimOut = 3
@@ -305,7 +291,7 @@ contains
     use ModCoordTransform, ONLY: xyz_to_rlonlat
     use GITM_planet, ONLY: rBody, iCO2_, iO_, iCO2P_, iOP_
     use ModConst, ONLY: cBoltzmann, cProtonMass
-    
+
     logical,          intent(in) :: IsNew   ! true for new point array
     character(len=*), intent(in) :: NameVar ! List of variables
     integer,          intent(in) :: nVarIn  ! Number of variables in Data_VI
@@ -330,10 +316,10 @@ contains
     real :: grav, dH, Hscale, HCO2, HO, AltMaxDomain, Tnu
     real, parameter :: NuMassCo2 = 44, NuMassO = 16
     real, parameter :: Tiny = 1e-12
-    
+
     logical:: DoTest, DoTestMe
 
-    character(len=*), parameter :: NameSub='UA_get_for_gm'
+    character(len=*), parameter:: NameSub = 'UA_get_for_gm'
     !--------------------------------------------------------------------------
     call CON_set_do_test(NameSub, DoTest, DoTestMe)
 
@@ -344,10 +330,10 @@ contains
        allocate(iBlockCell_DI(0:nDimIn,nPoint), Dist_DI(nDimIn,nPoint))
 
        AltMaxDomain = AltMin + (nAlts-0.5)*(AltMax-AltMin)/nAlts
-       
-       ! grav=3.72/r_GB(i,j,k,iBlock)/r_GB(i,j,k,iBlock)         
+
+       ! grav=3.72/r_GB(i,j,k,iBlock)/r_GB(i,j,k,iBlock)
        grav = 3.72/(1.0+AltMaxDomain/3396.0)/(1.0+AltMaxDomain/3396.0)
-       
+
        do iPoint = 1, nPoint
           call xyz_to_rlonlat(Xyz_DI(:,iPoint), rLonLat_D)
           Alt = rLonLat_D(1) - rBody
@@ -356,11 +342,11 @@ contains
 
           if(Alt > AltMaxDomain)then
              call LocationIndex(Lon, Lat, iiBlock, iiLon, iiLat, rLon, rLat)
-             
+
              ! Store block and cell indexes and distances for extrapolation
              iBlockCell_DI(0,iPoint)      = iiBlock
-             iBlockCell_DI(1:nDimIn,iPoint) = (/ iiLon, iiLat, nAlts /)
-             Dist_DI(:,iPoint)            = (/ 1.0-rLon, 1.0-rLat, 0.0 /)
+             iBlockCell_DI(1:nDimIn,iPoint) = [ iiLon, iiLat, nAlts ]
+             Dist_DI(:,iPoint)            = [ 1.0-rLon, 1.0-rLat, 0.0 ]
           else
              call LocationProcIndex(Lon, Lat, Alt, &
                   iiBlock, iiLon, iiLat, iAlt, rLon, rLat, rAlt, iProcFound)
@@ -373,8 +359,8 @@ contains
 
              ! Store block and cell indexes and distances for interpolation
              iBlockCell_DI(0,iPoint)      = iiBlock
-             iBlockCell_DI(1:nDimIn,iPoint) = (/ iiLon, iiLat, iAlt /)
-             Dist_DI(:,iPoint)            = (/ 1.0-rLon, 1.0-rLat, 1.0-rAlt /)
+             iBlockCell_DI(1:nDimIn,iPoint) = [ iiLon, iiLat, iAlt ]
+             Dist_DI(:,iPoint)            = [ 1.0-rLon, 1.0-rLat, 1.0-rAlt ]
           end if
        end do
     end if
@@ -386,7 +372,7 @@ contains
        Dist_D(1:nDimIn)  = Dist_DI(:,iPoint)
 
        Alt  = sqrt(sum(Xyz_DI(:,iPoint)**2)) - rBody
-       
+
        if(Alt > AltMaxDomain)then
           ! Extrapolate using isothermal stratified atmosphere
 
@@ -398,7 +384,7 @@ contains
           Data_VI(1,iPoint) = Tnu
 
           dH = Alt - AltMaxDomain
-          
+
           Hscale = cBoltzmann*Tnu/grav/cProtonMass ! in m unit
 
           HCO2 = Hscale/NuMassCo2/1e3
@@ -461,50 +447,44 @@ contains
     end do
 
   end subroutine UA_get_for_gm
-
   !============================================================================
   subroutine UA_get_info_for_ie(nVar, NameVar_V, nMagLat, nMagLon)
 
-    !OUTPUT ARGUMENTS:
     integer, intent(out) :: nVar
     integer, intent(out), optional :: nMagLat, nMagLon
     character(len=*), intent(out), optional :: NameVar_V(:)
 
-    character(len=*), parameter :: NameSub='UA_get_info_for_ie'
-
+    character(len=*), parameter:: NameSub = 'UA_get_info_for_ie'
+    !--------------------------------------------------------------------------
     call CON_stop(NameSub//': UA_ERROR: empty version cannot be used!')
 
   end subroutine UA_get_info_for_ie
-
   !============================================================================
   subroutine UA_put_from_ie(Buffer_IIV, iSizeIn, jSizeIn, nVarIn, &
        NameVarIn_V, iBlock)
 
-    !INPUT/OUTPUT ARGUMENTS:
     integer, intent(in)           :: iSizeIn, jSizeIn, nVarIn, iBlock
     real, intent(in)              :: Buffer_IIV(iSizeIn,jSizeIn,nVarIn)
     character (len=*),intent(in)  :: NameVarIn_V(nVarIn)
 
-    character (len=*), parameter :: NameSub='UA_put_from_ie'
-
+    character(len=*), parameter:: NameSub = 'UA_put_from_ie'
+    !--------------------------------------------------------------------------
     call CON_stop(NameSub//': UA_ERROR: empty version cannot be used!')
 
   end subroutine UA_put_from_ie
   !============================================================================
   subroutine UA_get_for_ie(BufferOut_IIBV, nMltIn, nLatIn, nVarIn, NameVarIn_V)
 
-    ! INPUT ARGUMENTS:
     integer,          intent(in) :: nMltIn, nLatIn, nVarIn
     character(len=3), intent(in) :: NameVarIn_V(nVarIn)
 
-    ! OUTPUT ARGUMENTS:
     real, intent(out) :: BufferOut_IIBV(nMltIn, nLatIn, 2, nVarIn)
 
-    character (len=*), parameter :: NameSub='UA_get_for_ie'
-
+    character(len=*), parameter:: NameSub = 'UA_get_for_ie'
+    !--------------------------------------------------------------------------
     call CON_stop(NameSub//': UA_ERROR: empty version cannot be used!')
 
   end subroutine UA_get_for_ie
-
-
+  !============================================================================
 end module UA_wrapper
+!==============================================================================
