@@ -358,7 +358,7 @@ contains
              call LocationIndex(Lon, Lat, iiBlock, iiLon, iiLat, rLon, rLat)
              
              ! Store block and cell indexes and distances for extrapolation
-             iBlockCell_DI(0,iPoint)      = iBlock
+             iBlockCell_DI(0,iPoint)      = iiBlock
              iBlockCell_DI(1:nDimIn,iPoint) = (/ iiLon, iiLat, nAlts /)
              Dist_DI(:,iPoint)            = (/ 1.0-rLon, 1.0-rLat, 0.0 /)
           else
@@ -372,7 +372,7 @@ contains
              end if
 
              ! Store block and cell indexes and distances for interpolation
-             iBlockCell_DI(0,iPoint)      = iBlock
+             iBlockCell_DI(0,iPoint)      = iiBlock
              iBlockCell_DI(1:nDimIn,iPoint) = (/ iiLon, iiLat, iAlt /)
              Dist_DI(:,iPoint)            = (/ 1.0-rLon, 1.0-rLat, 1.0-rAlt /)
           end if
