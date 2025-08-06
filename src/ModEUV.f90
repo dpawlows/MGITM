@@ -1110,17 +1110,21 @@ contains
   !=========================================================================
   subroutine init_mod_euv
 
-
     if(allocated(HeatingEfficiency_CB)) RETURN
     allocate(HeatingEfficiency_CB(nLons, nLats, nAlts, nBlocks))
     allocate(eHeatingEfficiency_CB(nLons, nLats, nAlts, nBlocks))
     allocate(EuvIonRate(nLons, nLats, nAlts, nBlocks))
     allocate(EuvTotal(nLons, nLats, nAlts, nBlocks))
-    ! Added ghost cells for coupling with GM:
-    allocate(EuvIonRateS(-1:nLons+2,-1:nLats+2,-1:nAlts+2,nIons,nBlocks))
+
+    ! Added ghost cells in Lon-Lat directions for coupling with GM:
+    allocate(EuvIonRateS(-1:nLons+2,-1:nLats+2,nAlts,nIons,nBlocks))
+    ! The first coupling may happen before this array is set, so initialize
+    EuvIonRateS = 0.0
+
     allocate(EuvDissRateS(nLons, nLats, nAlts, nSpeciesTotal,nBlocks))
     allocate(Chapman(nLons, nLats, nAlts, nSpecies,nBlocks))
     allocate(CO2_Abs_Fac(nLons,nLats,nAlts,Num_Wavelengths_High,nBlocks))
+
   end subroutine init_mod_euv
   !=========================================================================
   subroutine clean_mod_euv
