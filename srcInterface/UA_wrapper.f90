@@ -432,16 +432,24 @@ contains
                DoExtrapolate=.false., iCell_D=iCell_D, Dist_D=Dist_D)
 
           ! EUVIonRate_CO2->CO2+
-          write(*,*)'!!! iPoint, iCell_D=', iPoint, iCell_D
+          ! write(*,*)'!!! Alt, Lon, Lat=', Alt, Lon, Lat
+          ! write(*,*)'!!! iPoint, iCell_D=', iPoint, iCell_D
+          ! write(*,*)'!!! iBlock, Dist_D =', iBlock, Dist_D
+          ! write(*,*)'!!! iCO2P_, iOP_=', iCO2P_, iOP_
+          ! write(*,*)'!!! EuvIonRateS=', EuvIonRateS( &
+          !     iCell_D(1):iCell_D(1)+1, &
+          !     iCell_D(2):iCell_D(2)+1, &
+          !     iCell_D(3):iCell_D(3)+1, &
+          !     iCO2P_,iBlock)
           Data_VI(4,iPoint) = &
                trilinear(EuvIonRateS(:,:,:,iCO2P_,iBlock),&
-               -1, nLons+2, -1, nLats+2, -1, nAlts+2, &
+               -1, nLons+2, -1, nLats+2, 1, nAlts, &
                DoExtrapolate=.true., iCell_D=iCell_D, Dist_D=Dist_D)
 
           ! EUVIonRate_O->O+
           Data_VI(5,iPoint) = &
                trilinear(EuvIonRateS(:,:,:,iOP_,iBlock), &
-               -1, nLons+2, -1, nLats+2, -1, nAlts+2, &
+               -1, nLons+2, -1, nLats+2, 1, nAlts, &
                DoExtrapolate=.true., iCell_D=iCell_D, Dist_D=Dist_D)
        end if
     end do
