@@ -1,4 +1,3 @@
-
 module ModSphereInterface
 
   use AB_module
@@ -12,6 +11,7 @@ module ModSphereInterface
   use ModGITM
   use ModConstants
   use ModSizeGitm
+  use ModEUV
   use GITM_planet, only: nSpecies
   use ModInputs, only: UseIonAdvection
 
@@ -258,10 +258,10 @@ contains
     ! Velocity
     call AB_1blk4_gc_add_size(nLons,nLats,nAlts,3,2,size)
 
-    ! Species
+    ! NDensityS
     call AB_1blk4_gc_add_size(nLons,nLats,nAlts,nSpecies,2,size)
 
-    ! Add Vertical Velocities (nSpecies)
+    ! Vertical Velocities (nSpecies)
     call AB_1blk4_gc_add_size(nLons,nLats,nAlts,nSpecies,2,size)
 
     ! Temperature
@@ -272,6 +272,9 @@ contains
 
     ! eTemperature
     call AB_1blk3_gc_add_size(nLons,nLats,nAlts,2,size)
+
+    ! EuvIonRateS  if(CoupledToGM)...
+    call AB_1blk4_gc_add_size(nLons,nLats,nAlts,nIons,2,size)
 
     ! Ion Species
     if (UseIonAdvection) &
@@ -310,6 +313,9 @@ contains
     call AB_1blk3_gc_pack(nLons,nLats,nAlts,2, &
          eTemperature(:,:,1:nAlts,index),dir,pole,p,out_array)
 
+    call AB_1blk4_gc_pack(nLons,nLats,nAlts,nIons,2, &
+         EuvIonRateS(:,:,1:nAlts,:,index),dir,pole,p,out_array)
+
     if (UseIonAdvection) &
          call AB_1blk4_gc_pack(nLons,nLats,nAlts,nIonsAdvect,2, &
          IDensityS(:,:,1:nAlts,:,index),dir,pole,p,out_array)
@@ -344,6 +350,9 @@ contains
     call AB_1blk3_gc_unpack(nLons,nLats,nAlts,2, &
          eTemperature(:,:,1:nAlts,index),dir,p,in_array)
 
+    call AB_1blk4_gc_unpack(nLons,nLats,nAlts,nIons,2, &
+         EuvIonRateS(:,:,1:nAlts,:,index),dir,p,in_array)
+
     if (UseIonAdvection) &
          call AB_1blk4_gc_unpack(nLons,nLats,nAlts,nIonsAdvect,2, &
          IDensityS(:,:,1:nAlts,:,index),dir,p,in_array)
@@ -354,13 +363,16 @@ contains
     integer :: size(ab_num_nbrs), i
 
     size=0
+    ! Rho
     call AB_array3_gc_add_size(nLons,nLats,nAlts,2,size)
 
+    ! Velocity
     call AB_array4_gc_add_size(nLons,nLats,nAlts,3,2,size)
 
     ! Vertical Velocity
     call AB_array4_gc_add_size(nLons,nLats,nAlts,nSpecies,2,size)
 
+    ! NDensityS
     call AB_array4_gc_add_size(nLons,nLats,nAlts,nSpecies,2,size)
 
     ! temperatures
@@ -368,6 +380,10 @@ contains
     call AB_array3_gc_add_size(nLons,nLats,nAlts,2,size)
     call AB_array3_gc_add_size(nLons,nLats,nAlts,2,size)
 
+    ! EuvIonRateS
+    call AB_array4_gc_add_size(nLons,nLats,nAlts,nIons,2,size)
+
+    ! IDensityS
     if (UseIonAdvection) &
          call AB_array4_gc_add_size(nLons,nLats,nAlts,nIonsAdvect,2,size)
 
@@ -380,6 +396,7 @@ contains
     integer :: p,i, iIon
     real :: tmpI(-1:nLons+2, -1:nLats+2, 1:nAlts, 1:nIonsAdvect)
     real :: tmpN(-1:nLons+2, -1:nLats+2, 1:nAlts, 1:nSpecies)
+    real :: tmpE(-1:nLons+2, -1:nLats+2, 1:nAlts, 1:nIons)
 
     p=1 ! start packing at position 1 in out_array
 
@@ -406,6 +423,10 @@ contains
     call AB_array3_gc_pack(nLons,nLats,nAlts,2, &
          eTemperature(:,:,1:nAlts,index),dir,pole,p,out_array)
 
+    tmpE = EuvIonRateS(:,:,1:nAlts,:,index)
+    call AB_array4_gc_pack(nLons,nLats,nAlts,nIons,2, &
+         tmpE,dir,pole,p,out_array)
+
     if (UseIonAdvection) then
 !       do iIon = 1, nIonsAdvect
 !          tmpI(:,:,:,iIon) = IDensityS(:,:,1:nAlts,iIon,index)
@@ -424,6 +445,7 @@ contains
     integer :: p,i, iIon
     real :: tmpI(-1:nLons+2, -1:nLats+2, 1:nAlts, 1:nIonsAdvect)
     real :: tmpN(-1:nLons+2, -1:nLats+2, 1:nAlts, 1:nSpecies)
+    real :: tmpE(-1:nLons+2, -1:nLats+2, 1:nAlts, 1:nIons)
 
     p=1 ! start unpacking at position 1 in in_array
 
@@ -456,6 +478,11 @@ contains
 
     call AB_array3_gc_unpack(nLons,nLats,nAlts,2, &
          eTemperature(:,:,1:nAlts,index),dir,p,in_array)
+
+    tmpE = EuvIonRateS(:,:,1:nAlts,:,index)
+    call AB_array4_gc_unpack(nLons,nLats,nAlts,nIons,2, &
+         tmpE,dir,p,in_array)
+    EuvIonRateS(:,:,1:nAlts,:,index) = tmpE
 
     if (UseIonAdvection) then
        ! call AB_array4_gc_unpack(nLons,nLats,nAlts,nIonsAdvect,2, &
