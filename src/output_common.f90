@@ -221,11 +221,8 @@ cTime = cTimeSave
 
   case ('3DALL')
 
-     !nvars_to_write = 13+nSpeciesTotal+nSpecies+nIons+nIons-1+1
-     nvars_to_write = 13+nSpeciesTotal+nSpecies+nIons+nIons-1+1 + &
-                1 + & ! Add LocalTime
-                1 + & ! Add Solar-Mars Distance
-                1     ! NO emissions
+     nvars_to_write = 4+nSpeciesTotal+1+3+nSpecies+nIons+2+3+5+4
+
      call output_3dall(iBlock)
 
   case ('3DNEU')
