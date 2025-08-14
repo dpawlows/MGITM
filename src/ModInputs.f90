@@ -64,6 +64,7 @@ module ModInputs
   integer :: iAltTest = -1
   integer :: iDebugLevel = 0
   logical :: UseBarriers = .false.
+  logical :: DoCheckForNans = .false.
   integer :: nSteps = 10
 
   real :: CFL = 0.25
@@ -100,8 +101,7 @@ module ModInputs
 
   logical :: UseTopography = .false.
 
- real :: AltMinIono=80.0 ! in km
-! real :: AltMinIono=60.0 ! in km
+  real :: AltMinIono=60.0 ! in km
 
   real :: TempMax = 1000.0
   real :: TempMin =  200.0
