@@ -228,8 +228,9 @@ contains
   !============================================================================
   subroutine UA_find_points(nDimIn, nPoint, Xyz_DI, iProc_I)
 
+    use ModGitm, ONLY: iProc
     use GITM_planet, ONLY: rBody
-    use ModCoordTransform, ONLY: xyz_to_rlonlat
+    use ModCoordTransform, ONLY: xyz_to_lonlat
 
     integer, intent(in) :: nDimIn                ! dimension of positions
     integer, intent(in) :: nPoint                ! number of positions
@@ -237,22 +238,34 @@ contains
     integer, intent(out):: iProc_I(nPoint)       ! processor owning position
 
     ! Find array of points and return processor indexes owning them
-    ! Could be generalized to return multiple processors...
 
     integer:: iPoint
-    integer :: iiLat, iiLon, iiAlt, iiBlock, iAlt
-    real :: rLon, rLat, rAlt
-    real :: rLonLat_D(3), Alt
+    integer :: iLat, iLon, iBlock
+    real :: rLon, rLat
+    real :: Lon, Lat
 
+    integer:: nFound
+    logical:: DoTest, DoTestMe
     character(len=*), parameter:: NameSub = 'UA_find_points'
     !--------------------------------------------------------------------------
-    do iPoint = 1, nPoint
-       call xyz_to_rlonlat(Xyz_DI(:,iPoint), rLonLat_D)
-       Alt = rLonLat_D(1) - rBody
+    call CON_set_do_test(NameSub, DoTest, DoTestMe)
 
-       call LocationProcIndex(rLonLat_D(2), rLonLat_D(3), Alt, &
-            iiBlock, iiLon, iiLat, iAlt, rLon, rLat, rAlt, iProc_I(iPoint))
+    if(DoTestMe)nFound = 0
+    do iPoint = 1, nPoint
+       call xyz_to_lonlat(Xyz_DI(:,iPoint), Lon, Lat)
+
+       ! The iLon, iLat, rLon, rLat arguments should be optional
+       call LocationIndex(Lon, Lat, iBlock, iLon, iLat, rLon, rLat)
+
+       if(iBlock > 0)then
+          iProc_I(iPoint) = iProc
+       else
+          iProc_I(iPoint) = -1
+       end if
+
+       if(DoTestMe .and. iProc_I(iPoint) >= 0) nFound = nFound + 1
     end do
+    if(DoTestMe) write(*,*) NameSub, ' nFound=', nFound
 
   end subroutine UA_find_points
   !============================================================================
@@ -307,15 +320,14 @@ contains
     integer, allocatable, save:: iBlockCell_DI(:,:)
     real,    allocatable, save:: Dist_DI(:,:)
 
-    integer:: iPoint, iBlock, iProcFound
-    integer :: iiLat, iiLon, iAlt, iiBlock
-    real :: rAlt, rLon, rLat
-    real :: Alt, Lon, Lat
-    real :: rLonLat_D(3)
+    integer:: iPoint, iLat, iLon, iAlt, iBlock, iProcFound
+    real:: rAlt, rLon, rLat
+    real:: Alt, Lon, Lat
+    real:: rLonLat_D(3)
 
     real :: grav, dH, Hscale, HCO2, HO, AltMaxDomain, Tnu
-    real, parameter :: NuMassCo2 = 44, NuMassO = 16
-    real, parameter :: Tiny = 1e-12
+    real, parameter:: NuMassCo2 = 44, NuMassO = 16
+    real, parameter:: Tiny = 1e-12
 
     logical:: DoTest, DoTestMe
 
@@ -341,15 +353,15 @@ contains
           Lat = rLonLat_D(3)
 
           if(Alt > AltMaxDomain)then
-             call LocationIndex(Lon, Lat, iiBlock, iiLon, iiLat, rLon, rLat)
+             call LocationIndex(Lon, Lat, iBlock, iLon, iLat, rLon, rLat)
 
              ! Store block and cell indexes and distances for extrapolation
-             iBlockCell_DI(0,iPoint)      = iiBlock
-             iBlockCell_DI(1:nDimIn,iPoint) = [ iiLon, iiLat, nAlts ]
+             iBlockCell_DI(0,iPoint)      = iBlock
+             iBlockCell_DI(1:nDimIn,iPoint) = [ iLon, iLat, nAlts ]
              Dist_DI(:,iPoint)            = [ 1.0-rLon, 1.0-rLat, 0.0 ]
           else
              call LocationProcIndex(Lon, Lat, Alt, &
-                  iiBlock, iiLon, iiLat, iAlt, rLon, rLat, rAlt, iProcFound)
+                  iBlock, iLon, iLat, iAlt, rLon, rLat, rAlt, iProcFound)
 
              if(iProcFound /= iProc)then
                 write(*,*) NameSub,' ERROR: Xyz_D, iProcFound=', &
@@ -358,8 +370,8 @@ contains
              end if
 
              ! Store block and cell indexes and distances for interpolation
-             iBlockCell_DI(0,iPoint)      = iiBlock
-             iBlockCell_DI(1:nDimIn,iPoint) = [ iiLon, iiLat, iAlt ]
+             iBlockCell_DI(0,iPoint)      = iBlock
+             iBlockCell_DI(1:nDimIn,iPoint) = [ iLon, iLat, iAlt ]
              Dist_DI(:,iPoint)            = [ 1.0-rLon, 1.0-rLat, 1.0-rAlt ]
           end if
        end do
