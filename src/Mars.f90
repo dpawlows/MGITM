@@ -803,6 +803,8 @@ subroutine calc_eddy_diffusion_coefficient(iBlock)
       
 
       PEddyMax = 1.26e-04  ! Pascals (SI Units)
+      PEddyMax = 5.7e-02  ! Pascals (SI Units)
+      
 
       do iLat = 1, nLats
          do iLon = 1, nLons
