@@ -335,16 +335,16 @@ contains
     !--------------------------------------------------------------------------
     call CON_set_do_test(NameSub, DoTest, DoTestMe)
 
+    AltMaxDomain = AltMin + (nAlts-0.5)*(AltMax-AltMin)/nAlts
+    ! grav=3.72/r_GB(i,j,k,iBlock)/r_GB(i,j,k,iBlock)
+    grav = 3.72/(1 + AltMaxDomain/3396.0)/(1 + AltMaxDomain/3396.0)
+
+
     if(IsNew)then
        if(DoTest)write(*,*) NameSub,': iProc, nPoint=', iProc, nPoint
 
        if(allocated(iBlockCell_DI)) deallocate(iBlockCell_DI, Dist_DI)
        allocate(iBlockCell_DI(0:nDimIn,nPoint), Dist_DI(nDimIn,nPoint))
-
-       AltMaxDomain = AltMin + (nAlts-0.5)*(AltMax-AltMin)/nAlts
-
-       ! grav=3.72/r_GB(i,j,k,iBlock)/r_GB(i,j,k,iBlock)
-       grav = 3.72/(1.0+AltMaxDomain/3396.0)/(1.0+AltMaxDomain/3396.0)
 
        do iPoint = 1, nPoint
           call xyz_to_rlonlat(Xyz_DI(:,iPoint), rLonLat_D)
@@ -383,6 +383,8 @@ contains
        iCell_D(1:nDimIn) = iBlockCell_DI(1:nDimIn,iPoint)
        Dist_D(1:nDimIn)  = Dist_DI(:,iPoint)
 
+       ! We could use info in iCell_D and Dist_D instead of
+       ! calculating Alt etc.
        Alt  = sqrt(sum(Xyz_DI(:,iPoint)**2)) - rBody
 
        if(Alt > AltMaxDomain)then
@@ -444,15 +446,6 @@ contains
                DoExtrapolate=.false., iCell_D=iCell_D, Dist_D=Dist_D)
 
           ! EUVIonRate_CO2->CO2+
-          ! write(*,*)'!!! Alt, Lon, Lat=', Alt, Lon, Lat
-          ! write(*,*)'!!! iPoint, iCell_D=', iPoint, iCell_D
-          ! write(*,*)'!!! iBlock, Dist_D =', iBlock, Dist_D
-          ! write(*,*)'!!! iCO2P_, iOP_=', iCO2P_, iOP_
-          ! write(*,*)'!!! EuvIonRateS=', EuvIonRateS( &
-          !     iCell_D(1):iCell_D(1)+1, &
-          !     iCell_D(2):iCell_D(2)+1, &
-          !     iCell_D(3):iCell_D(3)+1, &
-          !     iCO2P_,iBlock)
           Data_VI(4,iPoint) = &
                trilinear(EuvIonRateS(:,:,:,iCO2P_,iBlock),&
                -1, nLons+2, -1, nLats+2, 1, nAlts, &
