@@ -50,17 +50,19 @@ subroutine LocationIndex(LonFind, LatFind, iiBlock, iiLon, iiLat, rLon, rLat)
 
   use ModGITM
 
+  implicit none
+  
   real, intent(in) :: LonFind, LatFind
   integer, intent(out) :: iiBlock, iiLon, iiLat
   real, intent(out) :: rLon, rLat
-  !----------------------------------------------------------------------------
-  integer iBlock, iLon, iLat
 
+  integer:: iBlock, iLon, iLat
+  !----------------------------------------------------------------------------
   iiBlock = -1
   iiLon   = -1
   iiLat   = -1
 
-  do iBlock=1,nBlocks
+  do iBlock = 1, nBlocks
 
      if((Longitude(0,iBlock)+Longitude(1,iBlock))/2 <=LonFind .and. &
           (Longitude(nLons,iBlock)+Longitude(nLons+1,iBlock))/2 >LonFind) then
@@ -104,18 +106,20 @@ subroutine LocationProcIndex(LonFind, LatFind, AltFind, &
 
   use ModGITM
 
-  real, intent(in) :: LonFind, LatFind
+  implicit none
+
+  real, intent(in) :: LonFind, LatFind, AltFind
   integer, intent(out) :: iiBlock, iiLon, iiLat, iiProc, iAlt
   real, intent(out) :: rLon, rLat, rAlt
-  !----------------------------------------------------------------------------
-  integer iBlock, iLon, iLat, jAlt
 
-  iiProc = -1
+  integer:: iBlock, iLon, iLat, jAlt
+  !----------------------------------------------------------------------------
+  iiProc  = -1
   iiBlock = -1
   iiLon   = -1
   iiLat   = -1
-  iAlt = -1
-  rAlt = -1.0
+  iAlt    = -1
+  rAlt    = -1.0
 
   do iBlock = 1, nBlocks
 
@@ -172,17 +176,20 @@ subroutine LocationProcIndex(LonFind, LatFind, AltFind, &
 
 end subroutine LocationProcIndex
 !==============================================================================
-subroutine BlockLocationIndex(LonFind,LatFind,iBlock,iiLon,iiLat,rLon,rLat)
+subroutine BlockLocationIndex( &
+     LonFind, LatFind, iBlock, iiLon, iiLat, rLon, rLat)
 
   use ModGITM
+
+  implicit none
 
   real, intent(in) :: LonFind, LatFind
   integer, intent(in) :: iBlock
   integer, intent(out) :: iiLon, iiLat
   real, intent(out) :: rLon, rLat
-  !----------------------------------------------------------------------------
-  integer iLon, iLat
 
+  integer:: iLon, iLat
+  !----------------------------------------------------------------------------
   iiLon = -1
   iiLat = -1
   rLon  = -1.0
@@ -218,17 +225,19 @@ subroutine BlockLocationIndex(LonFind,LatFind,iBlock,iiLon,iiLat,rLon,rLat)
 
 end subroutine BlockLocationIndex
 !==============================================================================
-subroutine BlockAltIndex(AltFind,iBlock,iLon,iLat,iAlt,rAlt)
+subroutine BlockAltIndex(AltFind, iBlock, iLon, iLat, iAlt, rAlt)
 
   use ModGITM
+
+  implicit none
 
   real, intent(in)     :: AltFind
   integer, intent(in)  :: iBlock, iLon, iLat
   integer, intent(out) :: iAlt
   real, intent(out)    :: rAlt
-  !----------------------------------------------------------------------------
-  integer jAlt
 
+  integer:: jAlt
+  !----------------------------------------------------------------------------
   iAlt = -1
   rAlt = -1.0
 
