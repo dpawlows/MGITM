@@ -649,28 +649,20 @@ subroutine advance_vertical_1stage( &
 
   enddo !iAlt
 
-  ! Both Flags set in the Input File
-  if (UseNeutralFriction .and. UseNeutralFrictionInSolver) then
-!     write(*,*) 'UseNeutralFriction, FrictionInSolver =', &
-!       UseNeutralFriction, UseNeutralFrictionInSolver
 
-           nVel(-1:nAlts+2,1:nSpecies) = NewVertVel(-1:nAlts+2,1:nSpecies)
-           call calc_neutral_friction(nVel(1:nAlts,1:nSpecies), &
-                                      EddyCoef_1d(1:nAlts), &
-                                      NT(1:nAlts), &
-                                      NS(1:nAlts,1:nSpecies), &
-                                      GradLogConS(1:nAlts,1:nSpecies), &
-                                      Temp(1:nAlts) )
+  nVel(-1:nAlts+2,1:nSpecies) = NewVertVel(-1:nAlts+2,1:nSpecies)
+  call calc_neutral_friction(nVel(1:nAlts,1:nSpecies), &
+      EddyCoef_1d(1:nAlts), &
+      NT(1:nAlts), &
+      NS(1:nAlts,1:nSpecies), &
+      GradLogConS(1:nAlts,1:nSpecies), &
+      Temp(1:nAlts) )
 
-           NewVertVel(1:nAlts,1:nSpecies) = nVel(1:nAlts,1:nSpecies)
-  endif
-
+  NewVertVel(1:nAlts,1:nSpecies) = nVel(1:nAlts,1:nSpecies)
   NewVel_GD(-1:nAlts+2,iUp_) = 0.0
-!  TimeFactor = exp(-tSimulation/(2.0*86400.0))
+
   do iAlt = 1, nAlts
-
      do iSpecies=1,nSpecies
-
 
         NewVertVel(iAlt, iSpecies) = max(-MaximumVerticalVelocity, &
              NewVertVel(iAlt, iSpecies))
@@ -682,7 +674,6 @@ subroutine advance_vertical_1stage( &
              (Mass(iSpecies) * NS(iAlt,iSpecies) / Rho(iAlt))
 
      enddo
-
   enddo
 
   StressHeating = 0.0
