@@ -461,7 +461,6 @@ subroutine advance_vertical_1stage( &
   !! Eddy Diffusion Variables
   real, dimension(1:nAlts,nSpecies)    :: GradLogConS
   real, dimension(-1:nAlts+2,nSpecies)    :: ConS, LogConS
-  real, dimension(1:nAlts,nSpecies)    :: EddyCoefRatio_1d
   !--------------------------------------------------------------------------
   !!! Turbulent Lapse Rate Contribution
   real, dimension(-1:nAlts+2)    :: LocalEddyHeatFlux
@@ -661,8 +660,7 @@ subroutine advance_vertical_1stage( &
                                       NT(1:nAlts), &
                                       NS(1:nAlts,1:nSpecies), &
                                       GradLogConS(1:nAlts,1:nSpecies), &
-                                      EddyCoefRatio_1d(1:nAlts,1:nSpecies), &
-                                      Temp(1:nAlts), cMax(1:nAlts) )
+                                      Temp(1:nAlts) )
 
            NewVertVel(1:nAlts,1:nSpecies) = nVel(1:nAlts,1:nSpecies)
   endif

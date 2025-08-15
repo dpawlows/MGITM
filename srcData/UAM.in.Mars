@@ -146,10 +146,6 @@ T           UseEddyInSolver
 T           UseFrictionInSolver
 25.0
 
-#EDDYVELOCITY
-F           UseBoquehoAndBlelly
-F           UseEddyCorrection
-
 #TIDES
 F
 F

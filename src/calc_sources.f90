@@ -43,10 +43,6 @@ subroutine calc_GITM_sources(iBlock)
   real :: LogConS(nLons,nLats,-1:nAlts+2,1:nSpecies)
   real :: GradLogConS(nLons,nLats,1:nAlts,1:nSpecies)
 
-
-! Temporary
-  real :: EddyCoefRatio(nLons, nLats, 1:nAlts,nSpecies)
-
   call report("calc_GITM_sources",1)
 
   ! calc_rate is used to determine reaction rates, heating coefficients,
@@ -382,19 +378,11 @@ subroutine calc_GITM_sources(iBlock)
                                       NF_NDen(1:nAlts), &
                                       NF_NDenS(1:nAlts,1:nSpecies), &
                                       NF_GradLogCon(1:nAlts,1:nSpecies), &
-                                      NF_EddyRatio(1:nAlts,1:nSpecies), &
-                                      NF_Temp(1:nAlts), NF_Gravity(1:nAlts) )
+                                      NF_Temp(1:nAlts) )
 
            do iAlt = 1, nAlts
               NeutralFriction(iLon, iLat, iAlt, 1:nSpecies) = &
                    nVel(iAlt,1:nSpecies) - VerticalVelocity(iLon,iLat,iAlt,1:nSpecies,iBlock)
-!
-!              EddyCoefRatio(iLon, iLat, iAlt, 1:nSpecies,iBlock) = &
-!                    NF_EddyRatio(iAlt,1:nSpecies)
-!
-!              EddyCoefRatio(iLon, iLat, iAlt, 1:nSpecies) = &
-!                    NF_EddyRatio(iAlt,1:nSpecies)
-
 
            enddo
 
