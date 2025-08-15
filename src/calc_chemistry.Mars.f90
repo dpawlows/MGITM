@@ -418,6 +418,7 @@ subroutine calc_chemistry(iBlock)
               Reaction = rr * Ions(ie_) * Ions(iN2P_)
 
               IonLosses(iN2P_) = IonLosses(iN2P_) + Reaction
+
               NeutralSources(iN4S_) = NeutralSources(iN4S_) + Reaction
               NeutralSources(iN2D_) = NeutralSources(iN2D_) + Reaction
               reactionrate(10) = reaction
@@ -846,6 +847,7 @@ subroutine calc_chemistry(iBlock)
               ! N2D + CO2  ==> NO + CO
               ! -----------------------------------------------------------
               rr = 2.8e-19  !Fox and Sung: 3.6e-19
+
               Reaction = rr*Neutrals(iN2D_)*Neutrals(iCO2_)
 
               NeutralLosses(iN2D_) = NeutralLosses(iN2D_) + Reaction
@@ -866,8 +868,8 @@ subroutine calc_chemistry(iBlock)
               ! -----------------------------------------------------------
               ! N2D + O  ==> N4S + O + 2.38 eV
               ! -----------------------------------------------------------
-              rr = 6.9e-19 !2.0e-17 was in the old code?
-              !rr = 2.0e-17
+              !rr = 6.9e-19 !2.0e-17 was in the old code? Seems way too large
+              rr = 2.0e-18 !Used in E-GITM, consistent with range in literature
               Reaction = rr*Neutrals(iN2D_)*Neutrals(iO_)
 
               NeutralLosses(iN2D_) = NeutralLosses(iN2D_) + Reaction
@@ -895,7 +897,7 @@ subroutine calc_chemistry(iBlock)
               ! NO + N4S  ==> N2 + O + 3.25 eV
               ! -----------------------------------------------------------
               rr  = 2.5e-16*tn3m053de6
-              !rr = 3.4e-17 !Fox and sung has
+              !rr = 3.4e-17 !Fox and sung
               Reaction = rr*Neutrals(iN4S_)*Neutrals(iNO_)
 
               NeutralLosses(iNO_) = NeutralLosses(iNO_) + Reaction
@@ -926,30 +928,36 @@ subroutine calc_chemistry(iBlock)
               ! -----------------------------------------------------------
               ! N + CO2  ==> NO + CO
               ! -----------------------------------------------------------
-              Reaction = 1.7e-22*Neutrals(iN4S_)*Neutrals(iCO2_)
+              !rr = 1.7e-22
+              rr = 1.7e-25 !see discussion in Fox and Sung 2001 about this reaction
+              Reaction = rr * Neutrals(iN4S_)*Neutrals(iCO2_)
 
               NeutralLosses(iN4S_) = NeutralLosses(iN4S_) + Reaction
               NeutralLosses(iCO2_) = NeutralLosses(iCO2_) + Reaction
               NeutralSources(iNO_) = NeutralSources(iNO_) + Reaction
               NeutralSources(iCO_) = NeutralSources(iCO_) + Reaction
-         !
+         
               ! -----------------------------------------------------------
               ! N(2D) + NO  ==> N2 + O
               ! -----------------------------------------------------------
-              Reaction = 6.7e-17*Neutrals(iN2D_)*Neutrals(iNO_)
+              rr = 6.7e-17
+             
+              Reaction = rr*Neutrals(iN2D_)*Neutrals(iNO_)
 
               NeutralLosses(iN2D_) = NeutralLosses(iN2D_) + Reaction
               NeutralLosses(iNO_) = NeutralLosses(iNO_) + Reaction
               NeutralSources(iN2_) = NeutralSources(iN2_) + Reaction
               NeutralSources(iO_) = NeutralSources(iO_) + Reaction
-         !
-         !               ! -----------------------------------------------------------
-         !               ! N(2D) + e  ==> N(4S) + e
-         !               ! -----------------------------------------------------------
-         !               Reaction = rtN2D_e*Neutrals(iN2D_)*Ions(ie_)
-         !
-         !               NeutralLosses(iN2D_) = NeutralLosses(iN2D_) + Reaction
-         !               NeutralSources(iN4S_) = NeutralSources(iN4S_) + Reaction
+         
+              ! -----------------------------------------------------------
+              ! N(2D) + e  ==> N(4S) + e + 2.38eV
+              ! -----------------------------------------------------------
+              rr = 5.5e-16 * te3 ** (0.5)
+              Reaction = rr*Neutrals(iN2D_)*Ions(ie_)
+
+              NeutralLosses(iN2D_) = NeutralLosses(iN2D_) + Reaction
+              NeutralSources(iN4S_) = NeutralSources(iN4S_) + Reaction
+
          !\
          !-----------Inert Species (zeroed out sources and sinks)
          !-----------Species not calculated yet (zeroed out sources and sinks)
