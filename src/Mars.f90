@@ -775,6 +775,7 @@ end subroutine init_isochem
 
 subroutine calc_eddy_diffusion_coefficient(iBlock)
 
+  use ModUserGITM
   use ModSizeGITM
   use ModGITM, only: pressure, NDensity
   use ModInputs, only: EddyDiffusionPressure0,EddyDiffusionPressure1, &
@@ -803,7 +804,7 @@ subroutine calc_eddy_diffusion_coefficient(iBlock)
       
 
       PEddyMax = 1.26e-04  ! Pascals (SI Units)
-      PEddyMax = 5.7e-02  ! Pascals (SI Units)
+!      PEddyMax = 5.7e-02  ! Pascals (SI Units)
       
 
       do iLat = 1, nLats
@@ -860,6 +861,8 @@ subroutine calc_eddy_diffusion_coefficient(iBlock)
       else
          KappaEddyDiffusion = KEddyMax
    endif
+userdata3d(1:nLons,1:nLats,:,1,1) = KappaEddyDiffusion(1:nlons,1:nlats,:,1)
+userdata1d(1:nLons,1:nLats,:,1) = KappaEddyDiffusion(1:nlons,1:nlats,:,1)
 
 end subroutine calc_eddy_diffusion_coefficient
 
@@ -10020,8 +10023,8 @@ subroutine interpolateField(nMagLons,nMagLats,nMagAlts,MagFieldLon,MagFieldLat,M
      enddo
 
      B0(:,:,:,iMag_,iBlock) = sqrt(B0(:,:,:,1,iBlock)**2+B0(:,:,:,2,iBlock)**2+B0(:,:,:,3,iBlock)**2)
-     userdata3D(:,:,:,3,iblock)=B0(:,:,:,iMag_,iBlock)
-     userdata3D(:,:,:,4,iblock)=FieldType(:,:,:,iBlock)
+!     userdata3D(:,:,:,3,iblock)=B0(:,:,:,iMag_,iBlock)
+!     userdata3D(:,:,:,4,iblock)=FieldType(:,:,:,iBlock)
 
   enddo
 

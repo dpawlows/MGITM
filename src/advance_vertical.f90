@@ -105,16 +105,16 @@ subroutine advance_vertical(iLon,iLat,iBlock)
 
   ! Fill in the User3D Data from our UserData1D
   ! Adabatic Heating/Cooling
-  UserData3D(iLon,iLat,1:nAlts,42,iBlock) = &
-         UserData1D(1,1,1:nAlts,42)
+!  UserData3D(iLon,iLat,1:nAlts,42,iBlock) = &
+!         UserData1D(1,1,1:nAlts,42)
 
   ! Hydrodynamic transport term
-  UserData3D(iLon,iLat,1:nAlts,43,iBlock) = &
-       UserData1D(1,1,1:nAlts,43)
+ ! UserData3D(iLon,iLat,1:nAlts,43,iBlock) = &
+ !      UserData1D(1,1,1:nAlts,43)
 
   ! Viscous Heating Term
-  UserData3D(iLon,iLat,1:nAlts,44,iBlock) = &
-       UserData1D(1,1,1:nAlts,44)
+ ! UserData3D(iLon,iLat,1:nAlts,44,iBlock) = &
+ !      UserData1D(1,1,1:nAlts,44)
 
    Rho(iLon,iLat,:,iBlock)                  = exp(LogRho)
 

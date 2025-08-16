@@ -142,8 +142,8 @@ F		 UseUpdatedTurbulentConduction
 F           UseStressHeating
 
 #VERTICALSOURCES
-T           UseEddyInSolver
-T           UseFrictionInSolver
+F           UseEddyInSolver
+F           UseFrictionInSolver
 25.0
 
 #TIDES

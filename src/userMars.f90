@@ -37,7 +37,7 @@ subroutine set_nVarsUser3d
 
   ! Make sure to include Lat, Lon, and Alt
 
-  nVarsUser3d = 6
+  nVarsUser3d = 4
   !nVarsUser3d = 14
 
   if (nVarsUser3d-3 > nUserOutputs) &
@@ -73,8 +73,7 @@ subroutine set_nVarsUser1d
 
   ! Make sure to include Lat, Lon, and Alt
 
-! nVarsUser1d = 4
-  nVarsUser1d = 6
+  nVarsUser1d = 4
 
   if (nVarsUser1d-3 > nUserOutputs) &
        call stop_gitm("Too many user outputs!! Increase nUserOutputs!!")
@@ -114,8 +113,8 @@ subroutine output_header_user(cType, iOutputUnit_)
      write(iOutputUnit_,"(I7,A1,a)")  1, " ", "Longitude"
      write(iOutputUnit_,"(I7,A1,a)")  2, " ", "Latitude"
      write(iOutputUnit_,"(I7,A1,a)")  3, " ", "Altitude"
-     write(iOutputUnit_,"(I7,A1,a)")  4, " ", "ImpactIonizaionRate"
-     write(iOutputUnit_,"(I7,A1,a)")  5, " ", "CO2ImpactIonizationFrequency"
+     write(iOutputUnit_,"(I7,A1,a)")  4, " ", "Eddy Diffusion Coefficient"
+!     write(iOutputUnit_,"(I7,A1,a)")  5, " ", "CO2ImpactIonizationFrequency"
      ! write(iOutputUnit_,"(I7,A1,a)")  6, " ", "EUVHeatingRate"
      ! write(iOutputUnit_,"(I7,A1,a)")  7, " ", "QNIRTotalRate"
      ! write(iOutputUnit_,"(I7,A1,a)")  8, " ", "QNIRLTERate"
@@ -178,9 +177,9 @@ subroutine output_header_user(cType, iOutputUnit_)
      write(iOutputUnit_,"(I7,A1,a)")  1, " ", "Longitude"
      write(iOutputUnit_,"(I7,A1,a)")  2, " ", "Latitude"
      write(iOutputUnit_,"(I7,A1,a)")  3, " ", "Altitude"
-     write(iOutputUnit_,"(I7,A1,a)")  4, " ", "CO2+hv->O2+C"
-     write(iOutputUnit_,"(I7,A1,a)")  5, " ", "CO2+hv->2O+C"
-     write(iOutputUnit_,"(I7,A1,a)")  6, " ", "CO+hv->C+O"
+     write(iOutputUnit_,"(I7,A1,a)")  4, " ", "Eddy Diffusion Coefficient"
+!     write(iOutputUnit_,"(I7,A1,a)")  5, " ", "CO2+hv->2O+C"
+!     write(iOutputUnit_,"(I7,A1,a)")  6, " ", "CO+hv->C+O"
      !write(iOutputUnit_,"(I7,A1,a)")  7, " ", "QNIRTotalRate"
      !write(iOutputUnit_,"(I7,A1,a)")  8, " ", "QNIRLTERate"
      !write(iOutputUnit_,"(I7,A1,a)")  9, " ", "CIRLTERate"
@@ -210,7 +209,7 @@ subroutine output_3dUser(iBlock, iOutputUnit_)
 
   integer, intent(in) :: iBlock, iOutputUnit_
   integer :: iAlt, iLat, iLon
-
+write(*,*) minval(userdata3D),maxval(userdata3D)
   do iAlt=-1,nAlts+2
      do iLat=-1,nLats+2
         do iLon=-1,nLons+2
@@ -218,9 +217,9 @@ subroutine output_3dUser(iBlock, iOutputUnit_)
                 Longitude(iLon,iBlock), &
                 Latitude(iLat,iBlock), &
                 Altitude_GB(iLon, iLat, iAlt, iBlock),&
-                UserData3D(iLon,iLat,iAlt,1,iBlock),&
-                UserData3D(iLon,iLat,iAlt,2,iBlock),&
-                UserData3D(iLon,iLat,iAlt,3,iBlock)
+                UserData3D(iLon,iLat,iAlt,1,iBlock)
+!                UserData3D(iLon,iLat,iAlt,2,iBlock),&
+!                UserData3D(iLon,iLat,iAlt,3,iBlock)
 
         enddo
      enddo
@@ -277,9 +276,9 @@ subroutine output_1dUser(iBlock, iOutputUnit_)
                 Longitude(iLon,iBlock), &
                 Latitude(iLat,iBlock), &
                 Altitude_GB(iLon, iLat, iAlt, iBlock),&
-                UserData1D(iLon,iLat,iAlt,1), &
-                UserData1D(iLon,iLat,iAlt,2), &
-                UserData1D(iLon,iLat,iAlt,3)
+                UserData1D(iLon,iLat,iAlt,1)
+!                UserData1D(iLon,iLat,iAlt,2), &
+!                UserData1D(iLon,iLat,iAlt,3)
 !                UserData1D(iLon,iLat,iAlt,10), &
 !                UserData1D(iLon,iLat,iAlt,11)
 !               UserData1D(iLon,iLat,iAlt,1:nVarsUser1d-3)

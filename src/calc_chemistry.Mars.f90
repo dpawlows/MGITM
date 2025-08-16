@@ -364,7 +364,7 @@ subroutine calc_chemistry(iBlock)
               ! CO + hv ==> C + O+ + e
               ! ----------------------------------------------------------
 
-              Reaction = EuvIonRateS(iLon,iLat,iAlt,iPICO_C_OP,iBlock)*Neutrals(iCO2_)
+              Reaction = EuvIonRateS(iLon,iLat,iAlt,iPICO_C_OP,iBlock)*Neutrals(iCO_)
 
               NeutralLosses(iCO_) = NeutralLosses(iCO_) + Reaction
               NeutralSources(iC_) = NeutralSources(iC_) + Reaction
