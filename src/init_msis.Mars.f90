@@ -19,14 +19,10 @@ subroutine get_msis_temperature(lon, lat, alt, t, h)
 
   real, intent(in) :: lon, lat, alt
   real, intent(out) :: t, h
-
-! real :: nCO2, nO2, nN2, nCO, m, r, g
-! real :: nCO2, nO,  nN2, nCO, m, r, g
   real :: nCO2, nOX,  nN2, nCO, m, r, g
   integer :: i
 
   i = 1
-! do while (alt >= newalt(i))
   do while ( (alt >= newalt(i)) .and.  (i <= nAlts+2) )
      i = i + 1
   enddo
@@ -302,7 +298,9 @@ subroutine init_msis
      !    IDensityS(:,:,:,iCO2P_,iBlock) = 1.0e0
      IDensityS(:,:,:,iOP_,iBlock) = 1.0e0
      IDensityS(:,:,:,iN2P_,iBlock) = 1.0e0
-     IDensityS(:,:,:,iNOP_,iBlock) = 1.0e0
+     IDensityS(:,:,:,iCOP_,iBlock) = 1.0e0
+     IDensityS(:,:,:,iCP_,iBlock) = 1.0e0
+
      write(*,*) '============> init_msis.Mars.f90 Major Diagnostics:  Begin'
      !     Temperature(:,:,:,iBlock) = 175.
      !\

@@ -400,16 +400,16 @@ contains
                + Dt * (DiffLonTemp_C(iLon,iLat)+DiffLatTemp_C(iLon,iLat))
 
           ! Output 3DUserFiles
-          UserData3D(iLon,iLat,iAlt,40,iBlock) = &
-              -1.0*(Gamma_C(iLon,iLat) - 1.0)*&
-                     Temp_C(iLon,iLat)*TempUnit(iLon,iLat,iAlt)*&
-                   DivVel_C(iLon,iLat)
+!          UserData3D(iLon,iLat,iAlt,40,iBlock) = &
+!              -1.0*(Gamma_C(iLon,iLat) - 1.0)*&
+!                     Temp_C(iLon,iLat)*TempUnit(iLon,iLat,iAlt)*&
+!                   DivVel_C(iLon,iLat)
 
           ! Output 3DUserFiles
-          UserData3D(iLon,iLat,iAlt,41,iBlock) = &
-              -1.0*TempUnit(iLon,iLat,iAlt)*&
-               ( GradLatTemp_C(iLon,iLat)*Vel_CD(iLon,iLat,iNorth_) &
-               + GradLonTemp_C(iLon,iLat)*Vel_CD(iLon,iLat,iEast_))
+!          UserData3D(iLon,iLat,iAlt,41,iBlock) = &
+!              -1.0*TempUnit(iLon,iLat,iAlt)*&
+!               ( GradLatTemp_C(iLon,iLat)*Vel_CD(iLon,iLat,iNorth_) &
+!               + GradLonTemp_C(iLon,iLat)*Vel_CD(iLon,iLat,iEast_))
 
        end do !iLon
     end do !iLat

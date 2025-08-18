@@ -64,6 +64,7 @@ OBJECTS = \
 	calc_rates.o\
 	calc_timestep.o\
 	exchange_messages_sphere.o\
+	check_for_nans.o\
 	timing.o\
 	advance.o\
 	advance_vertical.o\

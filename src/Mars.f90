@@ -39,9 +39,9 @@ subroutine fill_photo(photoion, photoabs, photodis)
 
   implicit none
 
-  real, intent(out) :: photoion(Num_WaveLengths_High, nIons-1)
+  real, intent(out) :: photoion(Num_WaveLengths_High, nPhotoIonPathways)
   real, intent(out) :: photoabs(Num_WaveLengths_High, nSpeciesTotal)
-  real, intent(out) :: photodis(Num_WaveLengths_High, nSpeciesTotal)
+  real, intent(out) :: photodis(Num_WaveLengths_High, nPhotoPathways)
 
 
   integer :: i, iSpecies, iIon, NWH
@@ -57,13 +57,13 @@ subroutine fill_photo(photoion, photoabs, photodis)
 
   NWH = Num_WaveLengths_High
 
-  photoabs               = 0.0
-  photoabs(:,iCO2_)  = PhotoAbs_CO2
-  photoabs(:,iCO_)    = PhotoAbs_CO
-  photoabs(:,iO_)      = PhotoAbs_O
-  photoabs(:,iN2_)    = PhotoAbs_N2
-  photoabs(:,iO2_)    = PhotoAbs_O2
-  photoabs(58,iCO2_) = 0.0! timing fix (DP: Nov. 2011)
+  photoabs              = 0.0
+  photoabs(:,iCO2_)     = PhotoAbs_CO2
+  photoabs(:,iCO_)      = PhotoAbs_CO
+  photoabs(:,iO_)       = PhotoAbs_O
+  photoabs(:,iN2_)      = PhotoAbs_N2
+  photoabs(:,iO2_)      = PhotoAbs_O2
+  photoabs(58,iCO2_)    = 0.0! timing fix (DP: Nov. 2011)
 
   ! ---------------------------------------------------------------------
   !  Specific Photoionization Cross Sections (nIons-1)
@@ -71,23 +71,56 @@ subroutine fill_photo(photoion, photoabs, photodis)
   !  Need:  O+, O2+, CO2+, N2+ Productions
   ! ---------------------------------------------------------------------
 
-  photoion(1:NWH,iOP_)        = PhotoIon_OPlus4S(1:NWH)*sfop
-  photoion(1:NWH,iO2P_)      = PhotoIon_O2(1:NWH)
-  photoion(1:NWH,iCO2P_)    = PhotoIon_CO2(1:NWH)* &
-       BranchingRatio_CO2_to_CO2Plus(1:NWH)*sfco2p
-  photoion(1:NWH,iN2P_)      = PhotoIon_N2(1:NWH)*  &
-       BranchingRatio_N2_to_N2Plus(1:NWH)*sfn2p
-  photoion(1:NWH,iNOP_)     = PhotoIon_CO2(1:NWH)* &
-       BranchingRatio_CO2_to_OPlus(1:NWH)*sfco2p
+  photoion                       = 0.0
+  photoion(:,iPIO_OP)        = PhotoIon_OPlus4S*sfop
+  photoion(:,iPIO2_O2P)      = PhotoIon_O2
+  photoion(:,iPICO2_CO2P)    = PhotoIon_CO2* &
+       BranchingRatio_CO2_to_CO2Plus(:)*sfco2p
+  photoion(:,iPIN2_N2P)      = PhotoIon_N2*  &
+       BranchingRatio_N2_to_N2Plus(:)*sfn2p
+  photoion(:,iPICO2_OP_CO)     = PhotoIon_CO2* &
+       BranchingRatio_CO2_to_OPlus*sfco2p
+
+   ! These photodissociation reactions use cross-sections instead of branching ratios
+   photoion(:,iPICO2_COP_O)    = PhotoIon_CO2_COP_O  
+   photoion(:,iPICO2_COP_OP)   = PhotoIon_CO2_COP_OP 
+   photoion(:,iPICO2_CP_O2)    = PhotoIon_CO2_CP_O2 
+   photoion(:,iPICO2_CP_OP_O)  = PhotoIon_CO2_CP_OP_O 
+   photoion(:,iPICO_C_OP)      = PhotoIon_CO_C_OP 
+
 
   ! ---------------------------------------------------------------------
   !  Specific PhotoiDissociations (Absorption-Total_Ionization) (nSpecies)
   !  Need:  CO2, O2, and N2 dissociations (only)
   ! ---------------------------------------------------------------------
 
-  photodis(1:NWH,iCO2_)  = PhotoAbs_CO2(1:NWH)-PhotoIon_CO2(1:NWH)
-  photodis(1:NWH,iN2_)   = PhotoAbs_N2(1:NWH)-PhotoIon_N2(1:NWH)
-  photodis(1:NWH,iO2_)   = PhotoAbs_O2(1:NWH)-PhotoIon_O2(1:NWH)
+  ! Normally photodissociation is just photoabsorption - photoionization. However, 
+  ! CO2 and CO both branch. We only do CO2 branching for now. So, we will just use 
+  ! photodissociation rates directly from the literature.
+
+  ! In order to accomodate this, photodis and euvdissrates are indexed based on their products, not 
+  ! the reactants. N2 and O2 are fine as those are unchanged. 
+  
+  ! CO2 -> CO + O  calculated
+  photodis(:,iPDCO2_CO_O)  = PhotoAbs_CO2 - sum(PhotoIon(:,iPICO2_CO2P:iPICO2_OP_CO),dim=2)
+
+  ! CO2 -> O2 + C   specified directly
+  photodis(:,iPDCO2_O2_C)  = PhotoDis_CO2_O2_C
+  
+  ! CO2 -> 2O + C   specified directly
+  photodis(:,iPDCO2_2O_C)  = PhotoDis_CO2_2O_C
+
+  ! CO -> C + O  specified directly
+  photodis(:,iPDCO_C_O) = PhotoDis_CO_C_O 
+    
+  ! N2 -> N + N   calculated
+  photodis(:,iPDN2_N4S_N2D)   = PhotoAbs_N2 - photoion(:,iPIN2_N2P)
+
+  ! O2 -> O + O   calculated
+  photodis(:,iPDO2_O_O)   = PhotoAbs_O2 - PhotoIon(:,iPIO2_O2P)
+
+! Make sure cross-sections aren't negative!
+where(photodis < 0.0) photodis = 0.0 
 
 end subroutine fill_photo
 
@@ -743,6 +776,7 @@ end subroutine init_isochem
 
 subroutine calc_eddy_diffusion_coefficient(iBlock)
 
+  use ModUserGITM
   use ModSizeGITM
   use ModGITM, only: pressure, NDensity
   use ModInputs, only: EddyDiffusionMethod,KEddyMax,KEddyMin
@@ -770,6 +804,8 @@ subroutine calc_eddy_diffusion_coefficient(iBlock)
       
 
       PEddyMax = 1.26e-04  ! Pascals (SI Units)
+!      PEddyMax = 5.7e-02  ! Pascals (SI Units)
+      
 
       do iLat = 1, nLats
          do iLon = 1, nLons
@@ -825,6 +861,8 @@ subroutine calc_eddy_diffusion_coefficient(iBlock)
       else
          KappaEddyDiffusion = KEddyMax
    endif
+userdata3d(1:nLons,1:nLats,:,1,1) = KappaEddyDiffusion(1:nlons,1:nlats,:,1)
+userdata1d(1:nLons,1:nLats,1:nAlts,1) = KappaEddyDiffusion(1:nlons,1:nlats,1:nAlts,1)
 
 end subroutine calc_eddy_diffusion_coefficient
 
@@ -9985,8 +10023,8 @@ subroutine interpolateField(nMagLons,nMagLats,nMagAlts,MagFieldLon,MagFieldLat,M
      enddo
 
      B0(:,:,:,iMag_,iBlock) = sqrt(B0(:,:,:,1,iBlock)**2+B0(:,:,:,2,iBlock)**2+B0(:,:,:,3,iBlock)**2)
-     userdata3D(:,:,:,3,iblock)=B0(:,:,:,iMag_,iBlock)
-     userdata3D(:,:,:,4,iblock)=FieldType(:,:,:,iBlock)
+!     userdata3D(:,:,:,3,iblock)=B0(:,:,:,iMag_,iBlock)
+!     userdata3D(:,:,:,4,iblock)=FieldType(:,:,:,iBlock)
 
   enddo
 

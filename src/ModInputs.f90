@@ -6,6 +6,8 @@ module ModInputs
 ! real, parameter :: PLONG = 4.0E-1 ! Pa  (also 4.0  ubar): 60 km (aphelion) (on)
 ! real, parameter :: RPTAU = 6.1 mbar (standard) (on)
 ! AltMinIono = 60.0 km !  revised for NOx chemsitry (170310: S. W. Bougher)
+! AltMinIono = 80.0 km !  carbon chemistry is slow below ~75km (D. Pawlowski)
+
 ! New Logicals for (ON) Secondary Ionization and (ON) EUVData FISM fluxes
 ! ------------------------------------------------------------------------------
 
@@ -63,6 +65,7 @@ module ModInputs
   integer :: iAltTest = -1
   integer :: iDebugLevel = 0
   logical :: UseBarriers = .false.
+  logical :: DoCheckForNans = .false.
   integer :: nSteps = 10
 
   real :: CFL = 0.25
@@ -99,7 +102,6 @@ module ModInputs
 
   logical :: UseTopography = .false.
 
-! real :: AltMinIono=80.0 ! in km
   real :: AltMinIono=60.0 ! in km
 
   real :: TempMax = 1000.0

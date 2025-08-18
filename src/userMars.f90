@@ -37,8 +37,7 @@ subroutine set_nVarsUser3d
 
   ! Make sure to include Lat, Lon, and Alt
 
-  nVarsUser3d = 6
-  !nVarsUser3d = 14
+  nVarsUser3d = 4
 
   if (nVarsUser3d-3 > nUserOutputs) &
        call stop_gitm("Too many user outputs!! Increase nUserOutputs!!")
@@ -73,10 +72,9 @@ subroutine set_nVarsUser1d
 
   ! Make sure to include Lat, Lon, and Alt
 
-! nVarsUser1d = 4
-  nVarsUser1d = 14
+  nVarsUser1d = 4
 
-  if (nVarsUser2d-3 > nUserOutputs) &
+  if (nVarsUser1d-3 > nUserOutputs) &
        call stop_gitm("Too many user outputs!! Increase nUserOutputs!!")
 
 end subroutine set_nVarsUser1d
@@ -114,8 +112,8 @@ subroutine output_header_user(cType, iOutputUnit_)
      write(iOutputUnit_,"(I7,A1,a)")  1, " ", "Longitude"
      write(iOutputUnit_,"(I7,A1,a)")  2, " ", "Latitude"
      write(iOutputUnit_,"(I7,A1,a)")  3, " ", "Altitude"
-     write(iOutputUnit_,"(I7,A1,a)")  4, " ", "ImpactIonizationRate"
-     write(iOutputUnit_,"(I7,A1,a)")  5, " ", "CO2ImpactIonizationFrequency"
+     write(iOutputUnit_,"(I7,A1,a)")  4, " ", "Eddy Diffusion Coefficient"
+     !     write(iOutputUnit_,"(I7,A1,a)")  5, " ", "CO2ImpactIonizationFrequency"
      ! write(iOutputUnit_,"(I7,A1,a)")  6, " ", "EUVHeatingRate"
      ! write(iOutputUnit_,"(I7,A1,a)")  7, " ", "QNIRTotalRate"
      ! write(iOutputUnit_,"(I7,A1,a)")  8, " ", "QNIRLTERate"
@@ -178,17 +176,17 @@ subroutine output_header_user(cType, iOutputUnit_)
      write(iOutputUnit_,"(I7,A1,a)")  1, " ", "Longitude"
      write(iOutputUnit_,"(I7,A1,a)")  2, " ", "Latitude"
      write(iOutputUnit_,"(I7,A1,a)")  3, " ", "Altitude"
-     write(iOutputUnit_,"(I7,A1,a)")  4, " ", "NLTECoolingRate"
-     write(iOutputUnit_,"(I7,A1,a)")  5, " ", "NetLowAtmosRadRate"
-     write(iOutputUnit_,"(I7,A1,a)")  6, " ", "EUVHeatingRate"
-     write(iOutputUnit_,"(I7,A1,a)")  7, " ", "QNIRTotalRate"
-     write(iOutputUnit_,"(I7,A1,a)")  8, " ", "QNIRLTERate"
-     write(iOutputUnit_,"(I7,A1,a)")  9, " ", "CIRLTERate"
-     write(iOutputUnit_,"(I7,A1,a)") 10, " ", "Conduction"
-     write(iOutputUnit_,"(I7,A1,a)") 11, " ", "Pressure(ubar)"
-     write(iOutputUnit_,"(I7,A1,a)") 12, " ", "Temperature"
-     write(iOutputUnit_,"(I7,A1,a)") 13, " ", "VMRO1"
-     write(iOutputUnit_,"(I7,A1,a)") 14, " ", "VMRCO2"
+     write(iOutputUnit_,"(I7,A1,a)")  4, " ", "Eddy Diffusion Coefficient"
+     !     write(iOutputUnit_,"(I7,A1,a)")  5, " ", "CO2+hv->2O+C"
+     !     write(iOutputUnit_,"(I7,A1,a)")  6, " ", "CO+hv->C+O"
+     !write(iOutputUnit_,"(I7,A1,a)")  7, " ", "QNIRTotalRate"
+     !write(iOutputUnit_,"(I7,A1,a)")  8, " ", "QNIRLTERate"
+     !write(iOutputUnit_,"(I7,A1,a)")  9, " ", "CIRLTERate"
+     !write(iOutputUnit_,"(I7,A1,a)") 10, " ", "Conduction"
+     !write(iOutputUnit_,"(I7,A1,a)") 11, " ", "Pressure(ubar)"
+     !write(iOutputUnit_,"(I7,A1,a)") 12, " ", "Temperature"
+     !write(iOutputUnit_,"(I7,A1,a)") 13, " ", "VMRO1"
+     !write(iOutputUnit_,"(I7,A1,a)") 14, " ", "VMRCO2"
 
   endif
 
@@ -218,9 +216,9 @@ subroutine output_3dUser(iBlock, iOutputUnit_)
                 Longitude(iLon,iBlock), &
                 Latitude(iLat,iBlock), &
                 Altitude_GB(iLon, iLat, iAlt, iBlock),&
-                UserData3D(iLon,iLat,iAlt,1,iBlock),&
-                UserData3D(iLon,iLat,iAlt,2,iBlock),&
-                UserData3D(iLon,iLat,iAlt,3,iBlock)
+                UserData3D(iLon,iLat,iAlt,1,iBlock)
+           !                UserData3D(iLon,iLat,iAlt,2,iBlock),&
+           !                UserData3D(iLon,iLat,iAlt,3,iBlock)
 
         enddo
      enddo
@@ -267,22 +265,23 @@ subroutine output_1dUser(iBlock, iOutputUnit_)
   implicit none
 
   integer, intent(in) :: iBlock, iOutputUnit_
-  integer :: iAlt, iLat, iLon
+  integer :: iAlt, iLat, iLon,iiAlt
 
   iLat = 1
   iLon = 1
-!  Plotter outputs
+  !  Plotter outputs
   do iAlt=-1,nAlts+2
-           write(iOutputUnit_)       &
-                Longitude(iLon,iBlock), &
-                Latitude(iLat,iBlock), &
-                Altitude_GB(iLon, iLat, iAlt, iBlock),&
-                UserData1D(iLon,iLat,iAlt,4), &
-                UserData1D(iLon,iLat,iAlt,8), &
-                UserData1D(iLon,iLat,iAlt,9), &
-                UserData1D(iLon,iLat,iAlt,10), &
-                UserData1D(iLon,iLat,iAlt,11)
-!               UserData1D(iLon,iLat,iAlt,1:nVarsUser1d-3)
+     iiAlt = max(min(iAlt,nAlts),1)
+     write(iOutputUnit_)       &
+          Longitude(iLon,iBlock), &
+          Latitude(iLat,iBlock), &
+          Altitude_GB(iLon, iLat, iAlt, iBlock),&
+          UserData1D(iLon,iLat,iiAlt,1)
+     !                UserData1D(iLon,iLat,iAlt,2), &
+     !                UserData1D(iLon,iLat,iAlt,3)
+     !                UserData1D(iLon,iLat,iAlt,10), &
+     !                UserData1D(iLon,iLat,iAlt,11)
+     !               UserData1D(iLon,iLat,iAlt,1:nVarsUser1d-3)
   enddo
 
 end subroutine output_1dUser

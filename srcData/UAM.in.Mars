@@ -9,10 +9,10 @@ F
 
 # -----------------------------------------------------------------------
 #GRID
-1        lons
-1	        lats
-40		minimum latitude to model
-40		maximum latitude to model
+8	        lons
+4	        lats
+-90		minimum latitude to model
+90		maximum latitude to model
 180.0		longitude to model (ignored in everything but 1D)
 
 #ALTITUDE
@@ -31,7 +31,7 @@ minmax      EddyDiffusionMethod (constant, minmax, or yoshida)
 # -------------------------------------------------------------------------
 
 #TIMESTART
-2010		year
+2015		year
 01		month
 01		day
 00		hour
@@ -39,7 +39,7 @@ minmax      EddyDiffusionMethod (constant, minmax, or yoshida)
 00		second
 
 #TIMEEND
-2010		year
+2015		year
 02		month
 01		day
 00		hour
@@ -97,7 +97,7 @@ mhdfilelist    file that includes the names of the mhd output files
 T      Turn on vertical velocity damping term in vertical_solver
 
 #GRAVITYWAVE
-F       UseGravityWave
+T       UseGravityWave
 
 #DUST
 0.5
@@ -140,15 +140,6 @@ F		 UseUpdatedTurbulentConduction
 
 #WAVEDRAG
 F           UseStressHeating
-
-#VERTICALSOURCES
-T           UseEddyInSolver
-T           UseFrictionInSolver
-25.0
-
-#EDDYVELOCITY
-F           UseBoquehoAndBlelly
-F           UseEddyCorrection
 
 #TIDES
 F

@@ -19,16 +19,16 @@ subroutine euv_ionization_heat(iBlock)
 
   integer, intent(in) :: iBlock
 
-  integer :: iAlt, iWave, iSpecies, iIon, iError, iLon, iLat
+  integer :: iAlt, iWave, iSpecies, iIon, iError, iLon, iLat, iPathway
   ! integer :: iAlt, iWave, iSpecies, iIon, iError, iLon,iLat
   real, dimension(nLons,nLats) :: Tau, Intensity
   real, dimension(nLons,nLats,nalts) :: secondaryRate
 
   logical :: IsFirstTime(nBlocksMax) = .true.
 
-  real :: photoion(Num_WaveLengths_High, nIons-1)
+  real :: photoion(Num_WaveLengths_High, nPhotoIonPathways)
   real :: photoabs(Num_WaveLengths_High, nSpeciesTotal)
-  real :: photodis(Num_WaveLengths_High, nSpeciesTotal)
+  real :: photodis(Num_WaveLengths_High, nPhotoPathways)
 
   real :: NeutralDensity(nLons, nLats, nSpecies)
   real :: ChapmanLittle(nLons, nLats, nSpecies)
@@ -59,9 +59,9 @@ subroutine euv_ionization_heat(iBlock)
   EuvDissRateS(:,:,:,:,iBlock) = 0.0
   SIR(:,:,:,:,iBlock) = 0.0
 
-  photoion(1:Num_Wavelengths_High,1:nIons-1) = 0.0
+  photoion(1:Num_Wavelengths_High,1:nPhotoIonPathways) = 0.0
   photoabs(1:Num_Wavelengths_High,1:nSpeciesTotal)= 0.0
-  photodis(1:Num_Wavelengths_High,1:nSpeciesTotal) = 0.0
+  photodis(1:Num_Wavelengths_High,1:nPhotoPathways) = 0.0
 
   ! This transfers the specific photo absorption and ionization cross
   ! sections into general variables, so we can use loops...
@@ -84,28 +84,28 @@ subroutine euv_ionization_heat(iBlock)
 
         Intensity = Flux_of_EUV(iWave) * exp(-1.0*Tau)
 
-        !  SIR code
-        do iIon = 1, nIons-1
-           if (iIon .eq. iCO2P_) then
+        ! There are multiple photodissociation and photoionization pathways for 
+        ! certain species, so they are numbered separately from the source species 
 
-              if (UseWValue) then
+        do iPathway = 1, nPhotoIonPathways
+           if (UseWValue) then 
+	      if (iPathway == iPICO2_CO2P) then
+
                  SIR(:,:,iAlt,iWave,iBlock) = Intensity * photoelectronfactor(iwave) * &
-                      photoion(iWave,iIon)
-                 !             write(*,*)intensity,photoelectronfactor(iwave),photoion(iwave,iion),iwave
+                      photoion(iWave,iPathway)
               endif
            endif
 
-           EuvIonRateS(1:nLons,1:nLats,iAlt,iIon,iBlock) = &
-                EuvIonRateS(1:nLons,1:nLats,iAlt,iIon,iBlock) + &
-                Intensity*PhotoIon(iWave,iIon)
+           EuvIonRateS(1:nLons,1:nLats,iAlt,iPathway,iBlock) = &
+                EuvIonRateS(1:nLons,1:nLats,iAlt,iPathway,iBlock) + &
+                Intensity*PhotoIon(iWave,iPathway)
         enddo
 
-        do iSpecies = 1, nSpeciesTotal
-           EuvDissRateS(:,:,iAlt,iSpecies,iBlock) = &
-                EuvDissRateS(:,:,iAlt,iSpecies,iBlock) + &
-                Intensity*PhotoDis(iWave,iSpecies)
+        do iPathway = 1, nPhotoPathways
+           EuvDissRateS(:,:,iAlt,iPathway,iBlock) = &
+                EuvDissRateS(:,:,iAlt,iPathway,iBlock) + &
+                Intensity*PhotoDis(iWave,iPathway)
         enddo
-
         do iSpecies = 1, nSpecies
            EHeat = EHeat + &
                 Intensity*PhotonEnergy(iWave)* &
@@ -125,20 +125,18 @@ subroutine euv_ionization_heat(iBlock)
            endif
         enddo
      enddo
-
   enddo
-
   !\
   ! Add Secondary Ionization if specified to use it.
   !/
   !  if (UseSecondaryIonization) then
-  !      EuvIonRateS(1:nLons,1:nLats,1:nAlts,iCO2_,iBlock) = &
-  !      EuvIonRateS(1:nLons,1:nLats,1:nAlts,iCO2_,iBlock) &
+  !      EuvIonRateS(1:nLons,1:nLats,1:nAlts,iPICO2_CO2P,iBlock) = &
+  !      EuvIonRateS(1:nLons,1:nLats,1:nAlts,iPICO2_CO2P,iBlock) &
   !      + SecondaryRate(:,:,:)/NDensityS(:,:,1:nAlts,iCO2_,iBlock)
   !  else
   if (UseWValue) then
-     EuvIonRates(1:nLons,1:nLats,1:nAlts,iCO2_,iBlock) = &
-          EuvIonRates(1:nLons,1:nLats,1:nAlts,iCO2_,iBlock) &
+     EuvIonRates(1:nLons,1:nLats,1:nAlts,iPICO2_CO2P,iBlock) = &
+          EuvIonRates(1:nLons,1:nLats,1:nAlts,iPICO2_CO2P,iBlock) &
           + sum(SIR(1:nLons,1:nLats,1:nAlts,:,iBlock),DIM=4)
   endif
 
@@ -157,9 +155,6 @@ subroutine euv_ionization_heat(iBlock)
         EuvTotal(:,:,iAlt,iBlock) = EuvHeating(:,:,iAlt,iBlock) * &
              TempUnit(1:nLons,1:nLats,iAlt) / &
              HeatingEfficiency_CB(:,:,iAlt,iBlock)
-
-
-
 
      enddo
   else
@@ -421,10 +416,8 @@ subroutine calc_scaled_euv
      Flux_of_EUV(NN) = 0.5*(EUV_Flux(N)+Solar_Flux(NN))
   enddo
 
-
+!!! This assumes F107 is measured at 1AU
   Flux_of_EUV = Flux_of_EUV/(SunOrbitEccentricity**2)
-  !   write(*,*) SunOrbitEccentricity
-  !   stop
 
   do N=1,Num_WaveLengths_High
      wvavg(N)=(WAVEL(N)+WAVES(N))/2.
@@ -581,6 +574,10 @@ subroutine init_euv
   PhotoAbs_CO2      = PhotoAbs_CO2        / 10000.0
   PhotoAbs_CO      = PhotoAbs_CO        / 10000.0
 
+  PhotoDis_CO2_O2_C = PhotoDis_CO2_O2_C / 10000.0
+  PhotoDis_CO2_2O_C = PhotoDis_CO2_2O_C / 10000.0
+  PhotoDis_CO_C_O   = PhotoDis_CO_C_O / 10000.0
+
   PhotoIon_O2      = PhotoIon_O2        / 10000.0
   PhotoIon_CO2      = PhotoIon_CO2        / 10000.0
   PhotoIon_CO      = PhotoIon_CO        / 10000.0
@@ -590,6 +587,11 @@ subroutine init_euv
   PhotoIon_OPlus2D = PhotoIon_OPlus2D   / 10000.0
   PhotoIon_OPlus2P = PhotoIon_OPlus2P   / 10000.0
 
+  PhotoIon_CO2_COP_O   = PhotoIon_CO2_COP_O     / 10000.0
+  PhotoIon_CO2_COP_OP  = PhotoIon_CO2_COP_OP    / 10000.0  
+  PhotoIon_CO2_CP_O2   = PhotoIon_CO2_CP_O2     / 10000.0
+  PhotoIon_CO2_CP_OP_O = PhotoIon_CO2_CP_OP_O   / 10000.0
+  PhotoIon_CO_C_OP     = PhotoIon_CO_C_OP       / 10000.0
 
 
   !  do n = 1, nS2WaveLengths
