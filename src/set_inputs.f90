@@ -7,6 +7,7 @@ subroutine set_inputs
   use ModTime
   use GITM_planet
   use ModSatellites
+  use ModNumConst, ONLY: cDegToRad
 
   ! EUVData logicals  (December 2017):  S. Bougher and D. Pawlowski
   ! SecondaryIonization logicals  (Spring 2018):  S. Bougher and D. Pawlowski
@@ -728,8 +729,8 @@ subroutine set_inputs
 
            else
 
-              MagneticPoleRotation = MagneticPoleRotation * pi / 180.0
-              MagneticPoleTilt     = MagneticPoleTilt     * pi / 180.0
+              MagneticPoleRotation = MagneticPoleRotation * cDegToRad
+              MagneticPoleTilt     = MagneticPoleTilt     * cDegToRad
               xDipoleCenter = xDipoleCenter * 1000.0
               yDipoleCenter = yDipoleCenter * 1000.0
               zDipoleCenter = zDipoleCenter * 1000.0
@@ -776,7 +777,7 @@ subroutine set_inputs
                  write(*,*) "You can now model part of the globe in"
                  write(*,*) "longitude.  Include a LonEnd after the LonStart"
                  write(*,*) "variable in #GRID."
-                 LonEnd = LonStart
+                 LonEnd = 360.0
                  iError = 0
               endif
            endif
@@ -802,16 +803,12 @@ subroutine set_inputs
               IsDone = .true.
            else
 
-              if (LatStart <= -90.0 .and. LatEnd >= 90.0) then
-                 IsFullSphere = .true.
-              else
-                 IsFullSphere = .false.
-                 LatStart = LatStart * pi / 180.0
-                 LatEnd   = LatEnd * pi / 180.0
-              endif
+              IsFullSphere = LatStart <= -90.0 .and. LatEnd >= 90.0
 
-              LonStart = LonStart * pi / 180.0
-              LonEnd   = LonEnd * pi / 180.0
+              LatStart = LatStart*cDegToRad
+              LatEnd   = LatEnd*cDegToRad
+              LonStart = LonStart*cDegToRad
+              LonEnd   = LonEnd*cDegToRad
 
            endif
 
