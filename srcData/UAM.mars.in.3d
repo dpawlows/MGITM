@@ -7,29 +7,29 @@ F		usebarriers - forces the code to stop and wait more often
 #RESTART
 F
 
-# -----------------------------------------------------------------------
+-----------------------------------------------------------------------
 #GRID
 2	        lons
 2	        lats
--90		minimum latitude to model
-90		maximum latitude to model
-0.0		longitude to model (ignored in everything but 1D)
-0.0
+-90		latstart minimum latitude to model
+90		latend maximum latitude to model
+0.0		lonstart
+360.0		lonend
 
 #ALTITUDE
 0.0		minimum altitude to use
 300.0		maximum altitude to use (ignored unless the following is F)
 F		use stretched grid
 
-# -------------------------------------------------------------------------
+-------------------------------------------------------------------------
 #EDDYDIFFUSION
-minmax      EddyDiffusionMethod (constant, minmax, or yoshida)
-1500	    kEddyMax
-500		    kEddyMin (Ignored for all methods except minmax)
+minmax		EddyDiffusionMethod (constant, minmax, or yoshida)
+1500	    	kEddyMax
+500		kEddyMin (Ignored for all methods except minmax)
 
 #THERMALDIFFUSION
 2.22e-4		Thermal conductivity (code use kappa = number * T**0.75)
-# -------------------------------------------------------------------------
+-------------------------------------------------------------------------
 
 #TIMESTART
 2017		year
@@ -66,7 +66,7 @@ mc		only limiter available
 #LOGFILE
 1.0		dt for output to a log file
 
-# ----------------------------------------------------------------------
+----------------------------------------------------------------------
 #STATISTICALMODELSONLY
 F		if you want to run with msis and iri only (i.e. not GITM)
 1800.0		time step to take if you run with msis and iri
@@ -95,7 +95,7 @@ F		Use apex magnetic coordinate system
 none      northern hemisphere amie file
 none      southern hemisphere amie file
 
-# ----------------------------------------------------------------------
+----------------------------------------------------------------------
 #DAMPING
 T      Turn on vertical velocity damping term in vertical_solver
 
