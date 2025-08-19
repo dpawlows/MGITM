@@ -230,6 +230,7 @@ contains
 
     use ModGitm, ONLY: iProc
     use GITM_planet, ONLY: rBody
+    use GITM_location, ONLY: find_lonlat
     use ModCoordTransform, ONLY: xyz_to_lonlat
 
     integer, intent(in) :: nDimIn                ! dimension of positions
@@ -240,32 +241,25 @@ contains
     ! Find array of points and return processor indexes owning them
 
     integer:: iPoint
-    integer :: iLat, iLon, iBlock
-    real :: rLon, rLat
     real :: Lon, Lat
 
-    integer:: nFound
     logical:: DoTest, DoTestMe
     character(len=*), parameter:: NameSub = 'UA_find_points'
     !--------------------------------------------------------------------------
     call CON_set_do_test(NameSub, DoTest, DoTestMe)
-
-    if(DoTestMe)nFound = 0
+    if(DoTest)write(*,*) NameSub,' iProc, nPoint=', iProc, nPoint
+    
     do iPoint = 1, nPoint
        call xyz_to_lonlat(Xyz_DI(:,iPoint), Lon, Lat)
 
-       ! The iLon, iLat, rLon, rLat arguments should be optional
-       call LocationIndex(Lon, Lat, iBlock, iLon, iLat, rLon, rLat)
+       ! Find processor obtaining Lon, Lat
+       call find_lonlat(Lon, Lat, iProc_I(iPoint))
 
-       if(iBlock > 0)then
-          iProc_I(iPoint) = iProc
-       else
-          iProc_I(iPoint) = -1
+       if(iProc_I(iPoint) < 0)then
+          write(*,*) NameSub,' Xyz, Lon, Lat=', Xyz_DI(:,iPoint), Lon, Lat
+          call CON_stop(NameSub//': point not found')
        end if
-
-       if(DoTestMe .and. iProc_I(iPoint) >= 0) nFound = nFound + 1
     end do
-    if(DoTestMe) write(*,*) NameSub, ' nFound=', nFound
 
   end subroutine UA_find_points
   !============================================================================
@@ -296,13 +290,14 @@ contains
     ! Interpolate Data_VI from UA at the list of positions Xyz_DI
     ! required by GM
 
-    use ModInputs, ONLY: AltMin, AltMax
-    use ModGITM,  ONLY: iProc, Temperature, NDensityS
+    use ModGITM, ONLY: iProc, Temperature, NDensityS, Altitude_GB
     use ModSizeGitm, ONLY: nLons, nLats, nAlts
     use ModEUV, ONLY: EuvIonRateS
     use ModInterpolate, ONLY: bilinear, trilinear
     use ModCoordTransform, ONLY: xyz_to_rlonlat
-    use GITM_planet, ONLY: rBody, iCO2_, iO_, iCO2P_, iOP_
+    use GITM_location, ONLY: LocationIndex, LocationProcIndex
+    use GITM_planet, ONLY: rBody, Gravitational_Constant, &
+         iCO2_, iO_, iCO2P_, iOP_
     use ModConst, ONLY: cBoltzmann, cProtonMass
 
     logical,          intent(in) :: IsNew   ! true for new point array
@@ -325,7 +320,7 @@ contains
     real:: Alt, Lon, Lat
     real:: rLonLat_D(3)
 
-    real :: grav, dH, Hscale, HCO2, HO, AltMaxDomain, Tnu
+    real :: Grav, dH, HscaleCO2, HscaleO, AltMaxDomain, Tnu
     real, parameter:: NuMassCo2 = 44, NuMassO = 16
     real, parameter:: Tiny = 1e-12
 
@@ -335,13 +330,17 @@ contains
     !--------------------------------------------------------------------------
     call CON_set_do_test(NameSub, DoTest, DoTestMe)
 
-    AltMaxDomain = AltMin + (nAlts-0.5)*(AltMax-AltMin)/nAlts
-    ! grav=3.72/r_GB(i,j,k,iBlock)/r_GB(i,j,k,iBlock)
-    grav = 3.72/(1 + AltMaxDomain/3396.0)/(1 + AltMaxDomain/3396.0)
-
+    ! Altitude of the last grid cell (assume that iBlock=1 exists).
+    AltMaxDomain = Altitude_GB(1,1,nAlts,1)
+    ! Grav is the gravitational acceleration at the top of the domain
+    ! used to calculate scale height.
+    ! Gravitational_Constant is the acceleration at the surface
+    Grav = Gravitational_Constant/(1 + AltMaxDomain/rBody)**2
 
     if(IsNew)then
-       if(DoTest)write(*,*) NameSub,': iProc, nPoint=', iProc, nPoint
+       if(DoTest) write(*,*) NameSub,': iProc, nPoint=', iProc, nPoint
+       if(DoTestMe)write(*,*) NameSub,': AltMaxDomain, Grav=', &
+            AltMaxDomain, Grav
 
        if(allocated(iBlockCell_DI)) deallocate(iBlockCell_DI, Dist_DI)
        allocate(iBlockCell_DI(0:nDimIn,nPoint), Dist_DI(nDimIn,nPoint))
@@ -354,6 +353,11 @@ contains
 
           if(Alt > AltMaxDomain)then
              call LocationIndex(Lon, Lat, iBlock, iLon, iLat, rLon, rLat)
+             if(iBlock < 1)then
+                write(*,*) NameSub,' ERROR: Xyz_D, iProcFound=', &
+                     Xyz_DI(:,iPoint)
+                call CON_stop(NameSub//' could not find 2D position')
+             end if
 
              ! Store block and cell indexes and distances for extrapolation
              iBlockCell_DI(0,iPoint)      = iBlock
@@ -366,7 +370,7 @@ contains
              if(iProcFound /= iProc)then
                 write(*,*) NameSub,' ERROR: Xyz_D, iProcFound=', &
                      Xyz_DI(:,iPoint), iProcFound
-                call CON_stop(NameSub//' could not find position on this proc')
+                call CON_stop(NameSub//' could not find 3D position')
              end if
 
              ! Store block and cell indexes and distances for interpolation
@@ -395,27 +399,27 @@ contains
                -1, nLons+2, -1, nLats+2, &
                DoExtrapolate=.false., iCell_D=iCell_D(:2), Dist_D=Dist_D(:2))
 
+          ! Scale heights for CO2 and O in m
+          HscaleCO2 = cBoltzmann*Tnu/(Grav*cProtonMass*NuMassCo2)
+          HscaleO   = cBoltzmann*Tnu/(Grav*cProtonMass*NuMassO)
+
           Data_VI(1,iPoint) = Tnu
 
+          ! Distance from top of domain in m
           dH = Alt - AltMaxDomain
-
-          Hscale = cBoltzmann*Tnu/grav/cProtonMass ! in m unit
-
-          HCO2 = Hscale/NuMassCo2/1e3
-          HO   = Hscale/NuMassO/1e3
 
           ! N_CO2
           Data_VI(2,iPoint) = &
                bilinear(NDensityS(:,:,nAlts,iCO2_,iBlock), &
                -1, nLons+2, -1, nLats+2, &
                DoExtrapolate=.false., iCell_D=iCell_D(:2), Dist_D=Dist_D(:2)) &
-               *exp(-dH/HCO2)
+               *exp(-dH/HscaleCO2)
 
           ! N_O
           Data_VI(3,iPoint) = bilinear(NDensityS(:,:,nAlts,iO_,iBlock),&
                -1, nLons+2, -1, nLats+2, &
                DoExtrapolate=.false., iCell_D=iCell_D(:2), Dist_D=Dist_D(:2)) &
-               *exp(-dH/HO)
+               *exp(-dH/HscaleO)
 
           ! EUVIonRate_CO2->CO2+
           Data_VI(4,iPoint) = max(Tiny, &
