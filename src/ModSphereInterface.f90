@@ -29,7 +29,7 @@ module ModSphereInterface
   type (AB_XFER) :: uam_xfer
 
   ! Sphere description
-  !! if there is comm. across poles
+  !! if there is communication across poles
   logical :: n_pole_connect
   logical :: s_pole_connect
 
@@ -48,18 +48,14 @@ module ModSphereInterface
   integer :: cells_alt
 
   !! number of blocks in each direction
-  integer            :: blks_long, &
-       blks_lat
+  integer :: blks_long, blks_lat
 
-  real                :: radius, &
-       thickness
-  real                :: theta_min, &
-       theta_max, &
-       theta_range
+  real :: radius, thickness
+  real :: theta_min, theta_max, theta_range
 
-  real, dimension(-1:nLons+2,-1:nLats+2,nAlts) :: x,y,z,theta,phi
+  real, dimension(-1:nLons+2,-1:nLats+2,nAlts) :: x, y, z, theta, phi
 
-  real,dimension(1:3) :: center
+  real :: center(3)
   integer, parameter :: gcn=2
 
   !! cells per block (cpb)
@@ -72,7 +68,6 @@ module ModSphereInterface
      private
      type (AB_ITER) :: iter
   end type UAM_ITER
-
 
 contains
 
@@ -114,14 +109,14 @@ contains
     integer, intent(in) :: icells_long, icells_lat, icells_alt
     integer, intent(in) :: iblks_long, iblks_lat
     real, intent(in)    :: imin_lat_ang, imax_lat_ang
-    real, intent(in)    :: icx,icy,icz
+    real, intent(in)    :: icx, icy, icz
     real, intent(in)    :: iradius, ithickness
     logical, intent(in) :: inorth_on, isouth_on
     logical, optional, intent(out) :: ok
     type (AB_ITER) :: iter
-    integer :: index,lat,long,s,si,t,i,j,a
+    integer :: index, lat, long, s, si, t, i, j, a
     logical :: done, tmp_ok
-    real :: lgp,th,ph,alt,lout
+    real :: lgp, th, ph, alt, lout
     integer :: ierror
 
     ! intialize error returns
@@ -162,7 +157,7 @@ contains
 
     !! can we fit within the blocks
     cpb_long=cells_long  ! /blks_long
-    if (cpb_long .gt. nLons) then
+    if (cpb_long > nLons) then
        if (present(ok)) ok=.false.
        call AB_ERROR_set("UAM_module_setup", &
             "too many cells per block")
@@ -170,7 +165,7 @@ contains
     endif
 
     cpb_lat=cells_lat  ! /blks_lat
-    if (cpb_lat .gt. nLats) then
+    if (cpb_lat > nLats) then
        if (present(ok)) ok=.false.
        call AB_ERROR_set("UAM_module_setup", &
             "too many cells per block")
@@ -178,7 +173,7 @@ contains
     endif
 
     cpb_alt=cells_alt
-    if (cpb_alt .gt. nAlts) then
+    if (cpb_alt > nAlts) then
        if (present(ok)) ok=.false.
        call AB_ERROR_set("UAM_module_setup", &
             "too many cells per block")
@@ -195,7 +190,7 @@ contains
     lat_gc_width=gcn*lat_cell_width
 
     ! setup AB module
-    call AB_module_setup(par_context,tmp_ok)
+    call AB_module_setup(par_context, tmp_ok)
     if (.not. tmp_ok) then
        if (present(ok)) ok=.false.
        return
@@ -209,7 +204,7 @@ contains
     endif
 
     ! allocate AB sphere
-    call AB_SPH_create(uam_sph,uam_grp,cpb_long,cpb_lat,cpb_alt,gcn, &
+    call AB_SPH_create(uam_sph, uam_grp, cpb_long, cpb_lat, cpb_alt, gcn, &
          blks_long, blks_lat, n_pole_connect, s_pole_connect, &
          radius, thickness, center, &
          theta_min, theta_max, iStartBLK, tmp_ok)
@@ -218,24 +213,21 @@ contains
        return
     endif
 
-
     ! Initialize stuff for sphere
-    call AB_ITER_create(iter,uam_grp)
-    call AB_ITER_reset(iter,index,done)
+    call AB_ITER_create(iter, uam_grp)
+    call AB_ITER_reset(iter, index, done)
     do while (.not. done)
 
        ! setup coordinates
-       call AB_SPH_get_xyztp(uam_sph,index,lat_distr, &
-            x(:,:,:), y(:,:,:), z(:,:,:), &
-            theta(:,:,:), phi(:,:,:))
+       call AB_SPH_get_xyztp(uam_sph, index, lat_distr, &
+            x, y, z, theta, phi)
 
        Latitude (:,index) = theta(1,:,1)
        Longitude(:,index) = phi(:,1,1)
 
-       call AB_ITER_next(iter,index,done)
+       call AB_ITER_next(iter, index, done)
 
     enddo
-
 
   end subroutine UAM_module_setup
 
@@ -679,22 +671,19 @@ contains
   ! in the range [0,1] and y, the output value, should also fall
   ! within this range. Setting this function to y=x will
   ! distribute the grid lines evenly among the latitude range, less
-  ! linear distributions can be achived with other functions.
+  ! linear distributions can be achieved with other functions.
   ! 0 is the bottom of both the latitude and grid value ranges, similarly
   ! 1 is the top of both.
 
-  subroutine lat_distr(x,y)
+  subroutine lat_distr(x, y)
 
     real, intent(in):: x
     real :: y, xnorm, xdist, lat
     real, parameter :: pi = 3.141592
 
-    call stretch_grid(x,y)
+    call stretch_grid(x, y)
 
   end subroutine lat_distr
-
-
-
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   !
@@ -784,9 +773,9 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   subroutine UAM_XFER_create(ok)
     logical, optional, intent(out) :: ok
+
     logical :: tmp_ok
     integer :: size(ab_num_nbrs)
-
 
     ! calculate amount being sent in each direction
     if (blks_long==1) then
@@ -796,7 +785,7 @@ contains
     endif
 
     ! create XFER structure
-    call AB_XFER_create(uam_xfer,uam_grp,size,0,tmp_ok)
+    call AB_XFER_create(uam_xfer, uam_grp, size, 0, tmp_ok)
     if (present(ok)) ok=tmp_ok
 
   end subroutine UAM_XFER_create
