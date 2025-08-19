@@ -10,6 +10,7 @@ SEARCH_EXTRA = -I${ABDIR} -I${IODIR} -I${EMPIRICALUADIR} -I${EMPIRICALIEDIR}
 -include Makefile.RULES
 
 MODULES = \
+	GITM_location.o\
 	ModSize.o\
 	ModTime.o\
 	ModConstants.o\
@@ -89,7 +90,6 @@ OBJECTS = \
 	write_output.o\
 	gradient.o\
 	tides.o\
-	get_location.o\
 	user.o
 
 OBJECTS_EXE = main.o ${OBJECTS} ${MODULES}
