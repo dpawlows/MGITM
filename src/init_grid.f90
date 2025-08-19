@@ -1,19 +1,23 @@
-
 subroutine init_grid
 
   use ModGITM
   use ModInputs
   use ModConstants
   use GITM_planet
+  ! use GITM_location, ONLY: find_lonlat
   use ModSphereInterface
   use ModTime
-  use ModEUV,     only: init_mod_euv
-  use ModSources, only: init_mod_sources
+  use ModEUV,     ONLY: init_mod_euv
+  use ModSources, ONLY: init_mod_sources
+
   implicit none
 
   type (UAM_ITER) :: r_iter
 
   integer :: iBlock
+  ! ! Testing find_lonlat
+  ! integer:: jBlock, jProc, iLon, iLat
+  ! real:: rLon, rLat
 
   logical :: IsOk, IsDone, DoTouchSouth, DoTouchNorth
 
@@ -63,12 +67,22 @@ subroutine init_grid
      endif
 
      call UAM_ITER_create(r_iter)
-     call UAM_ITER_reset(r_iter,iBlock,IsDone)
+     call UAM_ITER_reset(r_iter, iBlock, IsDone)
 
      nBlocks = 0
-     do while (.not. IsDone)
+     do
+        ! ! This is a test of the find_lonlat subroutine
+        ! call find_lonlat( &
+        !     Longitude(1,iBlock)*0.7+Longitude(2,iBlock)*0.3, &
+        !     Latitude(nLats-1,iBlock)*0.2+Latitude(nLats,iBlock)*0.8, &
+        !     jProc, jBlock, iLon, iLat, rLon, rLat)
+        ! write(*,'(a,6i4,2f6.1)') &
+        !     '!!! ijProc,ijBlock,iLon, iLat, rLon, rLat=', &
+        !     iProc, jProc, iBlock, jBlock, iLon, iLat, rLon, rLat
+
         nBlocks = nBlocks + 1
-        call UAM_ITER_next(r_iter,iBlock,IsDone)
+        call UAM_ITER_next(r_iter, iBlock, IsDone)
+        if(IsDone) EXIT
      enddo
 
   else
