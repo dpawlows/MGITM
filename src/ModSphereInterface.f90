@@ -266,7 +266,7 @@ contains
     call AB_1blk3_gc_add_size(nLons,nLats,nAlts,2,size)
 
     ! EuvIonRateS  if(CoupledToGM)...
-    call AB_1blk4_gc_add_size(nLons,nLats,nAlts,nIons,2,size)
+    call AB_1blk4_gc_add_size(nLons,nLats,nAlts,nPhotoIonPathways,2,size)
 
     ! Ion Species
     if (UseIonAdvection) &
@@ -305,7 +305,7 @@ contains
     call AB_1blk3_gc_pack(nLons,nLats,nAlts,2, &
          eTemperature(:,:,1:nAlts,index),dir,pole,p,out_array)
 
-    call AB_1blk4_gc_pack(nLons,nLats,nAlts,nIons,2, &
+    call AB_1blk4_gc_pack(nLons,nLats,nAlts,nPhotoIonPathways,2, &
          EuvIonRateS(:,:,1:nAlts,:,index),dir,pole,p,out_array)
 
     if (UseIonAdvection) &
@@ -342,7 +342,7 @@ contains
     call AB_1blk3_gc_unpack(nLons,nLats,nAlts,2, &
          eTemperature(:,:,1:nAlts,index),dir,p,in_array)
 
-    call AB_1blk4_gc_unpack(nLons,nLats,nAlts,nIons,2, &
+    call AB_1blk4_gc_unpack(nLons,nLats,nAlts,nPhotoIonPathways,2, &
          EuvIonRateS(:,:,1:nAlts,:,index),dir,p,in_array)
 
     if (UseIonAdvection) &
@@ -373,7 +373,7 @@ contains
     call AB_array3_gc_add_size(nLons,nLats,nAlts,2,size)
 
     ! EuvIonRateS
-    call AB_array4_gc_add_size(nLons,nLats,nAlts,nIons,2,size)
+    call AB_array4_gc_add_size(nLons,nLats,nAlts,nPhotoIonPathways,2,size)
 
     ! IDensityS
     if (UseIonAdvection) &
@@ -384,11 +384,11 @@ contains
   subroutine pack_vars_nblk(index,dir,pole,out_array)
     integer, intent(in) :: dir,index
     logical, intent(in) :: pole
-    real, dimension(:),intent(out) :: out_array
+    real,    intent(out):: out_array(:)
     integer :: p,i, iIon
     real :: tmpI(-1:nLons+2, -1:nLats+2, 1:nAlts, 1:nIonsAdvect)
     real :: tmpN(-1:nLons+2, -1:nLats+2, 1:nAlts, 1:nSpecies)
-    real :: tmpE(-1:nLons+2, -1:nLats+2, 1:nAlts, 1:nIons)
+    real :: tmpE(-1:nLons+2, -1:nLats+2, 1:nAlts, 1:nPhotoIonPathways)
 
     p=1 ! start packing at position 1 in out_array
 
@@ -416,7 +416,7 @@ contains
          eTemperature(:,:,1:nAlts,index),dir,pole,p,out_array)
 
     tmpE = EuvIonRateS(:,:,1:nAlts,:,index)
-    call AB_array4_gc_pack(nLons,nLats,nAlts,nIons,2, &
+    call AB_array4_gc_pack(nLons,nLats,nAlts,nPhotoIonPathways,2, &
          tmpE,dir,pole,p,out_array)
 
     if (UseIonAdvection) then
@@ -437,7 +437,7 @@ contains
     integer :: p,i, iIon
     real :: tmpI(-1:nLons+2, -1:nLats+2, 1:nAlts, 1:nIonsAdvect)
     real :: tmpN(-1:nLons+2, -1:nLats+2, 1:nAlts, 1:nSpecies)
-    real :: tmpE(-1:nLons+2, -1:nLats+2, 1:nAlts, 1:nIons)
+    real :: tmpE(-1:nLons+2, -1:nLats+2, 1:nAlts, 1:nPhotoIonPathways)
 
     p=1 ! start unpacking at position 1 in in_array
 
@@ -472,7 +472,7 @@ contains
          eTemperature(:,:,1:nAlts,index),dir,p,in_array)
 
     tmpE = EuvIonRateS(:,:,1:nAlts,:,index)
-    call AB_array4_gc_unpack(nLons,nLats,nAlts,nIons,2, &
+    call AB_array4_gc_unpack(nLons,nLats,nAlts,nPhotoIonPathways,2, &
          tmpE,dir,p,in_array)
     EuvIonRateS(:,:,1:nAlts,:,index) = tmpE
 
