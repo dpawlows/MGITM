@@ -81,12 +81,12 @@ subroutine fill_photo(photoion, photoabs, photodis)
   photoion(:,iPICO2_OP_CO)     = PhotoIon_CO2* &
        BranchingRatio_CO2_to_OPlus*sfco2p
 
-   ! These photodissociation reactions use cross-sections instead of branching ratios
-   photoion(:,iPICO2_COP_O)    = PhotoIon_CO2_COP_O  
-   photoion(:,iPICO2_COP_OP)   = PhotoIon_CO2_COP_OP 
-   photoion(:,iPICO2_CP_O2)    = PhotoIon_CO2_CP_O2 
-   photoion(:,iPICO2_CP_OP_O)  = PhotoIon_CO2_CP_OP_O 
-   photoion(:,iPICO_C_OP)      = PhotoIon_CO_C_OP 
+  ! These photodissociation reactions use cross-sections instead of branching ratios
+  photoion(:,iPICO2_COP_O)    = PhotoIon_CO2_COP_O  
+  photoion(:,iPICO2_COP_OP)   = PhotoIon_CO2_COP_OP 
+  photoion(:,iPICO2_CP_O2)    = PhotoIon_CO2_CP_O2 
+  photoion(:,iPICO2_CP_OP_O)  = PhotoIon_CO2_CP_OP_O 
+  photoion(:,iPICO_C_OP)      = PhotoIon_CO_C_OP 
 
 
   ! ---------------------------------------------------------------------
@@ -100,27 +100,27 @@ subroutine fill_photo(photoion, photoabs, photodis)
 
   ! In order to accomodate this, photodis and euvdissrates are indexed based on their products, not 
   ! the reactants. N2 and O2 are fine as those are unchanged. 
-  
+
   ! CO2 -> CO + O  calculated
   photodis(:,iPDCO2_CO_O)  = PhotoAbs_CO2 - sum(PhotoIon(:,iPICO2_CO2P:iPICO2_OP_CO),dim=2)
 
   ! CO2 -> O2 + C   specified directly
   photodis(:,iPDCO2_O2_C)  = PhotoDis_CO2_O2_C
-  
+
   ! CO2 -> 2O + C   specified directly
   photodis(:,iPDCO2_2O_C)  = PhotoDis_CO2_2O_C
 
   ! CO -> C + O  specified directly
   photodis(:,iPDCO_C_O) = PhotoDis_CO_C_O 
-    
+
   ! N2 -> N + N   calculated
   photodis(:,iPDN2_N4S_N2D)   = PhotoAbs_N2 - photoion(:,iPIN2_N2P)
 
   ! O2 -> O + O   calculated
   photodis(:,iPDO2_O_O)   = PhotoAbs_O2 - PhotoIon(:,iPIO2_O2P)
 
-! Make sure cross-sections aren't negative!
-where(photodis < 0.0) photodis = 0.0 
+  ! Make sure cross-sections aren't negative!
+  where(photodis < 0.0) photodis = 0.0 
 
 end subroutine fill_photo
 
@@ -793,82 +793,81 @@ subroutine calc_eddy_diffusion_coefficient(iBlock)
 
   KappaEddyDiffusion(:,:,:,iBlock) = 0.0
 
-   if (EddyDiffusionMethod == 'yoshida') then
-      ! Default max KEddy is 1500
-      KappaEddyDiffusion(:,:,:,iBlock) = &
-         8.0e13*(1e-4) / sqrt(NDensity(:,:,:,iBlock))
-   
-      KappaEddyDiffusion(:,:,:,iBlock) = min( KEddyMax, KappaEddyDiffusion(:,:,:,iBlock))
+  if (EddyDiffusionMethod == 'yoshida') then
+     ! Default max KEddy is 1500
+     KappaEddyDiffusion(:,:,:,iBlock) = &
+          8.0e13*(1e-4) / sqrt(NDensity(:,:,:,iBlock))
 
-   else if (EddyDiffusionMethod == 'minmax') then 
-      
+     KappaEddyDiffusion(:,:,:,iBlock) = min( KEddyMax, KappaEddyDiffusion(:,:,:,iBlock))
 
-      PEddyMax = 1.26e-04  ! Pascals (SI Units)
-!      PEddyMax = 5.7e-02  ! Pascals (SI Units)
-      
-
-      do iLat = 1, nLats
-         do iLon = 1, nLons
-
-            First = 0
-
-            do iAlt = 1, nAlts
-
-               if (Pressure(iLon,iLat,iAlt,iBlock) > PEddyMax) then
-                  cycle
-               else
-                  if (First == 0) then
-                     NEddyMax(iLon,iLat) = NDensity(iLon,iLat,iAlt,iBlock)
-                     First = 1
-                  endif
-               endif
-
-            enddo
-
-         enddo
-      enddo
+  else if (EddyDiffusionMethod == 'minmax') then 
 
 
+     PEddyMax = 1.26e-04  ! Pascals (SI Units)
+     !      PEddyMax = 5.7e-02  ! Pascals (SI Units)
 
-      ! Now we have all the trigger densities as a function of Longitude and Latitude
 
-      ! Next, extend the profile downward as 1/sqrt(N) and put a lower bound of 100 m^2/s
+     do iLat = 1, nLats
+        do iLon = 1, nLons
 
-      do iAlt = -1, nAlts+2
-         do iLat = 1, nLats
-            do iLon = 1, nLons
+           First = 0
 
-               ! Krasnopolsky et al. [2005] Helium modeling
-               !              KappaEddyDiffusion(iLon,iLat,iAlt,iBlock) =  &
-               !                   (1.0e-04)*(1.8e+13)/sqrt( (1.0e-06)*NDensity(iLon,iLat,iAlt,iBlock))
+           do iAlt = 1, nAlts
 
-               KappaEddyDiffusion(iLon,iLat,iAlt,iBlock) =  &
-                     KEddyMax* sqrt( NEddyMax(iLon,iLat) / NDensity(iLon,iLat,iAlt,iBlock))
-               !
-               !! \
-               !! This gives an upper bound of KEddyMax
-               KappaEddyDiffusion(iLon,iLat,iAlt,iBlock) = &
-                     min(KEddyMax, KappaEddyDiffusion(iLon,iLat,iAlt,iBlock) )
+              if (Pressure(iLon,iLat,iAlt,iBlock) > PEddyMax) then
+                 cycle
+              else
+                 if (First == 0) then
+                    NEddyMax(iLon,iLat) = NDensity(iLon,iLat,iAlt,iBlock)
+                    First = 1
+                 endif
+              endif
 
-               KappaEddyDiffusion(iLon,iLat,iAlt,iBlock) = &
-                     max(KEddyMin, KappaEddyDiffusion(iLon,iLat,iAlt,iBlock) )
-             
-            enddo
-         enddo
+           enddo
 
-      enddo
+        enddo
+     enddo
 
-      else
-         KappaEddyDiffusion = KEddyMax
-   endif
-userdata3d(1:nLons,1:nLats,:,1,1) = KappaEddyDiffusion(1:nlons,1:nlats,:,1)
-userdata1d(1:nLons,1:nLats,1:nAlts,1) = KappaEddyDiffusion(1:nlons,1:nlats,1:nAlts,1)
+
+
+     ! Now we have all the trigger densities as a function of Longitude and Latitude
+
+     ! Next, extend the profile downward as 1/sqrt(N) and put a lower bound of 100 m^2/s
+
+     do iAlt = -1, nAlts+2
+        do iLat = 1, nLats
+           do iLon = 1, nLons
+
+              ! Krasnopolsky et al. [2005] Helium modeling
+              !              KappaEddyDiffusion(iLon,iLat,iAlt,iBlock) =  &
+              !                   (1.0e-04)*(1.8e+13)/sqrt( (1.0e-06)*NDensity(iLon,iLat,iAlt,iBlock))
+
+              KappaEddyDiffusion(iLon,iLat,iAlt,iBlock) =  &
+                   KEddyMax* sqrt( NEddyMax(iLon,iLat) / NDensity(iLon,iLat,iAlt,iBlock))
+              !
+              !! \
+              !! This gives an upper bound of KEddyMax
+              KappaEddyDiffusion(iLon,iLat,iAlt,iBlock) = &
+                   min(KEddyMax, KappaEddyDiffusion(iLon,iLat,iAlt,iBlock) )
+
+              KappaEddyDiffusion(iLon,iLat,iAlt,iBlock) = &
+                   max(KEddyMin, KappaEddyDiffusion(iLon,iLat,iAlt,iBlock) )
+
+           enddo
+        enddo
+
+     enddo
+
+  else
+     KappaEddyDiffusion = KEddyMax
+  endif
+  userdata3d(:,:,:,1,iBlock) = KappaEddyDiffusion(:,:,:,iBlock)
+  userdata1d(1,1,:,1) = KappaEddyDiffusion(1,1,:,iBlock)
 
 end subroutine calc_eddy_diffusion_coefficient
 
-
 ! ----------------------------------------------------------------------
-   
+
 subroutine calc_gw(iBlock)
 
   use ModInputs
@@ -10023,8 +10022,8 @@ subroutine interpolateField(nMagLons,nMagLats,nMagAlts,MagFieldLon,MagFieldLat,M
      enddo
 
      B0(:,:,:,iMag_,iBlock) = sqrt(B0(:,:,:,1,iBlock)**2+B0(:,:,:,2,iBlock)**2+B0(:,:,:,3,iBlock)**2)
-!     userdata3D(:,:,:,3,iblock)=B0(:,:,:,iMag_,iBlock)
-!     userdata3D(:,:,:,4,iblock)=FieldType(:,:,:,iBlock)
+     !     userdata3D(:,:,:,3,iblock)=B0(:,:,:,iMag_,iBlock)
+     !     userdata3D(:,:,:,4,iblock)=FieldType(:,:,:,iBlock)
 
   enddo
 
@@ -10449,7 +10448,6 @@ subroutine getMHDFiles(firstfile,secondfile,timereal1,timereal2)
      read(file2(pos+13:pos+14),*) sec
 
      call time_int_to_real([year,mon,day,hour,minu,sec,0],tr2)
-
 
      if (tr1 <= CurrentTime .and. tr2 > CurrentTime) then
         firstfile = file1
