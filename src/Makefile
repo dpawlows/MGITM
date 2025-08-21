@@ -29,7 +29,6 @@ MODULES = \
 	ModTides.o\
 	ModNewell.o\
 	ModMagTrace.o\
-	ModChemistry.o\
 	ModGITMImplicit.o\
 	ModUser.o
 
