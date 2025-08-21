@@ -74,7 +74,7 @@ subroutine calc_reaction_rates(iLon,iLat,iAlt,iBlock)
            rtNOP_e2 = 1.0e-07*rt300te*1.0e-6
            rtCO2P_e = 3.5e-07*rt300te*1.0e-6
            rtO2P_e = 1.95e-07*(300./te)**0.70*1.0e-6
-           rtCOP_e = 4.82e-6*te**-0.55*1.0e-6
+           rtCOP_e = 4.82e-6*te**(-0.55)*1.0e-6
 
 !\
 ! Reaction Rates with Neutral Temp, tn: cm^3/s -> m^3/s
@@ -88,7 +88,7 @@ subroutine calc_reaction_rates(iLon,iLat,iAlt,iBlock)
            rtN2D_O2 = 9.7e-12*exp(-185./tn)*1.0e-6
            rtN4S_O = 1.9e-17*rt300tn*(1.-0.57/tn**0.5)*1.e-06
            rtN4S_NO = 2.5e-10*rttn300*exp(-600./tn)*1.e-06
-           rtO2_C = 4.9e-11*(tn/298)**-0.32*1.e-06        !Geppert et al. 2000 or (3.03E-10 * T^-0.32)?
+           rtO2_C = 4.9e-11*(tn/298)**(-0.32)*1.e-06        !Geppert et al. 2000 or (3.03E-10 * T^-0.32)?
 !\
 ! Reaction Rates with Neutral Temp, tn: cm^6/s -> m^6/s
 ! real :: rtO_O_CO2, rtO_CO_CO2, rtO_O2_CO2, rtO_N4S_CO2  ! Ter-molecular
