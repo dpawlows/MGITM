@@ -861,8 +861,10 @@ subroutine calc_eddy_diffusion_coefficient(iBlock)
   else
      KappaEddyDiffusion = KEddyMax
   endif
-  userdata3d(:,:,:,1,iBlock) = KappaEddyDiffusion(:,:,:,iBlock)
-  userdata1d(1,1,:,1) = KappaEddyDiffusion(1,1,:,iBlock)
+  userdata3d(1:nLons,1:nLats,:,1,iBlock) = &
+       KappaEddyDiffusion(1:nLons,1:nLats,:,iBlock)
+  userdata1d(1,1,1:nAlts,1) = &
+       KappaEddyDiffusion(1,1,1:nAlts,1)
 
 end subroutine calc_eddy_diffusion_coefficient
 
