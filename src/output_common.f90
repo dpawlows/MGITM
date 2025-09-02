@@ -311,6 +311,7 @@ subroutine output(dir, iBlock, iOutputType)
 
      nGCs = 0
      nvars_to_write = nSpeciesTotal+nSpecies+nIons+nSpecies+5+nIons-2+1
+
      call output_1dall(iiLon, iiLat, iBlock, rLon, rLat, iOutputUnit_)
 
   case ('1DGLO')
@@ -1474,12 +1475,12 @@ subroutine output_1dall(iiLon, iiLat, iBlock, rLon, rLat, iUnit)
      enddo
 
      iOff = 8+nSpeciesTotal+nSpecies
-     do iIon = 1, nIons-1
+     do iIon = 1, nIons
         Tmp = IDensityS(0:nLons+1,0:nLats+1,iAlt,iIon,iBlock)
         Vars(iOff+iIon) = inter(Tmp,iiLon,iiLat,rlon,rlat)
      enddo
-
-     iOff = 8+nSpeciesTotal+nSpecies+nIons
+   
+     iOff = 8+nSpeciesTotal+nSpecies+nIons+1
      Tmp = eTemperature(0:nLons+1,0:nLats+1,iAlt,iBlock)
      Vars(iOff)   = eTemperature(1,1,ialt,iblock) !inter(Tmp,iiLon,iiLat,rlon,rlat)
 
