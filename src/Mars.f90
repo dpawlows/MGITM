@@ -49,7 +49,8 @@ subroutine fill_photo(photoion, photoabs, photodis)
   ! --------------------------------------------------------------------
   ! Secondary PE enhancement factors (simplified; check against Fox & Sung)
 
-  real,parameter ::  sfn2p = 1.40, sfop = 1.60, sfco2p = 1.50
+!  real,parameter ::  sfn2p = 1.40, sfop = 1.60, sfco2p = 1.50
+  real,parameter ::  sfn2p = 1.00, sfop = 1.00, sfco2p = 1.00
   ! --------------------------------------------------------------------
   photoabs           = 0.0
   photoion            = 0.0
@@ -10465,3 +10466,106 @@ subroutine getMHDFiles(firstfile,secondfile,timereal1,timereal2)
   endif
 
 end subroutine getMHDFiles
+
+subroutine getIonizationEfficiency(IonizationEfficiency)
+
+  use GITM_planet, only: nSpecies
+  use ModGITM, only: Pressure, nAlts
+
+  implicit None
+
+  integer, parameter :: n = 15
+  real, intent(out) :: IonizationEfficiency(nAlts,nSpecies)
+
+  ! Lookup grids
+  real :: iePressure(n), pressureDifference(n)
+  real :: ieEfficiency(n, nSpecies)
+
+  ! workspace
+  integer :: i, k, s
+  integer :: idx(nAlts)       ! nearest index in iePressure for each level
+  real,    parameter :: start = -8.0, step = 1.0/3.0  ! 0.333333...
+  logical :: lowEUV = .true.
+  real :: pval 
+
+  !-----------------------------
+  ! Build pressure grid
+  do i = 1, n
+     iePressure(i) = start + (i-1)*step
+  end do
+
+  !-----------------------------
+  ! Fill the 2-D efficiency table: shape (n,ns)
+  ! Provide your 3 columns (species) top-to-bottom for each column.
+  ! The source is in column-major order to match Fortran storage.
+
+  !!! Low EUV
+    ! Initialize table to zero, then fill known species columns
+  ieEfficiency = 0.0
+  lowEUV = .false. 
+  if (lowEUV) then  
+     ieEfficiency = reshape( (/ &
+          0.1960, 0.1897, 0.1816, 0.1691, 0.1668, 0.1727, 0.1823, 0.1830, 0.0,0.0,0.0,0.0,0.0,0.0,0.0,  & ! CO2
+          0.2025, 0.1957, 0.1870, 0.1737, 0.1718, 0.1820, 0.1870, 0.1871, 0.0,0.0,0.0,0.0,0.0,0.0,0.0,  & ! CO
+          0.2234, 0.2151, 0.2049, 0.1902, 0.1886, 0.1958, 0.2001, 0.2059, 0.2060, 0.0,0.0,0.0,0.0,0.0,0.0,  & ! O
+          0.2214, 0.2128, 0.2027, 0.1881, 0.1864, 0.1929, 0.1967, 0.2022, 0.2022, 0.0,0.0,0.0,0.0,0.0,0.0,  & ! N2
+          0.3067, 0.2964, 0.2830, 0.2628, 0.2611, 0.2722, 0.2803, 0.2896, 0.2902, 0.0,0.0,0.0,0.0,0.0,0.0,  & ! Ar
+          0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, &
+          0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, &
+          0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0   /), &
+          shape = (/ n, nSpecies /) )
+     else
+!!! High EUV
+        ieEfficiency = reshape( (/ &
+             0.2132,0.2143,0.2127,0.2156,0.2158,0.2211,0.2233,0.2281,0.2321,0.2605,0.3170,0.3798,0.5080,0.6970,0.0, & ! CO2
+             0.2195,0.2204,0.2188,0.2217,0.2218,0.2270,0.2288,0.2328,0.2363,0.2643,0.3170,0.3729,0.4882,0.6609,0.0,  & ! CO
+             0.2409,0.2414,0.2392,0.2422,0.2420,0.2476,0.2494,0.2542,0.2582,0.2901,0.3524,0.4189,0.5535,0.7497,0.0,  & ! O
+             0.2407,0.2408,0.2382,0.2408,0.2404,0.2458,0.2475,0.2521,0.2563,0.2879,0.3513,0.4223,0.5722,0.8038,0.0,  & ! N2
+             0.3397,0.3422,0.3404,0.3451,0.3457,0.3541,0.3579,0.3663,0.3747,0.4251,0.5305,0.6642,0.9710,1.5181,0.0,  & ! Ar
+             0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, &
+             0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, &
+             0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0   /), &
+             shape = (/ n, nSpecies /) )
+     endif
+
+  !-----------------------------
+  ! Precompute nearest indices on the table grid for each model level
+
+  do k = 1, nAlts
+     pval = log10(Pressure(1,1,k,1))
+     pressureDifference = (iePressure - pval)
+   if (pval > maxval(iePressure)) then
+      ! Above the highest bin → no defined efficiency
+      idx(k) = -1
+   else
+      ! Find the nearest lower bin index
+      pressureDifference = iePressure - pval
+      idx(k) = maxloc(pressureDifference, mask=(pressureDifference < 0.0), dim=1)
+   end if
+
+!if (k == 80) then 
+!write(*,*) log10(Pressure(1,1,k,1)),idx(k),ieEfficiency(idx(k),1)
+!write(*,*) iePressure - log10(Pressure(1,1,k,1))
+!stop
+!endif
+  end do
+!stop
+
+  ! Map to all species using those indices
+do s = 1, nspecies
+   do k = 1, nAlts
+      if (idx(k) < 1) then
+         IonizationEfficiency(k,s) = 0.0
+      else
+         IonizationEfficiency(k,s) = ieEfficiency(idx(k),s)
+      end if
+   end do
+end do
+
+  
+end subroutine getIonizationEfficiency
+    
+
+
+
+

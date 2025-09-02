@@ -4,7 +4,7 @@ subroutine calc_chemistry(iBlock)
 
   use ModSizeGITM
   use ModGITM
-  use ModInputs, only: iDebugLevel, UseIonChemistry, UseNeutralChemistry, UseEmpiricalIonization, DoCheckForNans
+  use ModInputs, only: iDebugLevel, UseIonChemistry, UseNeutralChemistry, UseEmpiricalIonization, DoCheckForNans, is1D
   use ModConstants
   use ModSources
   use ModTime, only : iStep
@@ -48,7 +48,7 @@ subroutine calc_chemistry(iBlock)
   logical :: UseNeutralConstituent(nSpeciesTotal)
   logical :: UseIonConstituent(nIons)
 
-  real :: reactionrate(42)
+  real :: reactionrate(42), IonizationEfficiency(nAlts,nSpecies)
 
   !---------------------------------------------------------------------------
 
@@ -135,6 +135,10 @@ subroutine calc_chemistry(iBlock)
   tn3m053de63d = tn33d**(0.5)*exp(-600/tn3d)
   tne21843d = exp(-2184./tn3d)
   tn31m057tn3d = tn33d*(1.0-0.57/tn3d**0.5)
+
+   IonizationEfficiency = 0.0
+   ! Ionization Efficiency stuff is only setup for 1D right now
+!   if (is1D) call getIonizationEfficiency(IonizationEfficiency)
 
   do iLon = 1, nLons
     do iLat = 1, nLats
@@ -224,7 +228,7 @@ subroutine calc_chemistry(iBlock)
           ! N2 + hv ==> N2+
           ! ----------------------------------------------------------
 
-          Reaction = EuvIonRateS(iLon,iLat,iAlt,iPIN2_N2P,iBlock)*Neutrals(iN2_)
+          Reaction = EuvIonRateS(iLon,iLat,iAlt,iPIN2_N2P,iBlock)*(1 + IonizationEfficiency(iAlt,iN2_))*Neutrals(iN2_)
 
           NeutralLosses(iN2_) = NeutralLosses(iN2_) + Reaction
           IonSources(iN2P_) = IonSources(iN2P_) + Reaction
@@ -236,7 +240,7 @@ subroutine calc_chemistry(iBlock)
           ! CO2 + hv ==> CO2+
           ! ----------------------------------------------------------
           
-          Reaction = EuvIonRateS(iLon,iLat,iAlt,iPICO2_CO2P,iBlock)*Neutrals(iCO2_)
+          Reaction = EuvIonRateS(iLon,iLat,iAlt,iPICO2_CO2P,iBlock)*(1 + IonizationEfficiency(iAlt,iCO2_))*Neutrals(iCO2_)
 
           NeutralLosses(iCO2_) = NeutralLosses(iCO2_) + Reaction
           IonSources(iCO2P_) = IonSources(iCO2P_) + Reaction
@@ -353,7 +357,7 @@ subroutine calc_chemistry(iBlock)
           ! CO + hv ==> O + C
           !         ==> O(1D) + C(1D)
           ! ----------------------------------------------------------
-          Reaction = EuvDissRateS(iLon,iLat,iAlt,iPDCO_C_O,iBlock)*Neutrals(iCO_)
+          Reaction = EuvDissRateS(iLon,iLat,iAlt,iPDCO_C_O,iBlock)*(1 + IonizationEfficiency(iAlt,iCO_))*Neutrals(iCO_)
 
           NeutralLosses(iCO_) = NeutralLosses(iCO_) + Reaction
           NeutralSources(iO_) = NeutralSources(iO_) + Reaction
@@ -399,7 +403,7 @@ subroutine calc_chemistry(iBlock)
           ! O + hv ==> O+
           ! ----------------------------------------------------------
 
-          Reaction = EuvIonRateS(iLon,iLat,iAlt,iPIO_OP,iBlock)*Neutrals(iO_)
+          Reaction = EuvIonRateS(iLon,iLat,iAlt,iPIO_OP,iBlock)*(1 + IonizationEfficiency(iAlt,iO_))*Neutrals(iO_)
 
           NeutralLosses(iO_) = NeutralLosses(iO_) + Reaction
           IonSources(iOP_) = IonSources(iOP_) + Reaction
