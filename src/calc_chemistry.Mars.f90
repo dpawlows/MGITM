@@ -106,7 +106,6 @@ subroutine calc_chemistry(iBlock)
   te073d = (250.0/eTemperature(1:nLons, 1:nLats, 1:nAlts, iBlock))**0.7
   tn2983d = tn3d/298.0
 
-  
 
   te3m0813d = te33d**(0.81)
   te3m073d = te33d**(-0.7)
@@ -135,7 +134,7 @@ subroutine calc_chemistry(iBlock)
   tn3m053de63d = tn33d**(0.5)*exp(-600/tn3d)
   tne21843d = exp(-2184./tn3d)
   tn31m057tn3d = tn33d*(1.0-0.57/tn3d**0.5)
-
+     
   do iLon = 1, nLons
     do iLat = 1, nLats
 
@@ -186,7 +185,6 @@ subroutine calc_chemistry(iBlock)
         EmissionTotal = 0.0
 
         Ions = IDensityS(iLon, iLat, iAlt, :, iBlock)
-
         Neutrals = NDensityS(iLon, iLat, iAlt, :, iBlock)
 
         niters = 0
@@ -411,28 +409,26 @@ subroutine calc_chemistry(iBlock)
           !-----------Begin Electron Recombination Chemistry---------------------------------+
           !/
           ! -----------------------------------------------------------
-          ! N2+ + e- ==> N4S + N2D  
+          ! N2+ + e- ==> N4S + N4S   + 5.77 eV
+          ! N2+ + e- ==> N2D + N2D   + 1.04 eV
           ! -----------------------------------------------------------
-          rr = 1.01e-13*te3m039
+          rr = 2.2e-13*te3m039
 
-          Reaction = rr * Ions(ie_) * Ions(iN2P_)
+          Reaction = &
+            rr* &
+            Ions(iN2P_)* &
+            Ions(ie_)
 
+          NeutralSources(iN2D_) = NeutralSources(iN2D_) + 2*Reaction*0.56
+          NeutralSources(iN4S_) = NeutralSources(iN4S_) + 2*Reaction*0.44
           IonLosses(iN2P_) = IonLosses(iN2P_) + Reaction
 
-          NeutralSources(iN4S_) = NeutralSources(iN4S_) + Reaction
-          NeutralSources(iN2D_) = NeutralSources(iN2D_) + Reaction
+          ChemicalHeatingSub = &
+            ChemicalHeatingSub + &
+            Reaction*1.04*0.56 + &
+            Reaction*5.77*0.44
+
           reactionrate(10) = reaction
-
-          ! -----------------------------------------------------------
-          ! N2+ + e- ==> N2D + N2D  
-          ! -----------------------------------------------------------
-          rr = 1.01e-13*te3m039
-
-          Reaction = rr * Ions(ie_) * Ions(iN2P_)
-
-          IonLosses(iN2P_) = IonLosses(iN2P_) + Reaction
-          NeutralSources(iN2D_) = NeutralSources(iN2D_) + 2.*Reaction
-          reactionrate(10) = reactionrate(10)+reaction !Since both are N2 recombination
 
           ! -----------------------------------------------------------
           ! O2+ + e- ==> 2O + 6.99 eV  (There are two other excited state branches that we should look at)
@@ -446,9 +442,11 @@ subroutine calc_chemistry(iBlock)
 
           IonLosses(iO2P_) = IonLosses(iO2P_) + Reaction
           NeutralSources(iO_) = NeutralSources(iO_) + 2.*Reaction
-          reactionrate(11) = reaction
+
+          ChemicalHeatingSub = ChemicalHeatingSub + Reaction * 6.99
+          reactionrate(11) = reaction 
           ! -----------------------------------------------------------
-          ! CO2+ + e- ==> O + CO
+          ! CO2+ + e- ==> O + CO + 8.31 eV
           ! -----------------------------------------------------------
 
           rr = 3.5e-13*te3m05
@@ -457,7 +455,10 @@ subroutine calc_chemistry(iBlock)
           IonLosses(iCO2P_) = IonLosses(iCO2P_) + Reaction
           NeutralSources(iO_) = NeutralSources(iO_) + Reaction
           NeutralSources(iCO_) = NeutralSources(iCO_) + Reaction
-          reactionrate(12) = reaction
+
+          ChemicalHeatingSub = ChemicalHeatingSub + Reaction * 8.31
+
+          reactionrate(12) = reaction 
           ! ----------------------------------------------------------
           ! NO+ + e- ==> O + N2D + 0.38 eV
           ! g = 0.75
@@ -469,7 +470,10 @@ subroutine calc_chemistry(iBlock)
           IonLosses(iNOP_) = IonLosses(iNOP_) + Reaction
           NeutralSources(iN2D_) = NeutralSources(iN2D_) + Reaction
           NeutralSources(iO_) = NeutralSources(iO_) + Reaction
-          reactionrate(13) = reaction
+
+          ChemicalHeatingSub = ChemicalHeatingSub + Reaction * 0.38
+
+          reactionrate(13) = reaction 
 
           ! -----------------------------------------------------------
           ! NO+ + e- ==> O + N4S + 2.77 eV
@@ -481,13 +485,17 @@ subroutine calc_chemistry(iBlock)
           IonLosses(iNOP_) = IonLosses(iNOP_) + Reaction
           NeutralSources(iN4S_) = NeutralSources(iN4S_) + Reaction
           NeutralSources(iO_) = NeutralSources(iO_) + Reaction
-          reactionrate(14) = reaction
+
+          ChemicalHeatingSub = ChemicalHeatingSub + Reaction * 2.77
+
+          reactionrate(14) = reaction 
+          
           !-----------End Electron Recombination Chemistry-------------------------------------------+
           !/
           !-----------Begin Bi-Molecular Ion-Neutral and Neutral-Neutral Chemistry-----------+
           !/
           ! -----------------------------------------------------------
-          ! CO2+ + O ==> O2+ + CO  Fast
+          ! CO2+ + O ==> O2+ + CO + 1.33  Fast
           ! -----------------------------------------------------------
           rr = 1.64e-16
           Reaction = rr * Neutrals(iO_) * Ions(iCO2P_)
@@ -496,7 +504,10 @@ subroutine calc_chemistry(iBlock)
           IonLosses(iCO2P_) = IonLosses(iCO2P_) + Reaction
           NeutralSources(iCO_) = NeutralSources(iCO_) + Reaction
           IonSources(iO2P_) = IonSources(iO2P_) + Reaction
-          reactionrate(15) = reaction
+
+          ChemicalHeatingSub = ChemicalHeatingSub + Reaction * 1.33
+
+          reactionrate(15) = reaction 
 
           ! -----------------------------------------------------------
           ! CO2+ + O ==> O+ + CO2  Fast
@@ -511,7 +522,7 @@ subroutine calc_chemistry(iBlock)
           reactionrate(16) = reaction
 
           ! -----------------------------------------------------------
-          ! CO2 + O+ ==> O2+ + CO  Fast
+          ! CO2 + O+ ==> O2+ + CO + 1.21 Fast
           ! -----------------------------------------------------------
           if (ti <= 800) then 
              rr = 1.1e-15
@@ -526,6 +537,9 @@ subroutine calc_chemistry(iBlock)
              IonLosses(iOP_) = IonLosses(iOP_) + Reaction
              NeutralSources(iCO_) = NeutralSources(iCO_) + Reaction
              IonSources(iO2P_) = IonSources(iO2P_) + Reaction
+
+             ChemicalHeatingSub = ChemicalHeatingSub + Reaction * 1.21
+
              reactionrate(17) = reaction
 
           endif
@@ -539,6 +553,9 @@ subroutine calc_chemistry(iBlock)
           IonLosses(iN2P_) = IonLosses(iN2P_) + Reaction
           NeutralSources(iN2_) = NeutralSources(iN2_) + Reaction
           IonSources(iCO2P_) = IonSources(iCO2P_) + Reaction
+
+          ChemicalHeatingSub = ChemicalHeatingSub + Reaction * 1.81
+
           reactionrate(18) = reaction
 
 
@@ -556,10 +573,13 @@ subroutine calc_chemistry(iBlock)
           IonLosses(iN2P_) = IonLosses(iN2P_) + Reaction
           NeutralSources(iN2D_) = NeutralSources(iN2D_) + Reaction
           IonSources(iNOP_) = IonSources(iNOP_) + Reaction
+
+          ChemicalHeatingSub = ChemicalHeatingSub + Reaction * 0.70
+
           reactionrate(19) = reaction
 
           ! -----------------------------------------------------------
-          ! N2 + O+ ==> NO+ + N4S
+          ! N2 + O+ ==> NO+ + N4S + 1.41 eV
           !-----------------------------------------------------------
           if (ti <= 1000) then 
              rr = 1.20e-18*ti3m045 
@@ -572,6 +592,9 @@ subroutine calc_chemistry(iBlock)
           IonLosses(iOP_) = IonLosses(iOP_) + Reaction
           NeutralSources(iN4S_) = NeutralSources(iN4S_) + Reaction
           IonSources(iNOP_) = IonSources(iNOP_) + Reaction
+
+          ChemicalHeatingSub = ChemicalHeatingSub + Reaction * 1.41
+
           reactionrate(20) = reaction
 
           ! -----------------------------------------------------------
@@ -584,10 +607,13 @@ subroutine calc_chemistry(iBlock)
           IonLosses(iO2P_) = IonLosses(iO2P_) + Reaction
           NeutralSources(iO_) = NeutralSources(iO_) + Reaction
           IonSources(iNOP_) = IonSources(iNOP_) + Reaction
+
+          ChemicalHeatingSub = ChemicalHeatingSub + Reaction * 4.21
+   
           reactionrate(21) = reaction
 
           ! -----------------------------------------------------------
-          ! CO2+ + O2 ==> CO2 + O2+
+          ! CO2+ + O2 ==> CO2 + O2+ + 1.72 eV 
           ! -----------------------------------------------------------
           if (ti <= 1500) then
              rr = 5.50e-17*ti3m082
@@ -603,7 +629,7 @@ subroutine calc_chemistry(iBlock)
           reactionrate(22) = reaction
 
           ! -----------------------------------------------------------
-          !CO2+ + NO ==> NO+ + CO2
+          !CO2+ + NO ==> NO+ + CO2 + 4.51 eV
           ! -----------------------------------------------------------
           rr = 1.23e-16
           reaction = rr * Neutrals(iNO_) * Ions(iCO2P_)
@@ -612,6 +638,9 @@ subroutine calc_chemistry(iBlock)
           IonLosses(iCO2P_) = IonLosses(iCO2P_) + Reaction
           NeutralSources(iCO2_) = NeutralSources(iCO2_) + Reaction
           IonSources(iNOP_) = IonSources(iNOP_) + Reaction
+
+          ChemicalHeatingSub = ChemicalHeatingSub + Reaction * 4.51
+
           reactionrate(23) = reaction
 
           ! -----------------------------------------------------------
@@ -626,7 +655,7 @@ subroutine calc_chemistry(iBlock)
 
 
           ! -----------------------------------------------------------
-          ! O2+ + N2D ==> NO+ + O
+          ! O2+ + N2D ==> NO+ + O + 6.519 eV
           ! -----------------------------------------------------------
           rr = 1.8e-16
           reaction = rr * Neutrals(iN2D_) * Ions(iO2P_)
@@ -635,6 +664,9 @@ subroutine calc_chemistry(iBlock)
           IonLosses(iO2P_) = IonLosses(iO2P_) + Reaction
           NeutralSources(iO_) = NeutralSources(iO_) + Reaction
           IonSources(iNOP_) = IonSources(iNOP_) + Reaction
+
+          ChemicalHeatingSub = ChemicalHeatingSub + Reaction * 6.519
+
           reactionrate(25) = reaction
 
           ! -----------------------------------------------------------
@@ -650,7 +682,7 @@ subroutine calc_chemistry(iBlock)
           !               reactionrate(25) = reaction
 
           ! -----------------------------------------------------------
-          ! O2+ + N2 ==> NO+ + NO
+          ! O2+ + N2 ==> NO+ + NO + 0.933 eV
           ! -----------------------------------------------------------
           rr = 1.00e-21
           reaction = rr * Neutrals(iN2_) * Ions(iO2P_)
@@ -659,11 +691,14 @@ subroutine calc_chemistry(iBlock)
           IonLosses(iO2P_) = IonLosses(iO2P_) + Reaction
           NeutralSources(iNO_) = NeutralSources(iNO_) + Reaction
           IonSources(iNOP_) = IonSources(iNOP_) + Reaction
+
+          ChemicalHeatingSub = ChemicalHeatingSub + Reaction * 0.933
+
           reactionrate(26) = reaction
 
 
           ! -----------------------------------------------------------
-          ! N2+ + O2 ==> N2 + O2+
+          ! N2+ + O2 ==> N2 + O2+ + 3.5 eV
           ! -----------------------------------------------------------
           if (ti <= 1000) then
              rr = 5.10e-17*ti3m116
@@ -676,6 +711,9 @@ subroutine calc_chemistry(iBlock)
           IonLosses(iN2P_) = IonLosses(iN2P_) + Reaction
           NeutralSources(iN2_) = NeutralSources(iN2_) + Reaction
           IonSources(iO2P_) = IonSources(iO2P_) + Reaction
+
+          ChemicalHeatingSub = ChemicalHeatingSub + Reaction * 3.5
+
           reactionrate(27) = reaction
 
           ! -----------------------------------------------------------
@@ -692,6 +730,9 @@ subroutine calc_chemistry(iBlock)
           IonLosses(iN2P_) = IonLosses(iN2P_) + Reaction
           NeutralSources(iN2_) = NeutralSources(iN2_) + Reaction
           IonSources(iOP_) = IonSources(iOP_) + Reaction
+
+          ChemicalHeatingSub = ChemicalHeatingSub + Reaction * 1.96
+
           reactionrate(28) = reaction
 
           ! -----------------------------------------------------------
@@ -704,10 +745,13 @@ subroutine calc_chemistry(iBlock)
           IonLosses(iN2P_) = IonLosses(iN2P_) + Reaction
           NeutralSources(iN2_) = NeutralSources(iN2_) + Reaction
           IonSources(iNOP_) = IonSources(iNOP_) + Reaction
+
+          ChemicalHeatingSub = ChemicalHeatingSub + Reaction * 6.33
+
           reactionrate(29) = reaction
 
           ! -----------------------------------------------------------
-          ! O+ + O2 ==> O + O2+
+          ! O+ + O2 ==> O + O2+ + 1.55 eV
           ! -----------------------------------------------------------
           if (ti <= 900) then 
              rr = 1.6e-17*ti3m052
@@ -719,6 +763,9 @@ subroutine calc_chemistry(iBlock)
           IonLosses(iOP_) = IonLosses(iOP_) + Reaction
           NeutralSources(iO_) = NeutralSources(iO_) + Reaction
           IonSources(iO2P_) = IonSources(iO2P_) + Reaction
+
+          ChemicalHeatingSub = ChemicalHeatingSub + Reaction * 1.55
+
           reactionrate(30) = reaction
 
           ! ----------------------------------------------------------
@@ -735,7 +782,7 @@ subroutine calc_chemistry(iBlock)
 
 
           ! ----------------------------------------------------------
-          ! CO+ + e ==> C + O
+          ! CO+ + e ==> C + O + 2.86 ev 
           ! ----------------------------------------------------------
           rr = 1.80e-13*te3m055  !!!Fox and Sung- compare to: 4.82e-6*te**-0.55*1.0e-6
           reaction = rr* Ions(iCOP_) * Ions(ie_)
@@ -744,8 +791,10 @@ subroutine calc_chemistry(iBlock)
           NeutralSources(iC_) = NeutralSources(iC_) + Reaction 
           NeutralSources(iO_) = NeutralSources(iO_) + Reaction 
 
+          ChemicalHeatingSub = ChemicalHeatingSub + Reaction * 2.86
+
           ! ----------------------------------------------------------
-          ! CO+ + CO2 -> CO2+ + CO
+          ! CO+ + CO2 -> CO2+ + CO + 0.24 eV
           ! ----------------------------------------------------------
           rr = 1.10e-15
           reaction = rr * Ions(iCOP_)*Neutrals(iCO2_)
@@ -755,9 +804,10 @@ subroutine calc_chemistry(iBlock)
           NeutralSources(iCO_) = NeutralSources(iCO_) + Reaction 
           IonSources(iCO2P_) = IonSources(iCO2P_) + Reaction 
 
+          ChemicalHeatingSub = ChemicalHeatingSub + Reaction * 0.24
 
           ! ----------------------------------------------------------
-          ! C+ + CO2 -> CO+ + CO
+          ! C+ + CO2 -> CO+ + CO + 2.89 eV 
           ! ----------------------------------------------------------
           rr = 1.10e-15
           reaction = rr * Ions(iCP_)*Neutrals(iCO2_)
@@ -766,6 +816,8 @@ subroutine calc_chemistry(iBlock)
           IonLosses(iCP_) = IonLosses(iCP_) + Reaction 
           NeutralSources(iCO_) = NeutralSources(iCO_) + Reaction 
           IonSources(iCOP_) = IonSources(iCOP_) + Reaction 
+
+          ChemicalHeatingSub = ChemicalHeatingSub + Reaction * 2.89
 
           ! ----------------------------------------------------------
           ! C+ + CO2 -> CO2+ + C
@@ -874,7 +926,11 @@ subroutine calc_chemistry(iBlock)
 
           NeutralLosses(iN2D_) = NeutralLosses(iN2D_) + Reaction
           NeutralSources(iN4S_) = NeutralSources(iN4S_) + Reaction
+
+          ChemicalHeatingSub = ChemicalHeatingSub + Reaction * 2.38
+
           reactionrate(38) = reaction
+
           ! -----------------------------------------------------------
           ! N2D + O2  ==> N4S + O2 + 3.76 eV
           ! -----------------------------------------------------------
@@ -883,6 +939,9 @@ subroutine calc_chemistry(iBlock)
 
           NeutralLosses(iN2D_) = NeutralLosses(iN2D_) + Reaction
           NeutralSources(iN4S_) = NeutralSources(iN4S_) + Reaction
+
+          ChemicalHeatingSub = ChemicalHeatingSub + Reaction * 3.76
+
           reactionrate(39) = reaction
           ! -----------------------------------------------------------
           ! N2D + N2  ==> N4S + N2
@@ -892,6 +951,7 @@ subroutine calc_chemistry(iBlock)
 
           NeutralLosses(iN2D_) = NeutralLosses(iN2D_) + Reaction
           NeutralSources(iN4S_) = NeutralSources(iN4S_) + Reaction
+
           reactionrate(40) = reaction
           ! -----------------------------------------------------------
           ! NO + N4S  ==> N2 + O + 3.25 eV
@@ -904,6 +964,9 @@ subroutine calc_chemistry(iBlock)
           NeutralLosses(iN4S_) = NeutralLosses(iN4S_) + Reaction
           NeutralSources(iN2_) = NeutralSources(iN2_) + Reaction
           NeutralSources(iO_) = NeutralSources(iO_) + Reaction
+
+          ChemicalHeatingSub = ChemicalHeatingSub + Reaction * 3.25
+
           reactionrate(41) = reaction
           ! -----------------------------------------------------------
           ! N4S + O  ==> NO* + hv (Nightglow reaction)
@@ -926,7 +989,7 @@ subroutine calc_chemistry(iBlock)
           !New reactions
           !----------------------------------
           ! -----------------------------------------------------------
-          ! N + CO2  ==> NO + CO
+          ! N + CO2  ==> NO + CO -> 1.03 eV
           ! -----------------------------------------------------------
           !rr = 1.7e-22
           rr = 1.7e-25 !see discussion in Fox and Sung 2001 about this reaction
@@ -936,9 +999,10 @@ subroutine calc_chemistry(iBlock)
           NeutralLosses(iCO2_) = NeutralLosses(iCO2_) + Reaction
           NeutralSources(iNO_) = NeutralSources(iNO_) + Reaction
           NeutralSources(iCO_) = NeutralSources(iCO_) + Reaction
+          ChemicalHeatingSub = ChemicalHeatingSub + Reaction * 1.03 
 
           ! -----------------------------------------------------------
-          ! N(2D) + NO  ==> N2 + O
+          ! N(2D) + NO  ==> N2 + O + 5.63 eV
           ! -----------------------------------------------------------
           rr = 6.7e-17
 
@@ -949,6 +1013,8 @@ subroutine calc_chemistry(iBlock)
           NeutralSources(iN2_) = NeutralSources(iN2_) + Reaction
           NeutralSources(iO_) = NeutralSources(iO_) + Reaction
 
+          ChemicalHeatingSub = ChemicalHeatingSub + Reaction * 5.63
+
           ! -----------------------------------------------------------
           ! N(2D) + e  ==> N(4S) + e + 2.38eV
           ! -----------------------------------------------------------
@@ -957,6 +1023,9 @@ subroutine calc_chemistry(iBlock)
 
           NeutralLosses(iN2D_) = NeutralLosses(iN2D_) + Reaction
           NeutralSources(iN4S_) = NeutralSources(iN4S_) + Reaction
+
+          ChemicalHeatingSub = ChemicalHeatingSub + Reaction * 2.38
+
 
           !\
           !-----------Inert Species (zeroed out sources and sinks)
@@ -980,7 +1049,6 @@ subroutine calc_chemistry(iBlock)
           !------------------------------------------------------+
           !-----------End Total Chemistry-------------------------------------------+
           !------------------------------------------------------+
-
 
           if (.not. UseIonChemistry) then
              IonSources = 0.0
@@ -1038,6 +1106,7 @@ subroutine calc_chemistry(iBlock)
                   NeutralLosses(iNeutral)*DtSub
 
           enddo
+
           ChemicalHeatingRate(iLon, iLat, iAlt) = &
                ChemicalHeatingRate(iLon, iLat, iAlt) + &
                ChemicalHeatingSub*DtSub
@@ -1089,7 +1158,7 @@ subroutine calc_chemistry(iBlock)
                  write(*, *) "chemistry : Neutral is nan", iLon, iLat, iAlt, iNeutral
                  call stop_gitm("Must stop now.")
               endif
-           enddo
+           enddo  
         endif
      enddo ! Alt
   enddo ! Lat
@@ -1099,7 +1168,6 @@ ChemicalHeatingRate(:, :, :) = &
      ChemicalHeatingRate(:, :, :)*Element_Charge/ &
      TempUnit(1:nLons, 1:nLats, 1:nAlts)/cp(1:nLons, 1:nLats, 1:nAlts, iBlock)/ &
      rho(1:nLons, 1:nLats, 1:nAlts, iBlock)
-
 !  ChemicalHeatingRateIon(:, :, :) = &
 !    ChemicalHeatingRateIon(:, :, :)*Element_Charge
 

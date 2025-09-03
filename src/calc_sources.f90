@@ -415,12 +415,15 @@ subroutine calc_GITM_sources(iBlock)
      endif
   endif
 
+
+  !\
+  ! ---------------------------------------------------------------
+  ! Chemistry
+  ! ---------------------------------------------------------------
+  !/
+
+  if (iDebugLevel > 4) write(*, *) "=====> Chemistry", iproc
+  if (UseBarriers) call MPI_BARRIER(iCommGITM, iError)
   call calc_chemistry(iBlock)
 
-  ChemicalHeatingRate(:,:,:) = &
-       ChemicalHeatingRate(:,:,:) * Element_Charge / &
-       TempUnit(1:nLons,1:nLats,1:nAlts) / cp(1:nLons,1:nLats,1:nAlts,iBlock)/&
-       rho(1:nLons,1:nLats,1:nAlts,iBlock)
-
-  ChemicalHeatingSpecies = ChemicalHeatingSpecies * Element_Charge
 end subroutine calc_GITM_sources
