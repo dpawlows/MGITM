@@ -126,8 +126,7 @@ GITM_for_Darwin:
 	rm -rf Tmp_
 
 POST:	PostProcess.o
-	${LINK.f90} ${Lflag} -o ${BINDIR}/PostProcess.exe PostProcess.o
-
+	${LINK.f90} ${Lflag} -o ${BINDIR}/PostGITM.exe PostProcess.o
 
 MY_LIB = libGITM.a
 
