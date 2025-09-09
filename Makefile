@@ -91,11 +91,11 @@ rundir:
 		if [ ! -e "EIE/README" ]; then \
 			ln -s ${EMPIRICALIEDIR}/data EIE;\
 		fi;)
-	cd ${RUNDIR}; rm -f ./PostGITM.exe ; ln -s ${BINDIR}/PostProcess.exe ./PostGITM.exe
 	cd ${RUNDIR}/UA; \
 		mkdir restartOUT data DataIn; \
 		ln -s restartOUT restartIN; \
-		ln -s ${BINDIR}/pGITM .; \
+		ln -s ${BINDIR}/PostGITM.exe .; \
+		ln -s ${MYDIR}/src/pGITM .; \
 		ln -s ${MYDIR}/srcData/* DataIn; rm -f DataIn/CVS;
 	@(if [ "$(STANDALONE)" != "NO" ]; then \
 		cd ${RUNDIR} ; \
