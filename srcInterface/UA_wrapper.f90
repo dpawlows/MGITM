@@ -248,7 +248,7 @@ contains
     !--------------------------------------------------------------------------
     call CON_set_do_test(NameSub, DoTest, DoTestMe)
     if(DoTest)write(*,*) NameSub,' iProc, nPoint=', iProc, nPoint
-    
+
     do iPoint = 1, nPoint
        call xyz_to_lonlat(Xyz_DI(:,iPoint), Lon, Lat)
 
@@ -290,8 +290,8 @@ contains
     ! Interpolate Data_VI from UA at the list of positions Xyz_DI
     ! required by GM
 
-    use ModGITM, ONLY: iProc, Temperature, NDensityS, Altitude_GB
-    use ModSizeGitm, ONLY: nLons, nLats, nAlts
+    use ModGITM, ONLY: iProc, Temperature, NDensityS, Altitude_GB, TempUnit
+    use ModSizeGitm, ONLY: nLons, nLats, nAlts, nBlocks
     use ModEUV, ONLY: EuvIonRateS
     use ModInterpolate, ONLY: bilinear, trilinear
     use ModCoordTransform, ONLY: xyz_to_rlonlat
@@ -314,6 +314,7 @@ contains
 
     integer, allocatable, save:: iBlockCell_DI(:,:)
     real,    allocatable, save:: Dist_DI(:,:)
+    real, allocatable, save:: Tneu_GB(:,:,:,:)
 
     integer:: iPoint, iLat, iLon, iAlt, iBlock, iProcFound
     real:: rAlt, rLon, rLat
@@ -381,6 +382,12 @@ contains
        end do
     end if
 
+    if(.not.allocated(Tneu_GB)) allocate(Tneu_GB(-1:nLons+2,-1:nLats+2,-1:nAlts+2,nBlocks))
+    do iBlock = 1, nBlocks
+       call calc_rates(iBlock)
+       Tneu_GB(:,:,:,iBlock) = Temperature(:,:,:,iBlock)*TempUnit
+    end do
+
     do iPoint = 1, nPoint
        ! Use stored block and cell indexes and distances
        iBlock            = iBlockCell_DI(0,iPoint)
@@ -395,8 +402,7 @@ contains
           ! Extrapolate using isothermal stratified atmosphere
 
           ! Neutral temperature, does not depend on height
-          Tnu = bilinear(Temperature(:,:,nAlts,iBlock), &
-               -1, nLons+2, -1, nLats+2, &
+          Tnu = bilinear(Tneu_GB(:,:,nAlts,iBlock), -1, nLons+2, -1, nLats+2, &
                DoExtrapolate=.false., iCell_D=iCell_D(:2), Dist_D=Dist_D(:2))
 
           ! Scale heights for CO2 and O in m
@@ -435,8 +441,8 @@ contains
 
        else
           ! Neutral temperature
-          Data_VI(1,iPoint) = trilinear(Temperature(:,:,:,iBlock), &
-               -1, nLons+2, -1, nLats+2, -1, nAlts+2, &
+          Data_VI(1,iPoint) = &
+               trilinear(Tneu_GB(:,:,:,iBlock), -1, nLons+2, -1, nLats+2, -1, nAlts+2, &
                DoExtrapolate=.false., iCell_D=iCell_D, Dist_D=Dist_D)
 
           ! N_CO2
