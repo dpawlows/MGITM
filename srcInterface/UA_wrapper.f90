@@ -30,22 +30,24 @@ module UA_wrapper
   public :: UA_get_for_ie
   public :: UA_put_from_ie
 
+  ! real:: XyzTest_D(3) = [401037.03, 4071804.0, 402979.53]
+
 contains
   !============================================================================
   subroutine UA_set_param(CompInfo, TypeAction)
 
-    use ModInputs, only: cInputText
-    use ModReadParam, only: read_text
+    use ModInputs, ONLY: cInputText
+    use ModReadParam, ONLY: read_text
 
     use ModTime, ONLY: StartTime, tSimulation, CurrentTime
-    use ModInputs, only: iStartTime, IsFramework, iOutputUnit_, set_defaults, &
+    use ModInputs, ONLY: iStartTime, IsFramework, iOutputUnit_, set_defaults, &
          nInputLines
     use ModTimeConvert, ONLY: time_real_to_int
-    use CON_physics,    ONLY: get_time
+    use CON_physics, ONLY: get_time
     use ModIoUnit
     use ModProcUA
-    use ModGITM, only: iCommGITM, nProcs, iProcGITM => iProc
-    use GITM_planet, only: init_planet
+    use ModGITM, ONLY: iCommGITM, nProcs, iProcGITM => iProc
+    use GITM_planet, ONLY: init_planet
     use CON_comp_info
     use ModUtilities, ONLY: check_dir
 
@@ -100,11 +102,11 @@ contains
 
     use CON_Coupler
     use CON_comp_param, ONLY: UA_
-    use ModInputs,    ONLY: LatStart, LatEnd, LonStart, LonEnd, AltMin, AltMax
-    use ModSizeGitm,  ONLY: nLons, nLats, nAlts
-    use ModInputs,    ONLY: nBlocksLat, nBlocksLon
+    use ModInputs, ONLY: LatStart, LatEnd, LonStart, LonEnd, AltMin, AltMax
+    use ModSizeGitm, ONLY: nLons, nLats, nAlts
+    use ModInputs, ONLY: nBlocksLat, nBlocksLon
     use ModUtilities, ONLY: check_allocate
-    use ModGeometry,  ONLY: TypeGeometry
+    use ModGeometry, ONLY: TypeGeometry
 
     character(len=*), parameter:: NameSub = 'UA_set_grid'
     !--------------------------------------------------------------------------
@@ -127,8 +129,8 @@ contains
   !============================================================================
   subroutine UA_init_session(iSession, TimeSimulation)
 
-    use CON_physics,    ONLY: get_time
-    use ModTime, only : StartTime, iTimeArray, CurrentTime
+    use CON_physics, ONLY: get_time
+    use ModTime, ONLY: StartTime, iTimeArray, CurrentTime
 
     real, intent(in)    :: TimeSimulation
     integer, intent(in) :: iSession
@@ -161,8 +163,8 @@ contains
   !============================================================================
   subroutine UA_run(TimeSimulation, TimeSimulationLimit)
 
-    use ModGITM,   ONLY: iProc, Dt
-    use ModTime,   ONLY: StartTime, CurrentTime, EndTime, iStep
+    use ModGITM, ONLY: iProc, Dt
+    use ModTime, ONLY: StartTime, CurrentTime, EndTime, iStep
     use ModInputs, ONLY: Is1D
     use ModTimeConvert, ONLY: time_real_to_int, n_day_of_year
 
@@ -239,7 +241,7 @@ contains
     integer:: iPoint
     real :: Lon, Lat
 
-    logical:: DoTest, DoTestMe
+    logical:: DoTest, DoTestMe, DoTestPoint
     character(len=*), parameter:: NameSub = 'UA_find_points'
     !--------------------------------------------------------------------------
     call CON_set_do_test(NameSub, DoTest, DoTestMe)
@@ -250,6 +252,10 @@ contains
 
        ! Find processor obtaining Lon, Lat
        call find_lonlat(Lon, Lat, iProc_I(iPoint))
+
+       ! if(sum(abs(Xyz_DI(:,iPoint) - XyzTest_D)) < 100.0) &
+       !     write(*,*) NameSub,': iPoint, Lon, Lat, iProc_I=', &
+       !     iPoint, Lon, Lat, iProc_I(iPoint)
 
        if(iProc_I(iPoint) < 0)then
           write(*,*) NameSub,' Xyz, Lon, Lat=', Xyz_DI(:,iPoint), Lon, Lat
@@ -321,7 +327,7 @@ contains
     real, parameter:: NuMassCo2 = 44, NuMassO = 16
     real, parameter:: Tiny = 1e-12
 
-    logical:: DoTest, DoTestMe
+    logical:: DoTest, DoTestMe ! , DoTestCell
 
     character(len=*), parameter:: NameSub = 'UA_get_for_gm'
     !--------------------------------------------------------------------------
@@ -343,10 +349,18 @@ contains
        allocate(iBlockCell_DI(0:nDimIn,nPoint), Dist_DI(nDimIn,nPoint))
 
        do iPoint = 1, nPoint
+
+          ! DoTestCell = sum(abs(Xyz_DI(:,iPoint) - XyzTest_D)) < 100.0
+          ! if(DoTestCell)write(*,*) NameSub,': iProc, iPoint=', iProc, iPoint
+
           call xyz_to_rlonlat(Xyz_DI(:,iPoint), rLonLat_D)
+
           Alt = rLonLat_D(1) - rBody
           Lon = rLonLat_D(2)
           Lat = rLonLat_D(3)
+
+          ! if(DoTestCell)write(*,*) NameSub,': rBody, Alt, Lon, Lat=', &
+          !     rBody, Alt, Lon, Lat
 
           if(Alt > AltMaxDomain)then
              call LocationIndex(Lon, Lat, iBlock, iLon, iLat, rLon, rLat)
@@ -360,6 +374,9 @@ contains
              iBlockCell_DI(0,iPoint)      = iBlock
              iBlockCell_DI(1:nDimIn,iPoint) = [ iLon, iLat, nAlts ]
              Dist_DI(:,iPoint)            = [ 1.0-rLon, 1.0-rLat, 0.0 ]
+
+             ! if(DoTestCell) write(*,*) NameSub, &
+             !     ': iBlock, iLon, iLat, nAlts=', iBlock, iLon, iLat, nAlts
           else
              call LocationProcIndex(Lon, Lat, Alt, &
                   iBlock, iLon, iLat, iAlt, rLon, rLat, rAlt, iProcFound)
@@ -374,11 +391,16 @@ contains
              iBlockCell_DI(0,iPoint)      = iBlock
              iBlockCell_DI(1:nDimIn,iPoint) = [ iLon, iLat, iAlt ]
              Dist_DI(:,iPoint)            = [ 1.0-rLon, 1.0-rLat, 1.0-rAlt ]
+
+             ! if(DoTestCell) write(*,*) NameSub, &
+             !     ': iBlock, iLon, iLat, iAlt=', iBlock, iLon, iLat, iAlt
           end if
        end do
     end if
 
-    if(.not.allocated(Tneu_GB)) allocate(Tneu_GB(-1:nLons+2,-1:nLats+2,-1:nAlts+2,nBlocks))
+    ! Calculate neutral temperature in [K]
+    if(.not.allocated(Tneu_GB)) &
+         allocate(Tneu_GB(-1:nLons+2,-1:nLats+2,-1:nAlts+2,nBlocks))
     do iBlock = 1, nBlocks
        call calc_rates(iBlock)
        Tneu_GB(:,:,:,iBlock) = Temperature(:,:,:,iBlock)*TempUnit
@@ -393,6 +415,10 @@ contains
        ! We could use info in iCell_D and Dist_D instead of
        ! calculating Alt etc.
        Alt  = sqrt(sum(Xyz_DI(:,iPoint)**2)) - rBody
+
+       ! DoTestCell = sum(abs(Xyz_DI(:,iPoint) - XyzTest_D)) < 100.0
+       ! if(DoTestCell) write(*,*) NameSub, &
+       !    ' iProc, iPoint, iBlock, iCell_D=', iProc, iPoint, iBlock, iCell_D
 
        if(Alt > AltMaxDomain)then
           ! Extrapolate using isothermal stratified atmosphere
@@ -416,6 +442,11 @@ contains
                -1, nLons+2, -1, nLats+2, &
                DoExtrapolate=.false., iCell_D=iCell_D(:2), Dist_D=Dist_D(:2)) &
                *exp(-dH/HscaleCO2)
+
+          ! if(DoTestCell)write(*,*) NameSub, &
+          !     ': NCO2, NCO2(iCell), dH, HscaleCO2=', Data_VI(2,iPoint), &
+          !     NDensityS(iCell_D(1), iCell_D(2), nAlts,iCO2_,iBlock), &
+          !     dH, HscaleCO2
 
           ! N_O
           Data_VI(3,iPoint) = bilinear(NDensityS(:,:,nAlts,iO_,iBlock),&
