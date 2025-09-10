@@ -30,20 +30,20 @@ subroutine get_msis_temperature(lon, lat, alt, t, h)
 
   t = InTemp(i)
   nCO2 = InNDensityS(i,iCO2_)
-! nO2 = InNDensityS(i,iO2_)
-! nO   = InNDensityS(i,iO_)
+  ! nO2 = InNDensityS(i,iO2_)
+  ! nO   = InNDensityS(i,iO_)
   nOX  = InNDensityS(i,iO_)
   nCO = InNDensityS(i,iCO_)
   nN2 = InNDensityS(i,iN2_)
 
-! m = (nCO2 * mass(iCO2_) + &
-!      nO2 * mass(iO2_) + &
-!      nN2 * mass(iN2_) + &
-!      nCO * mass(iCO_)) / (nCO2 + nO2 + nN2 + nCO)
-! m = (nCO2 * mass(iCO2_) + &
-!      nO   * mass(iO_) + &
-!      nN2 * mass(iN2_) + &
-!      nCO * mass(iCO_)) / (nCO2 + nO  + nN2 + nCO)
+  ! m = (nCO2 * mass(iCO2_) + &
+  !      nO2 * mass(iO2_) + &
+  !      nN2 * mass(iN2_) + &
+  !      nCO * mass(iCO_)) / (nCO2 + nO2 + nN2 + nCO)
+  ! m = (nCO2 * mass(iCO2_) + &
+  !      nO   * mass(iO_) + &
+  !      nN2 * mass(iN2_) + &
+  !      nCO * mass(iCO_)) / (nCO2 + nO  + nN2 + nCO)
 
   m = (nCO2 * mass(iCO2_) + &
        nOX  * mass(iO_) + &
@@ -51,7 +51,7 @@ subroutine get_msis_temperature(lon, lat, alt, t, h)
        nCO * mass(iCO_)) / (nCO2 + nOX + nN2 + nCO)
 
   r = RBody + alt
-!  g = Gravitational_Constant * (RBody/r) ** 2
+  !  g = Gravitational_Constant * (RBody/r) ** 2
   g = Gravitational_Constant
 
   h = Boltzmanns_Constant * t / (m*g)
@@ -138,8 +138,6 @@ subroutine init_msis
   LogInitialDensity = log10(InitialEDensity)
 
   do iBlock = 1, nBlocks
-     write(*,*) '==> Now Initializing Mars Background Composition', iBlock
-
      do iLat = -1, nLats + 2
         iiLat = min(max(iLat,1),nLats)
         do iLon = -1, nLons + 2
@@ -301,9 +299,7 @@ subroutine init_msis
      IDensityS(:,:,:,iCOP_,iBlock) = 1.0e0
      IDensityS(:,:,:,iCP_,iBlock) = 1.0e0
 
-     write(*,*) '============> init_msis.Mars.f90 Major Diagnostics:  Begin'
      !     Temperature(:,:,:,iBlock) = 175.
-     !\
      ! Altitude Ghost Cells
 
      Temperature(:,:,-1,iBlock) = Temperature(:,:,1,iBlock)
@@ -406,16 +402,14 @@ subroutine init_msis
           MeanMajorMass(-1:nLons+2,-1:nLats+2,-1:nAlts+2)* &
           NDensity(-1:nLons+2,-1:nLats+2,-1:nAlts+2,iBlock)
 
-     write(*,*) '==> Now Completing Mars Background Composition: END', iBlock
-
      call calc_electron_temperature(iBlock)
 
   enddo
 
 end subroutine init_msis
-
+!==============================================================================
 subroutine msis_bcs(iJulianDay,UTime,Alt,Lat,Lon,Lst, &
-             F107A,F107,AP,LogNS, Temp, LogRho)
+     F107A,F107,AP,LogNS, Temp, LogRho)
 
   write(*,*) "You can not use MSIS with any planet except Earth!!!"
   write(*,*) "If you ARE running Earth, then make the code again, using"
@@ -423,7 +417,7 @@ subroutine msis_bcs(iJulianDay,UTime,Alt,Lat,Lon,Lst, &
   call stop_gitm("I can not continue...")
 
 end subroutine msis_bcs
-
+!==============================================================================
 subroutine read_dust
   use GITM_planet
   use ModInputs
@@ -441,17 +435,16 @@ subroutine read_dust
   real :: ralt, invAltDiff, altFind, altdiff,dalt(nspeciestotal),alttemp(nInAlts)
 
 
-   call readDustHeader
-   do iBlock = 1, nBlocks
-      call setTau(iBlock)
-   enddo
+  call readDustHeader
+  do iBlock = 1, nBlocks
+     call setTau(iBlock)
+  enddo
 
-   call cleanDust
+  call cleanDust
 
 
 end subroutine read_dust
-
-
+!==============================================================================
 subroutine readDustHeader
   use GITM_planet
   use ModInputs, only: cDustFile, iCharLen_,DustFileType
@@ -502,9 +495,7 @@ subroutine readDustHeader
 
 
 end subroutine readDustHeader
-
-
-
+!==============================================================================
 subroutine setTau(iBlock)
 
   use ModInputs
@@ -525,7 +516,7 @@ subroutine setTau(iBlock)
 
   iline = 1
 
- open(unit=iInputUnit_,file=cDustFile)
+  open(unit=iInputUnit_,file=cDustFile)
 
   notstarted = .True.
 
@@ -534,107 +525,107 @@ subroutine setTau(iBlock)
      if (cline(1:6) .eq. '#START') notstarted = .False.
   end do
 
-if (DustFileType .eq. "FullHorizontal") then
+  if (DustFileType .eq. "FullHorizontal") then
 
-  !The flies are ordered by lats first then lons.  I.e.,
-  do while (iError .eq. 0)
-     read(iInputUnit_,*,iostat=iError) TimeArray(1:6),Temp
-     if (iproc .eq. 0) then
-        write(*,*) TimeArray(1:6)
-     endif
-     i = 1
-     do iLat = 1, ndustlats
-        do iLon =1 ,ndustlons
-           TempDust(iLat,iLon) = Temp(i)
-           i = i + 1
+     !The flies are ordered by lats first then lons.  I.e.,
+     do while (iError .eq. 0)
+        read(iInputUnit_,*,iostat=iError) TimeArray(1:6),Temp
+        if (iproc .eq. 0) then
+           write(*,*) TimeArray(1:6)
+        endif
+        i = 1
+        do iLat = 1, ndustlats
+           do iLon =1 ,ndustlons
+              TempDust(iLat,iLon) = Temp(i)
+              i = i + 1
+           enddo
         enddo
-     enddo
-     TimeArray(7) = 0
-     call time_int_to_real(TimeArray,TimeDust(iLine))
+        TimeArray(7) = 0
+        call time_int_to_real(TimeArray,TimeDust(iLine))
 
-     do iLat = 1, nLats
-        do iLon = 1, nLons
+        do iLat = 1, nLats
+           do iLon = 1, nLons
 
-           latFind = Latitude(ilat,iBlock)*180/pi
-           lonFind = Longitude(ilon,iBlock)*180/pi
+              latFind = Latitude(ilat,iBlock)*180/pi
+              lonFind = Longitude(ilon,iBlock)*180/pi
 
-           templat = DustLatitude
-           templon = DustLongitude
+              templat = DustLatitude
+              templon = DustLongitude
 
-           where(LatFind - tempLat .lt. -0.00001) tempLat = -1.0e9
-           ilatlow =  maxloc(tempLat)
+              where(LatFind - tempLat .lt. -0.00001) tempLat = -1.0e9
+              ilatlow =  maxloc(tempLat)
 
-           where(LonFind - tempLon < -0.00001) tempLon = -1.0e9
-           ilonlow = maxloc(tempLon)
+              where(LonFind - tempLon < -0.00001) tempLon = -1.0e9
+              ilonlow = maxloc(tempLon)
 
-           if (ilatlow(1) .eq. nDustLats) ilatlow = ilatlow - 1
-           if (ilonlow(1) .eq. nDustLons) ilonlow = ilonlow - 1
+              if (ilatlow(1) .eq. nDustLats) ilatlow = ilatlow - 1
+              if (ilonlow(1) .eq. nDustLons) ilonlow = ilonlow - 1
 
-           Latlow = DustLatitude(ilatlow(1))
-           LatHigh = DustLatitude(ilatlow(1)+1)
-           Lonlow = DustLongitude(ilonlow(1))
-           LonHigh = DustLongitude(ilonlow(1)+1)
+              Latlow = DustLatitude(ilatlow(1))
+              LatHigh = DustLatitude(ilatlow(1)+1)
+              Lonlow = DustLongitude(ilonlow(1))
+              LonHigh = DustLongitude(ilonlow(1)+1)
 
-           invLatdiff = 1/(Lathigh - Latlow)
-           invLondiff = 1/(Lonhigh - Lonlow)
+              invLatdiff = 1/(Lathigh - Latlow)
+              invLondiff = 1/(Lonhigh - Lonlow)
 
-           if (LatFind .lt. DustLatitude(1) .or. LonFind .lt. DustLongitude(1) &
-                .or. LatFind .gt. DustLatitude(nDustLats) .or. LonFind .ge. DustLongitude(nDustLons)) then
-              write(*,*) 'Dust grid does not cover GITM grid'
-              write(*,*) 'Stopping...'
-              call stop_gitm('Stopping in init_msis.Mars')
-           endif
+              if (LatFind .lt. DustLatitude(1) .or. LonFind .lt. DustLongitude(1) &
+                   .or. LatFind .gt. DustLatitude(nDustLats) .or. LonFind .ge. DustLongitude(nDustLons)) then
+                 write(*,*) 'Dust grid does not cover GITM grid'
+                 write(*,*) 'Stopping...'
+                 call stop_gitm('Stopping in init_msis.Mars')
+              endif
 
 
-           V11 = TempDust(ilatlow(1),ilonlow(1))
-           V12 = TempDust(ilatlow(1)+1,ilonlow(1))
-           V21 = TempDust(ilatlow(1),ilonlow(1)+1)
-           V22 = TempDust(ilatlow(1)+1,ilonlow(1)+1)
+              V11 = TempDust(ilatlow(1),ilonlow(1))
+              V12 = TempDust(ilatlow(1)+1,ilonlow(1))
+              V21 = TempDust(ilatlow(1),ilonlow(1)+1)
+              V22 = TempDust(ilatlow(1)+1,ilonlow(1)+1)
 
-           rlat1 = (Lathigh - LatFind)*V11*invLatDiff + &
-                (LatFind-LatLow)*V21*invLatDiff
+              rlat1 = (Lathigh - LatFind)*V11*invLatDiff + &
+                   (LatFind-LatLow)*V21*invLatDiff
 
-           rlat2 = (Lathigh - LatFind)*V12*invLatDiff + &
-                (LatFind-LatLow)*V22*invLatDiff
+              rlat2 = (Lathigh - LatFind)*V12*invLatDiff + &
+                   (LatFind-LatLow)*V22*invLatDiff
 
-           Dust = (Lonhigh - LonFind)*invLonDiff*rlat1 +  (LonFind - LonLow)*invLonDiff*rlat2
-!           if (iproc .eq. 1 .and. ilat .eq. 1 .and. ilon .eq. 5 .and. iline .eq. 54) then
-!              write(*,*) iproc,ilat,ilon,iline,dust,lonhigh,lonfind,lonlow,lathigh,latfind,latlow
-!              write(*,*) V11, V12, V21,V22
-!              write(*,*) "lats: ",ilatlow(1)+1, ilonlow(1),ndustlats,ndustlons
-!              stop
-!           endif
-           HorizontalDustProfile(iline,iLat,iLon,iblock) = Dust
+              Dust = (Lonhigh - LonFind)*invLonDiff*rlat1 +  (LonFind - LonLow)*invLonDiff*rlat2
+              !           if (iproc .eq. 1 .and. ilat .eq. 1 .and. ilon .eq. 5 .and. iline .eq. 54) then
+              !              write(*,*) iproc,ilat,ilon,iline,dust,lonhigh,lonfind,lonlow,lathigh,latfind,latlow
+              !              write(*,*) V11, V12, V21,V22
+              !              write(*,*) "lats: ",ilatlow(1)+1, ilonlow(1),ndustlats,ndustlons
+              !              stop
+              !           endif
+              HorizontalDustProfile(iline,iLat,iLon,iblock) = Dust
 
+           enddo
         enddo
+        iline = iline + 1
+
      enddo
-     iline = iline + 1
+     nDustTimes = iline-1
 
-  enddo
-  nDustTimes = iline-1
-
-  nConrathTimes = nDustTimes
-  TimeConrath = TimeDust
-  HorizontalConrathProfile = 0.03
+     nConrathTimes = nDustTimes
+     TimeConrath = TimeDust
+     HorizontalConrathProfile = 0.03
 
   else if (DustFileType .eq. "MCSVertical") then
-    !Read in data
-    !Files should be yyyy mm dd hh mm ss Latitude pressureLevel(not used) pressure(Pa) CumulativeTau  MixingRatio
-    !and organized by time, lat, alt to fill the dust grid
+     !Read in data
+     !Files should be yyyy mm dd hh mm ss Latitude pressureLevel(not used) pressure(Pa) CumulativeTau  MixingRatio
+     !and organized by time, lat, alt to fill the dust grid
      do iTime = 1, nDustTimes
         do iLat = 1, nDustLats
            do iAlt = 1, nDustAlts
               read(iInputUnit_,*,iostat=iError) TimeArray(1:6), MCSTemp
-             if (iError .ne. 0) then
-                write(*,*) "Error reading dustfile"
-                call stop_gitm('Stopping in init_msis.Mars')
-             endif
-             DustPressureLevel(iAlt) = MCSTemp(3)
-             CumulativeTau(iTime,iLat,iAlt) = MCSTemp(4)
-             DustMixingRatio(iTime,iLat,iAlt) = MCSTemp(5)
+              if (iError .ne. 0) then
+                 write(*,*) "Error reading dustfile"
+                 call stop_gitm('Stopping in init_msis.Mars')
+              endif
+              DustPressureLevel(iAlt) = MCSTemp(3)
+              CumulativeTau(iTime,iLat,iAlt) = MCSTemp(4)
+              DustMixingRatio(iTime,iLat,iAlt) = MCSTemp(5)
 
            enddo
-            DustLatitude(iLat) = MCSTemp(1)
+           DustLatitude(iLat) = MCSTemp(1)
         enddo
 
         TimeArray(7) = 0
@@ -642,54 +633,54 @@ if (DustFileType .eq. "FullHorizontal") then
         TimeDust(iTime) = rtime
      enddo
 
-    do iLat = 1, nLats
-      latFind = Latitude(ilat,iBlock)*180/pi
-      templat = DustLatitude
+     do iLat = 1, nLats
+        latFind = Latitude(ilat,iBlock)*180/pi
+        templat = DustLatitude
 
-      where(LatFind - tempLat .lt. -0.00001) tempLat = -1.0e9
-      ilatlow =  maxloc(tempLat)
+        where(LatFind - tempLat .lt. -0.00001) tempLat = -1.0e9
+        ilatlow =  maxloc(tempLat)
 
-      if (ilatlow(1) .eq. nDustLats) ilatlow = ilatlow - 1
+        if (ilatlow(1) .eq. nDustLats) ilatlow = ilatlow - 1
 
-      Latlow = DustLatitude(ilatlow(1))
-      LatHigh = DustLatitude(ilatlow(1)+1)
-      invLatdiff = 1/(Lathigh - Latlow)
+        Latlow = DustLatitude(ilatlow(1))
+        LatHigh = DustLatitude(ilatlow(1)+1)
+        invLatdiff = 1/(Lathigh - Latlow)
 
-      if (LatFind .lt. DustLatitude(1)) then
-          CumulativeTauProfile(1:nDustTimes,ilat,1:nDustAlts,iblock) = &
-               CumulativeTau(1:nDustTimes,1,1:nDustAlts)
+        if (LatFind .lt. DustLatitude(1)) then
+           CumulativeTauProfile(1:nDustTimes,ilat,1:nDustAlts,iblock) = &
+                CumulativeTau(1:nDustTimes,1,1:nDustAlts)
 
-          DustMixingRatioProfile(1:nDustTimes,ilat,1:nDustAlts,iblock) = &
-               DustMixingRatio(1:nDustTimes,1,1:nDustAlts)
+           DustMixingRatioProfile(1:nDustTimes,ilat,1:nDustAlts,iblock) = &
+                DustMixingRatio(1:nDustTimes,1,1:nDustAlts)
 
-       else if (LatFind .gt. DustLatitude(nDustLats)) then
+        else if (LatFind .gt. DustLatitude(nDustLats)) then
 
-          CumulativeTauProfile(1:nDustTimes,ilat,1:nDustAlts,iblock) = &
-               CumulativeTau(1:nDustTimes,nDustLats,1:nDustAlts)
+           CumulativeTauProfile(1:nDustTimes,ilat,1:nDustAlts,iblock) = &
+                CumulativeTau(1:nDustTimes,nDustLats,1:nDustAlts)
 
-          DustMixingRatioProfile(1:nDustTimes,ilat,1:nDustAlts,iblock) = &
-               DustMixingRatio(1:nDustTimes,nDustLats,1:nDustAlts)
+           DustMixingRatioProfile(1:nDustTimes,ilat,1:nDustAlts,iblock) = &
+                DustMixingRatio(1:nDustTimes,nDustLats,1:nDustAlts)
 
         else
            !Multiply by .999 to handle case when grids match up.
            !Rounding error can result in negative numbers
 
-          CumulativeTauProfile(1:nDustTimes,ilat,1:nDustAlts,iblock) = &
-               CumulativeTau(1:nDustTimes,ilatlow(1)+1,1:nDustAlts) - &
-               (Lathigh-LatFind)*0.999*invLatDiff*&
-               (CumulativeTau(1:nDustTimes,ilatlow(1)+1,1:nDustAlts)-&
-               CumulativeTau(1:nDustTimes,ilatlow(1),1:nDustAlts))
+           CumulativeTauProfile(1:nDustTimes,ilat,1:nDustAlts,iblock) = &
+                CumulativeTau(1:nDustTimes,ilatlow(1)+1,1:nDustAlts) - &
+                (Lathigh-LatFind)*0.999*invLatDiff*&
+                (CumulativeTau(1:nDustTimes,ilatlow(1)+1,1:nDustAlts)-&
+                CumulativeTau(1:nDustTimes,ilatlow(1),1:nDustAlts))
 
-          DustMixingRatioProfile(1:nDustTimes,ilat,1:nDustAlts,iblock) = &
-               DustMixingRatio(1:nDustTimes,ilatlow(1)+1,1:nDustAlts) - &
-               (Lathigh-LatFind)*0.999*invLatDiff*&
-               (DustMixingRatio(1:nDustTimes,ilatlow(1)+1,1:nDustAlts)-&
-               DustMixingRatio(1:nDustTimes,ilatlow(1),1:nDustAlts))
-       endif
+           DustMixingRatioProfile(1:nDustTimes,ilat,1:nDustAlts,iblock) = &
+                DustMixingRatio(1:nDustTimes,ilatlow(1)+1,1:nDustAlts) - &
+                (Lathigh-LatFind)*0.999*invLatDiff*&
+                (DustMixingRatio(1:nDustTimes,ilatlow(1)+1,1:nDustAlts)-&
+                DustMixingRatio(1:nDustTimes,ilatlow(1),1:nDustAlts))
+        endif
 
-    enddo
- endif
- 
+     enddo
+  endif
+
   close(iInputUnit_)
 
 
@@ -703,58 +694,59 @@ if (DustFileType .eq. "FullHorizontal") then
   !
   !     do iLat = 1, nLats
   !        latFind = Latitude(ilat,iBlock)*180/pi
- !        templat = DustLatitude
- !        where(LatFind - tempLat .lt. -0.00001) tempLat = -1.0e9
- !
- !        ilatlow =  maxloc(tempLat)
- !
- !        if (ilatlow(1) .eq. nDustLats) ialtlow = ialtlow - 1
- !
- !        Latlow = DustLatitude(ilatlow(1))
- !        LatHigh = DustLatitude(ilatlow(1)+1)
- !
- !        invLatdiff = 1/(Lathigh - Latlow)
- !
- !        if (LatFind .lt. DustLatitude(1)) then
- !
- !           rlat = (latlow-latFind)*(TempConrath(ilatlow(1) + 1)-TempConrath(ilatlow(1))) * &
- !                invLatDiff
- !           Conrath = TempConrath(ilat) - rlat
- !
- !        else
- !
- !           if (LatFind .ge. DustLatitude(nDustLats)) then
- !
- !              rlat = (LatFind-Lathigh)* &
- !                   (TempConrath(ilatlow(1) + 1) - TempConrath(ilatlow(1))) * invLatDiff
- !
- !              Conrath = TempConrath(ilatlow(1) + 1) + rlat
- !
- !           else
- !              rlat = (Lathigh - LatFind)*(TempConrath(ilatlow(1) + 1) - &
- !                   TempConrath(ilatlow(1))) * invLatDiff
- !              Conrath = TempConrath(ilatlow(1) + 1) - rlat
- !
- !           endif
- !        endif
- !        HorizontalConrathProfile(iline,iLat,iblock) = Conrath
- !
- !     enddo
- !
- !     iline = iline + 1
+  !        templat = DustLatitude
+  !        where(LatFind - tempLat .lt. -0.00001) tempLat = -1.0e9
+  !
+  !        ilatlow =  maxloc(tempLat)
+  !
+  !        if (ilatlow(1) .eq. nDustLats) ialtlow = ialtlow - 1
+  !
+  !        Latlow = DustLatitude(ilatlow(1))
+  !        LatHigh = DustLatitude(ilatlow(1)+1)
+  !
+  !        invLatdiff = 1/(Lathigh - Latlow)
+  !
+  !        if (LatFind .lt. DustLatitude(1)) then
+  !
+  !           rlat = (latlow-latFind)*(TempConrath(ilatlow(1) + 1)-TempConrath(ilatlow(1))) * &
+  !                invLatDiff
+  !           Conrath = TempConrath(ilat) - rlat
+  !
+  !        else
+  !
+  !           if (LatFind .ge. DustLatitude(nDustLats)) then
+  !
+  !              rlat = (LatFind-Lathigh)* &
+  !                   (TempConrath(ilatlow(1) + 1) - TempConrath(ilatlow(1))) * invLatDiff
+  !
+  !              Conrath = TempConrath(ilatlow(1) + 1) + rlat
+  !
+  !           else
+  !              rlat = (Lathigh - LatFind)*(TempConrath(ilatlow(1) + 1) - &
+  !                   TempConrath(ilatlow(1))) * invLatDiff
+  !              Conrath = TempConrath(ilatlow(1) + 1) - rlat
+  !
+  !           endif
+  !        endif
+  !        HorizontalConrathProfile(iline,iLat,iblock) = Conrath
+  !
+  !     enddo
+  !
+  !     iline = iline + 1
 
 
 end subroutine setTau
-
-
+!==============================================================================
 subroutine cleanDust
-use GITM_planet, only : DustLatitude,DustLongitude
 
-if (allocated(DustLatitude)) then
-   deallocate(DustLatitude)
-endif
-if (allocated(DustLongitude)) then
-   deallocate(DustLongitude)
-endif
+  use GITM_planet, only : DustLatitude,DustLongitude
+
+  if (allocated(DustLatitude)) then
+     deallocate(DustLatitude)
+  endif
+  if (allocated(DustLongitude)) then
+     deallocate(DustLongitude)
+  endif
 
 end subroutine cleanDust
+!==============================================================================
