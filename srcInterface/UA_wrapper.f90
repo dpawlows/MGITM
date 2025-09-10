@@ -55,13 +55,9 @@ contains
 
     character(len=*), parameter:: NameSub = 'UA_set_param'
     !--------------------------------------------------------------------------
-    write(*,*) "-->Starting UA_set_param..."
     select case(TypeAction)
     case('VERSION')
-       call put(CompInfo,&
-            Use=.true.,                                      &
-            NameVersion='Global Iono-Thermo Model (Ridley)', &
-            Version=2.0)
+       call put(CompInfo, Use=.true., NameVersion='MGITM')
     case('MPI')
        call get(CompInfo, iComm=iComm, iProc=iProc, nProc=nProc)
 
