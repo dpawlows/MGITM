@@ -289,34 +289,7 @@ subroutine calc_planet_sources(iBlock)
      ! Do nothing
   else
 
-     ! Calculate Ls
-     deltat_h = iTimeArray(4)+iTimeArray(5)/60.0+iTimeArray(6)/3600.0
-
-     deltat = 367*iTimeArray(1)-7*(iTimeArray(1)+(iTimeArray(2)+9)/12)/4 &
-          +275*iTimeArray(2)/9+iTimeArray(3)-730531.5+deltat_h/24.0
-
-     em = (19.3870+0.52402075*deltat)*pi/180.0
-
-     alpha_pms = 270.3863+0.52403840*deltat
-
-     ell_s = alpha_pms+(10.691+3.d-7*deltat)*dsin(em)+ &
-          0.623*dsin(2.0*em)+0.050*dsin(3.0*em)+ &
-          0.005*dsin(4.0*em)+0.0005*dsin(5.0*em)
-
-     pbs = 0.0
-     do i=1,7
-        pbs = pbs+Ls_a(i)*dcos(pi/180.0*(0.985626*deltat/ &
-             Ls_tau(i)+Ls_phi(i)))
-     enddo
-     ell_s = ell_s+pbs
-
-     if (ell_s > 0.0) then
-        ell_s = 360.0*(ell_s/360.0-floor(ell_s/360.0))
-     else
-        ell_s = 360.0+360.0*(ell_s/360.0-ceiling(ell_s/360.0))
-     endif
-
-     !     	 print*, ell_s
+  call calc_Ls()
 
      LowAtmosRadRate(1:nLons,1:nLats,1:nAlts,iBlock)=0.0
 

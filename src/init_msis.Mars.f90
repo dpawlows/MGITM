@@ -79,7 +79,8 @@ subroutine init_msis
   real :: ralt, invAltDiff, altFind, altdiff, LogElectronDensity,dalt(nspeciestotal),alttemp(nInAlts)
   real, dimension(nInitialAlts) :: tempalt,LogInitialDensity,InitialEDensity,InitialAlt
 
-
+  call calc_Ls ! Set Ls, J2000 and EOT
+  
   SurfaceAlbedo(:,:,:) = 0.0
 
   do iblock = 1, nblocks
@@ -94,7 +95,6 @@ subroutine init_msis
   enddo
 
   if (useDustDistribution) call read_dust
-
 
   if (DoRestart) return
 

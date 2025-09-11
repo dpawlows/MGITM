@@ -12,7 +12,7 @@ subroutine calc_physics(iBlock)
   implicit none
 
   integer, external :: jday
-
+  real*8, external :: julian_date
   integer, intent(in) :: iBlock
 
   integer :: itime(7)
@@ -23,7 +23,9 @@ subroutine calc_physics(iBlock)
   real :: DayNumber,TimeHour,Cy
   real :: MeanAnomaly,RMeanAnomaly,DMeanAnomaly
   real :: EccAnomaly1,EccAnomaly2,REccAnomaly1,REccAnomlay2
-  real :: TrueAnomaly,RTrueAnomaly
+  real :: TrueAnomaly,RTrueAnomaly, MTC, EOT_Hours, delta_lon
+
+  real, DIMENSION(-1:nlons+2) :: LMST
   
   integer :: i
   integer :: iLon, iLat, iAlt
@@ -84,9 +86,6 @@ subroutine calc_physics(iBlock)
   SunOrbitEccentricity = SunOrbit_A*(1.0-SunOrbit_B**2.0)/(1.0+ &
 	   SunOrbit_B*cos(TrueAnomaly))
 
-!  OrbitAngle = 2.*pi*(CurrentTime - VernalTime)/SecondsPerYear
-   OrbitAngle = ell_s
-
  !!!!!!! Old SunOrbitEccentricity
 !
 !  SunOrbitEccentricity = SunOrbit_A                     + &
@@ -98,19 +97,22 @@ subroutine calc_physics(iBlock)
   MarsOrbitalDistance(1:nLons,1:nLats,1:nAlts) = &
        SunOrbitEccentricity
 
+  OrbitAngle = L_s
   SunDeclination = atan(tan(Tilt*pi/180.)*sin(OrbitAngle*pi/180.))
-!JMB: Temporarily Freeze
+  SubSolarLatitude = SunDeclination ! Radians
+  EOT_Hours = EOT*24/360. !convert EOT to hours first
 
+  MTC = mod(24*(((JD_UTC-2451549.5)/1.027491252)+44796.0 - 0.0009626 ),24.0)
+  SubsolarLongitude = mod(((MTC+(EOT_Hours))*(360/24.)+180), 360.0) 
+
+  !Use deg E
+  SubsolarLongitude = (360-SubsolarLongitude) * pi/180. ! Radians
+	  
   SinDec = sin(SunDeclination)
   CosDec = cos(SunDeclination)
 
-  LocalTime = mod((UTime/3600.0 + &
-       Longitude(:,iBlock) * HoursPerDay / TwoPi), HoursPerDay)
-
-  if (UseApex) &
-       call SUBSOLR(iTimeArray(1),iJulianDay,iTimeArray(4),&
-       iTimeArray(5),iTimeArray(6),SubsolarLatitude, &
-       SubsolarLongitude)
+  LMST = modulo( MTC + Longitude(:,iBlock) * 24/(2*pi), 24.0 ) 
+  LocalTime = modulo( LMST + EOT_hours, 24.0 )  
 
   do iAlt=-1,nAlts+2
 
@@ -162,11 +164,12 @@ subroutine calc_physics(iBlock)
   end where
 
   do iLon = 1, nLons
+     delta_lon = mod((Longitude(iLon,iBlock) - SubsolarLongitude),360.0) 
      do iLat = 1, nLats
-        sza(iLon, iLat,iBlock) =  &
+         sza(iLon, iLat,iBlock) =  &
              acos(SinDec*sin(Latitude(iLat,iBlock)) + &
              CosDec*CosLatitude(iLat,iBlock) * &
-             cos(pi*(LocalTime(iLon)-HoursPerDay/2)/(HoursPerDay/2)))
+             cos(delta_lon))
 
         if (DtLTERadiation < Rotation_Period) then
            call calc_avesza(iLon,iLat,iBlock, SinDec, CosDec)
@@ -174,7 +177,7 @@ subroutine calc_physics(iBlock)
 
      enddo
   enddo
-
+write(*,*) sza(1,1,1)*180/pi,localtime(1)
   call calc_scaled_euv
 
   do iAlt = 1, nAlts
@@ -185,5 +188,3 @@ subroutine calc_physics(iBlock)
   enddo
 
 end subroutine calc_physics
-
-
