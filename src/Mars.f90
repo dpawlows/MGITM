@@ -180,6 +180,7 @@ subroutine calc_planet_sources(iBlock)
   ! (2) calc_radcode(iBlock)   :  to be added later (NELLI)
   ! (3) OCooling code : added 4/14/12 (BOUGHER)
 
+  call calc_Ls()
   if (useGravityWave)  call calc_GW(iBlock)
 
   !\ -------------------------------------------------------------------
@@ -288,9 +289,7 @@ subroutine calc_planet_sources(iBlock)
        floor(tSimulation/DtLTERadiation)) then
      ! Do nothing
   else
-
-  call calc_Ls()
-
+   
      LowAtmosRadRate(1:nLons,1:nLats,1:nAlts,iBlock)=0.0
 
      SurfaceTemp(1:nLons,1:nLats,iBlock) = SurfaceTemp(1:nLons,1:nLats,iBlock)+&
