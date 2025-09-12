@@ -68,13 +68,14 @@ module ModSources
   !/
 
   
-  integer, parameter :: nReactions = 26
+  integer, parameter :: nReactions = 56
   real :: ChemicalHeatingSpecies(nLons, nLats, nAlts,nReactions)
-  real :: ChemicalHeatingS(nReactions)
+  real :: ChemicalHeatingS(nReactions) 
   real :: NeutralSourcesTotal(nAlts,nSpeciesTotal)
   real :: NeutralLossesTotal(nAlts,nSpeciesTotal)
   real, allocatable :: ISourcesTotal(:,:,:,:,:)
   real, allocatable :: ILossesTotal(:,:,:,:,:)
+  real, allocatable :: ReactionRateS(:,:,:,:,:)
 
   integer, parameter ::    in2p_e = 1
   integer, parameter ::    io2p_e = 2
@@ -158,6 +159,7 @@ contains
     allocate(GW_beta_non(nLons, nLats, nAlts, nBlocks))
     allocate(GW_beta_ext(nLons, nLats, nAlts, nBlocks))
     allocate(SIR(nLons, nLats, nAlts, 59, nBlocks))
+    allocate(ReactionRateS(nLons,nLats,nAlts,nReactions,nBlocks))
 
     ChemicalHeatingS = 0.0
     AuroralHeating = 0.0
@@ -193,6 +195,7 @@ contains
     deallocate(GW_beta_non)
     deallocate(GW_beta_ext)
     deallocate(SIR)
+    deallocate(ReactionRateS)
 
   end subroutine clean_mod_sources
   !=========================================================================

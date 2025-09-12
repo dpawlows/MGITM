@@ -33,6 +33,7 @@ integer function bad_outputtype()
      if (OutputType(iOutputType) == '1DCHM')     IsFound = .true.
      if (OutputType(iOutputType) == '1DCMS')     IsFound = .true.
      if (OutputType(iOutputType) == '1DUSR')     IsFound = .true.
+     if (OutputType(iOutputType) == '1DION')     IsFound = .true.
 
      if (.not. IsFound) then
         bad_outputtype = iOutputType
@@ -266,12 +267,12 @@ subroutine output(dir, iBlock, iOutputType)
   case ('1DCHM')
 
      nGCs = 0
-     nvars_to_write = 30
+     nvars_to_write = nReactions + 3
      call output_1dchm(iBlock)
 
   case ('3DCHM')
 
-     nvars_to_write = 30
+     nvars_to_write = nReactions + 3
      call output_3dchm(iBlock)
 
   case ('3DGLO')
@@ -329,6 +330,11 @@ subroutine output(dir, iBlock, iOutputType)
      nGCs = 0
      nvars_to_write = 15 + nSpeciesTotal + nSpecies + nIons + nSpecies
      call output_1dnew(iiLon, iiLat, iBlock, rLon, rLat, iOutputUnit_)
+
+  case ('1DION')
+
+     nvars_to_write = 3+nIons+5+nPhotoIonPathways+11
+     call output_1dion
 
   end select
 
@@ -511,34 +517,62 @@ contains
 
     endif
     if (cType(3:5) == "CHM") then
-
-       write(iOutputUnit_,"(I7,A1,a)") 4, " ", "N!D2!U+!N + e"
-       write(iOutputUnit_,"(I7,A1,a)") 5, " ", "O!D2!U+!N + e"
-       write(iOutputUnit_,"(I7,A1,a)") 6, " ", "N!D2!U+!N + O"
-       write(iOutputUnit_,"(I7,A1,a)") 7, " ", "NO!U+!N + e"
-       write(iOutputUnit_,"(I7,A1,a)") 8, " ", "N!U+!N + O!D2!N"
-       write(iOutputUnit_,"(I7,A1,a)") 9, " ", "NO + N"
-       write(iOutputUnit_,"(I7,A1,a)") 10, " ","O!U+!N + O!D2!N" 
-       write(iOutputUnit_,"(I7,A1,a)") 11, " ", "N + O!D2!N"
-       write(iOutputUnit_,"(I7,A1,a)") 12, " ", "O!D2!U+!N + N"
-       write(iOutputUnit_,"(I7,A1,a)") 13, " ", "O!D2!U+!N + NO"
-       write(iOutputUnit_,"(I7,A1,a)") 14, " ", "O!D2!U+!N + N2"
-       write(iOutputUnit_,"(I7,A1,a)") 15, " ", "N!D2!U+!N + O!D2!N"
-       write(iOutputUnit_,"(I7,A1,a)") 16, " ", "N!U+!N + O"
-       write(iOutputUnit_,"(I7,A1,a)") 17, " ", "O!+!N + N!D2!N"
-       write(iOutputUnit_,"(I7,A1,a)") 18, " ", "O(1D) + N!D2!N"
-       write(iOutputUnit_,"(I7,A1,a)") 19, " ", "O(1D) + O!D2!N"
-       write(iOutputUnit_,"(I7,A1,a)") 20, " ", "O(1D) + O"
-       write(iOutputUnit_,"(I7,A1,a)") 21, " ", "O(1D) + e"
-       write(iOutputUnit_,"(I7,A1,a)") 22, " ", "N(2D) + O!D2!N"
-       write(iOutputUnit_,"(I7,A1,a)") 23, " ", "O!U+!N(2D)+e"
-       write(iOutputUnit_,"(I7,A1,a)") 24, " ", "N(2D) + O"
-       write(iOutputUnit_,"(I7,A1,a)") 25, " ", "N(2D) + e"
-       write(iOutputUnit_,"(I7,A1,a)") 26, " ", "O!U+!N(2D + N!D2!N"
-       write(iOutputUnit_,"(I7,A1,a)") 27, " ", "O!U+!N(2P) + e"
-       write(iOutputUnit_,"(I7,A1,a)") 28, " ", "O!U+!N(2P) + O"
-       write(iOutputUnit_,"(I7,A1,a)") 29, " ", "O!U+!N(2P) + N!D2!N"
-       write(iOutputUnit_,"(I7,A1,a)") 30, " ", "Chemical Heating Rate"
+write(iOutputUnit_,"(I7,A1,a)")  4, " ", "N2 + hv ==> N(4S) + N(2D)"
+write(iOutputUnit_,"(I7,A1,a)")  5, " ", "N2 + hv ==> N2+"
+write(iOutputUnit_,"(I7,A1,a)")  6, " ", "CO2 + hv ==> CO2+"
+write(iOutputUnit_,"(I7,A1,a)")  7, " ", "CO2 + hv ==> O+ + CO"
+write(iOutputUnit_,"(I7,A1,a)")  8, " ", "CO2 + hv ==> CO+ + O + e"
+write(iOutputUnit_,"(I7,A1,a)")  9, " ", "CO2 + hv ==> CO+ + O+ + 2e"
+write(iOutputUnit_,"(I7,A1,a)") 10, " ", "CO2 + hv ==> C+ + O2"
+write(iOutputUnit_,"(I7,A1,a)") 11, " ", "CO2 + hv ==> C+ + O+ + O + 2e"
+write(iOutputUnit_,"(I7,A1,a)") 12, " ", "CO2 + hv ==> CO + O"
+write(iOutputUnit_,"(I7,A1,a)") 13, " ", "CO2 + hv ==> O2 + C"
+write(iOutputUnit_,"(I7,A1,a)") 14, " ", "CO2 + hv ==> 2O + C"
+write(iOutputUnit_,"(I7,A1,a)") 15, " ", "CO + hv ==> O + C"
+write(iOutputUnit_,"(I7,A1,a)") 16, " ", "CO + hv ==> C + O+ + e"
+write(iOutputUnit_,"(I7,A1,a)") 17, " ", "O2 + hv ==> O2+"
+write(iOutputUnit_,"(I7,A1,a)") 18, " ", "O2 + hv ==> O + O"
+write(iOutputUnit_,"(I7,A1,a)") 19, " ", "O + hv ==> O+"
+write(iOutputUnit_,"(I7,A1,a)") 20, " ", "N2+ + e ==> N(4S) + N(2D)"
+write(iOutputUnit_,"(I7,A1,a)") 21, " ", "N2+ + e ==> N(2D) + N(2D)"
+write(iOutputUnit_,"(I7,A1,a)") 22, " ", "O2+ + e ==> 2O"
+write(iOutputUnit_,"(I7,A1,a)") 23, " ", "CO2+ + e ==> O + CO"
+write(iOutputUnit_,"(I7,A1,a)") 24, " ", "NO+ + e ==> O + N(2D)"
+write(iOutputUnit_,"(I7,A1,a)") 25, " ", "NO+ + e ==> O + N(4S)"
+write(iOutputUnit_,"(I7,A1,a)") 26, " ", "CO2+ + O ==> O2+ + CO"
+write(iOutputUnit_,"(I7,A1,a)") 27, " ", "CO2+ + O ==> O+ + CO2"
+write(iOutputUnit_,"(I7,A1,a)") 28, " ", "CO2 + O+ ==> O2+ + CO"
+write(iOutputUnit_,"(I7,A1,a)") 29, " ", "CO2 + N2+ ==> CO2+ + N2"
+write(iOutputUnit_,"(I7,A1,a)") 30, " ", "O + N2+ ==> NO+ + N(2D)"
+write(iOutputUnit_,"(I7,A1,a)") 31, " ", "N2 + O+ ==> NO+ + N(4S)"
+write(iOutputUnit_,"(I7,A1,a)") 32, " ", "O2+ + N(4S) ==> NO+ + O"
+write(iOutputUnit_,"(I7,A1,a)") 33, " ", "CO2+ + O2 ==> CO2 + O2+"
+write(iOutputUnit_,"(I7,A1,a)") 34, " ", "CO2+ + NO ==> NO+ + CO2"
+write(iOutputUnit_,"(I7,A1,a)") 35, " ", "O2+ + N(2D) ==> NO+ + O"
+write(iOutputUnit_,"(I7,A1,a)") 36, " ", "O2+ + N2 ==> NO+ + NO"
+write(iOutputUnit_,"(I7,A1,a)") 37, " ", "N2+ + O2 ==> N2 + O2+"
+write(iOutputUnit_,"(I7,A1,a)") 38, " ", "N2+ + O ==> O+ + N2"
+write(iOutputUnit_,"(I7,A1,a)") 39, " ", "N2+ + NO ==> N2 + NO+"
+write(iOutputUnit_,"(I7,A1,a)") 40, " ", "O+ + O2 ==> O + O2+"
+write(iOutputUnit_,"(I7,A1,a)") 41, " ", "O2 + C ==> CO + O"
+write(iOutputUnit_,"(I7,A1,a)") 42, " ", "CO+ + e ==> C + O"
+write(iOutputUnit_,"(I7,A1,a)") 43, " ", "CO+ + CO2 ==> CO2+ + CO"
+write(iOutputUnit_,"(I7,A1,a)") 44, " ", "C+ + CO2 ==> CO+ + CO"
+write(iOutputUnit_,"(I7,A1,a)") 45, " ", "C+ + CO2 ==> CO2+ + C"
+write(iOutputUnit_,"(I7,A1,a)") 46, " ", "O + O + CO2 ==> O2 + CO2"
+write(iOutputUnit_,"(I7,A1,a)") 47, " ", "O + O2 + CO2 ==> products + CO2"
+write(iOutputUnit_,"(I7,A1,a)") 48, " ", "O + CO + CO2 ==> 2CO2"
+write(iOutputUnit_,"(I7,A1,a)") 49, " ", "O + N(4S) + CO2 ==> NO + CO2"
+write(iOutputUnit_,"(I7,A1,a)") 50, " ", "N(2D) + CO2 ==> NO + CO"
+write(iOutputUnit_,"(I7,A1,a)") 51, " ", "N(2D) + CO ==> N(4S) + CO"
+write(iOutputUnit_,"(I7,A1,a)") 52, " ", "N(2D) + O ==> N(4S) + O"
+write(iOutputUnit_,"(I7,A1,a)") 53, " ", "N(2D) + O2 ==> N(4S) + O2"
+write(iOutputUnit_,"(I7,A1,a)") 54, " ", "N(2D) + N2 ==> N(4S) + N2"
+write(iOutputUnit_,"(I7,A1,a)") 55, " ", "NO + N(4S) ==> N2 + O"
+write(iOutputUnit_,"(I7,A1,a)") 56, " ", "N(4S) + O ==> NO + hv"
+write(iOutputUnit_,"(I7,A1,a)") 57, " ", "N + CO2 ==> NO + CO"
+write(iOutputUnit_,"(I7,A1,a)") 58, " ", "N(2D) + NO ==> N2 + O"
+write(iOutputUnit_,"(I7,A1,a)") 59, " ", "N(2D) + e ==> N(4S) + e"
 
 
     endif
@@ -970,6 +1004,7 @@ subroutine output_3dion(iBlock)
   integer :: iAlt, iLat, iLon, iiAlt, iiLat, iiLon, i
 
   do iAlt=-1,nAlts+2
+     iiAlt = max(min(iAlt,nAlts),1)
      do iLat=-1,nLats+2
         do iLon=-1,nLons+2
            write(iOutputUnit_)          &
@@ -980,7 +1015,7 @@ subroutine output_3dion(iBlock)
                 eTemperature(iLon,iLat,iAlt,iBlock),  &
                 ITemperature(iLon,iLat,iAlt,iBlock),  &
                 Ivelocity(iLon,iLat,iAlt,:,iBlock),   &
-                (EUVIonRateS(iLon,iLat,iAlt,i,iBlock),i=1,nPhotoIonPathways),&
+                (EUVIonRateS(iLon,iLat,iiAlt,i,iBlock),i=1,nPhotoIonPathways),&
                 mLatitude(iLon,iLat,iAlt,iBlock), &
                 mLongitude(iLon,iLat,iAlt,iBlock), &
                 B0(iLon,iLat,iAlt,:,iBlock), &  !Geomagnetic B0(nLons,nLats,nAlts,4[iEast_,iNorth_,iUp_,iMag_],nBlocks)
@@ -992,7 +1027,41 @@ subroutine output_3dion(iBlock)
   enddo
 
 end subroutine output_3dion
+!----------------------------------------------------------------
+!
+!----------------------------------------------------------------
+subroutine output_1dion
 
+  use ModGITM
+  use ModInputs
+  use ModElectrodynamics
+  use ModEUV, only : EUVIonRateS 
+
+  implicit none
+
+  integer :: iAlt,  iiAlt,  i
+
+  do iAlt=-1,nAlts+2
+     iiAlt = max(min(iAlt,nAlts),1)
+      write(iOutputUnit_)          &
+      Longitude(1,1),               &
+      Latitude(1,1),                &
+      Altitude_GB(1,1,iAlt,1),   &
+      IDensityS(1,1,iAlt,:,1),   &
+      eTemperature(1,1,iAlt,1),  &
+      ITemperature(1,1,iAlt,1),  &
+      Ivelocity(1,1,iAlt,:,1),   &
+      (EUVIonRateS(1,1,iiAlt,i,1),i=1,nPhotoIonPathways),&
+      mLatitude(1,1,iAlt,1), &
+      mLongitude(1,1,iAlt,1), &
+      B0(1,1,iAlt,:,1), &  !Geomagnetic B0(nLons,nLats,nAlts,4[iEast_,iNorth_,iUp_,iMag_],nBlocks)
+      potential(1,1,iAlt,1), &
+      EField(1,1,iAlt,:), &  ! EField(Lon,lat,alt,3)
+      sqrt(sum(EField(1,1,iAlt,:)**2))   ! magnitude of E.F.
+        
+  enddo
+
+end subroutine output_1dion
 !----------------------------------------------------------------
 !
 !----------------------------------------------------------------
@@ -1142,24 +1211,15 @@ subroutine output_1dchm(iBlock)
 
   integer, intent(in) :: iBlock
   integer :: iAlt, iiAlt, iReact
-  real :: vars(nReactions)
 
   do iAlt=-1,nAlts+2
      iiAlt = max(min(iAlt,nAlts),1)
-     do iReact = 1, nReactions
-        vars(iReact) = ChemicalHeatingSpecies(1,1,iiAlt,iReact) / &
-             Element_Charge
-     enddo
 
      write(iOutputUnit_) &
           Longitude(1,iBlock),               &
           Latitude(1,iBlock),                &
           Altitude_GB(1,1,iAlt,iBlock),   &
-          Vars, &
-          ChemicalHeatingRate(1,1,iiAlt) * &
-          cp(1,1,iiAlt,iBlock) *   &
-          Rho(1,1,iiAlt,iBlock)*TempUnit(1,1,iiAlt) / &
-          Element_Charge
+          ReactionRateS(1,1,iiAlt,:,iBlock)
   enddo
 
 end subroutine output_1dchm
@@ -1186,22 +1246,13 @@ subroutine output_3dchm(iBlock)
         iiLat = min(max(iLat,1),nLats)
         do iLon=-1,nLons+2
            iiLon = min(max(iLon,1),nLons)
-           do iReact = 1, nReactions
 
-              vars(iReact) = ChemicalHeatingSpecies(iiLon,iiLat,iiAlt,iReact) / &
-                   Element_Charge
-
-           enddo
 
            write(iOutputUnit_) &
                 Longitude(iLon,iBlock),               &
                 Latitude(iLat,iBlock),                &
                 Altitude_GB(iLon,iLat,iAlt,iBlock),   &
-                Vars, &
-                ChemicalHeatingRate(iiLon,iiLat,iiAlt) * &
-                cp(iilon,iiLat,iiAlt,iBlock) *   &
-                Rho(iilon,iiLat,iiAlt,iBlock)*TempUnit(iilon,iiLat,iiAlt) / &
-                Element_Charge
+                ReactionRateS(iiLon,iiLat,iiAlt,:,iBlock)
         enddo
      enddo
   enddo
