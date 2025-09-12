@@ -626,7 +626,8 @@ contains
       
       if (cType(1:2) == "1D" ) then 
        do iIon = 1, nPhotoIonPathways
-          write(iOutputUnit_,"(I7,A1,a)") iOff+iIon, " ", "EUV Ionization Rate("//cIons(iIon)//&
+          write(iOutputUnit_,"(I7,A1,a)") iOff+iIon, " ", &
+          "EUV Ionization Rate("//cIonPathway(iIon)//&
                ")"
        enddo
        iOff = iOff + nPhotoIonPathways
@@ -1102,8 +1103,8 @@ subroutine output_1dthm
      iiAlt = max(min(iAlt,nAlts),1)
 
      do iSpecies = 1, nSpeciesTotal
-        varsS(iSpecies) = NeutralSourcesTotal(iSpecies,iiAlt)
-        varsL(iSpecies) = NeutralLossesTotal(iSpecies,iiAlt)
+        varsS(iSpecies) = NeutralSourcesTotal(iiAlt,iSpecies)
+        varsL(iSpecies) = NeutralLossesTotal(iiAlt,iSpecies)
 
      enddo
 
