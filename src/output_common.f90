@@ -221,7 +221,7 @@ subroutine output(dir, iBlock, iOutputType)
 
   case ('3DALL')
 
-     nvars_to_write = 4+nSpeciesTotal+1+3+nSpecies+nIons+2+3+5+4
+     nvars_to_write = 4+nSpeciesTotal+1+3+nSpecies+nIons+2+3+3
 
      call output_3dall(iBlock)
 
@@ -232,12 +232,12 @@ subroutine output(dir, iBlock, iOutputType)
 
   case ('3DION')
 
-     nvars_to_write = 8+nIons+6+4+4+1
+     nvars_to_write = 3+nIons+5+nPhotoIonPathways+11
      call output_3dion(iBlock)
 
   case ('3DTHM')
 
-     nvars_to_write = 22
+     nvars_to_write = 17
      ! 3  (Lon, Lat, Alt)
      ! 2  (cp, rho)
 
@@ -457,19 +457,14 @@ contains
        write(iOutputUnit_,"(I7,A1,a)")  8, " ", "RadCooling (K/sol) "
        !      write(iOutputUnit_,"(I7,A1,a)")  9, " ", "Lower Atmos Heating/Cool (K/sol)"
        write(iOutputUnit_,"(I7,A1,a)")  9, " ", "Near IR Heating (K/sol)"
-       write(iOutputUnit_,"(I7,A1,a)")  10, " ", "Horizontal Adiabatic (K/sol)"
-       write(iOutputUnit_,"(I7,A1,a)")  11, " ", "Horizontal Hydrodynamic (K/sol)"
-       write(iOutputUnit_,"(I7,A1,a)")  12, " ", "Vertical Adiabatic (K/sol)"
-       write(iOutputUnit_,"(I7,A1,a)")  13, " ", "Vertical Hydrodynamic (K/sol)"
-       write(iOutputUnit_,"(I7,A1,a)")  14, " ", "Total Dynamical Heating (K/sol)  "
-       write(iOutputUnit_,"(I7,A1,a)")  15, " ", "GW U Drag (m/s/sol)  "
-       write(iOutputUnit_,"(I7,A1,a)")  16, " ", "GW V Drag (m/s/sol)  "
-       write(iOutputUnit_,"(I7,A1,a)")  17, " ", "GW Irreversible Heating (K/sol)"
-       write(iOutputUnit_,"(I7,A1,a)")  18, " ", "GW Differential Heating (K/sol) "
-       write(iOutputUnit_,"(I7,A1,a)")  19, " ", "GW Net Heating (K/sol) "
-       write(iOutputUnit_,"(I7,A1,a)")  20, " ", "GW Total Dissipation"
-       write(iOutputUnit_,"(I7,A1,a)")  21, " ", "GW Non-Linear Dissipation"
-       write(iOutputUnit_,"(I7,A1,a)")  22, " ", "GW External Dissipation"
+       write(iOutputUnit_,"(I7,A1,a)")  10, " ", "GW U Drag (m/s/sol)  "
+       write(iOutputUnit_,"(I7,A1,a)")  11, " ", "GW V Drag (m/s/sol)  "
+       write(iOutputUnit_,"(I7,A1,a)")  12, " ", "GW Irreversible Heating (K/sol)"
+       write(iOutputUnit_,"(I7,A1,a)")  13, " ", "GW Differential Heating (K/sol) "
+       write(iOutputUnit_,"(I7,A1,a)")  14, " ", "GW Net Heating (K/sol) "
+       write(iOutputUnit_,"(I7,A1,a)")  15, " ", "GW Total Dissipation"
+       write(iOutputUnit_,"(I7,A1,a)")  16, " ", "GW Non-Linear Dissipation"
+       write(iOutputUnit_,"(I7,A1,a)")  17, " ", "GW External Dissipation"
 
        if (cType(1:2) == "1D") then
 
@@ -491,17 +486,17 @@ contains
        do iIon = 1, nIons
           write(iOutputUnit_,"(I7,A1,a)") iOff+iIon, " ", "["//cIons(iIon)//"]"
        enddo
-       iOff = iOff+nIons
+       iOff = iOff+nIons+1
        write(iOutputUnit_,"(I7,A1,a)") iOff+1, " ", "eTemperature"
        write(iOutputUnit_,"(I7,A1,a)") iOff+2, " ", "iTemperature"
        write(iOutputUnit_,"(I7,A1,a)") iOff+3, " ", "Ion Velocity (North)"
-       write(iOutputUnit_,"(I7,A1,a)") iOff+3, " ", "Ion Velocity (East)"
-       write(iOutputUnit_,"(I7,A1,a)") iOff+3, " ", "Ion Velocity (Up)"
-       iOff = iOff + 5
-       write(iOutputUnit_,"(I7,A1,a)") iOff+1, " ", "Ed1"
-       write(iOutputUnit_,"(I7,A1,a)") iOff+2, " ", "Ed2"
-       write(iOutputUnit_,"(I7,A1,a)") iOff+3, " ", "Je1"
-       write(iOutputUnit_,"(I7,A1,a)") iOff+4, " ", "Je2"
+       write(iOutputUnit_,"(I7,A1,a)") iOff+4, " ", "Ion Velocity (East)"
+       write(iOutputUnit_,"(I7,A1,a)") iOff+5, " ", "Ion Velocity (Up)"
+       do iSpecies = 1, nPhotoIonPathways
+         write(iOutputUnit_,"(I7,A1,a,a)") iOff+iSpecies, " ", "EUV Ionization Frequency ",&
+            cIonPathway(iSpecies)
+       enddo
+       iOff = iOff + nPhotoIonPathways + 1
        write(iOutputUnit_,"(I7,A1,a)") iOff+5, " ", "Magnetic Latitude"
        write(iOutputUnit_,"(I7,A1,a)") iOff+6, " ", "Magnetic Longitude"
        write(iOutputUnit_,"(I7,A1,a)") iOff+8, " ", "B.F. East"
@@ -628,12 +623,16 @@ contains
        write(iOutputUnit_,"(I7,A1,a)") iOff+5, " ", "V!Di!N (up)"
 
        iOff = iOff + 5
-
-       do iIon = 1, nIons-1
+      
+      if (cType(1:2) == "1D" ) then 
+       do iIon = 1, nPhotoIonPathways
           write(iOutputUnit_,"(I7,A1,a)") iOff+iIon, " ", "EUV Ionization Rate("//cIons(iIon)//&
                ")"
        enddo
-       iOff = iOff + nIons-1
+       iOff = iOff + nPhotoIonPathways
+
+
+      else
 
        write(iOutputUnit_,"(I7,A1,a)") iOff+1, " ", "Solar Zenith Angle"
        iOff = iOff + 1
@@ -641,29 +640,9 @@ contains
        write(iOutputUnit_,"(I7,A1,a)") iOff+1, " ", "Local Time (hr)"
        iOff = iOff + 1
 
-       write(iOutputUnit_,"(I7,A1,a)") iOff+1, " ", "Mars-Solar Distance (AU)"
-       iOff = iOff + 1
-
        write(iOutputUnit_,"(I7,A1,a)") iOff+1, " ", "NO Emissions (ph/cm^3/s)"
        iOff = iOff + 1
-
-       ! if (cType(3:5) == "ALL") then
-
-       !          write(iOutputUnit_,"(I7,A1,a)") iOff+1, " ", "N2 Mixing Ratio"
-       !          write(iOutputUnit_,"(I7,A1,a)") iOff+2, " ", "CH4 Mixing Ratio"
-       !          write(iOutputUnit_,"(I7,A1,a)") iOff+3, " ", "Ar Mixing Ratio"
-       !          write(iOutputUnit_,"(I7,A1,a)") iOff+4, " ", "HCN Mixing Ratio"
-       !          write(iOutputUnit_,"(I7,A1,a)") iOff+5, " ", "H2 Mixing Ratio"
-       !
-       !!       write(iOutputUnit_,"(I7,A1,a)") iOff+6, " ", "15N2 Mixing Ratio"
-       !!       write(iOutputUnit_,"(I7,A1,a)") iOff+7, " ", "13CH4 Mixing Ratio"
-       !
-       !          iOff = iOff + nSpecies
-       !          write(iOutputUnit_,"(I7,A1,a)") iOff+1, " ", "RadCooling"
-       !          write(iOutputUnit_,"(I7,A1,a)") iOff+2, " ", "EuvHeating"
-       !          write(iOutputUnit_,"(I7,A1,a)") iOff+3, " ", "Conduction"
-       !          write(iOutputUnit_,"(I7,A1,a)") iOff+4, " ", "Heat Balance Total"
-       !          write(iOutputUnit_,"(I7,A1,a)") iOff+5, " ", "Heaing Efficiency"
+      end if
 
     end if
 
@@ -928,14 +907,8 @@ subroutine output_3dall(iBlock)
                 eTemperature(iLon,iLat,iAlt,iBlock)  ,&
                 ITemperature(iLon,iLat,iAlt,iBlock)  ,&
                 (Ivelocity(iLon,iLat,iAlt,i,iBlock),i=1,3),&
-                EUVIonRateS(iiLon,iiLat,iiAlt,1,iBlock),&
-                EUVIonRateS(iiLon,iiLat,iiAlt,2,iBlock),&
-                EUVIonRateS(iiLon,iiLat,iiAlt,3,iBlock),&
-                EUVIonRateS(iiLon,iiLat,iiAlt,4,iBlock),&
-                EUVIonRateS(iiLon,iiLat,iiAlt,5,iBlock),&
                 SZA(iiLon,iiLat,iBlock)*180/Pi, &
                 LocalTime(iiLon),        &
-                MarsOrbitalDistance(iiLon,iiLat,iiAlt),&
                 Emissions(iiLon,iiLat,iiAlt,iENOUV_,iBlock)
 
         enddo
@@ -988,11 +961,12 @@ subroutine output_3dion(iBlock)
   use ModGITM
   use ModInputs
   use ModElectrodynamics
+  use ModEUV, only : EUVIonRateS 
 
   implicit none
 
   integer, intent(in) :: iBlock
-  integer :: iAlt, iLat, iLon, iiAlt, iiLat, iiLon
+  integer :: iAlt, iLat, iLon, iiAlt, iiLat, iiLon, i
 
   do iAlt=-1,nAlts+2
      do iLat=-1,nLats+2
@@ -1005,10 +979,7 @@ subroutine output_3dion(iBlock)
                 eTemperature(iLon,iLat,iAlt,iBlock),  &
                 ITemperature(iLon,iLat,iAlt,iBlock),  &
                 Ivelocity(iLon,iLat,iAlt,:,iBlock),   &
-                ed1(iLon,iLat,iAlt), &
- 		ed2(iLon,iLat,iAlt), &
-		je1(iLon,iLat,iAlt), &
-		je2(iLon,iLat,iAlt), &
+                (EUVIonRateS(iLon,iLat,iAlt,i,iBlock),i=1,nPhotoIonPathways),&
                 mLatitude(iLon,iLat,iAlt,iBlock), &
                 mLongitude(iLon,iLat,iAlt,iBlock), &
                 B0(iLon,iLat,iAlt,:,iBlock), &  !Geomagnetic B0(nLons,nLats,nAlts,4[iEast_,iNorth_,iUp_,iMag_],nBlocks)
@@ -1091,19 +1062,6 @@ subroutine output_3dthm(iBlock)
                 *88775., &
                 ! Near IR heating Heating  ! Units of K/sol 
                 QnirTOT(iiLon, iiLat, iiAlt, iBlock)*88775., &
-                ! Horizontal Adiabatic Heating/Cooling
-                !                 UserData3D(iiLon,iiLat,iiAlt,40,iBlock)*88775., &
-                ! ! Horizontal Advective Heating (u dot grad T)
-                !                 UserData3D(iiLon,iiLat,iiAlt,41,iBlock)*88775., &
-                ! ! Vertical Adiabatic Cooling/Heating
-                !                 UserData3D(iiLon,iiLat,iiAlt,42,iBlock)*88775., &
-                ! ! Vertical Energy Transport
-                !                 UserData3D(iiLon,iiLat,iiAlt,43,iBlock)*88775., &
-                ! ! Total Dynamical Heating  (40-43)
-                !                 (UserData3D(iiLon,iiLat,iiAlt,40,iBlock)+ &
-                !                 UserData3D(iiLon,iiLat,iiAlt,41,iBlock) + &
-                !                 UserData3D(iiLon,iiLat,iiAlt,42,iBlock) + &
-                !                 UserData3D(iiLon,iiLat,iiAlt,43,iBlock))*88775., &
                 ! UDRAG and VDRAG Terms from EGWD2 (45-46):  m/sec/sol
                 GWDRAG(iiLon,iiLat,iiAlt,iEast_,iBlock)*88775., &
                 GWDRAG(iiLon,iiLat,iiAlt,iNorth_,iBlock)*88775., &
@@ -1474,12 +1432,12 @@ subroutine output_1dall(iiLon, iiLat, iBlock, rLon, rLat, iUnit)
      enddo
 
      iOff = 8+nSpeciesTotal+nSpecies
-     do iIon = 1, nIons-1
+     do iIon = 1, nIons
         Tmp = IDensityS(0:nLons+1,0:nLats+1,iAlt,iIon,iBlock)
         Vars(iOff+iIon) = inter(Tmp,iiLon,iiLat,rlon,rlat)
      enddo
 
-     iOff = 8+nSpeciesTotal+nSpecies+nIons
+     iOff = iOff + nIons+1
      Tmp = eTemperature(0:nLons+1,0:nLats+1,iAlt,iBlock)
      Vars(iOff)   = eTemperature(1,1,ialt,iblock) !inter(Tmp,iiLon,iiLat,rlon,rlat)
 
@@ -1504,35 +1462,14 @@ subroutine output_1dall(iiLon, iiLat, iBlock, rLon, rLat, iUnit)
      Tmp = IVelocity(0:nLons+1,0:nLats+1,iAlt,iUp_,iBlock)
      Vars(iOff) = inter(Tmp,iiLon,iiLat,rlon,rlat)
 
-     do iIon = 1, nIons-1
+     do iIon = 1, nPhotoIonPathways
         Vars(iOff+iIon) = EUVIonRates(1,1,iiAlt,iIon,iBlock)
      enddo
 
-     iOff = iOff + nIons-1
+     iOff = iOff + nPhotoIonPathways
      Vars(iOff+1) = SZA(1,1,iBlock)
 
-     iOff = iOff + 1
-     do iSpecies = 1, nSpecies
-        Tmp = NDensityS(0:nLons+1,0:nLats+1,iAlt,iSpecies,iBlock)/NDensity(0:nLons+1,0:nLats+1,iAlt,iBlock)
-        Vars(iOff+iSpecies) = inter(Tmp,iiLon,iiLat,rlon,rlat)
-     enddo
 
-     !        iOff = iOff + 1
-     !        Tmp = NDensityS(0:nLons+1,0:nLats+1,iAlt,iSpecies,iBlock)/NDensity(0:nLons+1,0:nLats+1,iAlt,iBlock)
-     !        Vars(iOff+iSpecies) = inter(Tmp,iiLon,iiLat,rlon,rlat)
-
-     iOff = iOff + nSpecies
-     Vars(iOff+1) = Dt*RadCooling(1,1,iiAlt,iBlock)*TempUnit(1,1,iiAlt)
-
-     Vars(iOff+2) = Dt*EuvHeating(1,1,iiAlt,iBlock)*TempUnit(1,1,iiAlt)
-
-     Vars(iOff+3) = Conduction(1,1,iiAlt)*TempUnit(1,1,iiAlt)
-
-     Vars(iOff+4) = Dt*EuvHeating(1,1,iiAlt,iBlock)*TempUnit(1,1,iiAlt) - &
-          Dt*RadCooling(1,1,iiAlt,iBlock)*TempUnit(1,1,iiAlt) + &
-          Conduction(1,1,iiAlt)*TempUnit(1,1,iiAlt)
-
-     ioff = iOff + 4
 
      write(iOutputUnit_) Vars
 
