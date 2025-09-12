@@ -1046,66 +1046,7 @@ contains
 
   end subroutine init_planet
 
-subroutine calc_Ls
 
-  use ModTime
-  use ModInputs, only : Ls_phi, Ls_tau, Ls_a
-  implicit none 
-  
-  ! Ls Variables
-  real :: J2000, alpha_pms, pbs, deltat_h
-  real :: d2r, vMinusM, meanAnomoly
-
-  integer :: Y, M, D, i
-
-  d2r = pi/180. 
-
-    ! Calculate Ls
-    deltat_h = iTimeArray(4) + iTimeArray(5) / 60.0 + iTimeArray(6) / 3600.0
-
-    Y = iTimeArray(1)
-    M = iTimeArray(2)
-    D = iTimeArray(3)
-
-    !Calculate Juliian Date, including time
-  JD_UTC = 367*Y                                                   &
-  - int( 7.0d0 * ( Y + int( (M+9)/12.0d0 ) ) / 4.0d0 )           &
-  - int( 3.0d0 * int( ( Y + int( (M-9)/7.0d0 ) ) / 100.0d0 + 1 ) &
-         / 4.0d0 )                                               &
-  + int( 275.0d0 * M / 9.0d0 ) + D + 1721028.5d0                 &
-  + deltat_h/24.0d0
-
-!     JD_UTC = 367*iTimeArray(1)-7*(iTimeArray(1)+(iTimeArray(2)+9)/12)/4 &
-!          +275*iTimeArray(2)/9+iTimeArray(3)-730531.5+deltat_h/24.0
-
-    J2000 = JD_UTC - 2451545.0
-
-    meanAnomoly = (19.3870 + 0.52402075 * J2000) * pi / 180.0
-
-    alpha_pms = 270.3863 + 0.52403840 * J2000
-
-    L_s = alpha_pms + (10.691 + 3.d-7 * J2000) * dsin(meanAnomoly) + &
-            0.623 * dsin(2.0 * meanAnomoly) + 0.050 * dsin(3.0 * meanAnomoly) + &
-            0.005 * dsin(4.0 * meanAnomoly) + 0.0005 * dsin(5.0 * meanAnomoly)
-
-    pbs = 0.0
-    do i = 1, 7
-      pbs = pbs + Ls_a(i) * dcos(pi / 180.0 * (0.985626 * J2000 / &
-                                               Ls_tau(i) + Ls_phi(i)))
-    end do
-    L_s = L_s + pbs
-
-    if (L_s > 0.0) then
-      L_s = 360.0 * (L_s / 360.0 - floor(L_s / 360.0))
-    else
-      L_s = 360.0 + 360.0 * (L_s / 360.0 - ceiling(L_s / 360.0))
-    end if
-
-    vMinusM = ((10.691 + 3.0e-7 *J2000)*sin(meanAnomoly) + 0.623*sin(2*meanAnomoly) + &
-	    0.050*sin(3*meanAnomoly) + 0.005*sin(4*meanAnomoly) + 0.0005*sin(5*meanAnomoly) + PBS)
-    EOT = 2.861*sin(2*L_s*d2R)-0.071*sin(4*L_s*d2R)+0.002*sin(6*L_s*d2R)-vMinusM !degrees
-
-end subroutine calc_Ls
   !################ Nelli, April 07 ##########################
   !Filling arrays needed by the correlated k lower
   !atmosphere radiation code
