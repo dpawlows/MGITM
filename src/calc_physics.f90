@@ -177,7 +177,7 @@ subroutine calc_physics(iBlock)
 
      enddo
   enddo
-write(*,*) sza(1,1,1)*180/pi,localtime(1)
+
   call calc_scaled_euv
 
   do iAlt = 1, nAlts
