@@ -20,7 +20,6 @@ subroutine euv_ionization_heat(iBlock)
   integer, intent(in) :: iBlock
 
   integer :: iAlt, iWave, iSpecies, iIon, iError, iLon, iLat, iPathway
-  ! integer :: iAlt, iWave, iSpecies, iIon, iError, iLon,iLat
   real, dimension(nLons,nLats) :: Tau, Intensity
   real, dimension(nLons,nLats,nalts) :: secondaryRate
 
@@ -80,16 +79,16 @@ subroutine euv_ionization_heat(iBlock)
         do iSpecies = 1, nSpecies
            Tau = Tau + &
                 photoabs(iWave, iSpecies) * ChapmanLittle(:,:,iSpecies)
+
         enddo
 
         Intensity = Flux_of_EUV(iWave) * exp(-1.0*Tau)
-
         ! There are multiple photodissociation and photoionization pathways for 
         ! certain species, so they are numbered separately from the source species 
 
         do iPathway = 1, nPhotoIonPathways
            if (UseWValue) then 
-	      if (iPathway == iPICO2_CO2P) then
+	           if (iPathway == iPICO2_CO2P) then
 
                  SIR(:,:,iAlt,iWave,iBlock) = Intensity * photoelectronfactor(iwave) * &
                       photoion(iWave,iPathway)
@@ -126,6 +125,7 @@ subroutine euv_ionization_heat(iBlock)
         enddo
      enddo
   enddo
+
   !\
   ! Add Secondary Ionization if specified to use it.
   !/
