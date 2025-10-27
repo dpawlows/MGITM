@@ -12,7 +12,7 @@ subroutine calc_electron_temperature(iBlock)
   implicit none
 
   integer, intent(in) :: iBlock
-  integer :: iLon,iLat,iAlt,iminiono,k130
+  integer :: iLon,iLat,iAlt,k130
   real :: Alt,TN130
 ! real,parameter :: TL = 510.
   real,parameter :: TL2 = 510.
@@ -50,8 +50,7 @@ subroutine calc_electron_temperature(iBlock)
 
   do iLon = 1, nLons
      do iLat = 1, nLats
-        iMinIono = iAltMinIono(iLon,iLat,iBlock)
-        do ialt = iminiono, nAlts
+        do ialt = 1, nAlts
 
            Alt = Altitude_GB(iLon,iLat,iAlt,iBlock) /1000.0
            if (Alt < 130.0) Then
@@ -80,8 +79,7 @@ subroutine calc_electron_temperature(iBlock)
 
   do iLon = 1, nLons
      do iLat = 1, nLats
-        iMinIono = iAltMinIono(iLon,iLat,iBlock)
-        do ialt = iminiono, nAlts
+        do ialt = 1, nAlts
 
            Alt = Altitude_GB(iLon,iLat,iAlt,iBlock) /1000.0
            if (Alt < 180.0) iTemperature(iLon,iLat,iAlt,iBlock) = &

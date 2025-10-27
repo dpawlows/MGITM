@@ -70,12 +70,12 @@ subroutine init_msis
 
   integer, parameter:: ninitialAlts = 25
   integer :: iBlock
-  integer :: iiLon,iiLat,iiAlt,iminiono,ialtlow(1), TimeArray(7),ilatlow(1)
+  integer :: iiLon,iiLat,iiAlt,ialtlow(1), TimeArray(7),ilatlow(1)
   integer :: iLon,iLat,iAlt, iSpecies, iIon, iError, jlat,klon,iline
 
   logical :: Done = .False.,NotStarted = .True.
   character (len=iCharLen_) :: cLine
-  real :: inDensities(9),altlow,althigh,latlow,lathigh
+  real :: inDensities(9),altlow,althigh,latlow,lathigh, Hc
   real :: ralt, invAltDiff, altFind, altdiff, LogElectronDensity,dalt(nspeciestotal),alttemp(nInAlts)
   real, dimension(nInitialAlts) :: tempalt,LogInitialDensity,InitialEDensity,InitialAlt
 
@@ -143,9 +143,8 @@ subroutine init_msis
         do iLon = -1, nLons + 2
            iiLon = min(max(iLon,1),nLons)
 
-           iMiniono =  iAltMinIono(iiLon,iiLat,iBlock)
 
-           do iAlt = iMinIono-2, nalts + 2
+           do iAlt = -1, nalts + 2
               iialt = max(-1,ialt)
               tempalt = initialAlt
               altFind = altitude_GB(iLon,iLat,iiAlt,iBlock)/1000.0
@@ -162,9 +161,11 @@ subroutine init_msis
               invaltdiff = 1/(althigh - altlow)
 
               if (altFind .lt. initialAlt(1)) then
+                  Hc = 5.0e3 !taper the exponental quickly
+                  altdiff = altlow - altFind
+                  ralt = ((LogInitialDensity(2) - LogInitialDensity(1)) / &
+                   (initialAlt(2) - initialAlt(1))) * altdiff*Hc *(exp(altdiff/Hc) - 1.0)
 
-                 ralt = (altlow-altFind)*(LogInitialDensity(ialtlow(1) + 1)-LogInitialDensity(ialtlow(1))) * &
-                      invAltDiff
                  LogElectronDensity = LogInitialDensity(ialtlow(1)) - ralt
 
               else
