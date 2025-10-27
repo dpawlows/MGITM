@@ -716,30 +716,30 @@ end subroutine nlte_tcool
 !---------------------------------------------------------
 
 subroutine init_isochem
-  use GITM_planet, only: ialtminiono
-  use ModInputs, only: altminiono
-  use ModGITM, only: Altitude_GB
-  use ModSizeGITM
+!  use GITM_planet, only: ialtminiono
+!  use ModInputs, only: altminiono
+!  use ModGITM, only: Altitude_GB
+!  use ModSizeGITM
 
 
-  implicit none
+!  implicit none
 
-  integer :: iBlock, iLon, iLat, iAlt
+!  integer :: iBlock, iLon, iLat, iAlt
 
-  iAltMinIono = 1
+!  iAltMinIono = 1
 
-  do iBlock = 1, nBlocks
-     do iLon = 1, nLons
-        do iLat = 1, nLats
-           do ialt = 1, nAlts
-              if (Altitude_GB(iLon,iLat,ialt,iBlock)/1000.0 .le. AltMinIono) &
-                   iAltMinIono(iLon,iLat,iBlock) = iAlt
-              if (ialtminiono(ilon,ilat,iblock) .lt. 1)  ialtminiono(ilon,ilat,iblock) = 1
-           enddo
-        enddo
-     enddo
-  enddo
-
+!  do iBlock = 1, nBlocks
+!     do iLon = 1, nLons
+!        do iLat = 1, nLats
+!           do ialt = 1, nAlts
+!              if (Altitude_GB(iLon,iLat,ialt,iBlock)/1000.0 .le. AltMinIono) &
+!                   iAltMinIono(iLon,iLat,iBlock) = iAlt
+!              if (ialtminiono(ilon,ilat,iblock) .lt. 1)  ialtminiono(ilon,ilat,iblock) = 1
+!           enddo
+!        enddo
+!     enddo
+!  enddo
+return
 end subroutine init_isochem
 
 !---------------------------------------------------------------------
