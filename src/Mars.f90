@@ -1,7 +1,6 @@
 subroutine fill_photo(photoion, photoabs, photodis)
 
   ! CVS_new_code:  Dec. 19, 2011 (DP additions)
-  ! -- Timing Fix, photoabs(58,iCO2_) = 0.0
   ! -- E(EUV) = 0.18 (off) or 0.20 (on)
   ! -- TOTAL(1) = 0.0; TOTAL(2) = 0.0
   ! -- populate 1-D and 3-D fields for diagnostics from RT code
@@ -63,7 +62,7 @@ subroutine fill_photo(photoion, photoabs, photodis)
   photoabs(:,iO_)       = PhotoAbs_O
   photoabs(:,iN2_)      = PhotoAbs_N2
   photoabs(:,iO2_)      = PhotoAbs_O2
-  photoabs(58,iCO2_)    = 0.0! timing fix (DP: Nov. 2011)
+  !photoabs(58,iCO2_)    = 0.0! timing fix (DP: Nov. 2011)
 
   ! ---------------------------------------------------------------------
   !  Specific Photoionization Cross Sections (nIons-1)
