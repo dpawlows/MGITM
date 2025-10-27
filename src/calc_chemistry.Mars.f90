@@ -520,16 +520,14 @@ subroutine calc_chemistry(iBlock)
              rr = 1.1e-15*ti3m039
           endif
 
-          if (Ions(iOP_) > 1.0e2) then
-             Reaction = rr * Neutrals(iCO2_) * Ions(iOP_)
+          Reaction = rr * Neutrals(iCO2_) * Ions(iOP_)
 
-             NeutralLosses(iCO2_) = NeutralLosses(iCO2_) + Reaction
-             IonLosses(iOP_) = IonLosses(iOP_) + Reaction
-             NeutralSources(iCO_) = NeutralSources(iCO_) + Reaction
-             IonSources(iO2P_) = IonSources(iO2P_) + Reaction
-             reactionrate(25) = reaction
+          NeutralLosses(iCO2_) = NeutralLosses(iCO2_) + Reaction
+          IonLosses(iOP_) = IonLosses(iOP_) + Reaction
+          NeutralSources(iCO_) = NeutralSources(iCO_) + Reaction
+          IonSources(iO2P_) = IonSources(iO2P_) + Reaction
+          reactionrate(25) = reaction
 
-          endif
           ! -----------------------------------------------------------
           ! CO2 + N2+ ==> CO2+ + N2
           ! -----------------------------------------------------------
