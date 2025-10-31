@@ -186,14 +186,11 @@ trouble = .false.
 
   where (MeanMajorMass == 0) MeanMajorMass = Mass(1)
 
-!write(*,*) '==> calc_rates:  Before MeanIonMass Calculation.'
-
-  invNe = 1/Ne
-  do iIon = 1, nIons-1
-     MeanIonMass = MeanIonMass + &
-          MassI(iIon) * IDensityS(:,:,:,iIon,iBlock)
+  do iIon = 1, nIons - 1
+    MeanIonMass = MeanIonMass + &
+                  MassI(iIon)*IDensityS(:, :, :, iIon, iBlock)/ &
+                  IDensityS(:, :, :, ie_, iBlock)
   enddo
-  MeanIonMass = MeanIonMass * invNe
 
 ! -------------------------------------------------------------------------------
   TempUnit = MeanMajorMass / Boltzmanns_Constant
