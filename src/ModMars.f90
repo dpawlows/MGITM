@@ -972,6 +972,9 @@ contains
     MassI(iNOP_)  = Mass(iO_) + Mass(iN2_)/2.0
     MassI(iCO2P_) = Mass(iCO2_)
     MassI(iO2P_)  = Mass(iO2_)
+    MassI(iCOP_)  = Mass(iCO_)
+    MassI(iCP_)   = Mass(iC_)
+    MassI(iN2P_)  = Mass(iN2_)
     MassI(ie_) = Mass_Electron
 
     itime = 0
