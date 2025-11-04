@@ -698,7 +698,7 @@ subroutine set_inputs
 
         case ("#USELILLIS")
            call read_in_logical(UseEmpiricalIonization,iError)
-           call read_in_string(cIEEFile, iError)
+           call read_in_string(cEIIFile, iError)
            call read_in_real(solarWindPressure,iError)
 
            if (iError /= 0) then
