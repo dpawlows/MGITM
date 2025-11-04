@@ -10180,7 +10180,7 @@ subroutine ReadLillisModel
   EIMReactions(iImpactCO2_A2PI_U)  = 'iImpactCO2_A2PI_U'
 
   write(*,*) "==> Now Reading Mars Empirical Ionization Model"
-  open(unit=42, file='UA/DataIn/nemlillis_v3.dat', action='read')
+  open(unit=42, file=cEIIFile, action='read')
 
 !!! The impact ionization grid is currently fixed
   !Read Header
@@ -10202,6 +10202,8 @@ subroutine ReadLillisModel
                          EIMBelvs(n) = elvmid
 
                     if (iError /= 0) then
+                        write(*,*) i,"/",nReactions_EIM,j,"/",nBTypes_EIM,k,"/",nAlts_EIM,&                                                        
+                          l,"/",nSW_EIM,m,"/",nBmags_EIM,n,"/",nBelvs_EIM                                                                       
                        call stop_gitm("Error reading impact ionization data")
                     endif
 

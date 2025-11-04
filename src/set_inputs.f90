@@ -698,13 +698,15 @@ subroutine set_inputs
 
         case ("#USELILLIS")
            call read_in_logical(UseEmpiricalIonization,iError)
+           call read_in_string(cEIIFile, iError)
            call read_in_real(solarWindPressure,iError)
 
            if (iError /= 0) then
               write(*,*) 'Incorrect format for #CRUSTAL:'
               write(*,*) '#USELILLIS'
-              write(*,*) 'UseEmpiricalIonization   (logical)'
-              write(*,*) 'solarWindPressure        (real)'
+              write(*,*) 'UseEmpiricalIonization      (logical)'
+              write(*,*) 'ElectronImpactModelFilename (string)'
+              write(*,*) 'solarWindPressure           (real)'
               write(*,*) 'Field Type (optional, default = 4) (int)'
            endif
            call read_in_int(DefaultFieldType,iErrorIgnore)

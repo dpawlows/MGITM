@@ -247,6 +247,7 @@ module ModInputs
 
   logical                   :: UseEUVData =.false.
   character (len=iCharLen_) :: cEUVFile
+  character (len=iCharLen_) :: cEIIFile
   character (len=iCharLen_) :: cMHDFile,cMHDFilelist
   character (len=100), dimension(1000) :: MHDFiles
   real :: dtBMHD = 60*15 !15 minutes by default
