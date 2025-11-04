@@ -14,7 +14,7 @@ src/ModChemistry.f90
 src/ModPlanet.f90
 src/ModRates.f90
 src/ModSize.f90
-src/PostProcess.exe
+src/PostGITM.exe
 src/aurora.f90
 src/calc_chemistry.f90
 src/calc_electron_temperature.f90
