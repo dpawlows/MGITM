@@ -83,7 +83,9 @@ F         UseCrustalFields
 
 #USELILLIS
 F        use empirical ionization
+filename
 0.42     Solar wind pressure (should be between 0.39 and 1.36)
+8
 
 #MHDFIELD
 F    
