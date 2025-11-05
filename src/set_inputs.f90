@@ -702,7 +702,7 @@ subroutine set_inputs
            call read_in_real(solarWindPressure,iError)
 
            if (iError /= 0) then
-              write(*,*) 'Incorrect format for #CRUSTAL:'
+              write(*,*) 'Incorrect format for #USELILLIS:'
               write(*,*) '#USELILLIS'
               write(*,*) 'UseEmpiricalIonization      (logical)'
               write(*,*) 'ElectronImpactModelFilename (string)'
