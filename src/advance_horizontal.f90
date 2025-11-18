@@ -131,7 +131,7 @@ stop
                     write(*,*) "using magnetic fields. This can result in huge ion velocities!!"
                     write(*,*) UseIonAdvection, UseCrustalField,UseMHDField
                   endif
-        if (minval(NewINum_CV) < 1.0e2) then
+        if (minval(NewINum_CV) < 0.0) then
 !           write(*,*) "Negative Ion Density after horizontal advection!!"
 !           write(*,*) "Correcting...."
            do iLon = 1, nLons
