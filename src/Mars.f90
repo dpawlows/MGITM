@@ -10271,7 +10271,6 @@ subroutine interpolateEIM(altitude,Bz,Bmag,MagFieldType,c)
   integer, intent(in) :: MagFieldType
   real :: BelevationAngle,vmlow,vmhigh,velow,vehigh,w1,w2,w3
   real :: invelvdiff, invmagDiff, altd, elvd, magd,distances(nAlts_EIM)
-  real, dimension(nReactions_EIM) :: c000, c001, c011, c010, c100, c101, c110, c111
   real, dimension(nReactions_EIM,nAlts_EIM) :: c00, c01, c10, c11, c0, c1, R1, R2
   real :: tempBMag(nBmags_EIM),tempBElev(nBelvs_EIM), tempAlt(2,nAlts_EIM),talt
   real,intent(out) :: c(nReactions_EIM)

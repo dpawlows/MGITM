@@ -312,7 +312,6 @@ module GITM_planet
   real, dimension(1:nLons,1:nLats,1:nAlts) :: MarsOrbitalDistance
 
   !
-  integer, parameter :: nReactions_EIM = 3 !this is the number of reactions we currently include
   integer, parameter :: nBTypes_EIM = 8
   integer, parameter :: nSW_EIM = 8
   integer, parameter :: nAlts_EIM = 5
@@ -348,6 +347,8 @@ module GITM_planet
   integer, parameter ::  iImpactCO2_X2PI_G = 1
   integer, parameter ::  iImpactCO2_B2Sig = 2
   integer, parameter ::  iImpactCO2_A2PI_U = 3
+  integer, parameter :: nReactions_EIM = iImpactCO2_A2PI_U  !this is the number of reactions we currently include
+
   integer, allocatable :: FieldType(:,:,:,:)
 
   real :: EIMsolarwindpressure(nSW_EIM), EIMAltitude(2,nAlts_EIM)
