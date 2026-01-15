@@ -347,7 +347,21 @@ module GITM_planet
   integer, parameter ::  iImpactCO2_X2PI_G = 1
   integer, parameter ::  iImpactCO2_B2Sig = 2
   integer, parameter ::  iImpactCO2_A2PI_U = 3
-  integer, parameter :: nReactions_EIM = iImpactCO2_A2PI_U  !this is the number of reactions we currently include
+  integer, parameter ::  iImpactCO2_COplus = 4
+  integer, parameter ::  iImpactCO2_Oplus = 5
+  integer, parameter ::  iImpactCO2_Cplus = 6
+  integer, parameter ::  iImpactO1_plus4S = 7
+  integer, parameter ::  iImpactO1_plus2D = 8
+  integer, parameter ::  iImpactO1_plus2P = 9
+  integer, parameter ::  iImpactN2_plusX2Sg = 10
+  integer, parameter ::  iImpactN2_plusA2Pu = 11
+  integer, parameter ::  iImpactN2_plusB2Su = 12
+  integer, parameter ::  iImpactCO_COplusX2Sig = 13
+  integer, parameter ::  iImpactCO_COMETTAI = 14
+  integer, parameter ::  iImpactCO_1STNEG = 15
+  integer, parameter ::  iImpactCO_Cplus = 16
+  integer, parameter ::  iImpactCO_Oplus = 17
+  integer, parameter :: nReactions_EIM = iImpactCO_Oplus  !this is the number of reactions we currently include
 
   integer, allocatable :: FieldType(:,:,:,:)
 

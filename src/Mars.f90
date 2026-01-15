@@ -10178,6 +10178,20 @@ subroutine ReadLillisModel
   EIMReactions(iImpactCO2_X2PI_G)  = 'iImpactCO2_X2PI_G'
   EIMReactions(iImpactCO2_B2Sig)   = 'iImpactCO2_B2Sig'
   EIMReactions(iImpactCO2_A2PI_U)  = 'iImpactCO2_A2PI_U'
+  EIMReactions(iImpactCO2_COplus)  = 'iImpactCO2_COplus'
+  EIMReactions(iImpactCO2_Oplus)  = 'iImpactCO2_Oplus'
+  EIMReactions(iImpactCO2_Cplus)  = 'iImpactCO2_Cplus'
+  EIMReactions(iImpactO1_plus4S)  = 'iImpactO1_plus4S'
+  EIMReactions(iImpactO1_plus2D)  = 'iImpactO1_plus2D'
+  EIMReactions(iImpactO1_plus2P)  = 'iImpactO1_plus2P'
+  EIMReactions(iImpactN2_plusX2Sg)  = 'iImpactN2_plusX2Sg'
+  EIMReactions(iImpactN2_plusA2Pu)  = 'iImpactN2_plusA2Pu'
+  EIMReactions(iImpactN2_plusB2Su)  = 'iImpactN2_plusB2Su'
+  EIMReactions(iImpactCO_COplusX2Sig)  = 'iImpactCO_COplusX2Sig'
+  EIMReactions(iImpactCO_COMETTAI)  = 'iImpactCO_COMETTAI'
+  EIMReactions(iImpactCO_1STNEG)  = 'iImpactCO_1STNEG'
+  EIMReactions(iImpactCO_Cplus)  = 'iImpactCO_Cplus'
+  EIMReactions(iImpactCO_Oplus)  = 'iImpactCO_Oplus'
 
   write(*,*) "==> Now Reading Mars Empirical Ionization Model"
   open(unit=42, file=cEIIFile, action='read')

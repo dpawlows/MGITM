@@ -331,10 +331,12 @@ subroutine calc_chemistry(iBlock)
           reactionrate(11) = reaction
 
           ! ----------------------------------------------------------
-          ! CO2 impact ionization
+          ! impact ionization
           ! ----------------------------------------------------------
 
           if (UseEmpiricalIonization) then
+          
+						!CO2 impact ionization
 
              Reaction = &
                   (impactIonizationFrequency(iLon,iLat,iAlt,iImpactCO2_X2PI_G,iBlock) + &
@@ -343,6 +345,81 @@ subroutine calc_chemistry(iBlock)
                   *Neutrals(iCO2_)
              IonSources(iCO2P_) = IonSources(iCO2P_) + Reaction
              NeutralLosses(iCO2_) = NeutralLosses(iCO2_) + Reaction
+             
+            ! CO2 + e- ==> CO+ + O
+             
+             Reaction = &
+                  impactIonizationFrequency(iLon,iLat,iAlt,iImpactCO2_COplus,iBlock) &
+                  *Neutrals(iCO2_)
+             IonSources(iCOP_) = IonSources(iCOP_) + Reaction
+             NeutralSources(iO_) = NeutralSources(iO_) + Reaction
+             NeutralLosses(iCO2_) = NeutralLosses(iCO2_) + Reaction
+             
+             ! CO2 + e- ==> O+ + CO
+             
+             Reaction = &
+                  impactIonizationFrequency(iLon,iLat,iAlt,iImpactCO2_Oplus,iBlock) &
+                  *Neutrals(iCO2_)
+             IonSources(iOP_) = IonSources(iOP_) + Reaction
+             NeutralSources(iCO_) = NeutralSources(iCO_) + Reaction
+             NeutralLosses(iCO2_) = NeutralLosses(iCO2_) + Reaction
+             
+             ! CO2 + e- ==> C+ + O2
+             
+             Reaction = &
+                  impactIonizationFrequency(iLon,iLat,iAlt,iImpactCO2_Cplus,iBlock) &
+                  *Neutrals(iCO2_)
+             IonSources(iCP_) = IonSources(iCP_) + Reaction
+             NeutralSources(iO2_) = NeutralSources(iO2_) + Reaction
+             NeutralLosses(iCO2_) = NeutralLosses(iCO2_) + Reaction
+             
+          	!O impact ionization
+          	
+             Reaction = &
+                  (impactIonizationFrequency(iLon,iLat,iAlt,iImpactO1_plus4S,iBlock) + &
+                  impactIonizationFrequency(iLon,iLat,iAlt,iImpactO1_plus2D,iBlock) + &
+                  impactIonizationFrequency(iLon,iLat,iAlt,iImpactO1_plus2P,iBlock)) &
+                  *Neutrals(iO_)
+             IonSources(iOP_) = IonSources(iOP_) + Reaction
+             NeutralLosses(iO_) = NeutralLosses(iO_) + Reaction
+             
+            !N2 impact ionization
+             
+             Reaction = &
+                  (impactIonizationFrequency(iLon,iLat,iAlt,iImpactN2_plusX2Sg,iBlock) + &
+                 impactIonizationFrequency(iLon,iLat,iAlt,iImpactN2_plusA2Pu,iBlock) + &
+                 impactIonizationFrequency(iLon,iLat,iAlt,iImpactN2_plusB2Su,iBlock)) &
+                  *Neutrals(iN2_)
+             IonSources(iN2P_) = IonSources(iN2P_) + Reaction
+             NeutralLosses(iN2_) = NeutralLosses(iN2_) + Reaction
+             
+            !CO impact ionization
+            
+             Reaction = &
+                  (impactIonizationFrequency(iLon,iLat,iAlt,iImpactCO_COplusX2Sig,iBlock) + &
+                 impactIonizationFrequency(iLon,iLat,iAlt,iImpactCO_COMETTAI,iBlock) + &
+                 impactIonizationFrequency(iLon,iLat,iAlt,iImpactCO_1STNEG,iBlock)) &
+                  *Neutrals(iCO_)
+             IonSources(iCOP_) = IonSources(iCOP_) + Reaction
+             NeutralLosses(iCO_) = NeutralLosses(iCO_) + Reaction
+             
+             ! CO + e- ==> C+ + O
+             
+             Reaction = &
+                  impactIonizationFrequency(iLon,iLat,iAlt,iImpactCO_Cplus,iBlock) &
+                  *Neutrals(iCO_)
+             IonSources(iCP_) = IonSources(iCP_) + Reaction
+             NeutralSources(iO_) = NeutralSources(iO_) + Reaction
+             NeutralLosses(iCO_) = NeutralLosses(iCO_) + Reaction
+             
+             ! CO + e- ==> O+ + C
+             
+             Reaction = &
+                  impactIonizationFrequency(iLon,iLat,iAlt,iImpactCO_Oplus,iBlock) &
+                  *Neutrals(iCO_)
+             IonSources(iOP_) = IonSources(iOP_) + Reaction
+             NeutralSources(iC_) = NeutralSources(iC_) + Reaction
+             NeutralLosses(iCO_) = NeutralLosses(iCO_) + Reaction
 
           endif
 

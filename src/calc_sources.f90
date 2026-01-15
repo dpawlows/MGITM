@@ -405,8 +405,14 @@ subroutine calc_GITM_sources(iBlock)
                     ! to different reactions. They are kept separate here for ease of inspection.
                     ! However, each species has only 1 attenuation factor.
 
-                    impactionizationFrequency(ilon,ilat,ialt,iImpactCO2_X2PI_G:iImpactCO2_A2PI_U,iBlock) = &
-                         (10**EIMIZ)*attenuationFactor(iCO2_)
+                    impactionizationFrequency(ilon,ilat,ialt,iImpactCO2_X2PI_G:iImpactCO2_Cplus,iBlock) = &
+                         (10**EIMIZ(iImpactCO2_X2PI_G:iImpactCO2_Cplus))*attenuationFactor(iCO2_)
+                         impactionizationFrequency(ilon,ilat,ialt,iImpactO1_plus4S:iImpactO1_plus2P,iBlock) = &
+                         (10**EIMIZ(iImpactO1_plus4S:iImpactO1_plus2P))*attenuationFactor(iO_)
+                         impactionizationFrequency(ilon,ilat,ialt,iImpactN2_plusX2Sg:iImpactN2_plusB2Su,iBlock) = &
+                         (10**EIMIZ(iImpactN2_plusX2Sg:iImpactN2_plusB2Su))*attenuationFactor(iN2_)
+                         impactionizationFrequency(ilon,ilat,ialt,iImpactCO_COplusX2Sig:iImpactCO_Oplus,iBlock) = &
+                         (10**EIMIZ(iImpactCO_COplusX2Sig:iImpactCO_Oplus))*attenuationFactor(iCO_)
 
                  endif
               enddo
