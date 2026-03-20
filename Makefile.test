@@ -76,10 +76,11 @@ test_gitm_mars_3d_run:
 test_gitm_mars_3d_restart:
 	cd ${TESTDIR}; cp UA/DataIn/UAM.mars.in.3d.restart ./UAM.in
 	cd ${TESTDIR}; ${PARALLEL} ${NPFLAG} ${NP} ./GITM.exe > runlog_mars_3d
+	cd ${TESTDIR}; ./PostProc.pl RESULTS
 
 test_gitm_mars_3d_check:
 	(${SCRIPTDIR}/DiffNum.pl -b -r=2e-2 \
-		${TESTDIR}/UA/data/log0000000?.dat ${TESTDIR}/UA/DataIn/log.3d.dat.mars \
+		${TESTDIR}/RESULTS/UA/log0000000?.dat ${TESTDIR}/UA/DataIn/log.3d.dat.mars \
 		> test_gitm_mars_3d.diff)
 	ls -l test_gitm_mars_3d.diff
 
