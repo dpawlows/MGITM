@@ -9,9 +9,13 @@ foreach file (*.header)
     pwd
     echo $base | `pwd`/../PostGITM.exe
 
-    if (-e ${base}.bin) rm -f ${base}.b[0-9][0-9][0-9][0-9] 
-    if (-e ${base}.bin) rm -f ${file}
-    if (-e ${base}.bin) rm -f ${base}.sat
+    if (-e ${base}.bin && -e ${base}.sat)then
+       # Remove satellite file and header
+       rm -f ${base}.sat ${file}
+    else if (-e ${base}.bin) then
+       # Remove block files and header
+       rm -f ${base}.b[0-9][0-9][0-9][0-9] ${file}
+    endif
 
 end
 
