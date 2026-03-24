@@ -77,7 +77,7 @@ my $NoFlush;
 
 &get_settings;
 
-$Planet = "Earth" if $Install; # Default planet
+$Planet = "Mars" if $Install; # Default planet
 $NoFlush = 0;
 
 #our $gitcmd;
