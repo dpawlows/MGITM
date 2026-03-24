@@ -78,10 +78,10 @@ distclean:
 	./Config.pl -uninstall
 
 allclean:
-	@cd $(ABDIR);    make clean
-	@cd $(MAINDIR);  make distclean
-	@cd srcInterface;make distclean
-	rm -f *~ srcData/UAM.in
+	@cd $(ABDIR);     make clean
+	@cd $(MAINDIR);   make distclean
+	@cd srcInterface; make distclean
+	rm -f *~ gitinfo.txt srcData/UAM.in
 #
 #       Create run directories
 #

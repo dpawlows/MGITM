@@ -5,6 +5,7 @@ run_test
 *.o
 *.a
 *.mod
+gitinfo.txt
 Makefile.conf
 Makefile.def
 Makefile.DEPEND
