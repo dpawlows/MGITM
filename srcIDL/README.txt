@@ -1,3 +1,7 @@
+Compile various macros by running idlr on startup, or using
+
+.r gitm_procedures
+
 read_thermosphere_file.pro reads an M-GITM file.
 
 See example usage on line 20 of thermo_batch.pro, which can be used to quickly
