@@ -345,8 +345,8 @@ module GITM_planet
   integer :: minMagFieldAlt,maxMagFieldAlt
 
   integer, parameter ::  iImpactCO2_X2PI_G = 1
-  integer, parameter ::  iImpactCO2_B2Sig = 2
-  integer, parameter ::  iImpactCO2_A2PI_U = 3
+  integer, parameter ::  iImpactCO2_A2PI_U = 2
+  integer, parameter ::  iImpactCO2_B2Sig = 3
   integer, parameter ::  iImpactCO2_COplus = 4
   integer, parameter ::  iImpactCO2_Oplus = 5
   integer, parameter ::  iImpactCO2_Cplus = 6
@@ -368,7 +368,7 @@ module GITM_planet
   real :: EIMsolarwindpressure(nSW_EIM), EIMAltitude(2,nAlts_EIM)
   real :: EIMBMag(nBmags_EIM),EIMBElvs(nBelvs_EIM),solarWindPressure
   integer :: EIMType(nBTypes_EIM)
-  character (len = 20) :: EIMReactions(nReactions_EIM)
+  character (len = 40) :: EIMReactions(nReactions_EIM)
 
   real, allocatable :: EIM_IonizationFrequency(:,:,:,:,:)
   real :: dtImpactIonization = 300

@@ -72,7 +72,8 @@ subroutine set_nVarsUser1d
 
   ! Make sure to include Lat, Lon, and Alt
 
-  nVarsUser1d = 4
+	!MM adding variables for debugging extra ei processes
+  nVarsUser1d = 23
 
   if (nVarsUser1d-3 > nUserOutputs) &
        call stop_gitm("Too many user outputs!! Increase nUserOutputs!!")
@@ -176,7 +177,7 @@ subroutine output_header_user(cType, iOutputUnit_)
      write(iOutputUnit_,"(I7,A1,a)")  1, " ", "Longitude"
      write(iOutputUnit_,"(I7,A1,a)")  2, " ", "Latitude"
      write(iOutputUnit_,"(I7,A1,a)")  3, " ", "Altitude"
-     write(iOutputUnit_,"(I7,A1,a)")  4, " ", "Eddy Diffusion Coefficient"
+     !write(iOutputUnit_,"(I7,A1,a)")  4, " ", "Eddy Diffusion Coefficient"
      !     write(iOutputUnit_,"(I7,A1,a)")  5, " ", "CO2+hv->2O+C"
      !     write(iOutputUnit_,"(I7,A1,a)")  6, " ", "CO+hv->C+O"
      !write(iOutputUnit_,"(I7,A1,a)")  7, " ", "QNIRTotalRate"
@@ -187,6 +188,27 @@ subroutine output_header_user(cType, iOutputUnit_)
      !write(iOutputUnit_,"(I7,A1,a)") 12, " ", "Temperature"
      !write(iOutputUnit_,"(I7,A1,a)") 13, " ", "VMRO1"
      !write(iOutputUnit_,"(I7,A1,a)") 14, " ", "VMRCO2"
+     !MM writing reaction rates
+     write(iOutputUnit_,"(I7,A1,a)") 4, " ", "|B|"
+     write(iOutputUnit_,"(I7,A1,a)") 5, " ", "Magnetic Elevation Angle"
+     write(iOutputUnit_,"(I7,A1,a)") 6, " ", "Magnetic Topology"
+     write(iOutputUnit_,"(I7,A1,a)") 7, " ", "CO2_X2PI_G_ionization"
+     write(iOutputUnit_,"(I7,A1,a)") 8, " ", "CO2_A2PI_U_ionization"
+     write(iOutputUnit_,"(I7,A1,a)") 9, " ", "CO2_B2Sig+u_ionization"
+     write(iOutputUnit_,"(I7,A1,a)") 10, " ", "CO2_CO+_ionization"
+     write(iOutputUnit_,"(I7,A1,a)") 11, " ", "CO2_O+_ionization"
+     write(iOutputUnit_,"(I7,A1,a)") 12, " ", "CO2_C+_ionization"
+     write(iOutputUnit_,"(I7,A1,a)") 13, " ", "O1_+4S_ionization"
+     write(iOutputUnit_,"(I7,A1,a)") 14, " ", "O1_+2D_ionization"
+     write(iOutputUnit_,"(I7,A1,a)") 15, " ", "O1_+2P_ionization"
+     write(iOutputUnit_,"(I7,A1,a)") 16, " ", "N2_+X2Sg_ionization"
+     write(iOutputUnit_,"(I7,A1,a)") 17, " ", "N2_+A2Pu_ionization"
+     write(iOutputUnit_,"(I7,A1,a)") 18, " ", "N2_+B2Su_ionization"
+     write(iOutputUnit_,"(I7,A1,a)") 19, " ", "CO_CO+X2Sig_ionization"
+     write(iOutputUnit_,"(I7,A1,a)") 20, " ", "CO_COMETTAI_ionization"
+     write(iOutputUnit_,"(I7,A1,a)") 21, " ", "CO_1STNEG_ionization"
+     write(iOutputUnit_,"(I7,A1,a)") 22, " ", "CO_C+_ionization"
+     write(iOutputUnit_,"(I7,A1,a)") 23, " ", "CO_O+_ionization"
 
   endif
 
@@ -276,7 +298,7 @@ subroutine output_1dUser(iBlock, iOutputUnit_)
           Longitude(iLon,iBlock), &
           Latitude(iLat,iBlock), &
           Altitude_GB(iLon, iLat, iAlt, iBlock),&
-          UserData1D(iLon,iLat,iiAlt,1)
+          UserData1D(iLon,iLat,iAlt,1:20)
      !                UserData1D(iLon,iLat,iAlt,2), &
      !                UserData1D(iLon,iLat,iAlt,3)
      !                UserData1D(iLon,iLat,iAlt,10), &

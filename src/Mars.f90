@@ -10175,23 +10175,42 @@ subroutine ReadLillisModel
   EIM_IonizationFrequency = 0.0
 
   ! Specify which reactions are included
-  EIMReactions(iImpactCO2_X2PI_G)  = 'iImpactCO2_X2PI_G'
-  EIMReactions(iImpactCO2_B2Sig)   = 'iImpactCO2_B2Sig'
-  EIMReactions(iImpactCO2_A2PI_U)  = 'iImpactCO2_A2PI_U'
-  EIMReactions(iImpactCO2_COplus)  = 'iImpactCO2_COplus'
-  EIMReactions(iImpactCO2_Oplus)  = 'iImpactCO2_Oplus'
-  EIMReactions(iImpactCO2_Cplus)  = 'iImpactCO2_Cplus'
-  EIMReactions(iImpactO1_plus4S)  = 'iImpactO1_plus4S'
-  EIMReactions(iImpactO1_plus2D)  = 'iImpactO1_plus2D'
-  EIMReactions(iImpactO1_plus2P)  = 'iImpactO1_plus2P'
-  EIMReactions(iImpactN2_plusX2Sg)  = 'iImpactN2_plusX2Sg'
-  EIMReactions(iImpactN2_plusA2Pu)  = 'iImpactN2_plusA2Pu'
-  EIMReactions(iImpactN2_plusB2Su)  = 'iImpactN2_plusB2Su'
-  EIMReactions(iImpactCO_COplusX2Sig)  = 'iImpactCO_COplusX2Sig'
-  EIMReactions(iImpactCO_COMETTAI)  = 'iImpactCO_COMETTAI'
-  EIMReactions(iImpactCO_1STNEG)  = 'iImpactCO_1STNEG'
-  EIMReactions(iImpactCO_Cplus)  = 'iImpactCO_Cplus'
-  EIMReactions(iImpactCO_Oplus)  = 'iImpactCO_Oplus'
+!  EIMReactions(iImpactCO2_COplus)  = 'CO2_CO+_ionization'
+!  EIMReactions(iImpactCO2_B2Sig)   = 'iImpactCO2_B2Sig'
+!  EIMReactions(iImpactCO2_A2PI_U)  = 'iImpactCO2_A2PI_U'
+!  EIMReactions(iImpactCO2_COplus)  = 'iImpactCO2_COplus'
+!  EIMReactions(iImpactCO2_Oplus)  = 'iImpactCO2_Oplus'
+!  EIMReactions(iImpactCO2_Cplus)  = 'iImpactCO2_Cplus'
+!  EIMReactions(iImpactO1_plus4S)  = 'iImpactO1_plus4S'
+!  EIMReactions(iImpactO1_plus2D)  = 'iImpactO1_plus2D'
+!  EIMReactions(iImpactO1_plus2P)  = 'iImpactO1_plus2P'
+!  EIMReactions(iImpactN2_plusX2Sg)  = 'iImpactN2_plusX2Sg'
+!  EIMReactions(iImpactN2_plusA2Pu)  = 'iImpactN2_plusA2Pu'
+!  EIMReactions(iImpactN2_plusB2Su)  = 'iImpactN2_plusB2Su'
+!  EIMReactions(iImpactCO_COplusX2Sig)  = 'iImpactCO_COplusX2Sig'
+!  EIMReactions(iImpactCO_COMETTAI)  = 'iImpactCO_COMETTAI'
+!  EIMReactions(iImpactCO_1STNEG)  = 'iImpactCO_1STNEG'
+!  EIMReactions(iImpactCO_Cplus)  = 'iImpactCO_Cplus'
+!  EIMReactions(iImpactCO_Oplus)  = 'iImpactCO_Oplus'
+
+ EIMReactions(iImpactCO2_X2PI_G)  = 'CO2_X2PI_G_ionization'
+ EIMReactions(iImpactCO2_A2PI_U)  = 'CO2_A2PI_U_ionization'
+ EIMReactions(iImpactCO2_B2Sig)  = 'CO2_B2Sig+u_ionization'
+ EIMReactions(iImpactCO2_COplus)  = 'CO2_CO+_ionization'
+ EIMReactions(iImpactCO2_Oplus)  = 'CO2_O+_ionization'
+ EIMReactions(iImpactCO2_Cplus)  = 'CO2_C+_ionization'
+ EIMReactions(iImpactO1_plus4S)  = 'O1_+4S_ionization'
+ EIMReactions(iImpactO1_plus2D)  = 'O1_+2D_ionization'
+ EIMReactions(iImpactO1_plus2P)  = 'O1_+2P_ionization'
+ EIMReactions(iImpactN2_plusX2Sg)  = 'N2_+X2Sg_ionization'
+ EIMReactions(iImpactN2_plusA2Pu)  = 'N2_+A2Pu_ionization'
+ EIMReactions(iImpactN2_plusB2Su)  = 'N2_+B2Su_ionization'
+ EIMReactions(iImpactCO_COplusX2Sig)  = 'CO_CO+X2Sig_ionization'
+ EIMReactions(iImpactCO_COMETTAI)  = 'CO_COMETTAI_ionization'
+ EIMReactions(iImpactCO_1STNEG)  = 'CO_1STNEG_ionization'
+ EIMReactions(iImpactCO_Cplus)  = 'CO_C+_ionization'
+ EIMReactions(iImpactCO_Oplus)  = 'CO_O+_ionization'
+
 
   write(*,*) "==> Now Reading Mars Empirical Ionization Model"
   open(unit=42, file=cEIIFile, action='read')
@@ -10212,10 +10231,18 @@ subroutine ReadLillisModel
                          swlow,swmid,swhigh,bmaglow,bmagmid,bmaghigh,elvlow,elvmid, &
                          elvhigh,EIM_IZ(i,j,k,l,m,n)
 
+                    if (trim(process) .ne. EIMReactions(i)) then
+                       iError = 1
+                       write(*,*) "Expected process doesn't match ",process,EIMReactions(i),i
+                    endif
+                    
                     if (i == 1 .and. j == 1 .and. k == 1 .and. l ==  1 .and. m == 1) &
                          EIMBelvs(n) = elvmid
 
                     if (iError /= 0) then
+                       write(*,*)  species, process, btype, altlow,altmid,althigh, &
+                         swlow,swmid,swhigh,bmaglow,bmagmid,bmaghigh,elvlow,elvmid, &
+                         elvhigh,EIM_IZ(i,j,k,l,m,n)
                         write(*,*) i,"/",nReactions_EIM,j,"/",nBTypes_EIM,k,"/",nAlts_EIM,&                                                        
                           l,"/",nSW_EIM,m,"/",nBmags_EIM,n,"/",nBelvs_EIM                                                                       
                        call stop_gitm("Error reading impact ionization data")

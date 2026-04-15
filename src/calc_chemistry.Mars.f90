@@ -336,7 +336,9 @@ subroutine calc_chemistry(iBlock)
 
           if (UseEmpiricalIonization) then
           
+          	! --------------------------------------------------------
 						!CO2 impact ionization
+						! --------------------------------------------------------
 
              Reaction = &
                   (impactIonizationFrequency(iLon,iLat,iAlt,iImpactCO2_X2PI_G,iBlock) + &
@@ -345,8 +347,14 @@ subroutine calc_chemistry(iBlock)
                   *Neutrals(iCO2_)
              IonSources(iCO2P_) = IonSources(iCO2P_) + Reaction
              NeutralLosses(iCO2_) = NeutralLosses(iCO2_) + Reaction
+             if (ialt == 80) write(*,*) "1 ", Reaction
+             UserData1D(1,1,ialt,4) = impactIonizationFrequency(iLon,iLat,iAlt,iImpactCO2_X2PI_G,iBlock)*Neutrals(iCO2_)
+             UserData1D(1,1,ialt,5) = impactIonizationFrequency(iLon,iLat,iAlt,iImpactCO2_A2PI_U,iBlock)*Neutrals(iCO2_)
+             UserData1D(1,1,ialt,6) = impactIonizationFrequency(iLon,iLat,iAlt,iImpactCO2_B2Sig,iBlock)*Neutrals(iCO2_)
              
+            ! --------------------------------------------------------
             ! CO2 + e- ==> CO+ + O
+            ! --------------------------------------------------------
              
              Reaction = &
                   impactIonizationFrequency(iLon,iLat,iAlt,iImpactCO2_COplus,iBlock) &
@@ -354,8 +362,12 @@ subroutine calc_chemistry(iBlock)
              IonSources(iCOP_) = IonSources(iCOP_) + Reaction
              NeutralSources(iO_) = NeutralSources(iO_) + Reaction
              NeutralLosses(iCO2_) = NeutralLosses(iCO2_) + Reaction
-             
+                           if (ialt == 80) write(*,*) "2 ", Reaction
+             UserData1D(1,1,ialt,7) = Reaction
+                           
+             ! --------------------------------------------------------
              ! CO2 + e- ==> O+ + CO
+             ! --------------------------------------------------------
              
              Reaction = &
                   impactIonizationFrequency(iLon,iLat,iAlt,iImpactCO2_Oplus,iBlock) &
@@ -363,8 +375,12 @@ subroutine calc_chemistry(iBlock)
              IonSources(iOP_) = IonSources(iOP_) + Reaction
              NeutralSources(iCO_) = NeutralSources(iCO_) + Reaction
              NeutralLosses(iCO2_) = NeutralLosses(iCO2_) + Reaction
-             
+                             if (ialt == 80) write(*,*) "3 ", Reaction
+             UserData1D(1,1,ialt,8) = Reaction
+                             
+             ! --------------------------------------------------------
              ! CO2 + e- ==> C+ + O2
+             ! --------------------------------------------------------
              
              Reaction = &
                   impactIonizationFrequency(iLon,iLat,iAlt,iImpactCO2_Cplus,iBlock) &
@@ -372,8 +388,11 @@ subroutine calc_chemistry(iBlock)
              IonSources(iCP_) = IonSources(iCP_) + Reaction
              NeutralSources(iO2_) = NeutralSources(iO2_) + Reaction
              NeutralLosses(iCO2_) = NeutralLosses(iCO2_) + Reaction
+             UserData1D(1,1,ialt,9) = Reaction
              
+            ! --------------------------------------------------------
           	!O impact ionization
+          	! --------------------------------------------------------
           	
              Reaction = &
                   (impactIonizationFrequency(iLon,iLat,iAlt,iImpactO1_plus4S,iBlock) + &
@@ -382,28 +401,43 @@ subroutine calc_chemistry(iBlock)
                   *Neutrals(iO_)
              IonSources(iOP_) = IonSources(iOP_) + Reaction
              NeutralLosses(iO_) = NeutralLosses(iO_) + Reaction
+             UserData1D(1,1,ialt,10) = impactIonizationFrequency(iLon,iLat,iAlt,iImpactO1_plus4S,iBlock)*Neutrals(iO_)
+             UserData1D(1,1,ialt,11) = impactIonizationFrequency(iLon,iLat,iAlt,iImpactO1_plus2D,iBlock)*Neutrals(iO_)
+             UserData1D(1,1,ialt,12) = impactIonizationFrequency(iLon,iLat,iAlt,iImpactO1_plus2P,iBlock)*Neutrals(iO_)
              
+            ! --------------------------------------------------------
             !N2 impact ionization
+            ! --------------------------------------------------------
              
              Reaction = &
-                  (impactIonizationFrequency(iLon,iLat,iAlt,iImpactN2_plusX2Sg,iBlock) + &
+                 (impactIonizationFrequency(iLon,iLat,iAlt,iImpactN2_plusX2Sg,iBlock) + &
                  impactIonizationFrequency(iLon,iLat,iAlt,iImpactN2_plusA2Pu,iBlock) + &
                  impactIonizationFrequency(iLon,iLat,iAlt,iImpactN2_plusB2Su,iBlock)) &
                   *Neutrals(iN2_)
              IonSources(iN2P_) = IonSources(iN2P_) + Reaction
              NeutralLosses(iN2_) = NeutralLosses(iN2_) + Reaction
+             UserData1D(1,1,ialt,13) = impactIonizationFrequency(iLon,iLat,iAlt,iImpactN2_plusX2Sg,iBlock)*Neutrals(iN2_)
+             UserData1D(1,1,ialt,14) = impactIonizationFrequency(iLon,iLat,iAlt,iImpactN2_plusA2Pu,iBlock)*Neutrals(iN2_)
+             UserData1D(1,1,ialt,15) = impactIonizationFrequency(iLon,iLat,iAlt,iImpactN2_plusB2Su,iBlock)*Neutrals(iN2_)
              
+            ! --------------------------------------------------------
             !CO impact ionization
+            ! --------------------------------------------------------
             
              Reaction = &
-                  (impactIonizationFrequency(iLon,iLat,iAlt,iImpactCO_COplusX2Sig,iBlock) + &
+                 (impactIonizationFrequency(iLon,iLat,iAlt,iImpactCO_COplusX2Sig,iBlock) + &
                  impactIonizationFrequency(iLon,iLat,iAlt,iImpactCO_COMETTAI,iBlock) + &
                  impactIonizationFrequency(iLon,iLat,iAlt,iImpactCO_1STNEG,iBlock)) &
                   *Neutrals(iCO_)
              IonSources(iCOP_) = IonSources(iCOP_) + Reaction
              NeutralLosses(iCO_) = NeutralLosses(iCO_) + Reaction
+             UserData1D(1,1,ialt,16) = impactIonizationFrequency(iLon,iLat,iAlt,iImpactCO_COplusX2Sig,iBlock)*Neutrals(iCO_)
+             UserData1D(1,1,ialt,17) = impactIonizationFrequency(iLon,iLat,iAlt,iImpactCO_COMETTAI,iBlock)*Neutrals(iCO_)
+             UserData1D(1,1,ialt,18) = impactIonizationFrequency(iLon,iLat,iAlt,iImpactCO_1STNEG,iBlock)*Neutrals(iCO_)
              
+             ! --------------------------------------------------------
              ! CO + e- ==> C+ + O
+             ! --------------------------------------------------------
              
              Reaction = &
                   impactIonizationFrequency(iLon,iLat,iAlt,iImpactCO_Cplus,iBlock) &
@@ -411,8 +445,11 @@ subroutine calc_chemistry(iBlock)
              IonSources(iCP_) = IonSources(iCP_) + Reaction
              NeutralSources(iO_) = NeutralSources(iO_) + Reaction
              NeutralLosses(iCO_) = NeutralLosses(iCO_) + Reaction
+             UserData1D(1,1,ialt,19) = Reaction
              
+             ! --------------------------------------------------------
              ! CO + e- ==> O+ + C
+             ! --------------------------------------------------------
              
              Reaction = &
                   impactIonizationFrequency(iLon,iLat,iAlt,iImpactCO_Oplus,iBlock) &
@@ -420,6 +457,9 @@ subroutine calc_chemistry(iBlock)
              IonSources(iOP_) = IonSources(iOP_) + Reaction
              NeutralSources(iC_) = NeutralSources(iC_) + Reaction
              NeutralLosses(iCO_) = NeutralLosses(iCO_) + Reaction
+             UserData1D(1,1,ialt,20) = Reaction
+!             print *, UserData1D(1,1,1:nalts,1)
+!             stop
 
           endif
 

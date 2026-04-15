@@ -370,6 +370,7 @@ subroutine calc_GITM_sources(iBlock)
 
         BLocal = B0(1:nLons,1:nLats,1:nAlts,1:4,iBlock)
 
+
         ! A weighted number density is used to remove atmospheric absorption 
         ! effects prior to calculating the ionization frequencies. We need 
         ! back this out so that absorption is included. 
@@ -382,6 +383,11 @@ subroutine calc_GITM_sources(iBlock)
 
                     call interpolateEIM(Altitude_GB(iLon,iLat,iAlt,iBlock),Blocal(iLon,iLat,iAlt,iUp_),&
                          Blocal(iLon,iLat,iAlt,iMag_),FieldType(ilon,ilat,iAlt,iBlock),EIMIZ)
+                         
+      						  !MM trying to save mag fields to user defined output
+        						userdata1d(:,:,ialt,1) = B0(ilon,ilat,ialt,iMag_,iBlock)
+        						userdata1d(:,:,ialt,2) = asin(B0(ilon,ilat,ialt,iUp_,iBlock)/B0(ilon,ilat,ialt,iMag_,iBlock))*180/pi
+        						userdata1d(:,:,ialt,3) = FieldType(ilon,ilat,ialt,iBlock)
 
                     ! Lastly, apply attenuation factor to re-apply effects of 
                     ! atmospheric attenuation. Note units should be in cm.
@@ -407,13 +413,12 @@ subroutine calc_GITM_sources(iBlock)
 
                     impactionizationFrequency(ilon,ilat,ialt,iImpactCO2_X2PI_G:iImpactCO2_Cplus,iBlock) = &
                          (10**EIMIZ(iImpactCO2_X2PI_G:iImpactCO2_Cplus))*attenuationFactor(iCO2_)
-                         impactionizationFrequency(ilon,ilat,ialt,iImpactO1_plus4S:iImpactO1_plus2P,iBlock) = &
+                    impactionizationFrequency(ilon,ilat,ialt,iImpactO1_plus4S:iImpactO1_plus2P,iBlock) = &
                          (10**EIMIZ(iImpactO1_plus4S:iImpactO1_plus2P))*attenuationFactor(iO_)
-                         impactionizationFrequency(ilon,ilat,ialt,iImpactN2_plusX2Sg:iImpactN2_plusB2Su,iBlock) = &
+                    impactionizationFrequency(ilon,ilat,ialt,iImpactN2_plusX2Sg:iImpactN2_plusB2Su,iBlock) = &
                          (10**EIMIZ(iImpactN2_plusX2Sg:iImpactN2_plusB2Su))*attenuationFactor(iN2_)
-                         impactionizationFrequency(ilon,ilat,ialt,iImpactCO_COplusX2Sig:iImpactCO_Oplus,iBlock) = &
+                    impactionizationFrequency(ilon,ilat,ialt,iImpactCO_COplusX2Sig:iImpactCO_Oplus,iBlock) = &
                          (10**EIMIZ(iImpactCO_COplusX2Sig:iImpactCO_Oplus))*attenuationFactor(iCO_)
-
                  endif
               enddo
            end do
