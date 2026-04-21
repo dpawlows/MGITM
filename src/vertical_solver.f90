@@ -715,17 +715,6 @@ subroutine advance_vertical_1stage( &
              + Dt * DiffTemp(iAlt) &
              + Dt * StressHeating(iAlt)
 
-! Already in K/s
-       UserData1D(1,1,iAlt,42) = &
-         -1.0*( Gamma_1d(iAlt) - 1.0)*Temp(iAlt)*DivVel(iAlt)
-
-! Already in K/s
-       UserData1D(1,1,iAlt,43) = &
-           -1.0*Vel_GD(iAlt,iUp_)*GradTemp(iAlt)
-
-! Already in K/s
-       UserData1D(1,1,iAlt,44) = &
-              StressHeating(iAlt)
   end do
 
   do iAlt = 1, nAlts

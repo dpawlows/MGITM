@@ -832,10 +832,10 @@ subroutine calc_eddy_diffusion_coefficient(iBlock)
   else
      KappaEddyDiffusion = KEddyMax
   endif
-  userdata3d(1:nLons,1:nLats,:,1,iBlock) = &
-       KappaEddyDiffusion(1:nLons,1:nLats,:,iBlock)
-  userdata1d(1,1,1:nAlts,1) = &
-       KappaEddyDiffusion(1,1,1:nAlts,1)
+!  userdata3d(1:nLons,1:nLats,:,1,iBlock) = &
+!       KappaEddyDiffusion(1:nLons,1:nLats,:,iBlock)
+!  userdata1d(1,1,1:nAlts,1) = &
+!       KappaEddyDiffusion(1,1,1:nAlts,1)
 
 end subroutine calc_eddy_diffusion_coefficient
 
@@ -9949,7 +9949,7 @@ subroutine interpolateField(nMagLons,nMagLats,nMagAlts,MagFieldLon,MagFieldLat,M
                             MagFieldAlt(jAlt+1) > AltFind) then
                           iiAlt=jAlt
                           BAlt =  (AltFind-MagFieldAlt(jAlt))/&
-                               (MagFieldAlt(jAlt+1)-MagFieldLat(jAlt))
+                               (MagFieldAlt(jAlt+1)-MagFieldAlt(jAlt))
 
 
                        endif
@@ -9976,12 +9976,12 @@ subroutine interpolateField(nMagLons,nMagLats,nMagAlts,MagFieldLon,MagFieldLat,M
                  else
                     itypelon = iilon + 1
                  end if
-                 if (abs(magfieldlat(iilat) - latfind) < abs(magfieldlat(iilat+1))-latfind) then
+                 if (abs(magfieldlat(iilat) - latfind) < abs(magfieldlat(iilat+1)-latfind)) then
                     itypelat = iilat
                  else
                     itypelat = iilat + 1
                  end if
-                 if (abs(magfieldalt(iialt) - altfind) < abs(magfieldalt(iialt+1))-altfind) then
+                 if (abs(magfieldalt(iialt) - altfind) < abs(magfieldalt(iialt+1)-altfind)) then
                     itypealt = iialt
                  else
                     itypealt = iialt + 1
