@@ -47,6 +47,7 @@ endif
        !Update B field!!!!
 
        call readMHDField
+       IsFirstTime = .false.
     end if
   end if
 
