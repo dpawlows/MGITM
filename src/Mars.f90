@@ -9878,7 +9878,7 @@ subroutine interpolateField(nMagLons,nMagLats,nMagAlts,MagFieldLon,MagFieldLat,M
   integer :: iLon,iLat,iAlt,iBlock, iiLon, iiLat,iialt,jLon, jLat, jalt
   integer :: iilon2, iilat2, magdim, itypelon,itypelat,itypealt
 
-  integer,intent(in) :: nMagAlts,nMagLons,nMagLats,TypeField(nMagAlts,nMagLons,nMagLats)
+  integer,intent(in) :: nMagLons,nMagLats,nMagAlts,TypeField(nMagAlts,nMagLons,nMagLats)
   real, intent(in) :: MagFieldLon(nMagLons),MagFieldLat(nMagLats),MagFieldAlt(nMagAlts)
   real, intent(in) :: MagField(nMagAlts,nMagLons,nMagLats,MaxDim)
 
@@ -9899,27 +9899,30 @@ subroutine interpolateField(nMagLons,nMagLats,nMagAlts,MagFieldLon,MagFieldLat,M
                  do Magdim =1, Maxdim
 
                     if (LonFind < MagFieldLon(1)) then
-                       !In between 0 deg and first lon
-                       iiLon = 1
-                       iiLon2 = 1
+                        iiLon = 1
+                        iiLon2 = 1
+                        BLon = 0.0
 
-                       BLon = 0
+                     else if (LonFind >= MagFieldLon(nMagLons)) then
+                        ! Wrap: bracket between last and first lon
+                        iiLon = nMagLons
+                        iiLon2 = 1
+                        BLon = (LonFind - MagFieldLon(nMagLons)) / &
+                              (MagFieldLon(1) + 360.0 - MagFieldLon(nMagLons))
 
-                    else
-                       do jLon = 1, nMagLons-1
-
-
-                          if (MagFieldLon(jLon) <= LonFind .and. &
-                               MagFieldLon(jLon+1) > LonFind) then
-                             iiLon = jLon
-                             iiLon2 = iiLon + 1
-                             BLon = (LonFind-MagFieldLon(jLon))/&
-                                  (MagFieldLon(iiLon2)-MagFieldLon(iiLon))
-
-                          endif
-
-                       enddo
-                    end if
+                     else
+                        iiLon = -1
+                        do jLon = 1, nMagLons-1
+                           if (MagFieldLon(jLon) <= LonFind .and. &
+                                 MagFieldLon(jLon+1) > LonFind) then
+                                 iiLon = jLon
+                                 iiLon2 = iiLon + 1
+                                 BLon = (LonFind - MagFieldLon(jLon)) / &
+                                       (MagFieldLon(iiLon2) - MagFieldLon(iiLon))
+                                 exit
+                           endif
+                        enddo
+                     end if
 
                     if (LatFind < MagFieldLat(1)) then
                        !In between -90 and first lat, using 1st lat
@@ -9971,11 +9974,22 @@ subroutine interpolateField(nMagLons,nMagLats,nMagAlts,MagFieldLon,MagFieldLat,M
 
                  enddo
 
-                 if (abs(magfieldlon(iilon) - lonfind) < abs(magfieldlon(iilon+1)-lonfind)) then
-                    itypelon = iilon
+                 if (iiLon < nMagLons) then
+                  if (abs(magfieldlon(iilon) - lonfind) < abs(magfieldlon(iilon+1)-lonfind)) then
+                     itypelon = iilon
+                  else
+                     itypelon = iilon + 1
+                  end if
                  else
-                    itypelon = iilon + 1
-                 end if
+                     ! iiLon == nMagLons, wraparound case
+                     ! compare distance to last lon vs first lon (accounting for periodicity)
+                     if (abs(magfieldlon(nMagLons) - lonfind) < abs(magfieldlon(1) + 360.0 - lonfind)) then
+                        itypelon = nMagLons
+                     else
+                        itypelon = 1
+                     end if
+                  end if
+
                  if (abs(magfieldlat(iilat) - latfind) < abs(magfieldlat(iilat+1)-latfind)) then
                     itypelat = iilat
                  else
@@ -9999,7 +10013,6 @@ subroutine interpolateField(nMagLons,nMagLats,nMagAlts,MagFieldLon,MagFieldLat,M
      !     userdata3D(:,:,:,4,iblock)=FieldType(:,:,:,iBlock)
 
   enddo
-
 end subroutine interpolateField
 
 subroutine ReadMagField
@@ -10042,7 +10055,6 @@ subroutine ReadMagField
   write(*,*) "==> Now Reading Mars Magnetic Field"
   open(unit=42, form="unformatted", file='UA/DataIn/CrustalField.dat', action='read')
 
-
   read(42) MagField
   close(42)
 
@@ -10063,24 +10075,17 @@ subroutine ReadMHDField
 
   implicit None
 
-  integer, parameter :: nMagLons=120, nMagLats=61, nMagAlts=21, Maxdim=3
-
-  real, dimension(nMagAlts,nMagLons,nMagLats, Maxdim) :: MagField
-  real, dimension(nMagAlts,nMagLons,nMagLats, Maxdim,2) :: inMagField
-  integer, dimension(nMagAlts,nMagLons,nMagLats,2) :: inFieldType
-  integer, dimension(nMagAlts,nMagLons,nMagLats) :: typeField
+  real, dimension(nMHDMagAlts,nMHDMagLons,nMHDMagLats, MaxMagdim) :: MagField
+  integer, dimension(nMHDMagAlts,nMHDMagLons,nMHDMagLats) :: typeField
 
   integer ::  i,j,k, ifile,btype
   integer :: iError, started
   real :: ctime
-  real, dimension(nMagLons) :: MagFieldLon
-  real, dimension(nMagLats) :: MagFieldLat
-  real, dimension(nMagAlts) :: MagFieldAlt
-  real ,dimension(2) :: realtime
-  real :: lon,lat,alt,btotalup,btotalnorth,btotaleast,biup,bieast,binorth
-  character (len=100) :: firstMHDfile, secondMHDfile
 
-  real, dimension(9) :: temp
+  real :: lon,lat,alt,btotalup,btotalnorth,btotaleast
+  character(len=100) :: newFirstFile, newSecondFile
+  real, dimension(2) :: newRealtime
+  logical :: IsFirstTime=.true.
   character    (len=20)                           :: cline
 
 
@@ -10089,67 +10094,73 @@ subroutine ReadMHDField
   ! Since the field is time dependent, we need to get the B field at
   ! 2 different times and interpolate to the current time
 
-  call getMHDFiles(firstMHDfile,secondMHDfile,realtime(1),realtime(2))
+  call getMHDFiles(newfirstfile,newsecondfile,newrealtime(1),newrealtime(2))
+     
+   if (newFirstFile /= firstMHDfile .or. newSecondFile /= secondMHDfile .or. IsFirstTime) then
+   firstMHDfile = newFirstFile
+   secondMHDfile = newSecondFile
+   mhdrealtime = newRealtime
+   isFirstTime = .false.
 
-  do ifile = 1, 2
+   do ifile = 1, 2
      if (ifile == 1) then
         cMHDFile = firstMHDfile
      else
         cMHDFile = secondMHDfile
      end if
+   
+      open(unit=iInputUnit_, file=cMHDFile, action='read')
 
-     open(unit=iInputUnit_, file=cMHDFile, action='read')
-
-     iError = 0
-     started = 0
-     do while (started == 0)
-        read(iInputUnit_,'(a)',iostat=iError) cLine
-        if (cline(1:1) .eq. '#') started = 1
-     end do
+      iError = 0
+      started = 0
+      do while (started == 0)
+         read(iInputUnit_,'(a)',iostat=iError) cLine
+         if (cline(1:1) .eq. '#') started = 1
+      end do
 
 
-     do i = 1, nMagLons
-        do j = 1, nMagLats
-           do k = 1, nMagAlts
-              read(iInputUnit_,*,iostat=iError) lon,lat,alt,btotalup,btotalnorth,btotaleast, btype
-              ! read(iInputUnit_,*,iostat=iError) lon,lat,alt,btotalup,btotalnorth,btotaleast,biup,binorth,bieast
-              if (j==1 .and. k==1) MagFieldLon(i) = lon*180/Pi
-              if (i == 1 .and. k ==1) MagFieldLat(j) = lat*180/Pi
-              if (i==1 .and. j==1) MagFieldAlt(k) = alt
+      do i = 1, nMHDMagLons
+         do j = 1, nMHDMagLats
+            do k = 1, nMHDMagAlts
+               read(iInputUnit_,*,iostat=iError) lon,lat,alt,btotalup,btotalnorth,btotaleast, btype
+               ! read(iInputUnit_,*,iostat=iError) lon,lat,alt,btotalup,btotalnorth,btotaleast,biup,binorth,bieast
+               if (j==1 .and. k==1) MHDMagFieldLon(i) = lon*180/Pi
+               if (i == 1 .and. k ==1) MHDMagFieldLat(j) = lat*180/Pi
+               if (i==1 .and. j==1) MHDMagFieldAlt(k) = alt
 
-              ! if (crustalFieldOnly) then
-              !   inMagField(k,i,j,1,ifile) = btotalnorth-binorth
-              !   inMagField(k,i,j,2,ifile) = btotaleast-bieast
-              !   inMagField(k,i,j,3,ifile) = btotalup-biup
-              ! else
-              inMagField(k,i,j,1,ifile) = btotalnorth
-              inMagField(k,i,j,2,ifile) = btotaleast
-              inMagField(k,i,j,3,ifile) = btotalup
-              inFieldType(k,i,j,ifile) = btype
-              ! endif
+               ! if (crustalFieldOnly) then
+               !   inMagField(k,i,j,1,ifile) = btotalnorth-binorth
+               !   inMagField(k,i,j,2,ifile) = btotaleast-bieast
+               !   inMagField(k,i,j,3,ifile) = btotalup-biup
+               ! else
+               inMagField(k,i,j,1,ifile) = btotalnorth
+               inMagField(k,i,j,2,ifile) = btotaleast
+               inMagField(k,i,j,3,ifile) = btotalup
+               inFieldType(k,i,j,ifile) = btype
+               ! endif
 
-           enddo
-        end do
-     end do
+            enddo
+         end do
+      end do
 
-     close(iInputUnit_)
+      close(iInputUnit_)
+   enddo
 
-  end do
+  endif
 
   !Interpolate the field between time 1 and time 2
-  ctime = (currentTime - realtime(1))/(realtime(2)-realtime(1))
+  ctime = (currentTime - mhdrealtime(1))/(mhdrealtime(2)-mhdrealtime(1))
   Magfield = inMagfield(:,:,:,:,1)*(1-ctime)+inMagfield(:,:,:,:,2)*ctime
 
-  if (currentTime - realtime(1) < realtime(2) - currentTime) then
+  if (currentTime - mhdrealtime(1) < mhdrealtime(2) - currentTime) then
      typeField = inFieldType(:,:,:,1)
   else
      typeField = inFieldType(:,:,:,2)
   ENDIF
 
-  call interpolateField(nMagLons,nMagLats,nMagAlts,MagFieldLon,MagFieldLat,MagFieldAlt,MagField,TypeField)
-  maxMagFieldAlt = maxval(MagFieldAlt)
-  minMagFieldAlt = minval(MagFieldAlt)
-
+  call interpolateField(nMHDMagLons,nMHDMagLats,nMHDMagAlts,MHDMagFieldLon,MHDMagFieldLat,MHDMagFieldAlt,MagField,TypeField)
+  maxMagFieldAlt = maxval(MHDMagFieldAlt)
+  minMagFieldAlt = minval(MHDMagFieldAlt)
 
 end subroutine ReadMHDField
 

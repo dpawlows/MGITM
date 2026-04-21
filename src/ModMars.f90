@@ -342,7 +342,16 @@ module GITM_planet
         0.0,          0.0,         0.0,          0.0,          0.0,        0.0 /), & !N4S                                                     
         shape(eimAttenFactor),order=(/2,1/) )  
 
+  !!!!!! MHD field stuff used for empirical election impact ionization. Dimensions are hard coded
   integer :: minMagFieldAlt,maxMagFieldAlt
+  integer, parameter :: nMHDMagLons=120, nMHDMagLats=61, nMHDMagAlts=21, MaxMagdim=3
+  real, dimension(nMHDMagAlts,nMHDMagLons,nMHDMagLats, MaxMagdim,2) :: inMagField
+  integer, dimension(nMHDMagAlts,nMHDMagLons,nMHDMagLats,2) :: inFieldType
+  character (len=100) :: firstMHDfile, secondMHDfile
+  real ,dimension(2) :: mhdrealtime
+  real, dimension(nMHDMagLons) :: MHDMagFieldLon
+  real, dimension(nMHDMagLats) :: MHDMagFieldLat
+  real, dimension(nMHDMagAlts) :: MHDMagFieldAlt
 
   integer, parameter ::  iImpactCO2_X2PI_G = 1
   integer, parameter ::  iImpactCO2_A2PI_U = 2

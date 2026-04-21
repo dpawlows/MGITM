@@ -250,7 +250,7 @@ module ModInputs
   character (len=iCharLen_) :: cEIIFile
   character (len=iCharLen_) :: cMHDFile,cMHDFilelist
   character (len=100), dimension(1000) :: MHDFiles
-  real :: dtBMHD = 60*15 !15 minutes by default
+  real :: dtBMHD = 60*5 !5 minutes by default
 
   ! These are Mars Specific, but ignored by other codes:
   ! Some are modified in Planet.f90 (set_planet_defaults)
