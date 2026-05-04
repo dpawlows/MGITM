@@ -498,24 +498,31 @@ contains
 
   end subroutine UA_get_for_gm
   !============================================================================
-  subroutine UA_get_info_for_ie(nVar, NameVar_V, nMagLat, nMagLon)
+  subroutine UA_get_info_for_ie(nVar, nVarSpec, nEngUA, NameVar_V, &
+                                NameVarSpec_V, nMagLat, nMagLon, EngUA)
 
-    integer, intent(out) :: nVar
+    integer, intent(out) :: nVar, nVarSpec, nEngUA
     integer, intent(out), optional :: nMagLat, nMagLon
-    character(len=*), intent(out), optional :: NameVar_V(:)
+    real, intent(out), optional :: EngUA(:)
+    character(len=*), intent(out), optional :: NameVar_V(:), NameVarSpec_V(:)
 
-    character(len=*), parameter:: NameSub = 'UA_get_info_for_ie'
-    !--------------------------------------------------------------------------
+    character(len=*), parameter :: NameSub='UA_get_info_for_ie'
+
     call CON_stop(NameSub//': UA_ERROR: empty version cannot be used!')
 
   end subroutine UA_get_info_for_ie
   !============================================================================
   subroutine UA_put_from_ie(Buffer_IIV, iSizeIn, jSizeIn, nVarIn, &
-       NameVarIn_V, iBlock)
+                            NameVarIn_V, nVarSpecIn, Buffer_IIIV, &
+                            NameVarSpecIn_V)
 
-    integer, intent(in)           :: iSizeIn, jSizeIn, nVarIn, iBlock
-    real, intent(in)              :: Buffer_IIV(iSizeIn,jSizeIn,nVarIn)
-    character (len=*),intent(in)  :: NameVarIn_V(nVarIn)
+    integer, intent(in)           :: iSizeIn, jSizeIn, nVarIn
+    real, intent(in)              :: Buffer_IIV(iSizeIn, jSizeIn, nVarIn)
+    character(len=*), intent(in)  :: NameVarIn_V(nVarIn)
+    integer, intent(in) :: nVarSpecIn
+    real, intent(in), optional    :: Buffer_IIIV(iSizeIn, jSizeIn, 0, &
+                                                nVarSpecIn)
+    character(len=*), intent(in), optional :: NameVarSpecIn_V(nVarSpecIn)
 
     character(len=*), parameter:: NameSub = 'UA_put_from_ie'
     !--------------------------------------------------------------------------
