@@ -267,7 +267,8 @@ contains
   !============================================================================
   subroutine UA_get_grid_info(nDimOut, iGridOut, iDecompOut)
 
-    use ModInputs, ONLY: Is1D,IsFullSphere
+    use CON_time, ONLY: tSimulation
+    use ModInputs, ONLY: Is1D, IsFullSphere
 
     integer, intent(out):: nDimOut    ! grid dimensionality
     integer, intent(out):: iGridOut   ! grid index
@@ -275,14 +276,28 @@ contains
 
     ! Return basic grid information useful for model coupling.
     ! The decomposition index increases with load balance and AMR.
+
+    real:: tSimulationLast = -1.0
+    integer:: iDecomp = 0
+
+    logical:: DoTest, DoTestMe
     character(len=*), parameter:: NameSub = 'UA_get_grid_info'
     !--------------------------------------------------------------------------
+    call CON_set_do_test(NameSub, DoTest, DoTestMe)
+
     if (Is1D) nDimOut = 1
     if (IsFullSphere) nDimOut = 3
 
     ! The GITM grid does not change
     iGridOut   = 1
-    iDecompOut = 1
+
+    ! The UA grid is rotating relative to the GM grid, so in effect it changes
+    if(tSimulation > tSimulationLast)then
+       tSimulationLast = tSimulation
+       iDecomp = modulo(iDecomp, 10) + 1
+    end if
+    iDecompOut = iDecomp
+    if(DoTestMe)write(*,*) NameSub,' tSim, iDecomp=', tSimulation, iDecomp
 
   end subroutine UA_get_grid_info
   !============================================================================
